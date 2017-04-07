@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\bounding_sphere.cpp" />
+    <ClCompile Include="src\config.cpp" />
     <ClCompile Include="src\geometry.cpp" />
     <ClCompile Include="src\geometry_generator.cpp" />
     <ClCompile Include="src\aldente.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="inc\skybox_shader.h" />
     <ClInclude Include="inc\util.h" />
     <ClInclude Include="inc\window.h" />
+    <ClInclude Include="inc\config.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

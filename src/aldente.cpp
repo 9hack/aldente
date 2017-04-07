@@ -8,10 +8,12 @@
 #include "scene_animation.h"
 #include "bounding_sphere.h"
 #include <cfloat>
+#include <string>
 
 #include "util.h"
 #include "colors.h"
 #include "global.h"
+#include "config.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -104,7 +106,14 @@ void Aldente::setup_scenes()
 
 void Aldente::go()
 {
-	window = Window::create_window(1280, 720, "Grandma Wants It Al Dente");
+	// Get window width and height from config
+	int width, height;
+	Config::config->get_value(Config::str_screen_width, width);
+	Config::config->get_value(Config::str_screen_height, height);
+	std::string game_name;
+	Config::config->get_value(Config::str_game_name, game_name);
+
+	window = Window::create_window(width, height, game_name.c_str());
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); // Don't show cursor
 	setup_callbacks();
 	setup_opengl();
@@ -115,7 +124,6 @@ void Aldente::go()
 	setup_scenes();
 
 	// Send height/width of window
-	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	resize_callback(window, width, height);
 
