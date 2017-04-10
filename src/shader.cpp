@@ -12,7 +12,7 @@ void Shader::use()
 
 void Shader::send_cam_pos(glm::vec3 cam_pos)
 {
-	this->cam_pos = cam_pos;
+    this->cam_pos = cam_pos;
 }
 
 void Shader::set_VP(glm::mat4 V, glm::mat4 P)
@@ -23,7 +23,7 @@ void Shader::set_VP(glm::mat4 V, glm::mat4 P)
 
 void Shader::send_mesh_model(glm::mat4 mesh_model)
 {
-	this->mesh_model = mesh_model;
+    this->mesh_model = mesh_model;
 }
 
 void Shader::set_material(Material m) {}

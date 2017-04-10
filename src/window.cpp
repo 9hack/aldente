@@ -14,20 +14,29 @@ GLFWwindow* Window::create_window(int width, int height, const char *window_titl
     // 4x antialiasing
     glfwWindowHint(GLFW_SAMPLES, 4);
 
+#ifdef __linux
+    // Ensure minimum OpenGL version is 3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    // Enable forward compatibility and allow a modern OpenGL context
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
     // Create the GLFW window
-	GLFWmonitor* monitor = NULL;
-	if (FULLSCREEN)
-	{
-		monitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-		width = mode->width;
-		height = mode->height;
-	}
-	GLFWwindow* window = glfwCreateWindow(width, height, window_title, monitor, NULL);
+    GLFWmonitor* monitor = NULL;
+    if (FULLSCREEN)
+    {
+        monitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        width = mode->width;
+        height = mode->height;
+    }
+    GLFWwindow* window = glfwCreateWindow(width, height, window_title, monitor, NULL);
 
     // Check if the window could not be created
     if (!window)
@@ -47,5 +56,5 @@ GLFWwindow* Window::create_window(int width, int height, const char *window_titl
     // Get the width and height of the framebuffer to properly resize the window
     glfwGetFramebufferSize(window, &width, &height);
 
-	return window;
+    return window;
 }

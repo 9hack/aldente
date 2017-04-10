@@ -2,7 +2,7 @@
 
 int main()
 {
-	Aldente grandma;
-	grandma.go();
-	exit(EXIT_SUCCESS);
+    Aldente grandma;
+    grandma.go();
+    exit(EXIT_SUCCESS);
 }
