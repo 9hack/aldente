@@ -6,7 +6,6 @@ aldente
 
 # User-specific files
 *.suo
-*.user
 *.userosscache
 *.sln.docstates
 settings.cfg
