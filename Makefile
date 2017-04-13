@@ -1,7 +1,7 @@
 MAIN_TARGET     := aldente
 
 SRC_DIR         := src
-INC_DIR	        := inc
+INC_DIR         := src
 BUILD_DIR       := .build
 
 CC              := clang++

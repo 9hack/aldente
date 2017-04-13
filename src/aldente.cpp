@@ -1,19 +1,19 @@
 #include "aldente.h"
 #include "window.h"
-#include "skybox_shader.h"
-#include "shadow_shader.h"
-#include "geometry_generator.h"
-#include "scene_model.h"
-#include "scene_transform.h"
-#include "scene_animation.h"
+#include "shaders/skybox_shader.h"
+#include "shaders/shadow_shader.h"
+#include "geometry/geometry_generator.h"
+#include "scene/scene_model.h"
+#include "scene/scene_transform.h"
+#include "scene/scene_animation.h"
 #include "bounding_sphere.h"
 #include <cfloat>
 #include <string>
 
-#include "util.h"
-#include "colors.h"
+#include "util/util.h"
+#include "util/colors.h"
 #include "global.h"
-#include "config.h"
+#include "util/config.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>

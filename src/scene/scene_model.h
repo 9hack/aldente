@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "scene.h"
-#include "shader.h"
+#include "shaders/shader.h"
 
 class SceneModel :
 	public SceneNode

@@ -1,5 +1,5 @@
 #include "scene.h"
-#include "util.h"
+#include "util/util.h"
 #include "global.h"
 const GLfloat PLAYER_HEIGHT = Global::PLAYER_HEIGHT;
 
