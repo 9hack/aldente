@@ -15,6 +15,8 @@
 #include "global.h"
 #include "util/config.h"
 
+#include "btBulletDynamicsCommon.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -91,6 +93,7 @@ void Aldente::setup_scenes()
     scene->root->add_child(cube_model);
 
 	//Setting up scene graph for Grid
+	btBoxShape* box = new btBoxShape(btVector3(1, 1, 1));
 	Grid* grid = new Grid(10,10);
 	vector<vector<Tile*>> toAdd = grid->getGrid();
 	for (int i = 0; i < toAdd.size(); i++) {
@@ -98,7 +101,7 @@ void Aldente::setup_scenes()
 		for (int j = 0; j < currRow.size(); j++) {
 			SceneModel *currTile = new SceneModel(scene);
 			currTile->add_mesh(currRow[j]->getMesh());
-			SceneTransform *tileTranslate = new SceneTransform(scene, 
+			SceneTransform *tileTranslate = new SceneTransform(scene,
 				glm::translate(glm::mat4(1.f), glm::vec3(currRow[j]->getX(), -0.5f * PLAYER_HEIGHT, currRow[j]->getZ())));
 			tileTranslate->add_child(currTile);
 			scene->root->add_child(tileTranslate);
