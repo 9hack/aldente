@@ -17,6 +17,7 @@
 #include "global.h"
 #include "util/config.h"
 #include "btBulletDynamicsCommon.h"
+#include "ui/text_renderer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -80,6 +81,7 @@ void Aldente::setup_shaders()
     ShaderManager::create_shader_program("skybox");
     ShaderManager::create_shader_program("shadow");
     ShaderManager::create_shader_program("debug_shadow");
+    ShaderManager::create_shader_program("text");
     ShaderManager::set_default("basic");
 }
 
@@ -199,6 +201,12 @@ void Aldente::go()
 	SceneModel* tmodel = test->getModel(std::string("textured.fbx"));
 	tmodel->setScene(scene);
 	scene->root->add_child(tmodel);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    TextRenderer tr;
+    tr.setup(width, height);
+
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -250,6 +258,8 @@ void Aldente::go()
             glBindTexture(GL_TEXTURE_2D, ((ShadowShader *)ShaderManager::get_shader_program("shadow"))->shadow_map_tex);
             Util::render_quad();
         }
+
+        tr.render_text(ShaderManager::get_shader_program("text"), "Hello world!", 25.f, 25.f, 1.f, glm::vec3(0.5f, 0.8f, 0.2f));
 
         glfwSwapBuffers(window);
     }
