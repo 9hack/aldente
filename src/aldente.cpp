@@ -17,7 +17,7 @@
 #include "global.h"
 #include "util/config.h"
 #include "btBulletDynamicsCommon.h"
-#include "ui/text_renderer.h"
+#include "ui/ui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -204,8 +204,8 @@ void Aldente::go()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    TextRenderer tr;
-    tr.setup(width, height);
+
+	UI *ui = new UI(width, height);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -259,7 +259,7 @@ void Aldente::go()
             Util::render_quad();
         }
 
-        tr.render_text(ShaderManager::get_shader_program("text"), "Hello world!", 25.f, 25.f, 1.f, glm::vec3(0.5f, 0.8f, 0.2f));
+		ui->update();
 
         glfwSwapBuffers(window);
     }

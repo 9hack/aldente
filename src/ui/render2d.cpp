@@ -1,11 +1,13 @@
-#include "text_renderer.h"
+#include "render2d.h"
 
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-void TextRenderer::setup(int width, int height)
+void Render2D::setup_text(int width, int height)
 {
+	projection_text = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
+
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
@@ -66,28 +68,26 @@ void TextRenderer::setup(int width, int height)
 	FT_Done_FreeType(ft);
 
 	// Configure VAO/VBO for texture quads
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glGenVertexArrays(1, &VAO_text);
+	glGenBuffers(1, &VBO_text);
+	glBindVertexArray(VAO_text);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_text);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
-	projection = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
 }
 
-void TextRenderer::render_text(Shader *shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
+void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
 	// Activate corresponding render state
 	shader->use();
 	glUniform3f(glGetUniformLocation(shader->shader_id, "textColor"), color.x, color.y, color.z);
-	glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_text));
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindVertexArray(VAO);
+	glBindVertexArray(VAO_text);
 
 	// Iterate through all characters
 	std::string::const_iterator c;
@@ -113,7 +113,7 @@ void TextRenderer::render_text(Shader *shader, std::string text, GLfloat x, GLfl
 		// Render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch.texture_ID);
 		// Update content of VBO memory
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_text);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -124,4 +124,36 @@ void TextRenderer::render_text(Shader *shader, std::string text, GLfloat x, GLfl
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLfloat texture_ID)
+{
+	shader->use();
+	glUniform3f(glGetUniformLocation(shader->shader_id, "textColor"), color.x, color.y, color.z);
+	glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_text));
+
+	glBindVertexArray(VAO_text);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture_ID);
+
+	// Update VBO for this rect
+	GLfloat vertices[6][4] = {
+		{ x,     	 y + height,   0.0, 0.0 },
+		{ x,     	 y,       	   0.0, 1.0 },
+		{ x + width, y,       	   1.0, 1.0 },
+
+		{ x,         y + height,   0.0, 0.0 },
+		{ x + width, y,       	   1.0, 1.0 },
+		{ x + width, y + height,   1.0, 0.0 }
+	};
+	// Update content of VBO memory
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_text);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Render quad
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }
