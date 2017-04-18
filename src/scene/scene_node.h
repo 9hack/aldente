@@ -12,8 +12,8 @@ class SceneNode
 protected:
 	Scene *scene;
 public:
-	virtual void draw(glm::mat4 m) = 0;
+	virtual void draw() = 0;
 	virtual void update() = 0;
-	virtual void pass(glm::mat4 m, Shader *s) = 0;
+	virtual void pass(Shader *s) = 0;
 };
 

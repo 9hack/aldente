@@ -31,7 +31,7 @@ void ShadowShader::set_material(Material m)
 }
 
 void ShadowShader::draw(Geometry *g, glm::mat4 to_world)
-{
+{	
     // Recalculate light matrix based on current light position and light projection matrix
     glm::mat4 light_view = glm::lookAt(light_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     light_matrix = light_proj * light_view;

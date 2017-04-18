@@ -4,9 +4,6 @@
 #include "shaders/shadow_shader.h"
 #include "geometry/geometry_generator.h"
 #include "scene/scene_model.h"
-#include "scene/scene_transform.h"
-#include "scene/scene_animation.h"
-#include "bounding_sphere.h"
 #include <cfloat>
 #include <string>
 
@@ -39,12 +36,9 @@ bool god_mode = false;
 bool helicopter_mode = false;
 glm::vec3 last_cursor_pos;
 
-const GLfloat PLAYER_HEIGHT = Global::PLAYER_HEIGHT;
-
-const GLfloat FAR_PLANE = 50.f * PLAYER_HEIGHT;
+const GLfloat FAR_PLANE = 100.0f;
 const GLfloat FOV = 45.f;
-
-const GLfloat   BASE_CAM_SPEED = PLAYER_HEIGHT / 10.f;
+const GLfloat   BASE_CAM_SPEED = 0.1f;
 const GLfloat   EDGE_PAN_THRESH = 5.f;
 const GLfloat   EDGE_PAN_SPEED = 0.5f;
 
@@ -136,7 +130,7 @@ void Aldente::setup_scenes()
 
 	/*
     // Plane
-    Geometry *plane_geo = GeometryGenerator::generate_plane(1.f, 0);
+    Geometry *plane_geo = GeometryGenerator::generate_plane(50.f, 0);
     Material plane_mat;
     plane_mat.diffuse = plane_mat.ambient = color::indian_red;
     Mesh plane_mesh = { plane_geo, plane_mat, ShaderManager::get_default(), glm::mat4(1.f) };
@@ -230,8 +224,8 @@ void Aldente::go()
 		}
 
         glfwGetFramebufferSize(window, &width, &height);
-        scene->update_frustum_planes();
-        scene->update_frustum_corners(width, height, FAR_PLANE);
+        scene->camera->update_frustum_planes();
+        scene->camera->update_frustum_corners(width, height, FAR_PLANE);
 
         // First pass: shadowmap.
         shadow_pass();
@@ -240,7 +234,9 @@ void Aldente::go()
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        scene->render();
+        scene->update();
+		scene->draw();
+
         // Debug shadows.
         if (debug_shadows)
         {
@@ -265,7 +261,7 @@ void Aldente::shadow_pass()
     ss->use();
     ss->light_pos = scene->light_pos;
     if (shadows_on) {
-        ss->light_proj = scene->frustum_ortho();
+        ss->light_proj = scene->camera->frustum_ortho();
     }
     else {
         ss->light_proj = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 0.1f);
@@ -351,7 +347,7 @@ void Aldente::resize_callback(GLFWwindow* window, int width, int height)
     if (height > 0)
     {
         for (Scene * s : scenes)
-            s->P = glm::perspective(FOV, (float)width / (float)height, 0.1f, FAR_PLANE);
+            s->camera->P = glm::perspective(FOV, (float)width / (float)height, 0.1f, FAR_PLANE);
     }
 }
 

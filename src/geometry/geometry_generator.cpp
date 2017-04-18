@@ -258,9 +258,9 @@ Geometry * GeometryGenerator::generate_plane(GLfloat scale, int texture_type)
 {
     Geometry *plane = new Geometry();
 
-    if (texture_type == WATER)
+    if (texture_type != 0)
     {
-        //Gotta go Square by Square for a texture
+        // Done square by square for repeatable texture
 
         float divisions = 10.f;
         float step = (scale * 2) / divisions;
@@ -289,12 +289,11 @@ Geometry * GeometryGenerator::generate_plane(GLfloat scale, int texture_type)
                 plane->tex_coords.push_back(glm::vec2(1.f, 1.f));
             }
         }
-
-        plane->attachNewTexture("assets/textures/WaterWW.png");
-        plane->add_texture_noise = true;
     }
     else
     {
+		// Rendered as two simple triangles
+
         //Setting Y-Offset as 0, change by Rotating World
         glm::vec3 v0 = { scale, 0, scale };
         glm::vec3 v1 = { -scale, 0, scale };
@@ -322,70 +321,3 @@ Geometry * GeometryGenerator::generate_plane(GLfloat scale, int texture_type)
 
     return plane;
 }
-
-Geometry * GeometryGenerator::generate_bezier_plane(GLfloat radius, GLuint num_curves, GLuint segmentation, GLfloat waviness, int texture_type, unsigned int seed = 0)
-{
-    Geometry *bez_plane = new Geometry();
-    bez_plane->draw_type = GL_TRIANGLE_FAN;
-
-    // Make bezier curves
-    if (seed != 0)
-        srand(seed);
-    int num_points = num_curves * 3;
-    std::vector<glm::vec3> control_points(num_points);
-    for (int i = 0; i < num_points; ++i)
-    {
-        if (i % 3 == 0) continue; // do interpolated points later
-        float offset = ((float)rand()/(float)RAND_MAX) * (radius / (1/waviness)) - (radius / (2/waviness));
-        float x = radius * glm::cos(glm::radians(i * 360.f / num_points)) + offset;
-        offset = ((float)rand() / (float)RAND_MAX) * (radius / (1/waviness)) - (radius / (2/waviness));
-        float z = radius * glm::sin(glm::radians(i * 360.f / num_points)) + offset;
-        float y = 0;
-        control_points[i] = glm::vec3(x, y, -z);
-    }
-    // Interpolated points as midpoints
-    for (int i = 0; i < num_points; i += 3)
-        control_points[i] = 0.5f * (control_points[i - 1 > 0 ? i - 1 : num_points - 1] + control_points[i + 1]);
-
-    // Calculate vertices
-    bez_plane->vertices.push_back(glm::vec3(0.f)); // centered at origin
-    for (unsigned int i = 0; i < num_curves; ++i)
-    {
-        int off = 3 * i;
-        glm::mat4 bezier_mat = Util::calc_bezier_mat(control_points[off],
-                control_points[off + 1],
-                control_points[off + 2],
-                control_points[(off + 3) % num_points]);
-
-        for (unsigned int j = 0; j <= segmentation; ++j)
-        {
-            float t = (float) j / (float) segmentation;
-            bez_plane->vertices.push_back(glm::vec3(bezier_mat * glm::vec4(t*t*t, t*t, t, 1.f)));
-        }
-    }
-
-    // Normals
-    for (int i = 0; i < bez_plane->vertices.size(); ++i)
-        bez_plane->normals.push_back(glm::vec3(0.f, 1.f, 0.f));
-
-    // Indices
-    for (int i = 0; i < bez_plane->vertices.size(); ++i)
-        bez_plane->indices.push_back(i);
-
-    bez_plane->tex_coords.push_back(glm::vec2(0.5f, 0.f));
-    for (int i = 1; i < bez_plane->vertices.size(); i += 2)
-    {
-        bez_plane->tex_coords.push_back(glm::vec2(0.f, 1.f));
-        bez_plane->tex_coords.push_back(glm::vec2(1.f, 1.f));
-    }
-
-    if (texture_type == SAND)
-        bez_plane->attachNewTexture("assets/textures/SandWW2.dds");
-    else if (texture_type == OBSIDIAN)
-        bez_plane->attachNewTexture("assets/textures/Obsidian.png");
-
-    bez_plane->populate_buffers();
-    geometries.push_back(bez_plane);
-    return bez_plane;
-}
-

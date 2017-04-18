@@ -26,10 +26,10 @@ void SceneGroup::remove_all()
     children.clear();
 }
 
-void SceneGroup::draw(glm::mat4 m)
+void SceneGroup::draw()
 {
     for (auto it = children.begin(); it != children.end(); ++it)
-        (*it)->draw(m);
+        (*it)->draw();
 }
 
 void SceneGroup::update()
@@ -38,8 +38,8 @@ void SceneGroup::update()
         (*it)->update();
 }
 
-void SceneGroup::pass(glm::mat4 m, Shader *s)
+void SceneGroup::pass(Shader *s)
 {
     for (auto it = children.begin(); it != children.end(); ++it)
-        (*it)->pass(m, s);
+        (*it)->pass(s);
 }

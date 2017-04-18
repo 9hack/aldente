@@ -17,12 +17,12 @@ public:
 	SceneModel(Scene *);
 	SceneModel() {};
 	~SceneModel();
-	void add_mesh(Mesh* m);
-	void draw(glm::mat4);
-	void update();
-	void combine_meshes();
-	void pass(glm::mat4 m, Shader *s);
-
 	void setScene(Scene* scene);
+	void add_mesh(Mesh m);
+	void combine_meshes();
+
+	void draw();
+	void update();
+	void pass(Shader *s);
 };
 

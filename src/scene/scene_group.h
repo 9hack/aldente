@@ -17,8 +17,8 @@ public:
 	~SceneGroup();
 	void add_child(SceneNode *node);
 	void remove_all();
-	virtual void draw(glm::mat4 m);
+	virtual void draw();
 	virtual void update();
-	virtual void pass(glm::mat4 m, Shader *s);
+	virtual void pass(Shader *s);
 };
 
