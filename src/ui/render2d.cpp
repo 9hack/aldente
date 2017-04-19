@@ -6,6 +6,8 @@
 
 void Render2D::setup_text(int width, int height)
 {
+	this->width = width;
+	this->height = height;
 	projection_text = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
 
 	FT_Library ft;
@@ -83,8 +85,9 @@ void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat 
 {
 	// Activate corresponding render state
 	shader->use();
-	glUniform3f(glGetUniformLocation(shader->shader_id, "textColor"), color.x, color.y, color.z);
+	glUniform3f(glGetUniformLocation(shader->shader_id, "baseColor"), color.x, color.y, color.z);
 	glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_text));
+	glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), true);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO_text);
@@ -126,11 +129,16 @@ void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLfloat texture_ID)
+void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID)
 {
 	shader->use();
-	glUniform3f(glGetUniformLocation(shader->shader_id, "textColor"), color.x, color.y, color.z);
+	glUniform3f(glGetUniformLocation(shader->shader_id, "baseColor"), color.x, color.y, color.z);
 	glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_text));
+	
+	if (texture_ID == 0)
+		glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), false);
+	else
+		glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), true);
 
 	glBindVertexArray(VAO_text);
 
@@ -156,4 +164,9 @@ void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, 
 	// Render quad
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
+}
+
+void Render2D::render_rectP(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID)
+{
+	render_rect(shader, x * this->width, y * this->height, width * this->width, height * this->height, color, texture_ID);
 }

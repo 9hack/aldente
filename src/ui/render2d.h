@@ -22,10 +22,11 @@ public:
     void setup_text(int width, int height);
     //void update_projection;
     void render_text(Shader *shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
-    void render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLfloat texture_ID);
+    void render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
+	void render_rectP(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 private:
     std::map<GLchar, Character> characters;
     GLuint VAO_text, VBO_text;
     glm::mat4 projection_text;
-
+	int width, height;
 };
