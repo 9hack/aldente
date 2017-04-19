@@ -7,14 +7,12 @@
 class Setup
 {
 
-private:	
+private:		
+public:	
 	static void setup_callbacks();
 	static void setup_opengl();
 	static void setup_shaders();
-
-public:
-	static void setup_opengl(); // Will handle all OpenGL and GLFW Setup
-	
-	static void setup_network();
+	static void setup_network();	
+	static void setup_bullet();
 };
 

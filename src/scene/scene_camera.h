@@ -5,7 +5,7 @@
 
 #include "scene_node.h"
 #include "shaders/shader.h"
-#include "geometry\plane.h"
+#include "model/plane.h"
 
 class SceneCamera :
 	public SceneNode

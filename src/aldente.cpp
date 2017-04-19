@@ -4,16 +4,17 @@
 #include "keyboard.h"
 #include "shaders/skybox_shader.h"
 #include "shaders/shadow_shader.h"
-#include "geometry/geometry_generator.h"
-#include "scene/model.h"
+#include "model/geometry_generator.h"
+#include "model/model.h"
+
+#include "grid.h"
+#include "tile.h"
 
 #include "events/input.h"
 #include "input/process.h"
-#include "global.h"
 #include "util/util.h"
 #include "util/colors.h"
 #include "util/config.h"
-#include "btBulletDynamicsCommon.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -23,37 +24,11 @@
 namespace input = kuuhaku::input;
 namespace events = kuuhaku::events;
 
-/* global vars */
-Scene* scene;
-std::vector<Scene*> scenes;
-SceneCamera* camera;
-
-bool debug_shadows = false;
-bool mouse_moved = false;
-bool shadows_on = true;
-bool god_mode = false;
-bool helicopter_mode = false;
-glm::vec3 last_cursor_pos;
-
-const GLfloat FAR_PLANE = 100.0f;
-const GLfloat FOV = 45.f;
-const GLfloat BASE_CAM_SPEED = 0.1f;
-const GLfloat EDGE_PAN_THRESH = 5.f;
-const GLfloat EDGE_PAN_SPEED = 0.5f;
-
-//Bullet varaibles
-btBroadphaseInterface* broadphase;
-btDefaultCollisionConfiguration* collisionConfiguration;
-btCollisionDispatcher* dispatcher;
-btSequentialImpulseConstraintSolver* solver;
-btDiscreteDynamicsWorld* dynamicsWorld;
-vector<btRigidBody*> rigidBodies;
+bool Aldente::debug_shadows = false;
+bool Aldente::shadows_on = true;
 
 Grid* grid;
 Tile* hover;
-
-Aldente::Aldente() {}
-Aldente::~Aldente() {}
 
 void Aldente::destroy()
 {
@@ -63,16 +38,6 @@ void Aldente::destroy()
 
     glfwDestroyWindow(window);
     glfwTerminate();
-}
-
-void Aldente::setup_shaders()
-{
-    // Load shaders via a shader manager.
-    ShaderManager::create_shader_program("basic");
-    ShaderManager::create_shader_program("skybox");
-    ShaderManager::create_shader_program("shadow");
-    ShaderManager::create_shader_program("debug_shadow");
-    ShaderManager::set_default("basic");
 }
 
 void Aldente::setup_scenes()
@@ -143,7 +108,7 @@ void Aldente::setup_scenes()
 }
 
 void Aldente::go()
-{
+{	
     // Get window width and height from config
     int width, height;
     Config::config->get_value(Config::str_screen_width, width);
@@ -153,27 +118,10 @@ void Aldente::go()
 
     window = Window::create_window(width, height, game_name.c_str());
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); // Don't show cursor
-    setup_callbacks();
-    setup_opengl();
+	Setup::setup_callbacks();
+    Setup::setup_opengl();
 
-    setup_shaders();
-
-	// Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
-	// even though we won't use most of this stuff.
-
-	// Build the broadphase
-	broadphase = new btDbvtBroadphase();
-
-	// Set up the collision configuration and dispatcher
-	collisionConfiguration = new btDefaultCollisionConfiguration();
-	dispatcher = new btCollisionDispatcher(collisionConfiguration);
-
-	// The actual physics solver
-	solver = new btSequentialImpulseConstraintSolver;
-
-	// The world.
-	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+    Setup::setup_shaders();	
 
 	// Seed PRNG.
     Util::seed(0);
@@ -209,10 +157,9 @@ void Aldente::go()
         {
             handle_movement();
             move_prev_ticks = curr_time;
-        }
+        }		
 
-		//Step in simulation
-		dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+		Physics::update();
 
 		vector<vector<Tile*>> toAdd = grid->getGrid();
 		for (int i = 0; i < toAdd.size(); i++) {
@@ -240,12 +187,8 @@ void Aldente::go()
 
         // Debug shadows.
         if (debug_shadows)
-        {
-            glViewport(0, 0, width / 3, height / 3);
-            ShaderManager::get_shader_program("debug_shadow")->use();
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, ((ShadowShader *)ShaderManager::get_shader_program("shadow"))->shadow_map_tex);
-            Util::render_quad();
+        {     
+			Shadows::debug_shadows();
         }
 
         glfwSwapBuffers(window);
@@ -253,84 +196,23 @@ void Aldente::go()
     destroy();
 }
 
-void Aldente::shadow_pass()
+std::vector<Scene*> Aldente::get_scenes()
 {
-    ShadowShader * ss = (ShadowShader *) ShaderManager::get_shader_program("shadow");
-    glViewport(0, 0, ss->size, ss->size);
-    glBindFramebuffer(GL_FRAMEBUFFER, ss->FBO);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    ss->use();
-    ss->light_pos = scene->light_pos;
-    if (shadows_on) {
-        ss->light_proj = scene->camera->frustum_ortho();
-    }
-    else {
-        ss->light_proj = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 0.1f);
-    }
-    // Render using scene graph.
-    glDisable(GL_CULL_FACE);
-    scene->pass(ss);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	return scenes;
 }
 
-void Aldente::handle_movement()
+Scene *Aldente::get_scene()
 {
-    GLfloat cam_step = keys[GLFW_KEY_LEFT_SHIFT] ? 3*BASE_CAM_SPEED : BASE_CAM_SPEED;
-    glm::vec3 displacement(0.f);
-
-    int btn_c;
-    const unsigned char* btns =
-        glfwGetJoystickButtons(GLFW_JOYSTICK_1, &btn_c);
-
-    if (keys[GLFW_KEY_W] || (btns && btns[13]))
-        displacement += cam_step * camera->cam_front;
-    if (keys[GLFW_KEY_S] || (btns && btns[15]))
-        displacement -= cam_step * camera->cam_front;
-    if (keys[GLFW_KEY_A] || (btns && btns[16]))
-        displacement -= glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
-    if (keys[GLFW_KEY_D] || (btns && btns[14]))
-        displacement += glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
-    if (keys[GLFW_KEY_SPACE])
-        displacement += cam_step * camera->cam_up;
-
-    camera->cam_pos += displacement;
-    camera->recalculate();
+	return scene;
 }
 
-void Aldente::setup_callbacks()
+SceneCamera *Aldente::get_camera()
 {
-    glfwSetErrorCallback(Window::error_callback);
-    glfwSetKeyCallback(window, Keyboard::key_callback);
-    glfwSetCursorPosCallback(window, cursor_position_callback);
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-    glfwSetFramebufferSizeCallback(window, resize_callback);
-
-    events::JoystickEvent::subscribe([](events::JoystickData d) {
-        fprintf(stderr,
-                "JoystickEvent:\n"
-                "  id: %d\n"
-                "  is_button: %d\n"
-                "  input: %d\n"
-                "  state: %d\n",
-                d.id, d.is_button, d.input, d.state);
-    });
+	return camera;
 }
 
-void Aldente::setup_opengl()
+GLFWwindow *Aldente::get_window()
 {
-    GLenum err = glewInit();
-    if (GLEW_OK != err)
-    {
-        fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-        glfwTerminate();
-    }
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	return window;
 }
+

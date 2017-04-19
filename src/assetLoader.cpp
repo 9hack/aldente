@@ -180,7 +180,7 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 
 //Use this function to access a model, pass in a path in the form of
 //"assets/fbx/the_model_you_want_here.fbx"
-SceneModel* AssetLoader::getModel(std::string name) {
+SceneModel *AssetLoader::getModel(std::string name) {
 	if (assets[name] == NULL) {
 		std::string error("ERROR: Asset ");
 		error += name;

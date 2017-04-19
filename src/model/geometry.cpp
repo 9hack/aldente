@@ -1,4 +1,5 @@
 #include "geometry.h"
+#include "soil.h"
 
 Geometry::Geometry()
 {
@@ -56,14 +57,11 @@ void Geometry::attachNewTexture(const char *texture_loc)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_type);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_type);
 
-    //int width, height, channels;
-
-	// Previous project used SOIL. Need a new way to attach textures
-
-    //unsigned char * image = SOIL_load_image(texture_loc, &width, &height, &channels, SOIL_LOAD_RGB);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    //glGenerateMipmap(GL_TEXTURE_2D);
-    //SOIL_free_image_data(image);
+    int width, height, channels;	
+    unsigned char * image = SOIL_load_image(texture_loc, &width, &height, &channels, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

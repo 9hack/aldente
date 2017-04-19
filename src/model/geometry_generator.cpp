@@ -254,11 +254,11 @@ Geometry * GeometryGenerator::generate_cylinder(GLfloat radius, GLfloat height, 
 
 }
 
-Geometry * GeometryGenerator::generate_plane(GLfloat scale, int texture_type)
+Geometry * GeometryGenerator::generate_plane(GLfloat scale, int has_texture)
 {
     Geometry *plane = new Geometry();
 
-    if (texture_type != 0)
+    if (has_texture != 0)
     {
         // Done square by square for repeatable texture
 

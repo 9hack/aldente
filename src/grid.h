@@ -6,7 +6,6 @@
 *   can be more than a single coordinate big). 
 */
 
-
 #pragma once
 using namespace std;
 
@@ -17,9 +16,14 @@ class Grid {
 private:
 	vector<vector<Tile*>> grid;
 	int width, height;
+	
+	Tile *hover;
+
 public:
 	Grid(int w, int h);
 	~Grid();
 
 	vector<vector<Tile*>> getGrid() { return grid; };
+
+	void set_hover(Tile *hover);
 };

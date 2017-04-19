@@ -1,6 +1,12 @@
 #include "window.h"
+#include "aldente.h"
+#include "scene\scene.h"
 
 const bool FULLSCREEN = false;
+
+// TODO : Find a better place for these constant parameters below
+const GLfloat FAR_PLANE = 100.0f;
+const GLfloat FOV = 45.f;
 
 GLFWwindow* Window::create_window(int width, int height, const char *window_title)
 {
@@ -73,11 +79,11 @@ void Window::error_callback(int error, const char* description)
 void Window::resize_callback(GLFWwindow* window, int width, int height)
 {
 	// Set the viewport size. This is the only matrix that OpenGL maintains for us in modern OpenGL!
-	glViewport(0, 0, width, height);
-
+	glViewport(0, 0, width, height);	
+	
 	if (height > 0)
 	{
-		for (Scene * s : scenes)
+		for (Scene * s : Aldente::get_scenes())
 			s->camera->P = glm::perspective(FOV, (float)width / (float)height, 0.1f, FAR_PLANE);
 	}
 }

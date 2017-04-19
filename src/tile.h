@@ -7,7 +7,6 @@
 *   (for example: rendering, collision detection, trigger functionality).
 */
 
-
 #pragma once
 
 #include "mesh.h"
@@ -21,7 +20,7 @@ class Tile
 protected:
 	int width, height, x, z;
 	bool traversable;
-	Mesh* mesh;
+	Mesh *mesh;
 	btRigidBody* rigidBody;
 	btBoxShape* box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
 	btBoxShape* ground = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));

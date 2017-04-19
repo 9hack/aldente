@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "geometry.h"
 
 // Constructor with default values for world matrix and no_culling. 
 Mesh::Mesh(Geometry *geo, Material *mat, Shader *shader)

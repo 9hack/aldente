@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "material.h"
-#include "geometry/geometry.h"
+#include "model/geometry.h"
 
 class Shader
 {

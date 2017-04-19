@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene\scene_node.h"
-#include "scene\model.h"
+#include "model\model.h"
  
 /*
 	This represents an abstract object in the scene.

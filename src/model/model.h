@@ -1,11 +1,15 @@
 #pragma once
-#include "scene_node.h"
-#include "mesh.h"
+
+/*
+	A Model is made up of a bunch of meshes to form a 3D renderable object.
+*/
 
 #include <vector>
 
-#include "scene.h"
+#include "scene/scene.h"
+#include "scene/scene_node.h"
 #include "shaders/shader.h"
+#include "mesh.h"
 
 class Model :
 	public SceneNode
@@ -16,6 +20,7 @@ public:
 
 	Model(Scene *);
 	~Model();
+
 	void add_mesh(Mesh *m);
 	void combine_meshes();
 

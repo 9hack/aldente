@@ -6,23 +6,32 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "shaders/shader_manager.h"
-#include "scene/scene.h"
-#include "grid.h"
-#include "assetLoader.h"
+#include "scene\scene.h"
+#include "scene\scene_camera.h"
 
+/*
+	Main Game Function.
+	Game loop and scene setup happens here
+*/
 class Aldente
 {
-private:
-	GLFWwindow *window;
+private:	
+	static GLFWwindow *window;
+	static Scene *scene;
+	static SceneCamera* camera;
+	static std::vector<Scene *> scenes;	
+	
+	static void setup_scenes();
+	static void destroy();	
 
-	void handle_movement();
-	void setup_scenes();
-	void destroy();	
-public:
-	Aldente();
-	~Aldente();
+public:	
+	static bool shadows_on;
+	static bool debug_shadows;
 
-	void go();
-	void shadow_pass();
+	static void go();	
+
+	static std::vector<Scene *> get_scenes(); // Gets list of all scenes in the game
+	static Scene *get_scene(); // Gets currently active scene
+	static SceneCamera *get_camera(); // Gets currently active camera
+	static GLFWwindow *get_window(); // Gets currently active window
 };

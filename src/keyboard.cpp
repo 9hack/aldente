@@ -1,8 +1,37 @@
 #include "keyboard.h"
+#include "aldente.h"
+#include "physics.h"
+#include "scene\scene_camera.h"
 
 bool Keyboard::lmb_down = false;
 bool Keyboard::rmb_down = false;
+bool Keyboard::mouse_moved = false;
 
+// TODO : Find better location to put these constant parameters below
+const GLfloat BASE_CAM_SPEED = 0.1f;
+const GLfloat EDGE_PAN_THRESH = 5.f;
+const GLfloat EDGE_PAN_SPEED = 0.5f;
+
+void Keyboard::handle_movement()
+{
+	SceneCamera *camera = Aldente::get_camera();
+
+	GLfloat cam_step = keys[GLFW_KEY_LEFT_SHIFT] ? 3 * BASE_CAM_SPEED : BASE_CAM_SPEED;
+	glm::vec3 displacement(0.f);
+	if (keys[GLFW_KEY_W])
+		displacement += cam_step * camera->cam_front;
+	if (keys[GLFW_KEY_S])
+		displacement -= cam_step * camera->cam_front;
+	if (keys[GLFW_KEY_A])
+		displacement -= glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
+	if (keys[GLFW_KEY_D])
+		displacement += glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
+	if (keys[GLFW_KEY_SPACE])
+		displacement += cam_step * camera->cam_up;
+
+	camera->cam_pos += displacement;
+	camera->recalculate();
+}
 
 void Keyboard::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -18,14 +47,11 @@ void Keyboard::key_callback(GLFWwindow* window, int key, int scancode, int actio
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 		case GLFW_KEY_Q:
-			debug_shadows = !debug_shadows;
+			Aldente::debug_shadows = !Aldente::debug_shadows;
 			break;
 		case GLFW_KEY_X:
-			shadows_on = !shadows_on;
-			break;
-		case GLFW_KEY_G:
-			god_mode = !god_mode;
-			break;
+			Aldente::shadows_on = !Aldente::shadows_on;
+			break;		
 		default:
 			break;
 		}
@@ -41,6 +67,9 @@ void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	glm::vec3 current_cursor_pos(x_pos, y_pos, 0);
+
+	Scene *scene = Aldente::get_scene();
+	SceneCamera *camera = Aldente::get_camera();
 
 	// First movement detected.
 	if (!mouse_moved)
@@ -104,6 +133,8 @@ void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double
 		camera->recalculate();
 	}
 
+	Physics::raycast_mouse(x_pos, y_pos, width, height);
+	
 	last_cursor_pos = current_cursor_pos;
 }
 
@@ -143,6 +174,7 @@ void Keyboard::mouse_button_callback(GLFWwindow* window, int button, int action,
 
 void Keyboard::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+	SceneCamera *camera = Aldente::get_camera();
 	glm::vec3 trans_vec = (float)yoffset * glm::normalize(camera->cam_front);
 	// Only y is relevant here, -1 is down, +1 is up
 	camera->cam_pos = glm::vec3(glm::translate(glm::mat4(1.0f), trans_vec) * glm::vec4(camera->cam_pos, 1.0f));

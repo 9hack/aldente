@@ -1,5 +1,3 @@
-
-
 #include "grid.h"
 
 Grid::Grid(int w, int h) {

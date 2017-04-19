@@ -6,8 +6,11 @@
 #include "scene_camera.h"
 #include "scene_group.h"
 #include "shaders/shader.h"
-#include "geometry/plane.h"
+#include "model/plane.h"
 
+/*
+	Contains all the information for a single scene
+*/
 class Scene
 {
 public:

@@ -1,6 +1,5 @@
 #include "scene.h"
 #include "util/util.h"
-#include "global.h"
 
 Scene::Scene()
 {
