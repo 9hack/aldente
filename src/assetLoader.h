@@ -8,7 +8,6 @@
 
 
 #include <boost/range.hpp>
-#include <filesystem>
 #include <boost/filesystem.hpp>
 
 #include <assimp/Importer.hpp>
@@ -21,14 +20,13 @@ private:
 	map<string, SceneModel*> assets;
 	map<string, GLuint> textures;
 	SceneModel* model;
+    Assimp::Importer import;
 public:
 	AssetLoader();
 	~AssetLoader();
 
-	
-
-	void loadModel(std::string path);
-	void processNode(aiNode* node, const aiScene* scene);
+	void load(std::string path, bool isModel);
+	void processNode(aiNode* node, const aiScene* scene, bool isModel);
 	Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
 	SceneModel* getModel(std::string name);
 };

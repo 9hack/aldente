@@ -4,14 +4,23 @@ AssetLoader::AssetLoader()
 {
 	boost::filesystem::path path = boost::filesystem::path("assets/fbx");
 	for (auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
-		model = new SceneModel();
+        std::size_t found = entry.path().filename().string().find_first_of("@");
+
 		std::string filepath = std::string("assets/fbx/");
 		filepath += entry.path().filename().string();
-		loadModel(filepath);
-		assets[entry.path().filename().string().c_str()] = model;
-		//std::cout << entry.path().filename() << "\n";
+
+        // If @ is not in filename (meaning that its a model and not an animation)
+        if (found == string::npos) {
+            model = new SceneModel();
+            load(filepath,true);
+            assets[entry.path().filename().string().c_str()] = model;
+        }
+        // Else it is an animation
+        else {
+            load(filepath,false);
+        }
 	}
-		
+
 	// Test
 }
 
@@ -19,7 +28,7 @@ AssetLoader::~AssetLoader()
 {
 }
 
-void AssetLoader::loadModel(std::string path)
+void AssetLoader::load(std::string path, bool isModel)
 {
 	unsigned int processFlags =
 		aiProcess_CalcTangentSpace | // calculate tangents and bitangents if possible
@@ -35,15 +44,13 @@ void AssetLoader::loadModel(std::string path)
 		aiProcess_GenUVCoords | // convert spherical, cylindrical, box and planar mapping to proper UVs
 		aiProcess_TransformUVCoords | // preprocess UV transformations (scaling, translation ...)
 		aiProcess_FindInstances | // search for instanced meshes and remove them by references to one master
-		aiProcess_LimitBoneWeights | // limit bone weights to 4 per vertex		
+		aiProcess_LimitBoneWeights | // limit bone weights to 4 per vertex
 		aiProcess_OptimizeMeshes | // join small meshes, if possible;
 		aiProcess_SplitByBoneCount | // split meshes with too many bones. Necessary for our (limited) hardware skinning shader
 		aiProcess_PreTransformVertices | //-- fixes the transformation issue.
 		//aiProcess_FlipUVs | // flips UV coords
 		0;
 
-
-	Assimp::Importer import;
 	const aiScene* scene = import.ReadFile(path, processFlags);
 
 	if (!scene)
@@ -53,23 +60,28 @@ void AssetLoader::loadModel(std::string path)
 	}
 
 	//this->directory = path.substr(0, path.find_last_of('/'));
-	
-	this->processNode(scene->mRootNode, scene);
+	this->processNode(scene->mRootNode, scene, isModel);
 }
 
-void AssetLoader::processNode(aiNode* node, const aiScene* scene)
+void AssetLoader::processNode(aiNode* node, const aiScene* scene, bool isModel)
 {
 	// Gets all meshes and adds it to the model
 
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		model->add_mesh(this->processMesh(mesh, scene));
+        if (isModel) {
+            model->add_mesh(this->processMesh(mesh, scene));
+        }
+        else {
+            model->meshes[0]->inverseBoneMat = scene->mRootNode->mTransformation;
+            model->meshes[0]->inverseBoneMat.Inverse();
+        }
 	}
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		this->processNode(node->mChildren[i], scene);
+		this->processNode(node->mChildren[i], scene, isModel);
 	}
 }
 
@@ -111,7 +123,7 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 	}
 
 	//Textures and Materials not yet loaded
-	
+
 	Mesh* final_mesh;
 
 	// If material exists for this mesh
@@ -137,12 +149,12 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 		for (GLuint i = 0; i < assimpMat->GetTextureCount(aiTextureType_DIFFUSE); i++) {
 			aiString str;
 			assimpMat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-			//fprintf(stderr, str.C_Str());
-			std::string temp(str.C_Str());
-			std::size_t found = temp.find_last_of("/\\");
-			std::string fileName = temp.substr(found + 1);
-			std::string toPass("assets/textures/");
-			toPass += fileName;
+
+            std::string temp(str.C_Str());
+            std::size_t found = temp.find_last_of("/\\");
+            std::string fileName = temp.substr(found + 1);
+            std::string toPass("assets/textures/");
+            toPass += fileName;
 
 			//Texture not loaded yet
 			if (textures.count(toPass) == 0) {
@@ -159,7 +171,7 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 		blank.diffuse = blank.ambient = color::white;
 		final_mesh = new Mesh{ geo, blank, ShaderManager::get_default(), glm::mat4(1.0f) };
 	}
-	
+
 	geo->populate_buffers();
 
 	return final_mesh;
@@ -174,8 +186,8 @@ SceneModel* AssetLoader::getModel(std::string name) {
 		error += name;
 		error += " was not loaded. Check for fbx file and double check filename.\n";
 		fprintf(stderr, error.c_str());
-		SceneModel* default = new SceneModel();
-		return default;
+		SceneModel* dflt = new SceneModel();
+		return dflt;
 	}
 	return assets[name];
 }
