@@ -6,6 +6,7 @@
 
 void Render2D::setup_text(int width, int height)
 {
+	// TODO: replace with event system callback
 	this->width = width;
 	this->height = height;
 	projection_text = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
@@ -16,7 +17,7 @@ void Render2D::setup_text(int width, int height)
 
 	// Load font ("face")
 	FT_Face face;
-	if (FT_New_Face(ft, "fonts/DejaVuSerif.ttf", 0, &face))
+	if (FT_New_Face(ft, "assets/fonts/DejaVuSerif.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Width and height params. Width is 0 for dynamic resizing.
@@ -131,6 +132,7 @@ void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat 
 
 void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID)
 {
+	// Send uniforms to the text shader
 	shader->use();
 	glUniform3f(glGetUniformLocation(shader->shader_id, "baseColor"), color.x, color.y, color.z);
 	glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_text));
@@ -140,6 +142,7 @@ void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, 
 	else
 		glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), true);
 
+	// Set active arrays
 	glBindVertexArray(VAO_text);
 
 	glActiveTexture(GL_TEXTURE0);
