@@ -1,6 +1,6 @@
 #pragma once
 #include "scene_node.h"
-#include "../mesh.h"
+#include "mesh.h"
 
 #include <vector>
 
