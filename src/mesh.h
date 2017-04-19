@@ -14,10 +14,15 @@ struct Anim {
     vector<float> weight;
 };
 
-struct Mesh
+class Mesh
 {
+public:
+	Mesh(Geometry *geo, Material *mat, Shader *shader);
+	Mesh(Geometry *geo, Material *mat, Shader *shader, glm::mat4 m, bool no_cull);
+	~Mesh();
+
 	Geometry *geometry;
-	Material material;
+	Material *material;
 	Shader *shader;
 	glm::mat4 to_world;
 	bool no_culling;

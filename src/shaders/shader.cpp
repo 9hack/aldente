@@ -26,6 +26,17 @@ void Shader::send_mesh_model(glm::mat4 mesh_model)
     this->mesh_model = mesh_model;
 }
 
-void Shader::set_material(Material m) {}
+void Shader::set_material(Material *m) {}
+
+void Shader::set_culling(bool b)
+{	
+	if (b)
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+	}
+	else
+		glDisable(GL_CULL_FACE);
+}
 
 void Shader::draw(Geometry *g, glm::mat4 to_world) {}

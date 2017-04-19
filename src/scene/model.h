@@ -7,18 +7,16 @@
 #include "scene.h"
 #include "shaders/shader.h"
 
-class SceneModel :
+class Model :
 	public SceneNode
 {
 public:
-	std::vector<Mesh*> meshes;
+	std::vector<Mesh *> meshes;
 	glm::mat4 model_mat;
 
-	SceneModel(Scene *);
-	SceneModel() {};
-	~SceneModel();
-	void setScene(Scene* scene);
-	void add_mesh(Mesh m);
+	Model(Scene *);
+	~Model();
+	void add_mesh(Mesh *m);
 	void combine_meshes();
 
 	void draw();

@@ -64,3 +64,20 @@ GLFWwindow* Window::create_window(int width, int height, const char *window_titl
 
     return window;
 }
+
+void Window::error_callback(int error, const char* description)
+{
+	fputs(description, stderr);
+}
+
+void Window::resize_callback(GLFWwindow* window, int width, int height)
+{
+	// Set the viewport size. This is the only matrix that OpenGL maintains for us in modern OpenGL!
+	glViewport(0, 0, width, height);
+
+	if (height > 0)
+	{
+		for (Scene * s : scenes)
+			s->camera->P = glm::perspective(FOV, (float)width / (float)height, 0.1f, FAR_PLANE);
+	}
+}

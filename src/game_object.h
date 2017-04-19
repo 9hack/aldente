@@ -1,0 +1,27 @@
+#pragma once
+
+#include "scene\scene_node.h"
+#include "scene\model.h"
+ 
+/*
+	This represents an abstract object in the scene.
+	Contains all the essential components required to
+	render the model in the scene.
+*/
+class GameObject : 
+	SceneNode
+{
+private:	
+	Model *model;	
+
+public:
+	GameObject();
+	~GameObject();
+
+	void attach_model(Model *m);
+
+	virtual void draw();
+	virtual void update();
+	virtual void pass(Shader *s);
+};
+
