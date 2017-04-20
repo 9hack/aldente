@@ -13,7 +13,7 @@ MAIN_SOURCES    := $(shell find $(SRC_DIR) -name '*.cpp' -type 'f' | sort)
 MAIN_OBJECTS    := $(MAIN_SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPFILES        := $(MAIN_SOURCES:$(SRC_DIR)/%.cpp=$(DEP_DIR)/%.dep)
 
-LIBS            := -lGLEW -lglfw -lassimp -lSOIL
+LIBS            := -lGLEW -lglfw -lassimp -lSOIL -lfreetype
 LIBS            += -lboost_system -lboost_filesystem -lboost_thread
 LIBS            += -pthread
 LIBS            += -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
