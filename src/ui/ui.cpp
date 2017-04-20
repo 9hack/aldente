@@ -7,6 +7,17 @@
 
 #include <iostream>
 
+// get click info from event callback
+void click_callback(events::MouseData d)
+{
+    fprintf(stderr,
+            "MouseEvent:\n"
+            "  x: %d\n"
+            "  y: %d\n",
+            d.x, d.y);
+    // which button was clicked? send event.
+}
+
 UI::UI(int width, int height)
 {
     renderer_2d = new Render2D();
@@ -21,6 +32,7 @@ UI::UI(int width, int height)
     UI::ID id1 = create_rectangle(0, 50, 50, 50, 50, false, glm::vec3(1.f, 1.f, 1.f));
     UI::ID id7 = create_rectangle(0, 150, 150, 50, 50, false, glm::vec3(1.f, 1.f, 1.f));
 
+    events::MouseEvent::subscribe(&click_callback);
 }
 
 void UI::update()
