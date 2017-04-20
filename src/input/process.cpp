@@ -24,7 +24,7 @@ void process() {
         d.is_button = true;
         d.which = i;
         d.level = btns[i] == GLFW_PRESS;
-        events::InputEvent.dispatch(d);
+        events::InputEvent::dispatch(d);
       }
     }
   }
@@ -44,7 +44,7 @@ void process() {
         d.is_button = false;
         d.which = i;
         d.level = level;
-        events::InputEvent.dispatch(d);
+        events::InputEvent::dispatch(d);
       }
     }
   }
