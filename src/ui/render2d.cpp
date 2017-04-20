@@ -9,9 +9,9 @@ void Render2D::setup(int width, int height)
     // TODO: replace with event system callback
     this->width = width;
     this->height = height;
-    projection_text = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
+    projection = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
 
-    setup_text();
+    setup_glyphs();
 
     // Configure VAO/VBO for texture quads
     glGenVertexArrays(1, &vao);
@@ -25,7 +25,7 @@ void Render2D::setup(int width, int height)
     glBindVertexArray(0);
 }
 
-void Render2D::setup_text()
+void Render2D::setup_glyphs()
 {
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
@@ -94,7 +94,7 @@ void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat 
     // Activate corresponding render state
     shader->use();
     glUniform3f(glGetUniformLocation(shader->shader_id, "baseColor"), color.x, color.y, color.z);
-    glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_text));
+    glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), true);
 
     glActiveTexture(GL_TEXTURE0);
@@ -146,7 +146,7 @@ void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, 
     // Send uniforms to the text shader
     shader->use();
     glUniform3f(glGetUniformLocation(shader->shader_id, "baseColor"), color.x, color.y, color.z);
-    glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_text));
+    glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     if (texture_ID == 0)
         glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), false);

@@ -25,10 +25,10 @@ public:
     void render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 	void render_rectP(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 private:
-    void setup_text();
+    void setup_glyphs();
 
     std::map<GLchar, Character> characters;
     GLuint vao, vbo;
-    glm::mat4 projection_text;
+    glm::mat4 projection;
 	int width, height;
 };

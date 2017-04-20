@@ -14,17 +14,17 @@ public:
 
     UI(int width, int height);
     void update();
-    UI::ID createRectangle(UI::ID parentID, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color);
-    UI::ID createTextNode(UI::ID parentID, int x_offset, int y_offset, bool interactable, glm::vec3 color, std::string text, float scale);
-    UI::ID createImageNode(UI::ID parentID, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color, GLuint textureID);
-	void setEnabled(UI::ID elementID, bool enable);
+    UI::ID create_rectangle(UI::ID parent_id, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color);
+    UI::ID create_text_node(UI::ID parent_id, int x_offset, int y_offset, bool interactable, glm::vec3 color, std::string text, float scale);
+    UI::ID create_image_node(UI::ID parent_id, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color, GLuint texture_id);
+	void set_enabled(UI::ID element_id, bool enable);
 private:
     // Helper functions
-    UIElement* getElementByID(UI::ID id);
-    UIElement::UIPosition derivePositionFromParent(UIElement *parent, int x_offset, int y_offset);
-    UI::ID finalizeElementAddition(UIElement *new_element, UIElement *parent, int z_depth, bool interactable);
+    UIElement* get_element_by_id(UI::ID id);
+    UIElement::UIPosition derive_position_from_parent(UIElement *parent, int x_offset, int y_offset);
+    UI::ID finalize_element_addition(UIElement *new_element, UIElement *parent, int z_depth, bool interactable);
 
-    Render2D *renderer2D;
+    Render2D *renderer_2d;
 	std::unordered_map<int, std::vector<UIElement *>> z_buffers;
 	std::unordered_map<int, UIElement *> id_lookup;
 	std::vector<UIElement *> interactables;
