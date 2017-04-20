@@ -19,14 +19,16 @@ class Render2D
     };
 
 public:
-    void setup_text(int width, int height);
+    void setup(int width, int height);
     //void update_projection;
     void render_text(Shader *shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
     void render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 	void render_rectP(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 private:
+    void setup_text();
+
     std::map<GLchar, Character> characters;
-    GLuint VAO_text, VBO_text;
+    GLuint vao, vbo;
     glm::mat4 projection_text;
 	int width, height;
 };

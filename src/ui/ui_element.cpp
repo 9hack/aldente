@@ -1,17 +1,6 @@
-#pragma once
-
 #include "ui_element.h"
 
 #include <algorithm>
-
-UIElement::UIElement(UIElement *parent, UIPosition pos, UIDims dims, bool interactable, glm::vec3 color)
-{
-	this->parent = parent;
-	this->pos = pos;
-	this->interactable = interactable;
-	this->dims = dims;
-	this->color = color;
-}
 
 // Enables rendering of this element and all its descendants.
 void UIElement::enable()
