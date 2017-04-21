@@ -2,23 +2,29 @@
 
 #include <algorithm>
 
-// Enables rendering of this element and all its descendants.
-void UIElement::enable()
+// Enables rendering of this element and all its descendants, if recurse is true.
+void UIElement::enable(bool recurse)
 {
 	enabled = true;
-	for (auto it = children.begin(); it != children.end(); ++it)
+	if (recurse)
 	{
-		(*it)->enable();
+		for (auto it = children.begin(); it != children.end(); ++it)
+		{
+			(*it)->enable(recurse);
+		}
 	}
 }
 
-// Disables rendering of this element and all its descendants.
-void UIElement::disable()
+// Disables rendering of this element and all its descendants, if recurse is true.
+void UIElement::disable(bool recurse)
 {
 	enabled = false;
-	for (auto it = children.begin(); it != children.end(); ++it)
+	if (recurse)
 	{
-		(*it)->disable();
+		for (auto it = children.begin(); it != children.end(); ++it)
+		{
+			(*it)->disable(recurse);
+		}
 	}
 }
 

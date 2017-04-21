@@ -21,8 +21,8 @@ public:
 
 	void add_child(UIElement *child);
 	void remove_child(UIElement *child);
-	void enable();
-	void disable();
+	void enable(bool recurse);
+	void disable(bool recurse);
 
     virtual void draw(Render2D *renderer2D)=0;
 

@@ -27,8 +27,7 @@ void UI::setup(int width, int height)
     renderer_2d = new Render2D();
     renderer_2d->setup(width, height);
 
-	UIGrid *uigrid = new UIGrid();
-    uigrid->setup(14, 4, {50, 50}, {0, 0}, color::windwaker_green);
+    UIGrid *uigrid = new UIGrid(14, 4, {50, 50}, {0, 0}, color::windwaker_green);
 
     events::MouseEvent::subscribe(&click_callback);
 }
@@ -51,15 +50,15 @@ void UI::update()
     }
 }
 
-void UI::set_enabled(UI::ID element_id, bool enable)
+void UI::set_enabled(UI::ID element_id, bool enable, bool recurse)
 {
     auto it = id_lookup.find(element_id);
     if (it != id_lookup.end())
     {
         if (enable)
-            it->second->enable();
+            it->second->enable(recurse);
         else
-            it->second->disable();
+            it->second->disable(recurse);
     }
 }
 

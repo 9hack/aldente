@@ -22,7 +22,7 @@ public:
     UI::ID create_rectangle(UI::ID parent_id, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color);
     UI::ID create_text_node(UI::ID parent_id, int x_offset, int y_offset, bool interactable, glm::vec3 color, std::string text, float scale);
     UI::ID create_image_node(UI::ID parent_id, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color, GLuint texture_id);
-	void set_enabled(UI::ID element_id, bool enable);
+	void set_enabled(UI::ID element_id, bool enable, bool recurse);
 private:
     // Private constructor
     UI();
