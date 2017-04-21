@@ -4,8 +4,12 @@
 #include "ui_rectangle.h"
 #include "ui_text_node.h"
 #include "ui_image_node.h"
+#include "ui_grid.h"
+#include "util/colors.h"
 
-#include <iostream>
+UI* UI::ui = new UI();
+
+UI::UI() {}
 
 // get click info from event callback
 void click_callback(events::MouseData d)
@@ -18,19 +22,13 @@ void click_callback(events::MouseData d)
     // which button was clicked? send event.
 }
 
-UI::UI(int width, int height)
+void UI::setup(int width, int height)
 {
     renderer_2d = new Render2D();
     renderer_2d->setup(width, height);
 
-    // Setup some test UI.
-    UI::ID id2 = create_rectangle(0, 100, 100, 50, 50, false, glm::vec3(1.f, 1.f, 1.f));
-    UI::ID id4 = create_text_node(0, 500.f, 500.f, false, glm::vec3(1.f, 1.f, 1.f), "GOODBYE!", 1.f);
-    UI::ID id5 = create_text_node(0, 100.f, 100.f, false, glm::vec3(0.7f, 0.8f, 0.9f), "middle World!", 1.f);
-    UI::ID id3 = create_text_node(0, 25.f, 25.f, false, glm::vec3(0.5f, 0.5f, 0.5f), "Hello World!", 1.f);
-    UI::ID id6 = create_text_node(0, 300.f, 300.f, false, glm::vec3(1.f, 0.f, 0.f), "red means mad!", 1.f);
-    UI::ID id1 = create_rectangle(0, 50, 50, 50, 50, false, glm::vec3(1.f, 1.f, 1.f));
-    UI::ID id7 = create_rectangle(0, 150, 150, 50, 50, false, glm::vec3(1.f, 1.f, 1.f));
+	UIGrid *uigrid = new UIGrid();
+    uigrid->setup(14, 4, {50, 50}, {0, 0}, color::windwaker_green);
 
     events::MouseEvent::subscribe(&click_callback);
 }

@@ -15,13 +15,18 @@ class UI
 public:
 	typedef unsigned int ID;
 
-    UI(int width, int height);
+    static UI* ui; // Use this static reference instead of your own call to the constructor
+
+    void setup(int width, int height);
     void update();
     UI::ID create_rectangle(UI::ID parent_id, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color);
     UI::ID create_text_node(UI::ID parent_id, int x_offset, int y_offset, bool interactable, glm::vec3 color, std::string text, float scale);
     UI::ID create_image_node(UI::ID parent_id, int x_offset, int y_offset, int width, int height, bool interactable, glm::vec3 color, GLuint texture_id);
 	void set_enabled(UI::ID element_id, bool enable);
 private:
+    // Private constructor
+    UI();
+
     // Helper functions
     UIElement* get_element_by_id(UI::ID id);
     UIElement::UIPosition derive_position_from_parent(UIElement *parent, int x_offset, int y_offset);

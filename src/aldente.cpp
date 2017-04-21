@@ -205,7 +205,7 @@ void Aldente::go()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	UI *ui = new UI(width, height);
+	UI::ui->setup(width, height);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -259,7 +259,7 @@ void Aldente::go()
 			Util::render_quad();
 		}
 
-		ui->update();
+		UI::ui->update();
 
 		glfwSwapBuffers(window);
 	}
