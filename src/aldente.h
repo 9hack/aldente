@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "main_scene.h"
-#include "scene\scene_camera.h"
+#include "scene/scene_camera.h"
 
 /*
 	Main Game Function.
@@ -15,21 +15,21 @@
 */
 class Aldente
 {
-private:	
+private:
 	Aldente();
 
 	// Scenes
 	std::vector<Scene *> scenes;
 	MainScene *main_scene;
-	
+
 	GLFWwindow *window;
 	Scene *scene;
-	SceneCamera* camera;	
-	
-	void setup_scenes();
-	void destroy();	
+	SceneCamera* camera;
 
-public:		
+	void setup_scenes();
+	void destroy();
+
+public:
 	static Aldente* aldente;
 
 	~Aldente();

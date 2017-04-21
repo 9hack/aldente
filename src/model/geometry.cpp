@@ -1,10 +1,10 @@
 #include "geometry.h"
-#include "soil.h"
+#include "SOIL.h"
 
 Geometry::Geometry()
 {
     has_texture = false;
-    has_normals = true;    
+    has_normals = true;
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -57,7 +57,7 @@ void Geometry::attachNewTexture(const char *texture_loc)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_type);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_type);
 
-    int width, height, channels;	
+    int width, height, channels;
     unsigned char * image = SOIL_load_image(texture_loc, &width, &height, &channels, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);

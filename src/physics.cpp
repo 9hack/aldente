@@ -1,5 +1,5 @@
 #include "physics.h"
-#include "scene\scene.h"
+#include "scene/scene.h"
 #include "aldente.h"
 #include "grid.h"
 
@@ -46,7 +46,7 @@ void Physics::raycast_mouse(double xpos, double ypos, int width, int height)
 		((float)ypos / (float)height - 0.5f) * 2.0f, // [0, 768] -> [-1,1]
 		0.0,
 		1.0f
-	);	
+	);
 
 	glm::mat4 M = glm::inverse(scene->camera->P * scene->camera->V);
 	glm::vec4 lRayStart_world = M * lRayStart_NDC;
@@ -70,7 +70,7 @@ void Physics::raycast_mouse(double xpos, double ypos, int width, int height)
 	);
 
 	// TODO: Change this such that it uses the event system to pass which tile
-	// is currently being hovered over. 
+	// is currently being hovered over.
 
 	if (RayCallback.hasHit())
 	{
@@ -91,5 +91,5 @@ void Physics::raycast_mouse(double xpos, double ypos, int width, int height)
 void Physics::update()
 {
 	//Step in simulation
-	dynamicsWorld->stepSimulation(1.f / 60.f, 10);	
+	dynamicsWorld->stepSimulation(1.f / 60.f, 10);
 }

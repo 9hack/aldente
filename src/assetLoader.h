@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene/scene.h"
-#include "model\model.h"
+#include "model/model.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -20,7 +20,7 @@ private:
 	map<string, GLuint> textures;
 	Model* model;
     Assimp::Importer import;
-public:	
+public:
 	static AssetLoader *asset_loader;
 
 	~AssetLoader();

@@ -1,9 +1,9 @@
 #include "mesh.h"
 #include "geometry.h"
-#include "shaders\shader_manager.h"
+#include "shaders/shader_manager.h"
 
 Mesh::Mesh()
-{	
+{
 	this->shader = ShaderManager::get_default();
 	this->to_world = glm::mat4(1.0f);
 	this->no_culling = false;
@@ -18,7 +18,7 @@ Mesh::Mesh(Geometry *geo, Material *mat)
 	this->no_culling = false;
 }
 
-// Constructor with default values for world matrix and no_culling. 
+// Constructor with default values for world matrix and no_culling.
 Mesh::Mesh(Geometry *geo, Material *mat, Shader *shader)
 {
 	this->geometry = geo;

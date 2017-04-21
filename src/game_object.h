@@ -1,18 +1,18 @@
 #pragma once
 
-#include "scene\scene_node.h"
-#include "model\model.h"
- 
+#include "scene/scene_node.h"
+#include "model/model.h"
+
 /*
 	This represents an abstract object in the scene.
 	Contains all the essential components required to
 	render the model in the scene.
 */
-class GameObject : 
+class GameObject :
 	public SceneNode
 {
-private:	
-	Model *model;	
+private:
+	Model *model;
 
 public:
 	GameObject(Scene *scene);

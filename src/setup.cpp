@@ -1,5 +1,5 @@
 #include "setup.h"
-#include "shaders\shader_manager.h"
+#include "shaders/shader_manager.h"
 #include "window.h"
 #include "aldente.h"
 #include "keyboard.h"

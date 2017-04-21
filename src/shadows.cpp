@@ -1,10 +1,10 @@
 #include "aldente.h"
 #include "shadows.h"
-#include "shaders\shader_manager.h"
-#include "shaders\shadow_shader.h"
-#include "util\util.h"
+#include "shaders/shader_manager.h"
+#include "shaders/shadow_shader.h"
+#include "util/util.h"
 #include "window.h"
-#include "util\config.h"
+#include "util/config.h"
 
 Shadows *Shadows::shadows = new Shadows();
 
@@ -12,7 +12,7 @@ Shadows::Shadows() {}
 Shadows::~Shadows() {}
 
 void Shadows::shadow_pass(Scene* scene)
-{	
+{
 	float far_plane;
 	Config::config->get_value(Config::str_far_plane, far_plane);
 

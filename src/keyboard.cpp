@@ -1,7 +1,7 @@
 #include "keyboard.h"
 #include "aldente.h"
 #include "physics.h"
-#include "scene\scene_camera.h"
+#include "scene/scene_camera.h"
 
 bool Keyboard::keys[1024];
 bool Keyboard::lmb_down;
@@ -9,7 +9,7 @@ bool Keyboard::rmb_down;
 bool Keyboard::mouse_moved;
 glm::vec3 Keyboard::last_cursor_pos;
 
-// TODO : This class won't be used in the final game anyways. 
+// TODO : This class won't be used in the final game anyways.
 const GLfloat BASE_CAM_SPEED = 0.1f;
 const GLfloat EDGE_PAN_THRESH = 5.f;
 const GLfloat EDGE_PAN_SPEED = 0.5f;
@@ -42,7 +42,7 @@ void Keyboard::handle_movement()
 		prev_ticks = curr_time;
 		return;
 	}
-	if (curr_time - move_prev_ticks > 1.f / 60.f)		
+	if (curr_time - move_prev_ticks > 1.f / 60.f)
 		move_prev_ticks = curr_time;
 
 	SceneCamera *camera = Aldente::aldente->get_camera();
@@ -82,7 +82,7 @@ void Keyboard::key_callback(GLFWwindow* window, int key, int scancode, int actio
 			break;
 		case GLFW_KEY_X:
 			Aldente::aldente->shadows_on = !Aldente::aldente->shadows_on;
-			break;		
+			break;
 		default:
 			break;
 		}
@@ -148,7 +148,7 @@ void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double
 	}
 
 	Physics::physics->raycast_mouse(x_pos, y_pos, width, height);
-	
+
 	last_cursor_pos = current_cursor_pos;
 }
 

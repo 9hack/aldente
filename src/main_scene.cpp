@@ -1,17 +1,17 @@
 #include "main_scene.h"
 #include "mesh.h"
-#include "model\model.h"
+#include "model/model.h"
 #include "material.h"
-#include "shaders\shader_manager.h"
-#include "model\geometry_generator.h"
+#include "shaders/shader_manager.h"
+#include "model/geometry_generator.h"
 #include "grid.h"
 #include "tile.h"
 #include "physics.h"
-#include "util\colors.h"
+#include "util/colors.h"
 #include "assetLoader.h"
 
 void MainScene::setup()
-{		
+{
 	light_pos = glm::vec3(0.f, 2.f, 1.f);
 
 	// Skybox
@@ -40,7 +40,7 @@ void MainScene::setup()
 		for (int j = 0; j < currRow.size(); j++)
 		{
 			Model *currTile = new Model(this);
-			currTile->add_mesh(currRow[j]->getMesh());	
+			currTile->add_mesh(currRow[j]->getMesh());
 			root->add_child(currTile);
 
 			if (currRow[j]->getRigid() != NULL)

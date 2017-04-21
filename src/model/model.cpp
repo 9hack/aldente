@@ -1,11 +1,11 @@
 #include "model.h"
-#include "model\geometry.h"
+#include "model/geometry.h"
 #include "util/util.h"
 
 Model::Model()
 {
 	// No Scene Set. Assumes that it will be manually
-	// set later before it can be drawn. 
+	// set later before it can be drawn.
 	model_mat = glm::mat4(1.0f);
 }
 

@@ -1,7 +1,7 @@
 #include "window.h"
 #include "aldente.h"
-#include "scene\scene.h"
-#include "util\config.h"
+#include "scene/scene.h"
+#include "util/config.h"
 
 const bool FULLSCREEN = false;
 
@@ -12,7 +12,7 @@ Window::~Window() {}
 
 GLFWwindow* Window::create_window()
 {
-	// Get window width and height from config	
+	// Get window width and height from config
 	Config::config->get_value(Config::str_screen_width, width);
 	Config::config->get_value(Config::str_screen_height, height);
 	std::string game_name;
@@ -91,12 +91,12 @@ void Window::error_callback(int error, const char* description)
 void Window::resize_callback(GLFWwindow* window, int width, int height)
 {
 	// Set the viewport size. This is the only matrix that OpenGL maintains for us in modern OpenGL!
-	glViewport(0, 0, width, height);	
+	glViewport(0, 0, width, height);
 
 	float far_plane, fov;
 	Config::config->get_value(Config::str_far_plane, far_plane);
 	Config::config->get_value(Config::str_fov, fov);
-	
+
 	if (height > 0)
 	{
 		for (Scene * s : Aldente::aldente->get_scenes())

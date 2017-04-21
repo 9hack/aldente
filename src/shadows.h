@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene\scene.h"
+#include "scene/scene.h"
 
 /*
 	Handles low level calls needed for running shadows
