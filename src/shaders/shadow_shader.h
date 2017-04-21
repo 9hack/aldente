@@ -14,7 +14,7 @@ public:
 	glm::mat4 light_proj;
 
 	ShadowShader(GLuint shader_id);
-	void set_material(Material m);
+	void set_material(Material *m);
 	void draw(Geometry *g, glm::mat4 to_world);
 };
 

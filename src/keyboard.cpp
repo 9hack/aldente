@@ -3,9 +3,11 @@
 #include "physics.h"
 #include "scene\scene_camera.h"
 
-bool Keyboard::lmb_down = false;
-bool Keyboard::rmb_down = false;
-bool Keyboard::mouse_moved = false;
+bool Keyboard::keys[1024];
+bool Keyboard::lmb_down;
+bool Keyboard::rmb_down;
+bool Keyboard::mouse_moved;
+glm::vec3 Keyboard::last_cursor_pos;
 
 // TODO : This class won't be used in the final game anyways. 
 const GLfloat BASE_CAM_SPEED = 0.1f;
@@ -16,6 +18,17 @@ const GLfloat EDGE_PAN_SPEED = 0.5f;
 GLuint frame = 0;
 double prev_ticks = glfwGetTime();
 double move_prev_ticks = prev_ticks;
+
+Keyboard *Keyboard::keyboard = new Keyboard();
+
+Keyboard::Keyboard()
+{
+	lmb_down = false;
+	rmb_down = false;
+	mouse_moved = false;
+}
+
+Keyboard::~Keyboard() {}
 
 void Keyboard::handle_movement()
 {
@@ -32,7 +45,7 @@ void Keyboard::handle_movement()
 	if (curr_time - move_prev_ticks > 1.f / 60.f)		
 		move_prev_ticks = curr_time;
 
-	SceneCamera *camera = Aldente::get_camera();
+	SceneCamera *camera = Aldente::aldente->get_camera();
 
 	GLfloat cam_step = keys[GLFW_KEY_LEFT_SHIFT] ? 3 * BASE_CAM_SPEED : BASE_CAM_SPEED;
 	glm::vec3 displacement(0.f);
@@ -65,10 +78,10 @@ void Keyboard::key_callback(GLFWwindow* window, int key, int scancode, int actio
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 		case GLFW_KEY_Q:
-			Aldente::debug_shadows = !Aldente::debug_shadows;
+			Aldente::aldente->debug_shadows = !Aldente::aldente->debug_shadows;
 			break;
 		case GLFW_KEY_X:
-			Aldente::shadows_on = !Aldente::shadows_on;
+			Aldente::aldente->shadows_on = !Aldente::aldente->shadows_on;
 			break;		
 		default:
 			break;
@@ -86,8 +99,8 @@ void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double
 	glfwGetFramebufferSize(window, &width, &height);
 	glm::vec3 current_cursor_pos(x_pos, y_pos, 0);
 
-	Scene *scene = Aldente::get_scene();
-	SceneCamera *camera = Aldente::get_camera();
+	Scene *scene = Aldente::aldente->get_scene();
+	SceneCamera *camera = Aldente::aldente->get_camera();
 
 	// First movement detected.
 	if (!mouse_moved)
@@ -103,23 +116,6 @@ void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double
 		int dir = cursor_delta.x > 0 ? 1 : -1;
 		float rot_angle = dir * glm::length(cursor_delta) * 0.001f;
 		scene->light_pos = glm::vec3(glm::rotate(glm::mat4(1.0f), rot_angle, glm::vec3(0.f, 0.f, 1.f)) * glm::vec4(scene->light_pos, 1.0f));
-
-		/*
-		float angle;
-		// Horizontal rotation
-		angle = (float)(cursor_delta.x) / 100.f;
-		camera->cam_pos = glm::vec3(glm::rotate(glm::mat4(1.f), angle, glm::vec3(0.f, 1.f, 0.f)) * glm::vec4(camera->cam_pos, 1.f));
-		camera->cam_up = glm::vec3(glm::rotate(glm::mat4(1.f), angle, glm::vec3(0.f, 1.f, 0.f)) * glm::vec4(camera->cam_up, 1.f));
-
-		// Vertical rotation
-		angle = (float)(-cursor_delta.y) / 100.f;
-		glm::vec3 axis = glm::cross((camera->cam_pos - (camera->cam_pos + camera->cam_front)), camera->cam_up);
-		camera->cam_pos = glm::vec3(glm::rotate(glm::mat4(1.f), angle, axis) * glm::vec4(camera->cam_pos, 1.f));
-		camera->cam_up = glm::vec3(glm::rotate(glm::mat4(1.f), angle, axis) * glm::vec4(camera->cam_up, 1.f));
-		camera->cam_front = glm::normalize(-camera->cam_pos);
-
-		camera->recalculate();
-		*/
 	}
 	else if (!keys[GLFW_KEY_LEFT_CONTROL])
 	{
@@ -151,7 +147,7 @@ void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double
 		camera->recalculate();
 	}
 
-	Physics::raycast_mouse(x_pos, y_pos, width, height);
+	Physics::physics->raycast_mouse(x_pos, y_pos, width, height);
 	
 	last_cursor_pos = current_cursor_pos;
 }
@@ -192,7 +188,7 @@ void Keyboard::mouse_button_callback(GLFWwindow* window, int button, int action,
 
 void Keyboard::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	SceneCamera *camera = Aldente::get_camera();
+	SceneCamera *camera = Aldente::aldente->get_camera();
 	glm::vec3 trans_vec = (float)yoffset * glm::normalize(camera->cam_front);
 	// Only y is relevant here, -1 is down, +1 is up
 	camera->cam_pos = glm::vec3(glm::translate(glm::mat4(1.0f), trans_vec) * glm::vec4(camera->cam_pos, 1.0f));

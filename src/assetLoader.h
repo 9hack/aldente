@@ -11,18 +11,24 @@
 /*
 	Class for loading all assets on startup.
 */
+
 class AssetLoader {
 private:
-	static map<string, Model*> assets;
-	static map<string, GLuint> textures;
-	static Model* model;
-    static Assimp::Importer import;
+	AssetLoader();
+
+	map<string, Model*> assets;
+	map<string, GLuint> textures;
+	Model* model;
+    Assimp::Importer import;
 public:	
-	static void setup();
-	static void load(std::string path, bool isModel);
-	static void processNode(aiNode* node, const aiScene* scene, bool isModel);
-	static Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
-	static Model* getModel(std::string name);
+	static AssetLoader *asset_loader;
+
+	~AssetLoader();
+	void setup();
+	void load(std::string path, bool isModel);
+	void processNode(aiNode* node, const aiScene* scene, bool isModel);
+	Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
+	Model* getModel(std::string name);
 };
 
 

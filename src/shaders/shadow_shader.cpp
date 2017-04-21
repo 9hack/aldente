@@ -26,7 +26,7 @@ ShadowShader::ShadowShader(GLuint shader_id) : Shader(shader_id)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ShadowShader::set_material(Material m)
+void ShadowShader::set_material(Material *m)
 {
 }
 

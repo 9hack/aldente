@@ -5,7 +5,10 @@
 
 const bool FULLSCREEN = false;
 
-int Window::width = 0;
+Window *Window::window = new Window();
+
+Window::Window() {}
+Window::~Window() {}
 
 GLFWwindow* Window::create_window()
 {
@@ -96,7 +99,7 @@ void Window::resize_callback(GLFWwindow* window, int width, int height)
 	
 	if (height > 0)
 	{
-		for (Scene * s : Aldente::get_scenes())
+		for (Scene * s : Aldente::aldente->get_scenes())
 			s->camera->P = glm::perspective(fov, (float)width / (float)height, 0.1f, far_plane);
 	}
 }

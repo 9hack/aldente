@@ -9,19 +9,24 @@
 class Physics
 {
 private:
-	//Bullet varaibles
-	static btBroadphaseInterface* broadphase;
-	static btDefaultCollisionConfiguration* collisionConfiguration;
-	static btCollisionDispatcher* dispatcher;
-	static btSequentialImpulseConstraintSolver* solver;	
-public:
+	Physics();
 
-	static btDiscreteDynamicsWorld* dynamicsWorld;
-	static std::vector<btRigidBody*> rigidBodies;
-	static Tile *hover;
+	//Bullet varaibles
+	btBroadphaseInterface* broadphase;
+	btDefaultCollisionConfiguration* collisionConfiguration;
+	btCollisionDispatcher* dispatcher;
+	btSequentialImpulseConstraintSolver* solver;	
+public:
+	static Physics *physics; // Singleton
+
+	~Physics();
+
+	btDiscreteDynamicsWorld* dynamicsWorld;
+	std::vector<btRigidBody*> rigidBodies;
+	Tile *hover;
 	
-	static void setup_bullet();
-	static void raycast_mouse(double xpos, double ypos, int width, int height);
-	static void update();
+	void setup_bullet();
+	void raycast_mouse(double xpos, double ypos, int width, int height);
+	void update();
 };
 

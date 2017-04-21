@@ -16,13 +16,16 @@
 namespace input = kuuhaku::input;
 namespace events = kuuhaku::events;
 
-bool Aldente::debug_shadows = false;
-bool Aldente::shadows_on = true;
+Aldente* Aldente::aldente = new Aldente();
+
+Aldente::Aldente() {}
+Aldente::~Aldente() {}
 
 void Aldente::setup_scenes()
 {
     // Initial scene and cam.
     main_scene = new MainScene();
+	main_scene->setup();
 	scene = main_scene;
     scenes.push_back(scene);
     camera = scene->camera;    
@@ -30,38 +33,38 @@ void Aldente::setup_scenes()
 
 void Aldente::go()
 {	    
-    window = Window::create_window();    
+    window = Window::window->create_window();    
 	Setup::setup_callbacks();
     Setup::setup_opengl();
     Setup::setup_shaders();	
-	AssetLoader::setup();	
+	Physics::physics->setup_bullet();
+	AssetLoader::asset_loader->setup();	
     Util::seed(0); // Seed PRNG.
     setup_scenes();	    
 	
-    while (!Window::should_close(window))
+    while (!Window::window->should_close(window))
     {
-		Window::poll_events();
+		Window::window->poll_events();
 
         input::process();		
-		Keyboard::handle_movement();
+		Keyboard::keyboard->handle_movement();
 
-		Window::update_size(window);
-		Physics::update();		
+		Window::window->update_size(window);
+		Physics::physics->update();		
 
 		scene->update(); 
 
-		// First pass: shadowmap.
-		if (shadows_on) 
-			Shadows::shadow_pass(scene); 
+		// First pass: shadowmap.		
+		Shadows::shadows->shadow_pass(scene);			
 
 		// Second pass: usual rendering.
-		Window::clear_window();
+		Window::window->clear_window();
 		scene->draw();
         
         if (debug_shadows)
-			Shadows::debug_shadows();        
+			Shadows::shadows->debug_shadows();        
 
-		Window::swap_buffers(window);
+		Window::window->swap_buffers(window);
     }
     destroy();
 }
@@ -71,7 +74,7 @@ void Aldente::destroy()
 	// Free memory here.
 	ShaderManager::destroy();
 	GeometryGenerator::clean_up();
-	Window::destroy(window);
+	Window::window->destroy(window);
 }
 
 std::vector<Scene*> Aldente::get_scenes()

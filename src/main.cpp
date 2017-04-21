@@ -1,9 +1,7 @@
 #include "aldente.h"
 
 int main()
-{
-    //Aldente grandma;
-    //grandma.go();
-	Aldente::go(); // Sorry Joshua
+{    
+	Aldente::aldente->go();
     exit(EXIT_SUCCESS);
 }

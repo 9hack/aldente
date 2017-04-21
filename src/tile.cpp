@@ -67,8 +67,7 @@ WallTile::WallTile(int x, int z) {
 	//mesh->to_world *= glm::translate(glm::mat4(1.f), glm::vec3(0,0,0));
 	mesh->geometry = GeometryGenerator::generate_cube(1.0f, true);
 	mesh->shader = ShaderManager::get_default();
-	Material *mat;
-	mat->diffuse = mat->ambient = color::indian_red;
+	Material *mat = new Material(color::indian_red);	
 	mesh->material = mat;
 
 	btDefaultMotionState* motionstate = new btDefaultMotionState(btTransform(

@@ -10,14 +10,18 @@
 class Keyboard
 {
 private:
+	Keyboard();
+
 	static bool keys[1024];
 	static bool lmb_down;
 	static bool rmb_down;
 	static bool mouse_moved;
 	static glm::vec3 last_cursor_pos;
 public:
+	static Keyboard *keyboard;
+	~Keyboard();
 
-	static void handle_movement();
+	void handle_movement();
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void cursor_position_callback(GLFWwindow* window, double x_pos, double y_pos);

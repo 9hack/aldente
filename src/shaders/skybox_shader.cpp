@@ -110,7 +110,7 @@ void SkyboxShader::load_cubemap()
     }
 }
 
-void SkyboxShader::set_material(Material m)
+void SkyboxShader::set_material(Material *m)
 {
 
 }

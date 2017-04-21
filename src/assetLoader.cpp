@@ -6,6 +6,11 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
+AssetLoader *AssetLoader::asset_loader = new AssetLoader();
+
+AssetLoader::AssetLoader() {}
+AssetLoader::~AssetLoader() {}
+
 void AssetLoader::setup()
 {
 	boost::filesystem::path path = boost::filesystem::path("assets/fbx");
@@ -130,7 +135,7 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 
 	// If material exists for this mesh
 	if (mesh->mMaterialIndex >= 0) {
-		Material *loadMat;
+		Material *loadMat = new Material();
 		aiMaterial* assimpMat = scene->mMaterials[mesh->mMaterialIndex];
 		aiColor3D diffuse(0, 0, 0);
 		assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);

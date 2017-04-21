@@ -7,8 +7,13 @@
 */
 class Shadows
 {
+private:
+	Shadows();
 public:
-	static void shadow_pass(Scene *scene);
-	static void debug_shadows();
+	static Shadows *shadows;
+	~Shadows();
+
+	void shadow_pass(Scene *scene);
+	void debug_shadows();
 };
 

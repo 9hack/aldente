@@ -24,6 +24,4 @@ public:
 	~Grid();
 
 	vector<vector<Tile*>> getGrid() { return grid; };
-
-	void set_hover(Tile *hover);
 };

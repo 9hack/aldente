@@ -100,7 +100,7 @@ void ShaderManager::create_shader_program(const char *type)
 
     Shader *s;
     std::string name = std::string(type);
-    if (name == "basic")
+    if (name == "basic" || name == "debug_pink")
         s = new BasicShader(ProgramID);
     else if (name == "skybox")
         s = new SkyboxShader(ProgramID);

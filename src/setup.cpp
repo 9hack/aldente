@@ -11,12 +11,14 @@ void Setup::setup_shaders()
 	ShaderManager::create_shader_program("skybox");
 	ShaderManager::create_shader_program("shadow");
 	ShaderManager::create_shader_program("debug_shadow");
+	ShaderManager::create_shader_program("debug_pink");
 	ShaderManager::set_default("basic");
+	//ShaderManager::set_default("debug_pink");
 }
 
 void Setup::setup_callbacks()
 {
-	GLFWwindow *window = Aldente::get_window();
+	GLFWwindow *window = Aldente::aldente->get_window();
 	glfwSetErrorCallback(Window::error_callback);
 	glfwSetKeyCallback(window, Keyboard::key_callback);
 	glfwSetCursorPosCallback(window, Keyboard::cursor_position_callback);

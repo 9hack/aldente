@@ -16,25 +16,31 @@
 class Aldente
 {
 private:	
+	Aldente();
+
 	// Scenes
-	static std::vector<Scene *> scenes;
-	static MainScene *main_scene;
+	std::vector<Scene *> scenes;
+	MainScene *main_scene;
 	
-	static GLFWwindow *window;
-	static Scene *scene;
-	static SceneCamera* camera;	
+	GLFWwindow *window;
+	Scene *scene;
+	SceneCamera* camera;	
 	
-	static void setup_scenes();
-	static void destroy();	
+	void setup_scenes();
+	void destroy();	
 
-public:	
-	static bool shadows_on;
-	static bool debug_shadows;
+public:		
+	static Aldente* aldente;
 
-	static void go();	// Main Game Loop
+	~Aldente();
 
-	static std::vector<Scene *> get_scenes(); // Gets list of all scenes in the game
-	static Scene *get_scene(); // Gets currently active scene
-	static SceneCamera *get_camera(); // Gets currently active camera
-	static GLFWwindow *get_window(); // Gets currently active window
+	bool shadows_on = true;
+	bool debug_shadows = false;
+
+	void go();	// Main Game Loop
+
+	std::vector<Scene *> get_scenes(); // Gets list of all scenes in the game
+	Scene *get_scene(); // Gets currently active scene
+	SceneCamera *get_camera(); // Gets currently active camera
+	GLFWwindow *get_window(); // Gets currently active window
 };

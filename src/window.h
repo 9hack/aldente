@@ -1,5 +1,4 @@
-#ifndef _WINDOW_H_
-#define _WINDOW_H_
+#pragma once
 
 #define GLFW_INCLUDE_GLEXT
 
@@ -15,19 +14,22 @@
 */
 class Window
 {
+private:
+	Window();
 public:
-	static int width, height; // Width and Height of last updated window
+	static Window *window;
+	~Window();
 
-    static GLFWwindow* create_window();
+	int width, height; // Width and Height of last updated window
+
+    GLFWwindow* create_window();
 	static void error_callback(int error, const char* description);
 	static void resize_callback(GLFWwindow* window, int width, int height);
 	
-	static void poll_events();
-	static int should_close(GLFWwindow* window);
-	static void swap_buffers(GLFWwindow* window);
-	static void clear_window();
-	static void update_size(GLFWwindow* window);
-	static void destroy(GLFWwindow *window);
+	void poll_events();
+	int should_close(GLFWwindow* window);
+	void swap_buffers(GLFWwindow* window);
+	void clear_window();
+	void update_size(GLFWwindow* window);
+	void destroy(GLFWwindow *window);
 };
-
-#endif
