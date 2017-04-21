@@ -5,6 +5,7 @@ Scene::Scene()
 {
     root = new SceneGroup(this);
     camera = new SceneCamera(this);
+	//setup();
 }
 
 Scene::~Scene()

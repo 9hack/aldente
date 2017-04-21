@@ -1,5 +1,4 @@
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -20,6 +19,8 @@ public:
 	static std::string str_screen_height;
 	static std::string str_full_screen;
 	static std::string str_game_name;
+	static std::string str_fov;
+	static std::string str_far_plane;
 
 public:
 	static Config* config; // Use this static reference instead of your own call to the constructor
@@ -54,6 +55,3 @@ private:
 	std::string file_name;
 	std::string template_file_name;
 };
-
-
-#endif

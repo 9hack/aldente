@@ -1,4 +1,7 @@
 #include "tile.h"
+#include "model\geometry_generator.h"
+#include "shaders/shader_manager.h"
+#include "util/colors.h"
 
 Tile::Tile() {}
 Tile::~Tile() {}
@@ -11,10 +14,9 @@ FloorTile::FloorTile(int x, int z) {
 	mesh = new Mesh();
 
 	mesh->to_world = glm::mat4(1.0f);
-	mesh->geometry = GeometryGenerator::generate_plane(0.5f, STONE);
+	mesh->geometry = GeometryGenerator::generate_plane(0.5f, 0);
 	mesh->shader = ShaderManager::get_default();
-	Material mat;
-	mat.diffuse = mat.ambient = color::indian_red;
+	Material *mat = new Material(color::indian_red);	
 	mesh->material = mat;
 
 	btDefaultMotionState* motionstate = new btDefaultMotionState(btTransform(
@@ -39,13 +41,11 @@ void FloorTile::update(Tile* hover) {
 	rigidBody->getMotionState()->getWorldTransform(t);
 	mesh->to_world[3] = glm::vec4((float)t.getOrigin().getX(), (float)t.getOrigin().getY(), (float)t.getOrigin().getZ(), 1.0f);
 	if (hover == this) {
-		Material mat;
-		mat.diffuse = mat.ambient = color::windwaker_green;
+		Material *mat = new Material(color::windwaker_green);		
 		mesh->material = mat;
 	}
 	else {
-		Material mat;
-		mat.diffuse = mat.ambient = color::indian_red;
+		Material *mat = new Material(color::indian_red);
 		mesh->material = mat;
 	}
 	//fprintf(stderr, "%f\n", mesh->to_world[3].y);
@@ -93,13 +93,11 @@ void WallTile::update(Tile* hover) {
 	rigidBody->getMotionState()->getWorldTransform(t);
 	mesh->to_world[3] = glm::vec4((float)t.getOrigin().getX(), (float)t.getOrigin().getY(), (float)t.getOrigin().getZ(),1.0f);
 	if (hover == this) {
-		Material mat;
-		mat.diffuse = mat.ambient = color::windwaker_green;
+		Material *mat = new Material(color::windwaker_green);
 		mesh->material = mat;
 	}
 	else {
-		Material mat;
-		mat.diffuse = mat.ambient = color::indian_red;
+		Material *mat = new Material(color::indian_red);
 		mesh->material = mat;
 	}
 	//fprintf(stderr, "%f\n", mesh->to_world[3].y);

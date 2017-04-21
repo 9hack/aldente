@@ -10,9 +10,7 @@
 #pragma once
 
 #include "mesh.h"
-#include "geometry/geometry_generator.h"
-#include "shaders/shader_manager.h"
-#include "util/colors.h"
+#include "model/geometry_generator.h"
 #include "btBulletDynamicsCommon.h"
 
 class Tile

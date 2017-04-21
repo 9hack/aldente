@@ -1,5 +1,8 @@
 #include "setup.h"
 #include "shaders\shader_manager.h"
+#include "window.h"
+#include "aldente.h"
+#include "keyboard.h"
 
 void Setup::setup_shaders()
 {
@@ -11,17 +14,18 @@ void Setup::setup_shaders()
 	ShaderManager::set_default("basic");
 }
 
-void Aldente::setup_callbacks()
+void Setup::setup_callbacks()
 {
+	GLFWwindow *window = Aldente::get_window();
 	glfwSetErrorCallback(Window::error_callback);
 	glfwSetKeyCallback(window, Keyboard::key_callback);
-	glfwSetCursorPosCallback(window, cursor_position_callback);
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-	glfwSetFramebufferSizeCallback(window, resize_callback);
+	glfwSetCursorPosCallback(window, Keyboard::cursor_position_callback);
+	glfwSetMouseButtonCallback(window, Keyboard::mouse_button_callback);
+	glfwSetScrollCallback(window, Keyboard::scroll_callback);
+	glfwSetFramebufferSizeCallback(window, Window::resize_callback);
 }
 
-void Aldente::setup_opengl()
+void Setup::setup_opengl()
 {
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
@@ -35,24 +39,4 @@ void Aldente::setup_opengl()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-}
-
-void Setup::setup_bullet()
-{
-	// Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
-	// even though we won't use most of this stuff.
-
-	// Build the broadphase
-	broadphase = new btDbvtBroadphase();
-
-	// Set up the collision configuration and dispatcher
-	collisionConfiguration = new btDefaultCollisionConfiguration();
-	dispatcher = new btCollisionDispatcher(collisionConfiguration);
-
-	// The actual physics solver
-	solver = new btSequentialImpulseConstraintSolver;
-
-	// The world.
-	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
 }

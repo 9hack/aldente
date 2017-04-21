@@ -36,43 +36,9 @@ void SceneCamera::reset()
 }
 
 void SceneCamera::displace_cam(glm::vec3 displacement)
-{
-	const GLfloat   SIZE = scene->get_size(); // Base on current scene size.
-	const GLfloat   EDGE_LEEWAY = SIZE / 6.f;
-	const GLfloat   MOVE_BOUNDS = SIZE + EDGE_LEEWAY;
-	const GLfloat   EDGE_THRESH = SIZE / 30.f;
-
-	glm::vec3 new_pos = cam_pos + displacement;
-	// Check horizontal bounds.
-	if (new_pos.x < -MOVE_BOUNDS || new_pos.x > MOVE_BOUNDS || new_pos.z < -MOVE_BOUNDS || new_pos.z > MOVE_BOUNDS)
-		return;
-
-	// Smoother edge movement.
-	if (new_pos.x < -MOVE_BOUNDS + EDGE_THRESH)
-	{
-		float diff = glm::abs(-MOVE_BOUNDS - new_pos.x);
-		displacement *= diff / EDGE_THRESH;
-	}
-	else if (new_pos.x > MOVE_BOUNDS - EDGE_THRESH)
-	{
-		float diff = glm::abs(MOVE_BOUNDS - new_pos.x);
-		displacement *= diff / EDGE_THRESH;
-	}
-	if (new_pos.z < -MOVE_BOUNDS + EDGE_THRESH)
-	{
-		float diff = glm::abs(-MOVE_BOUNDS - new_pos.z);
-		displacement *= diff / EDGE_THRESH;
-	}
-	else if (new_pos.z > MOVE_BOUNDS - EDGE_THRESH)
-	{
-		float diff = glm::abs(MOVE_BOUNDS - new_pos.z);
-		displacement *= diff / EDGE_THRESH;
-	}
+{	
+	glm::vec3 new_pos = cam_pos + displacement;	
 	new_pos = cam_pos + displacement;
-
-	// Fix height.
-	float new_height = 0.f;
-	new_pos.y = new_height;
 
 	cam_pos = new_pos;
 	recalculate();

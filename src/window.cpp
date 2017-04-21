@@ -1,15 +1,21 @@
 #include "window.h"
 #include "aldente.h"
 #include "scene\scene.h"
+#include "util\config.h"
 
 const bool FULLSCREEN = false;
 
-// TODO : Find a better place for these constant parameters below
-const GLfloat FAR_PLANE = 100.0f;
-const GLfloat FOV = 45.f;
+int Window::width = 0;
 
-GLFWwindow* Window::create_window(int width, int height, const char *window_title)
+GLFWwindow* Window::create_window()
 {
+	// Get window width and height from config	
+	Config::config->get_value(Config::str_screen_width, width);
+	Config::config->get_value(Config::str_screen_height, height);
+	std::string game_name;
+	Config::config->get_value(Config::str_game_name, game_name);
+	const char *window_title = game_name.c_str();
+
     // Initialize GLFW
     if (!glfwInit())
     {
@@ -68,6 +74,9 @@ GLFWwindow* Window::create_window(int width, int height, const char *window_titl
     // Get the width and height of the framebuffer to properly resize the window
     glfwGetFramebufferSize(window, &width, &height);
 
+
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); // Don't show cursor
+
     return window;
 }
 
@@ -80,10 +89,47 @@ void Window::resize_callback(GLFWwindow* window, int width, int height)
 {
 	// Set the viewport size. This is the only matrix that OpenGL maintains for us in modern OpenGL!
 	glViewport(0, 0, width, height);	
+
+	float far_plane, fov;
+	Config::config->get_value(Config::str_far_plane, far_plane);
+	Config::config->get_value(Config::str_fov, fov);
 	
 	if (height > 0)
 	{
 		for (Scene * s : Aldente::get_scenes())
-			s->camera->P = glm::perspective(FOV, (float)width / (float)height, 0.1f, FAR_PLANE);
+			s->camera->P = glm::perspective(fov, (float)width / (float)height, 0.1f, far_plane);
 	}
+}
+
+void Window::poll_events()
+{
+	glfwPollEvents();
+}
+
+int Window::should_close(GLFWwindow *window)
+{
+	return glfwWindowShouldClose(window);
+}
+
+void Window::swap_buffers(GLFWwindow *window)
+{
+	glfwSwapBuffers(window);
+}
+
+void Window::clear_window()
+{
+	glViewport(0, 0, width, height);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Window::update_size(GLFWwindow *window)
+{
+	glfwGetFramebufferSize(window, &width, &height);
+	resize_callback(window, width, height);
+}
+
+void Window::destroy(GLFWwindow *window)
+{
+	glfwDestroyWindow(window);
+	glfwTerminate();
 }

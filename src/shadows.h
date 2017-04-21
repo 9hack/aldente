@@ -9,6 +9,6 @@ class Shadows
 {
 public:
 	static void shadow_pass(Scene *scene);
-	static void debug_shadows(int width, int height);
+	static void debug_shadows();
 };
 

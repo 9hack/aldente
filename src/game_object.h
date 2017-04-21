@@ -9,13 +9,13 @@
 	render the model in the scene.
 */
 class GameObject : 
-	SceneNode
+	public SceneNode
 {
 private:	
 	Model *model;	
 
 public:
-	GameObject();
+	GameObject(Scene *scene);
 	~GameObject();
 
 	void attach_model(Model *m);

@@ -18,8 +18,11 @@ public:
 	std::vector<Mesh *> meshes;
 	glm::mat4 model_mat;
 
+	Model();
 	Model(Scene *);
 	~Model();
+
+	void set_scene(Scene *scene);
 
 	void add_mesh(Mesh *m);
 	void combine_meshes();

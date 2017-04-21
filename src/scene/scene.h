@@ -20,10 +20,9 @@ public:
 
 	Scene();
 	~Scene();
-	void draw();
-	void update();
+	void draw();	
 	void pass(Shader * s);	
 
-	virtual void setup() {}	
-	virtual GLfloat get_size() { return 0; }
+	virtual void update();
+	virtual void setup() = 0;
 };

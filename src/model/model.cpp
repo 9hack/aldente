@@ -2,6 +2,13 @@
 #include "model\geometry.h"
 #include "util/util.h"
 
+Model::Model()
+{
+	// No Scene Set. Assumes that it will be manually
+	// set later before it can be drawn. 
+	model_mat = glm::mat4(1.0f);
+}
+
 Model::Model(Scene *scene)
 {
     this->scene = scene;
@@ -10,6 +17,11 @@ Model::Model(Scene *scene)
 
 Model::~Model() {}
 
+void Model::set_scene(Scene *scene)
+{
+	this->scene = scene;
+}
+
 void Model::add_mesh(Mesh *m)
 {
     meshes.push_back(m);
@@ -17,6 +29,9 @@ void Model::add_mesh(Mesh *m)
 
 void Model::draw()
 {
+	if (!scene)
+		return;
+
     // Loop over meshes and their respective shader programs.
     for (Mesh *mesh : meshes)
     {

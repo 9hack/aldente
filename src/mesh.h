@@ -2,7 +2,7 @@
 using namespace std;
 
 #include <GL/glew.h>
-#include "geometry/geometry.h"
+#include "model/geometry.h"
 #include "material.h"
 #include "shaders/shader.h"
 #include <glm/glm.hpp>
@@ -17,6 +17,8 @@ struct Anim {
 class Mesh
 {
 public:
+	Mesh();
+	Mesh(Geometry *geo, Material *mat);
 	Mesh(Geometry *geo, Material *mat, Shader *shader);
 	Mesh(Geometry *geo, Material *mat, Shader *shader, glm::mat4 m, bool no_cull);
 	~Mesh();
@@ -26,6 +28,6 @@ public:
 	Shader *shader;
 	glm::mat4 to_world;
 	bool no_culling;
-    map<string, Anim*> animations();
+    // map<string, Anim*> animations();
     aiMatrix4x4 inverseBoneMat;
 };

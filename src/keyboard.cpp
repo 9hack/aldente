@@ -7,13 +7,31 @@ bool Keyboard::lmb_down = false;
 bool Keyboard::rmb_down = false;
 bool Keyboard::mouse_moved = false;
 
-// TODO : Find better location to put these constant parameters below
+// TODO : This class won't be used in the final game anyways. 
 const GLfloat BASE_CAM_SPEED = 0.1f;
 const GLfloat EDGE_PAN_THRESH = 5.f;
 const GLfloat EDGE_PAN_SPEED = 0.5f;
 
+// FPS Tracking Variables
+GLuint frame = 0;
+double prev_ticks = glfwGetTime();
+double move_prev_ticks = prev_ticks;
+
 void Keyboard::handle_movement()
 {
+	// FPS Control / Tracking
+	frame++;
+	double curr_time = glfwGetTime();
+	if (curr_time - prev_ticks > 1.f)
+	{
+		/* std::cerr << "FPS: " << frame << std::endl; */
+		frame = 0;
+		prev_ticks = curr_time;
+		return;
+	}
+	if (curr_time - move_prev_ticks > 1.f / 60.f)		
+		move_prev_ticks = curr_time;
+
 	SceneCamera *camera = Aldente::get_camera();
 
 	GLfloat cam_step = keys[GLFW_KEY_LEFT_SHIFT] ? 3 * BASE_CAM_SPEED : BASE_CAM_SPEED;

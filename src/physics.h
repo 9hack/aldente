@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "btBulletDynamicsCommon.h"
+#include "tile.h"
 #include <vector>
 
 class Physics
@@ -12,14 +13,15 @@ private:
 	static btBroadphaseInterface* broadphase;
 	static btDefaultCollisionConfiguration* collisionConfiguration;
 	static btCollisionDispatcher* dispatcher;
-	static btSequentialImpulseConstraintSolver* solver;
+	static btSequentialImpulseConstraintSolver* solver;	
+public:
+
 	static btDiscreteDynamicsWorld* dynamicsWorld;
 	static std::vector<btRigidBody*> rigidBodies;
-
-public:
+	static Tile *hover;
 	
 	static void setup_bullet();
-	static void raycast_mouse(int xpos, int ypos, int width, int height);
+	static void raycast_mouse(double xpos, double ypos, int width, int height);
 	static void update();
 };
 

@@ -1,6 +1,12 @@
 #include "assetLoader.h"
+#include "aldente.h"
+#include "util/colors.h"
+#include "shaders/shader_manager.h"
 
-AssetLoader::AssetLoader()
+#include <boost/range.hpp>
+#include <boost/filesystem.hpp>
+
+void AssetLoader::setup()
 {
 	boost::filesystem::path path = boost::filesystem::path("assets/fbx");
 	for (auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
@@ -11,7 +17,7 @@ AssetLoader::AssetLoader()
 
         // If @ is not in filename (meaning that its a model and not an animation)
         if (found == string::npos) {
-            model = new SceneModel();
+            model = new Model();
             load(filepath,true);
             assets[entry.path().filename().string().c_str()] = model;
         }
@@ -22,10 +28,6 @@ AssetLoader::AssetLoader()
 	}
 
 	// Test
-}
-
-AssetLoader::~AssetLoader()
-{
 }
 
 void AssetLoader::load(std::string path, bool isModel)
@@ -60,7 +62,7 @@ void AssetLoader::load(std::string path, bool isModel)
 	}
 
 	//this->directory = path.substr(0, path.find_last_of('/'));
-	this->processNode(scene->mRootNode, scene, isModel);
+	processNode(scene->mRootNode, scene, isModel);
 }
 
 void AssetLoader::processNode(aiNode* node, const aiScene* scene, bool isModel)
@@ -71,7 +73,7 @@ void AssetLoader::processNode(aiNode* node, const aiScene* scene, bool isModel)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         if (isModel) {
-            model->add_mesh(this->processMesh(mesh, scene));
+            model->add_mesh(processMesh(mesh, scene));
         }
         else {
             model->meshes[0]->inverseBoneMat = scene->mRootNode->mTransformation;
@@ -81,7 +83,7 @@ void AssetLoader::processNode(aiNode* node, const aiScene* scene, bool isModel)
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		this->processNode(node->mChildren[i], scene, isModel);
+		processNode(node->mChildren[i], scene, isModel);
 	}
 }
 
@@ -124,11 +126,11 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 
 	//Textures and Materials not yet loaded
 
-	Mesh* final_mesh;
+	Mesh *final_mesh;
 
 	// If material exists for this mesh
 	if (mesh->mMaterialIndex >= 0) {
-		Material loadMat;
+		Material *loadMat;
 		aiMaterial* assimpMat = scene->mMaterials[mesh->mMaterialIndex];
 		aiColor3D diffuse(0, 0, 0);
 		assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
@@ -138,11 +140,11 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 		assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
 		float shiny = 0.0f;
 		assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-		loadMat.ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
-		loadMat.diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-		loadMat.specular = glm::vec3(specular.r, specular.g, specular.b);
-		loadMat.shininess = shiny;
-		final_mesh = new Mesh{ geo, loadMat, ShaderManager::get_default(), glm::mat4(1.0f) };
+		loadMat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+		loadMat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+		loadMat->specular = glm::vec3(specular.r, specular.g, specular.b);
+		loadMat->shininess = shiny;
+		final_mesh = new Mesh(geo, loadMat, ShaderManager::get_default());
 		final_mesh->to_world = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f));
 
 		//If textures exist for this mesh
@@ -167,9 +169,8 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 		}
 	}
 	else {
-		Material blank;
-		blank.diffuse = blank.ambient = color::white;
-		final_mesh = new Mesh{ geo, blank, ShaderManager::get_default(), glm::mat4(1.0f) };
+		Material *blank = new Material(color::white);
+		final_mesh = new Mesh(geo, blank, ShaderManager::get_default());
 	}
 
 	geo->populate_buffers();
@@ -180,13 +181,13 @@ Mesh* AssetLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 
 //Use this function to access a model, pass in a path in the form of
 //"assets/fbx/the_model_you_want_here.fbx"
-SceneModel *AssetLoader::getModel(std::string name) {
+Model *AssetLoader::getModel(std::string name) {
 	if (assets[name] == NULL) {
 		std::string error("ERROR: Asset ");
 		error += name;
 		error += " was not loaded. Check for fbx file and double check filename.\n";
 		fprintf(stderr, error.c_str());
-		SceneModel* dflt = new SceneModel();
+		Model* dflt = new Model();
 		return dflt;
 	}
 	return assets[name];

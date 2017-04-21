@@ -1,6 +1,7 @@
 #include "physics.h"
 #include "scene\scene.h"
 #include "aldente.h"
+#include "grid.h"
 
 void Physics::setup_bullet()
 {
@@ -22,7 +23,7 @@ void Physics::setup_bullet()
 	dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
 }
 
-void Physics::raycast_mouse(int xpos, int ypos, int width, int height)
+void Physics::raycast_mouse(double xpos, double ypos, int width, int height)
 {
 	Scene *scene = Aldente::get_scene();
 
@@ -63,6 +64,9 @@ void Physics::raycast_mouse(int xpos, int ypos, int width, int height)
 		RayCallback
 	);
 
+	// TODO: Change this such that it uses the event system to pass which tile
+	// is currently being hovered over. 
+
 	if (RayCallback.hasHit())
 	{
 		hover = (Tile*)RayCallback.m_collisionObject->getUserPointer();
@@ -82,5 +86,5 @@ void Physics::raycast_mouse(int xpos, int ypos, int width, int height)
 void Physics::update()
 {
 	//Step in simulation
-	dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+	dynamicsWorld->stepSimulation(1.f / 60.f, 10);	
 }
