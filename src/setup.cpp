@@ -11,9 +11,7 @@ void Setup::setup_shaders()
 	ShaderManager::create_shader_program("skybox");
 	ShaderManager::create_shader_program("shadow");
 	ShaderManager::create_shader_program("debug_shadow");
-	ShaderManager::create_shader_program("debug_pink");
 	ShaderManager::set_default("basic");
-	//ShaderManager::set_default("debug_pink");
 }
 
 void Setup::setup_callbacks()
