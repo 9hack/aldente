@@ -1,19 +1,15 @@
 #pragma once
 
-#include "ui.h"
-#include "ui_element.h"
-#include "ui_grid_element.h"
+#include "ui_container.h"
 
-class UIGrid
-{
+class UIGrid : public UIContainer {
 public:
     UIGrid(int num_elements, int num_cols,
-                   UIElement::UIDims element_dims,
-                   UIElement::UIPosition bottom_left, glm::vec3 grid_bg_color,
-                   int border_width=10, int inter_padding=10);
-	~UIGrid();
-	UIGridElement *get_current_selection();
+           UIElement::UIDims element_dims,
+           UIElement::UIPosition bottom_left, glm::vec3 grid_bg_color,
+           int border_width=10, int inter_padding=10);
 
+	UIGridElement *get_current_selection();
 	void move_selection_left();
 	void move_selection_right();
 	void move_selection_up();

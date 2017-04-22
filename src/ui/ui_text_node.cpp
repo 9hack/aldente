@@ -1,20 +1,12 @@
 #include "ui_text_node.h"
 
-#include "shaders/shader_manager.h"
-
-UITextNode::UITextNode(UIElement *parent, UIPosition pos, bool interactable, glm::vec3 color, std::string text, float scale)
-{
-	this->parent = parent;
-	this->pos = pos;
-	this->interactable = interactable;
-	this->color = color;
-    this->text = text;
-    this->text_scale = scale;
+void UITextNode::draw(Render2D &renderer_2d,
+                       float offset_x, float offset_y) {
+    if (!enabled) return;
+    renderer_2d.render_textP(text,
+                             offset_x + start_x,
+                             offset_y + start_y,
+                             x_scale, y_scale,
+                             color);
 }
 
-void UITextNode::draw(Render2D *renderer2D)
-{
-    if (enabled)
-        renderer2D->render_text(ShaderManager::get_shader_program("text"), text,
-            pos.x, pos.y, text_scale, color);
-}

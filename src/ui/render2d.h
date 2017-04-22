@@ -9,6 +9,9 @@
 
 #include "shaders/shader.h"
 
+#define UNIT_TO_PERCENT 0.01f
+#define GLYPH_UNIT      0.1f
+
 class Render2D
 {
     struct Character {
@@ -19,16 +22,18 @@ class Render2D
     };
 
 public:
-    void setup(int width, int height);
+    Render2D(int screen_width, int screen_height, Shader *shader_2d);
     //void update_projection;
-    void render_text(Shader *shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
-    void render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
-	void render_rectP(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
+    void render_textP(std::string text, GLfloat x, GLfloat y, GLfloat x_scale, GLfloat y_scale, glm::vec3 color);
+	void render_rectP(GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 private:
     void setup_glyphs();
+    void render_text(std::string text, GLfloat x, GLfloat y, GLfloat x_scale, GLfloat y_scale, glm::vec3 color);
+    void render_rect(GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 
+    Shader *shader_2d;
     std::map<GLchar, Character> characters;
     GLuint vao, vbo;
     glm::mat4 projection;
-	int width, height;
+	int screen_width, screen_height;
 };

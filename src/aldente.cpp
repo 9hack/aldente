@@ -18,6 +18,7 @@
 #include "util/config.h"
 #include "btBulletDynamicsCommon.h"
 #include "ui/ui.h"
+#include "ui/render_2d.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -205,7 +206,8 @@ void Aldente::go()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	UI::ui->setup(width, height);
+	Render2D renderer_2d = Render2D(width, height, ShaderManager::get_shader_program("text"));
+	UI ui = UI(renderer_2d);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -259,7 +261,7 @@ void Aldente::go()
             Util::render_quad();
         }
 
-		UI::ui->update();
+		ui.update();
 
         glfwSwapBuffers(window);
     }

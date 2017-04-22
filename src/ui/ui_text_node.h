@@ -4,9 +4,18 @@
 
 #include <string>
 
-class UITextNode : public UIElement
-{
+class UITextNode : public UIElement {
 public:
-    UITextNode(UIElement *parent, UIPosition pos, bool interactable, glm::vec3 color, std::string text, float scale);
-    void draw(Render2D *renderer2D) override;
+    UITextNode(std::string text,
+               float start_x, float start_y,
+               float x_scale, float y_scale,
+               glm::vec3 color)
+        : text(text), start_x(start_x), start_y(start_y),
+          x_scale(x_scale), y_scale(y_scale),
+          color(color) {}
+    void draw(Render2D &renderer_2d, float offset_x, float offset_y) override;
+private:
+    std::string text;
+    float x_scale, y_scale;
+    glm::vec3 color;
 };

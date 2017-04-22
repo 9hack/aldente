@@ -1,19 +1,23 @@
+/**
+* Text rendering adapted from: https://learnopengl.com/#!In-Practice/Text-Rendering
+*/
+
 #include "render2d.h"
 
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-void Render2D::setup(int width, int height)
-{
-    // TODO: replace with event system callback
-    this->width = width;
-    this->height = height;
+Render2D::Render2D(int screen_width, int screen_height, Shader *shader_2d)
+    : screen_width(screen_width), screen_height(screen_height), shader_2d(shader_2d) {
+
+    // Calculate projection matrix.
     projection = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
 
+    // Generate textures for all glyphs.
     setup_glyphs();
 
-    // Configure VAO/VBO for texture quads
+    // Configure VAO/VBO for texture quads.
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glBindVertexArray(vao);
@@ -25,8 +29,7 @@ void Render2D::setup(int width, int height)
     glBindVertexArray(0);
 }
 
-void Render2D::setup_glyphs()
-{
+void Render2D::setup_glyphs() {
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
@@ -46,11 +49,9 @@ void Render2D::setup_glyphs()
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
-    for (GLubyte c = 0; c < 128; c++)
-    {
+    for (GLubyte c = 0; c < 128; c++) {
         // Load character glyph
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-        {
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
             continue;
         }
@@ -87,30 +88,32 @@ void Render2D::setup_glyphs()
     FT_Done_FreeType(ft);
 }
 
-void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
-{
+void Render2D::render_text(std::string text,
+                           GLfloat x, GLfloat y,
+                           GLfloat x_scale, GLfloat y_scale,
+                           glm::vec3 color) {
+    // Always render UI regardless of depth.
     glDisable(GL_DEPTH_TEST);
 
     // Activate corresponding render state
-    shader->use();
-    glUniform3f(glGetUniformLocation(shader->shader_id, "baseColor"), color.x, color.y, color.z);
-    glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), true);
+    shader_2d->use();
+    glUniform3f(glGetUniformLocation(shader_2d->shader_id, "baseColor"), color.x, color.y, color.z);
+    glUniformMatrix4fv(glGetUniformLocation(shader_2d->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniform1i(glGetUniformLocation(shader_2d->shader_id, "hasTexture"), true);
 
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(vao);
 
     // Iterate through all characters
     std::string::const_iterator c;
-    for (c = text.begin(); c != text.end(); c++)
-    {
+    for (c = text.begin(); c != text.end(); c++) {
         Character ch = characters[*c];
 
-        GLfloat xpos = x + ch.bearing.x * scale;
-        GLfloat ypos = y - (ch.size.y - ch.bearing.y) * scale;
+        GLfloat xpos = x + ch.bearing.x * x_scale;
+        GLfloat ypos = y - (ch.size.y - ch.bearing.y) * y_scale;
 
-        GLfloat w = ch.size.x * scale;
-        GLfloat h = ch.size.y * scale;
+        GLfloat w = ch.size.x * x_scale;
+        GLfloat h = ch.size.y * y_scale;
         // Update VBO for each character
         GLfloat vertices[6][4] = {
             { xpos,     ypos + h,   0.0, 0.0 },
@@ -131,7 +134,7 @@ void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat 
         // Render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += (ch.advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+        x += (ch.advance >> 6) * x_scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -139,19 +142,21 @@ void Render2D::render_text(Shader *shader, std::string text, GLfloat x, GLfloat 
     glEnable(GL_DEPTH_TEST);
 }
 
-void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID)
-{
+void Render2D::render_rect(GLfloat x, GLfloat y,
+                           GLfloat width, GLfloat height,
+                           glm::vec3 color, GLuint texture_ID) {
+    // Always render UI regardless of depth.
     glDisable(GL_DEPTH_TEST);
 
     // Send uniforms to the text shader
-    shader->use();
-    glUniform3f(glGetUniformLocation(shader->shader_id, "baseColor"), color.x, color.y, color.z);
-    glUniformMatrix4fv(glGetUniformLocation(shader->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    shader_2d->use();
+    glUniform3f(glGetUniformLocation(shader_2d->shader_id, "baseColor"), color.x, color.y, color.z);
+    glUniformMatrix4fv(glGetUniformLocation(shader_2d->shader_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     if (texture_ID == 0)
-        glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), false);
+        glUniform1i(glGetUniformLocation(shader_2d->shader_id, "hasTexture"), false);
     else
-        glUniform1i(glGetUniformLocation(shader->shader_id, "hasTexture"), true);
+        glUniform1i(glGetUniformLocation(shader_2d->shader_id, "hasTexture"), true);
 
     // Set active arrays
     glBindVertexArray(vao);
@@ -183,7 +188,25 @@ void Render2D::render_rect(Shader *shader, GLfloat x, GLfloat y, GLfloat width, 
     glEnable(GL_DEPTH_TEST);
 }
 
-void Render2D::render_rectP(Shader *shader, GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID)
-{
-    render_rect(shader, x * this->width, y * this->height, width * this->width, height * this->height, color, texture_ID);
+// Render rectangle in terms of percentages of screen width and height.
+void Render2D::render_rectP(GLfloat x, GLfloat y,
+                            GLfloat width, GLfloat height,
+                            glm::vec3 color, GLuint texture_ID) {
+    GLfloat adj_x      = x      * UNIT_TO_PERCENT * screen_width;
+    GLfloat adj_y      = y      * UNIT_TO_PERCENT * screen_height;
+    GLfloat adj_width  = width  * UNIT_TO_PERCENT * screen_width;
+    GLfloat adj_height = height * UNIT_TO_PERCENT * screen_height;
+    render_rect(adj_x, adj_y, adj_width, adj_height, color, texture_ID);
+}
+
+// Render text in terms of percentages of screen width and height.
+void Render2D::render_textP(std::string text,
+                            GLfloat x, GLfloat y,
+                            GLfloat x_scale, GLfloat y_scale,
+                            glm::vec3 color) {
+    GLfloat adj_x        = x        * UNIT_TO_PERCENT * screen_width;
+    GLfloat adj_y        = y        * UNIT_TO_PERCENT * screen_height;
+    GLfloat adj_x_scale  = x_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_width;
+    GLfloat adj_y_scale  = y_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_height;
+    render_text(adj_x, adj_y, adj_x_scale, adj_y_scale, color);
 }

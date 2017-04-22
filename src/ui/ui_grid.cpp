@@ -2,8 +2,6 @@
 
 #include "util/colors.h"
 
-UIGrid::~UIGrid() {}
-
 // Creates a grid with specified number of elements and dimensions of thos
 // elements. Returns UI ID to the grid parent element.
 UIGrid::UIGrid(int num_elements, int num_cols,
