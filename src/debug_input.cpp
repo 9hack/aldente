@@ -17,7 +17,10 @@ static double prev_ticks = glfwGetTime();
 static double move_prev_ticks = prev_ticks;
 
 // TODO: this is disgusting
-DebugInput::DebugInput(SceneManager &scene_manager) : scene_manager(scene_manager) {
+DebugInput::DebugInput(SceneManager &scene_manager) :
+        scene_manager(scene_manager), lmb_down(false), rmb_down(false), last_cursor_pos(0, 0, 0) {
+    std::fill(std::begin(keys), std::end(keys), false);
+
     // Set up callbacks
     events::window_resize_event.connect([&](events::WindowSizeData d) {
         // Set the viewport size. This is the only matrix that OpenGL maintains for us in modern OpenGL!
@@ -111,7 +114,6 @@ DebugInput::DebugInput(SceneManager &scene_manager) : scene_manager(scene_manage
         Physics::physics->raycast_mouse(d.x_pos, d.y_pos, width, height);
 
         last_cursor_pos = current_cursor_pos;
-		std::fill(std::begin(keys), std::end(keys), false);
     });
 
     events::window_mouse_button_event.connect([&](events::WindowMouseButtonData d) {
