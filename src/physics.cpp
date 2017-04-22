@@ -4,9 +4,15 @@
 
 Physics *Physics::physics = new Physics();
 
+Scene *Physics::scene = nullptr;
+
 Physics::Physics() {}
 
 Physics::~Physics() {}
+
+void Physics::set_scene(Scene *s) {
+    scene = s;
+}
 
 void Physics::setup_bullet() {
     // Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
@@ -28,8 +34,6 @@ void Physics::setup_bullet() {
 }
 
 void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
-    Scene *scene = Aldente::aldente->get_scene();
-
     // Constructing the ray for picking
     // The ray Start and End positions, in Normalized Device Coordinates (Have you read Tutorial 4 ?)
     ypos = height - ypos;

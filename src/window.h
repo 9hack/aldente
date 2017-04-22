@@ -6,38 +6,32 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <iostream>
+#include <unordered_map>
 
 /*
 	Handles GLFW calls for creating and resizing the window.
-	Currently assumes there to only be one window. 
 */
 class Window {
 private:
-    Window();
+    GLFWwindow *gl_window;
+    int width, height;
+
+    static std::unordered_map<GLFWwindow *, Window *> registry;
+    static Window *lookup(GLFWwindow * target);
+
+    // We explicitly define this because we need to call this in update_size().
+    static void resize_callback(GLFWwindow *window, int w, int h);
 
 public:
-    static Window *window;
-
+    Window(int width, int height, const std::string &name);
     ~Window();
 
-    int width, height; // Width and Height of last updated window
-
-    GLFWwindow *create_window();
-
-    static void error_callback(int error, const char *description);
-
-    static void resize_callback(GLFWwindow *window, int width, int height);
-
-    void poll_events();
-
-    int should_close(GLFWwindow *window);
-
-    void swap_buffers(GLFWwindow *window);
-
-    void clear_window();
-
-    void update_size(GLFWwindow *window);
-
-    void destroy(GLFWwindow *window);
+    static void set_hints();
+    void clear();
+    void close();
+    bool should_close();
+    void swap_buffers();
+    std::pair<int, int> get_size();
+    void update_size();
+    std::pair<double, double> get_cursor();
 };

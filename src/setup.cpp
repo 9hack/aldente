@@ -1,12 +1,7 @@
+#include <iostream>
 #include "setup.h"
 #include "shaders/shader_manager.h"
-#include "window.h"
-#include "aldente.h"
-#include "debug_input.h"
-
-#include "events/input.h"
-
-namespace events = kuuhaku::events;
+#include "events.h"
 
 void Setup::setup_shaders() {
     // Load shaders via a shader manager.
@@ -18,13 +13,6 @@ void Setup::setup_shaders() {
 }
 
 void Setup::setup_callbacks() {
-    GLFWwindow *window = Aldente::aldente->get_window();
-    glfwSetErrorCallback(Window::error_callback);
-    glfwSetKeyCallback(window, DebugInput::key_callback);
-    glfwSetCursorPosCallback(window, DebugInput::cursor_position_callback);
-    glfwSetMouseButtonCallback(window, DebugInput::mouse_button_callback);
-    glfwSetScrollCallback(window, DebugInput::scroll_callback);
-    glfwSetFramebufferSizeCallback(window, Window::resize_callback);
     events::joystick_event.connect([](events::JoystickData &d) {
         fprintf(stderr,
                 "JoystickEvent:\n"

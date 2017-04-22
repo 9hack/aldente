@@ -1,18 +1,17 @@
 #pragma once
 
 #include "scene/scene.h"
+#include "window.h"
 
 /*
 	Handles low level calls needed for running shadows
 */
 class Shadows {
 private:
-    Shadows();
+    Window &window;
 
 public:
-    static Shadows *shadows;
-
-    ~Shadows();
+    Shadows(Window &window) : window(window) {};
 
     void shadow_pass(Scene *scene);
 
