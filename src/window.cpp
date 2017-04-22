@@ -34,8 +34,8 @@ Window::Window(int width, int height, const std::string &name) :
     // Get the width and height of the framebuffer to properly resize the window
     glfwGetFramebufferSize(gl_window, &width, &height);
 
-
-    //glfwSetInputMode(gl_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); // Don't show cursor
+    // Don't show cursor
+    glfwSetInputMode(gl_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     // Set up event dispatchers
     glfwSetFramebufferSizeCallback(gl_window, resize_callback);
