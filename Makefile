@@ -14,7 +14,8 @@ MAIN_OBJECTS    := $(MAIN_SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPFILES        := $(MAIN_SOURCES:$(SRC_DIR)/%.cpp=$(DEP_DIR)/%.dep)
 
 LIBS            := -lGLEW -lglfw -lassimp -lSOIL
-LIBS            += -lboost_system -lboost_filesystem
+LIBS            += -lboost_system -lboost_filesystem -lboost_thread
+LIBS            += -pthread
 LIBS            += -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 INCS            += $(shell pkg-config bullet --cflags)
 ifeq ($(shell uname),Darwin)

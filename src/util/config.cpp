@@ -8,6 +8,9 @@ string Config::str_full_screen = "FullScreen";
 string Config::str_game_name = "GameName";
 string Config::str_fov = "FieldOfView";
 string Config::str_far_plane = "FarPlane";
+string Config::str_is_server = "IsServer";
+string Config::str_server_ip = "ServerIp";
+string Config::str_port = "Port";
 
 typedef pair<string, string> StringPair;
 Config *Config::config = new Config();
