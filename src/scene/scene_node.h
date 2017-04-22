@@ -9,11 +9,12 @@ class Scene;
 
 class SceneNode
 {
-protected:
-	Scene *scene;
 public:
+    virtual ~SceneNode() {};
 	virtual void draw() = 0;
 	virtual void update() = 0;
 	virtual void pass(Shader *s) = 0;
+protected:
+	Scene *scene;
 };
 

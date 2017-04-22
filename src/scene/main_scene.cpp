@@ -1,14 +1,14 @@
-#include "main_scene.h"
-#include "mesh.h"
+#include "scene/main_scene.h"
+#include "model/mesh.h"
 #include "model/model.h"
-#include "material.h"
+#include "model/material.h"
 #include "shaders/shader_manager.h"
 #include "model/geometry_generator.h"
 #include "grid.h"
 #include "tile.h"
 #include "physics.h"
 #include "util/colors.h"
-#include "assetLoader.h"
+#include "asset_loader.h"
 
 void MainScene::setup()
 {

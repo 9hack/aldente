@@ -15,13 +15,13 @@ class Scene
 {
 public:
 	SceneGroup *root;
-	SceneCamera *camera;	
+	SceneCamera *camera;
 	glm::vec3 light_pos;
 
 	Scene();
-	~Scene();
-	void draw();	
-	void pass(Shader * s);	
+	virtual ~Scene();
+	void draw();
+	void pass(Shader * s);
 
 	virtual void update();
 	virtual void setup() = 0;

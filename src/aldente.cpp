@@ -2,7 +2,7 @@
 
 #include "window.h"
 #include "setup.h"
-#include "assetLoader.h"
+#include "asset_loader.h"
 #include "physics.h"
 #include "shaders/shader_manager.h"
 #include "shadows.h"

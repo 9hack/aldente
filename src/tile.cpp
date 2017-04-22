@@ -5,6 +5,8 @@
 
 Tile::Tile() {}
 Tile::~Tile() {}
+FloorTile::~FloorTile() {}
+WallTile::~WallTile() {}
 
 FloorTile::FloorTile(int x, int z) {
 	width = 1;

@@ -18,6 +18,6 @@ private:
 	Grid* grid;
 	Tile* hover;
 public:
-	virtual void update() override;
-	void setup();
+	void update() override;
+	void setup() override;
 };

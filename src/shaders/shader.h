@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "material.h"
+#include "model/material.h"
 #include "model/geometry.h"
 
 class Shader
@@ -19,6 +19,6 @@ public:
     void set_VP(glm::mat4 V, glm::mat4 P);
 	void send_mesh_model(glm::mat4 mesh_model);
 	void set_culling(bool b);
-    virtual void set_material(Material *m);	
+    virtual void set_material(Material *m);
     virtual void draw(Geometry *g, glm::mat4 to_world);
 };

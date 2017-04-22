@@ -16,7 +16,7 @@ private:
 
 public:
 	GameObject(Scene *scene);
-	~GameObject();
+	virtual ~GameObject();
 
 	void attach_model(Model *m);
 
