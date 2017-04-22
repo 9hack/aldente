@@ -111,6 +111,7 @@ DebugInput::DebugInput(SceneManager &scene_manager) : scene_manager(scene_manage
         Physics::physics->raycast_mouse(d.x_pos, d.y_pos, width, height);
 
         last_cursor_pos = current_cursor_pos;
+		std::fill(std::begin(keys), std::end(keys), false);
     });
 
     events::window_mouse_button_event.connect([&](events::WindowMouseButtonData d) {
@@ -174,7 +175,7 @@ void DebugInput::handle_movement() {
         displacement -= glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
     if (keys[GLFW_KEY_D])
         displacement += glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
-    if (keys[GLFW_KEY_SPACE])
+	if (keys[GLFW_KEY_SPACE])
         displacement += cam_step * camera->cam_up;
 
     camera->cam_pos += displacement;

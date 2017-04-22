@@ -11,7 +11,7 @@
 */
 class DebugInput {
 private:
-    bool keys[1024];
+	bool keys[1024];
     bool lmb_down;
     bool rmb_down;
     bool mouse_moved;

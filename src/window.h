@@ -29,7 +29,7 @@ public:
     static void set_hints();
     void clear();
     void close();
-    bool should_close();
+    int should_close();
     void swap_buffers();
     std::pair<int, int> get_size();
     void update_size();

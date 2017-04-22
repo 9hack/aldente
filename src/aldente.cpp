@@ -55,7 +55,7 @@ void Aldente::start_game_loop() {
     DebugInput debug_input(scene_manager);
 
 
-    while (window.should_close()) {
+    while (!window.should_close()) {
         // Do polling
         glfwPollEvents();
         for (auto *poller : pollers) {

@@ -2,7 +2,8 @@
 #include "events.h"
 
 static const bool FULLSCREEN = false;
-auto Window::registry = std::unordered_map<GLFWwindow *, Window *>();
+std::unordered_map<GLFWwindow *, Window *> Window::registry = 
+	std::unordered_map<GLFWwindow *, Window *>();
 
 Window::Window(int width, int height, const std::string &name) :
     width(width), height(height) {
@@ -93,8 +94,8 @@ void Window::close() {
     glfwSetWindowShouldClose(gl_window, GL_TRUE);
 }
 
-bool Window::should_close() {
-    return (bool) glfwWindowShouldClose(gl_window);
+int Window::should_close() {
+    return glfwWindowShouldClose(gl_window);
 }
 
 void Window::swap_buffers() {
