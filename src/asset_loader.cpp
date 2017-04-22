@@ -9,7 +9,6 @@
 AssetLoader *AssetLoader::asset_loader = new AssetLoader();
 
 AssetLoader::AssetLoader() {}
-AssetLoader::~AssetLoader() {}
 
 void AssetLoader::setup()
 {
@@ -21,7 +20,7 @@ void AssetLoader::setup()
 		filepath += entry.path().filename().string();
 
         // If @ is not in filename (meaning that its a model and not an animation)
-        if (found == string::npos) {
+        if (found == std::string::npos) {
             model = new Model();
             load(filepath,true);
             assets[entry.path().filename().string().c_str()] = model;

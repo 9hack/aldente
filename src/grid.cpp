@@ -4,7 +4,7 @@ Grid::Grid(int w, int h) {
 	width = w;
 	height = h;
 	for (int i = 0; i < width; i++) {
-		vector<Tile*> newRow;
+		std::vector<Tile*> newRow;
 		for (int j = 0; j < height; j++) {
 			Tile* toAdd;
 			if (i == 0 || i == width - 1 || j == 0 || j == height-1) {

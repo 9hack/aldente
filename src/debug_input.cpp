@@ -1,13 +1,14 @@
-#include "keyboard.h"
+#include "debug_input.h"
+
 #include "aldente.h"
 #include "physics.h"
 #include "scene/scene_camera.h"
 
-bool Keyboard::keys[1024];
-bool Keyboard::lmb_down;
-bool Keyboard::rmb_down;
-bool Keyboard::mouse_moved;
-glm::vec3 Keyboard::last_cursor_pos;
+bool DebugInput::keys[1024];
+bool DebugInput::lmb_down;
+bool DebugInput::rmb_down;
+bool DebugInput::mouse_moved;
+glm::vec3 DebugInput::last_cursor_pos;
 
 // TODO : This class won't be used in the final game anyways.
 const GLfloat BASE_CAM_SPEED = 0.1f;
@@ -19,18 +20,18 @@ GLuint frame = 0;
 double prev_ticks = glfwGetTime();
 double move_prev_ticks = prev_ticks;
 
-Keyboard *Keyboard::keyboard = new Keyboard();
+DebugInput *DebugInput::debugInput = new DebugInput();
 
-Keyboard::Keyboard()
+DebugInput::DebugInput()
 {
 	lmb_down = false;
 	rmb_down = false;
 	mouse_moved = false;
 }
 
-Keyboard::~Keyboard() {}
+DebugInput::~DebugInput() {}
 
-void Keyboard::handle_movement()
+void DebugInput::handle_movement()
 {
 	// FPS Control / Tracking
 	frame++;
@@ -64,7 +65,7 @@ void Keyboard::handle_movement()
 	camera->recalculate();
 }
 
-void Keyboard::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void DebugInput::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	// Check for a key press
 	if (action == GLFW_PRESS)
@@ -93,7 +94,7 @@ void Keyboard::key_callback(GLFWwindow* window, int key, int scancode, int actio
 	}
 }
 
-void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double y_pos)
+void DebugInput::cursor_position_callback(GLFWwindow* window, double x_pos, double y_pos)
 {
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -152,7 +153,7 @@ void Keyboard::cursor_position_callback(GLFWwindow* window, double x_pos, double
 	last_cursor_pos = current_cursor_pos;
 }
 
-void Keyboard::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+void DebugInput::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	double x_pos, y_pos;
 	glfwGetCursorPos(window, &x_pos, &y_pos);
@@ -186,7 +187,7 @@ void Keyboard::mouse_button_callback(GLFWwindow* window, int button, int action,
 	}
 }
 
-void Keyboard::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void DebugInput::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	SceneCamera *camera = Aldente::aldente->get_camera();
 	glm::vec3 trans_vec = (float)yoffset * glm::normalize(camera->cam_front);

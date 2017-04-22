@@ -33,10 +33,10 @@ void MainScene::setup()
 	//Setting up scene graph for Grid
 
 	grid = new Grid(10, 10);
-	vector<vector<Tile*>> toAdd = grid->getGrid();
+	std::vector<std::vector<Tile*>> toAdd = grid->getGrid();
 	for (int i = 0; i < toAdd.size(); i++)
 	{
-		vector<Tile*> currRow = toAdd[i];
+		std::vector<Tile*> currRow = toAdd[i];
 		for (int j = 0; j < currRow.size(); j++)
 		{
 			Model *currTile = new Model(this);
@@ -62,10 +62,10 @@ void MainScene::update()
 {
 	hover = Physics::physics->hover;
 
-	vector<vector<Tile*>> toAdd = grid->getGrid();
+	std::vector<std::vector<Tile*>> toAdd = grid->getGrid();
 	for (int i = 0; i < toAdd.size(); i++)
 	{
-		vector<Tile*> currRow = toAdd[i];
+		std::vector<Tile*> currRow = toAdd[i];
 		for (int j = 0; j < currRow.size(); j++)
 		{
 			currRow[j]->update(hover);

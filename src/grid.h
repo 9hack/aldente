@@ -7,14 +7,13 @@
 */
 
 #pragma once
-using namespace std;
 
 #include <vector>
 #include "tile.h"
 
 class Grid {
 private:
-	vector<vector<Tile*>> grid;
+	std::vector<std::vector<Tile*>> grid;
 	int width, height;
 	
 	Tile *hover;
@@ -23,5 +22,5 @@ public:
 	Grid(int w, int h);
 	~Grid();
 
-	vector<vector<Tile*>> getGrid() { return grid; };
+	std::vector<std::vector<Tile*>> getGrid() { return grid; };
 };

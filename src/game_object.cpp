@@ -13,7 +13,7 @@ GameObject::~GameObject()
 // Attaches a model to the game object
 void GameObject::attach_model(Model *m)
 {
-	this->model = m;
+	model = m;
 }
 
 // Renders model in scene

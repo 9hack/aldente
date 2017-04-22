@@ -2,6 +2,6 @@
 
 int main()
 {    
-	Aldente::aldente->go();
+	Aldente::aldente->start_game_loop();
     exit(EXIT_SUCCESS);
 }

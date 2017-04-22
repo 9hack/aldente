@@ -7,7 +7,7 @@
 #include "shaders/shader_manager.h"
 #include "shadows.h"
 
-#include "keyboard.h"
+#include "debug_input.h"
 
 #include "events/input.h"
 #include "input/process.h"
@@ -31,7 +31,7 @@ void Aldente::setup_scenes()
     camera = scene->camera;
 }
 
-void Aldente::go()
+void Aldente::start_game_loop()
 {
     window = Window::window->create_window();
 	Setup::setup_callbacks();
@@ -47,7 +47,7 @@ void Aldente::go()
 		Window::window->poll_events();
 
         input::process();
-		Keyboard::keyboard->handle_movement();
+		DebugInput::debugInput->handle_movement();
 
 		Window::window->update_size(window);
 		Physics::physics->update();

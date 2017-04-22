@@ -12,8 +12,8 @@ Material::Material()
 
 Material::Material(glm::vec3 color)
 {
-	this->ambient = color;
-	this->diffuse = color;
+	ambient = color;
+	diffuse = color;
 	specular = { 0.f, 0.f, 0.f };
 	shininess = 50.f;
 	shadows = true;
@@ -26,9 +26,4 @@ Material::Material(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, GLf
 	this->specular = specular;
 	this->shininess = shininess;
 	this->shadows = shadows;
-}
-
-Material::~Material()
-{
-
 }

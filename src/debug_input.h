@@ -4,13 +4,14 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+
 /*
-	Handles GLFW calls for getting Mouse and Keyboard Input
+	Handles GLFW calls for getting Mouse and Keyboard Input (also temporarily holds Camera for debugging)
 */
-class Keyboard
+class DebugInput
 {
 private:
-	Keyboard();
+	DebugInput();
 
 	static bool keys[1024];
 	static bool lmb_down;
@@ -18,8 +19,8 @@ private:
 	static bool mouse_moved;
 	static glm::vec3 last_cursor_pos;
 public:
-	static Keyboard *keyboard;
-	~Keyboard();
+	static DebugInput *debugInput;
+	~DebugInput();
 
 	void handle_movement();
 

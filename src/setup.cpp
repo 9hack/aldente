@@ -2,7 +2,7 @@
 #include "shaders/shader_manager.h"
 #include "window.h"
 #include "aldente.h"
-#include "keyboard.h"
+#include "debug_input.h"
 
 void Setup::setup_shaders()
 {
@@ -18,10 +18,10 @@ void Setup::setup_callbacks()
 {
 	GLFWwindow *window = Aldente::aldente->get_window();
 	glfwSetErrorCallback(Window::error_callback);
-	glfwSetKeyCallback(window, Keyboard::key_callback);
-	glfwSetCursorPosCallback(window, Keyboard::cursor_position_callback);
-	glfwSetMouseButtonCallback(window, Keyboard::mouse_button_callback);
-	glfwSetScrollCallback(window, Keyboard::scroll_callback);
+	glfwSetKeyCallback(window, DebugInput::key_callback);
+	glfwSetCursorPosCallback(window, DebugInput::cursor_position_callback);
+	glfwSetMouseButtonCallback(window, DebugInput::mouse_button_callback);
+	glfwSetScrollCallback(window, DebugInput::scroll_callback);
 	glfwSetFramebufferSizeCallback(window, Window::resize_callback);
 }
 

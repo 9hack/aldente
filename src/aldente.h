@@ -37,7 +37,7 @@ public:
 	bool shadows_on = true;
 	bool debug_shadows = false;
 
-	void go();	// Main Game Loop
+	void start_game_loop();	// Main Game Loop
 
 	std::vector<Scene *> get_scenes(); // Gets list of all scenes in the game
 	Scene *get_scene(); // Gets currently active scene

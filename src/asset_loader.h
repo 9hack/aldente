@@ -16,8 +16,8 @@ class AssetLoader {
 private:
 	AssetLoader();
 
-	map<string, Model*> assets;
-	map<string, GLuint> textures;
+	std::map<std::string, Model*> assets;
+	std::map<std::string, GLuint> textures;
 	Model* model;
     Assimp::Importer import;
 public:

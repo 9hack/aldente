@@ -258,7 +258,7 @@ Geometry * GeometryGenerator::generate_plane(GLfloat scale, int has_texture)
 {
     Geometry *plane = new Geometry();
 
-    if (has_texture != 0)
+    if (has_texture)
     {
         // Done square by square for repeatable texture
 

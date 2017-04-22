@@ -8,9 +8,7 @@
 	Contains all the essential components required to
 	render the model in the scene.
 */
-class GameObject :
-	public SceneNode
-{
+class GameObject : public SceneNode {
 private:
 	Model *model;
 
