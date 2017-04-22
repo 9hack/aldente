@@ -10,7 +10,7 @@ public:
                float start_x, float start_y,
                float x_scale, float y_scale,
                glm::vec3 color)
-        : text(text), start_x(start_x), start_y(start_y),
+        : text(text), UIElement(start_x, start_y),
           x_scale(x_scale), y_scale(y_scale),
           color(color) {}
     void draw(Render2D &renderer_2d, float offset_x, float offset_y) override;

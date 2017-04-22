@@ -12,7 +12,10 @@ Render2D::Render2D(int screen_width, int screen_height, Shader *shader_2d)
     : screen_width(screen_width), screen_height(screen_height), shader_2d(shader_2d) {
 
     // Calculate projection matrix.
-    projection = glm::ortho(0.0f, static_cast<GLfloat>(width), 0.0f, static_cast<GLfloat>(height));
+    projection = glm::ortho(0.0f,
+                    static_cast<GLfloat>(screen_width),
+                    0.0f,
+                    static_cast<GLfloat>(screen_height));
 
     // Generate textures for all glyphs.
     setup_glyphs();
@@ -208,5 +211,5 @@ void Render2D::render_textP(std::string text,
     GLfloat adj_y        = y        * UNIT_TO_PERCENT * screen_height;
     GLfloat adj_x_scale  = x_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_width;
     GLfloat adj_y_scale  = y_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_height;
-    render_text(adj_x, adj_y, adj_x_scale, adj_y_scale, color);
+    render_text(text, adj_x, adj_y, adj_x_scale, adj_y_scale, color);
 }

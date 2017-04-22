@@ -7,10 +7,11 @@
 class UIRectangle : public UIElement
 {
 public:
-    UIImageNode(float start_x, float start_y,
+    UIRectangle() {} // default ctor
+    UIRectangle(float start_x, float start_y,
                 float width, float height,
                 glm::vec3 color)
-        : start_x(start_x), start_y(start_y),
+        : UIElement(start_x, start_y),
           width(width), height(height),
           color(color) {}
 

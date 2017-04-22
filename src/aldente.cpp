@@ -18,7 +18,8 @@
 #include "util/config.h"
 #include "btBulletDynamicsCommon.h"
 #include "ui/ui.h"
-#include "ui/render_2d.h"
+#include "ui/ui_grid.h"
+#include "ui/render2d.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -208,6 +209,10 @@ void Aldente::go()
 
 	Render2D renderer_2d = Render2D(width, height, ShaderManager::get_shader_program("text"));
 	UI ui = UI(renderer_2d);
+	UIGrid ui_grid = UIGrid(0, 0, 20, 5, 1, 1, color::white);
+	UIRectangle rect = UIRectangle(50, 50, 5, 5, color::windwaker_green);
+	ui.attach(&ui_grid);
+	ui.attach(&rect);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -261,7 +266,7 @@ void Aldente::go()
             Util::render_quad();
         }
 
-		ui.update();
+		ui.draw();
 
         glfwSwapBuffers(window);
     }

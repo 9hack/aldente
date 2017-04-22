@@ -4,16 +4,17 @@
 
 class UIContainer : public UIElement {
 public:
-    UIContainer(float start_x, float start_y
-        : start_x(start_x), start_y(start_y) {}
+    UIContainer() {} // default ctor
+    UIContainer(float start_x, float start_y)
+        : UIElement(start_x, start_y) {}
 
-	virtual void attach(UIElement *child);
-	virtual void detach(UIElement *child);
-	virtual void enable() override;
-	virtual void disable() override;
+    virtual void attach(UIElement *child);
+    virtual void detach(UIElement *child);
+    void enable() override;
+    void disable() override;
 
     virtual void draw(Render2D &renderer_2d,
         float offset_x, float offset_y) override;
 protected:
-	std::vector<UIElement *> children;
-}
+    std::vector<UIElement *> children;
+};

@@ -1,5 +1,7 @@
 #include "ui_container.h"
 
+#include <algorithm>
+
 void UIContainer::attach(UIElement *child) {
     children.push_back(child);
 }
