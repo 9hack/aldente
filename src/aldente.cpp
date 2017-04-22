@@ -211,8 +211,8 @@ void Aldente::go()
 	UI ui = UI(renderer_2d);
 	UIGrid ui_grid = UIGrid(0, 0, 20, 5, 1, 1, color::white);
 	UIRectangle rect = UIRectangle(50, 50, 5, 5, color::windwaker_green);
-	ui.attach(&ui_grid);
-	ui.attach(&rect);
+	ui.attach(ui_grid);
+	ui.attach(rect);
 
     while (!glfwWindowShouldClose(window))
     {

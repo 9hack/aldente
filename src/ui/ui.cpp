@@ -15,11 +15,11 @@ void UI::draw() {
     root.draw(renderer_2d, 0, 0);
 }
 
-void UI::attach(UIElement *e) {
+void UI::attach(UIElement &e) {
     root.attach(e);
 }
 
-void UI::detach(UIElement *e) {
+void UI::detach(UIElement &e) {
     root.detach(e);
 }
 

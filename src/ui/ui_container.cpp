@@ -2,12 +2,12 @@
 
 #include <algorithm>
 
-void UIContainer::attach(UIElement *child) {
-    children.push_back(child);
+void UIContainer::attach(UIElement &child) {
+    children.push_back(&child);
 }
 
-void UIContainer::detach(UIElement *child) {
-    auto it = std::find(children.begin(), children.end(), child);
+void UIContainer::detach(UIElement &child) {
+    auto it = std::find(children.begin(), children.end(), &child);
     if (it != children.end()) children.erase(it);
 }
 

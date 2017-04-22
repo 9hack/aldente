@@ -8,8 +8,8 @@ public:
     UIContainer(float start_x, float start_y)
         : UIElement(start_x, start_y) {}
 
-    virtual void attach(UIElement *child);
-    virtual void detach(UIElement *child);
+    virtual void attach(UIElement &child);
+    virtual void detach(UIElement &child);
     void enable() override;
     void disable() override;
 

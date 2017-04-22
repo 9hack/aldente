@@ -14,8 +14,8 @@ public:
            int border_width=10,
            int inter_padding=10,
            int selection_halo_padding=5); // hardcoded padding :(
-    void attach(UIElement *child) override;
-    void detach(UIElement *child) override;
+    void attach(UIElement &child) override;
+    void detach(UIElement &child) override;
 private:
     int num_elements;
     int columns, rows; // grid dimensions

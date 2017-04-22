@@ -64,10 +64,10 @@ UIGrid::UIGrid(float start_x, float start_y,
     }
 */
 
-void UIGrid::attach(UIElement *child) {
+void UIGrid::attach(UIElement &child) {
 
 }
 
-void UIGrid::detach(UIElement *child) {
+void UIGrid::detach(UIElement &child) {
 
 }

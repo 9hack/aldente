@@ -7,8 +7,8 @@ class UI {
 public:
     UI(Render2D &renderer_2d);
     void draw();
-    void attach(UIElement *e);
-    void detach(UIElement *e);
+    void attach(UIElement &e);
+    void detach(UIElement &e);
     void enable();
     void disable();
 private:
