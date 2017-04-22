@@ -35,7 +35,7 @@ Window::Window(int width, int height, const std::string &name) :
     glfwGetFramebufferSize(gl_window, &width, &height);
 
     // Don't show cursor
-    glfwSetInputMode(gl_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    // glfwSetInputMode(gl_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     // Set up event dispatchers
     glfwSetFramebufferSizeCallback(gl_window, resize_callback);
