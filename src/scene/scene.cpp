@@ -1,31 +1,25 @@
 #include "scene.h"
-#include "util/util.h"
 
-Scene::Scene()
-{
+Scene::Scene() {
     root = new SceneGroup(this);
-    camera = new SceneCamera(this);	
+    camera = new SceneCamera(this);
 }
 
-Scene::~Scene()
-{
-    delete(root);
-    delete(camera);
+Scene::~Scene() {
+    delete (root);
+    delete (camera);
 }
 
-void Scene::draw()
-{
+void Scene::draw() {
     root->draw();
 }
 
-void Scene::update()
-{
-	root->update();
+void Scene::update() {
+    root->update();
 }
 
-void Scene::pass(Shader * s)
-{
-	// For passing a different shader than the mesh's shader and drawing,
-	// Used mainly for shadow mapping passes
-    root->pass(s);	
+void Scene::pass(Shader *s) {
+    // For passing a different shader than the mesh's shader and drawing,
+    // Used mainly for shadow mapping passes
+    root->pass(s);
 }

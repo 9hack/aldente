@@ -13,45 +13,49 @@
 #include "model/geometry_generator.h"
 #include "btBulletDynamicsCommon.h"
 
-class Tile
-{
+class Tile {
 protected:
-	int width, height, x, z;
-	bool traversable;
-	Mesh *mesh;
-	btRigidBody* rigidBody;
-	btBoxShape* box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
-	btBoxShape* ground = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));
+    int width, height, x, z;
+    bool traversable;
+    Mesh *mesh;
+    btRigidBody *rigidBody;
+    btBoxShape *box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
+    btBoxShape *ground = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));
 
 private:
 
 public:
-	Tile();
-	virtual ~Tile();
+    Tile();
 
-	Mesh* getMesh() { return mesh; };
-	int getX() { return x; };
-	int getZ() { return z; };
-	virtual void update(Tile* hover) = 0;
-	btRigidBody* getRigid() { return rigidBody; };
+    virtual ~Tile();
+
+    Mesh *getMesh() { return mesh; };
+
+    int getX() { return x; };
+
+    int getZ() { return z; };
+
+    virtual void update(Tile *hover) = 0;
+
+    btRigidBody *getRigid() { return rigidBody; };
 };
 
-class FloorTile : public Tile
-{
+class FloorTile : public Tile {
 
 public:
-	FloorTile(int x, int z);
-	~FloorTile();
+    FloorTile(int x, int z);
 
-	void update(Tile* hover);
+    ~FloorTile();
+
+    void update(Tile *hover);
 };
 
-class WallTile : public Tile
-{
+class WallTile : public Tile {
 
 public:
-	WallTile(int x, int z);
-	~WallTile();
+    WallTile(int x, int z);
 
-	void update(Tile* hover);
+    ~WallTile();
+
+    void update(Tile *hover);
 };

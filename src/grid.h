@@ -13,14 +13,15 @@
 
 class Grid {
 private:
-	std::vector<std::vector<Tile*>> grid;
-	int width, height;
-	
-	Tile *hover;
+    std::vector<std::vector<Tile *>> grid;
+    int width, height;
+
+    Tile *hover;
 
 public:
-	Grid(int w, int h);
-	~Grid();
+    Grid(int w, int h);
 
-	std::vector<std::vector<Tile*>> getGrid() { return grid; };
+    ~Grid();
+
+    std::vector<std::vector<Tile *>> getGrid() { return grid; };
 };

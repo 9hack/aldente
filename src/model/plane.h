@@ -2,8 +2,7 @@
 
 #include <glm/glm.hpp>
 
-struct Plane
-{
-	glm::vec3 normal;
-	float d;
+struct Plane {
+    glm::vec3 normal;
+    float d;
 };

@@ -5,15 +5,17 @@
 /*
 	Handles low level calls needed for running shadows
 */
-class Shadows
-{
+class Shadows {
 private:
-	Shadows();
-public:
-	static Shadows *shadows;
-	~Shadows();
+    Shadows();
 
-	void shadow_pass(Scene *scene);
-	void debug_shadows();
+public:
+    static Shadows *shadows;
+
+    ~Shadows();
+
+    void shadow_pass(Scene *scene);
+
+    void debug_shadows();
 };
 

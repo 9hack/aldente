@@ -11,18 +11,21 @@
 /*
 	Contains all the information for a single scene
 */
-class Scene
-{
+class Scene {
 public:
-	SceneGroup *root;
-	SceneCamera *camera;
-	glm::vec3 light_pos;
+    SceneGroup *root;
+    SceneCamera *camera;
+    glm::vec3 light_pos;
 
-	Scene();
-	virtual ~Scene();
-	void draw();
-	void pass(Shader * s);
+    Scene();
 
-	virtual void update();
-	virtual void setup() = 0;
+    virtual ~Scene();
+
+    void draw();
+
+    void pass(Shader *s);
+
+    virtual void update();
+
+    virtual void setup() = 0;
 };

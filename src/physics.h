@@ -6,27 +6,28 @@
 #include "tile.h"
 #include <vector>
 
-class Physics
-{
+class Physics {
 private:
-	Physics();
+    Physics();
 
-	//Bullet varaibles
-	btBroadphaseInterface* broadphase;
-	btDefaultCollisionConfiguration* collisionConfiguration;
-	btCollisionDispatcher* dispatcher;
-	btSequentialImpulseConstraintSolver* solver;	
+    //Bullet varaibles
+    btBroadphaseInterface *broadphase;
+    btDefaultCollisionConfiguration *collisionConfiguration;
+    btCollisionDispatcher *dispatcher;
+    btSequentialImpulseConstraintSolver *solver;
 public:
-	static Physics *physics; // Singleton
+    static Physics *physics; // Singleton
 
-	~Physics();
+    ~Physics();
 
-	btDiscreteDynamicsWorld* dynamicsWorld;
-	std::vector<btRigidBody*> rigidBodies;
-	Tile *hover;
-	
-	void setup_bullet();
-	void raycast_mouse(double xpos, double ypos, int width, int height);
-	void update();
+    btDiscreteDynamicsWorld *dynamicsWorld;
+    std::vector<btRigidBody *> rigidBodies;
+    Tile *hover;
+
+    void setup_bullet();
+
+    void raycast_mouse(double xpos, double ypos, int width, int height);
+
+    void update();
 };
 

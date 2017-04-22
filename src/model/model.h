@@ -12,23 +12,27 @@
 #include "mesh.h"
 
 class Model :
-	public SceneNode
-{
+        public SceneNode {
 public:
-	std::vector<Mesh *> meshes;
-	glm::mat4 model_mat;
+    std::vector<Mesh *> meshes;
+    glm::mat4 model_mat;
 
-	Model();
-	Model(Scene *);
-	~Model();
+    Model();
 
-	void set_scene(Scene *scene);
+    Model(Scene *);
 
-	void add_mesh(Mesh *m);
-	void combine_meshes();
+    ~Model();
 
-	void draw();
-	void update();
-	void pass(Shader *s);
+    void set_scene(Scene *scene);
+
+    void add_mesh(Mesh *m);
+
+    void combine_meshes();
+
+    void draw();
+
+    void update();
+
+    void pass(Shader *s);
 };
 

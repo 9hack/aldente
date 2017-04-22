@@ -12,12 +12,12 @@
 	can also be its own scene.
 */
 class MainScene :
-	public Scene
-{
+        public Scene {
 private:
-	Grid* grid;
-	Tile* hover;
+    Grid *grid;
+    Tile *hover;
 public:
-	void update() override;
-	void setup() override;
+    void update() override;
+
+    void setup() override;
 };

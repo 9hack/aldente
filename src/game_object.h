@@ -10,16 +10,19 @@
 */
 class GameObject : public SceneNode {
 private:
-	Model *model;
+    Model *model;
 
 public:
-	GameObject(Scene *scene);
-	virtual ~GameObject();
+    GameObject(Scene *scene);
 
-	void attach_model(Model *m);
+    virtual ~GameObject();
 
-	virtual void draw();
-	virtual void update();
-	virtual void pass(Shader *s);
+    void attach_model(Model *m);
+
+    virtual void draw();
+
+    virtual void update();
+
+    virtual void pass(Shader *s);
 };
 

@@ -12,24 +12,32 @@
 	Handles GLFW calls for creating and resizing the window.
 	Currently assumes there to only be one window. 
 */
-class Window
-{
+class Window {
 private:
-	Window();
+    Window();
+
 public:
-	static Window *window;
-	~Window();
+    static Window *window;
 
-	int width, height; // Width and Height of last updated window
+    ~Window();
 
-    GLFWwindow* create_window();
-	static void error_callback(int error, const char* description);
-	static void resize_callback(GLFWwindow* window, int width, int height);
-	
-	void poll_events();
-	int should_close(GLFWwindow* window);
-	void swap_buffers(GLFWwindow* window);
-	void clear_window();
-	void update_size(GLFWwindow* window);
-	void destroy(GLFWwindow *window);
+    int width, height; // Width and Height of last updated window
+
+    GLFWwindow *create_window();
+
+    static void error_callback(int error, const char *description);
+
+    static void resize_callback(GLFWwindow *window, int width, int height);
+
+    void poll_events();
+
+    int should_close(GLFWwindow *window);
+
+    void swap_buffers(GLFWwindow *window);
+
+    void clear_window();
+
+    void update_size(GLFWwindow *window);
+
+    void destroy(GLFWwindow *window);
 };
