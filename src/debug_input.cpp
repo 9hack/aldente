@@ -18,7 +18,7 @@ static double move_prev_ticks = prev_ticks;
 
 // TODO: this is disgusting
 DebugInput::DebugInput(SceneManager &scene_manager) :
-        scene_manager(scene_manager), lmb_down(false), rmb_down(false), last_cursor_pos(0, 0, 0) {
+        lmb_down(false), rmb_down(false), mouse_moved(false), last_cursor_pos(0, 0, 0), scene_manager(scene_manager) {
     std::fill(std::begin(keys), std::end(keys), false);
 
     // Set up callbacks
