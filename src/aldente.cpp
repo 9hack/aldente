@@ -9,12 +9,10 @@
 
 #include "debug_input.h"
 
-#include "events/input.h"
 #include "input/process.h"
 #include "util/util.h"
 
 namespace input = kuuhaku::input;
-namespace events = kuuhaku::events;
 
 Aldente* Aldente::aldente = new Aldente();
 

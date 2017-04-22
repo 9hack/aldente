@@ -4,6 +4,10 @@
 #include "aldente.h"
 #include "debug_input.h"
 
+#include "events/input.h"
+
+namespace events = kuuhaku::events;
+
 void Setup::setup_shaders()
 {
 	// Load shaders via a shader manager.
@@ -23,6 +27,15 @@ void Setup::setup_callbacks()
 	glfwSetMouseButtonCallback(window, DebugInput::mouse_button_callback);
 	glfwSetScrollCallback(window, DebugInput::scroll_callback);
 	glfwSetFramebufferSizeCallback(window, Window::resize_callback);
+	events::joystick_event.connect([](events::JoystickData &d) {
+		fprintf(stderr,
+				"JoystickEvent:\n"
+						"  id: %d\n"
+						"  is_button: %d\n"
+						"  input: %d\n"
+						"  state: %d\n",
+				d.id, d.is_button, d.input, d.state);
+	});
 }
 
 void Setup::setup_opengl()
