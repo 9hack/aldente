@@ -2,13 +2,10 @@
 
 #include "render2d.h"
 #include "ui_element.h"
-#include "events/input.h"
 
 #include <unordered_map>
 #include <string>
 #include <GL/glew.h>
-
-namespace events = kuuhaku::events;
 
 class UI
 {

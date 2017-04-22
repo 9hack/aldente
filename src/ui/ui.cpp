@@ -11,17 +11,6 @@ UI* UI::ui = new UI();
 
 UI::UI() {}
 
-// get click info from event callback
-void click_callback(events::MouseData d)
-{
-    fprintf(stderr,
-            "MouseEvent:\n"
-            "  x: %d\n"
-            "  y: %d\n",
-            d.x, d.y);
-    // which button was clicked? send event.
-}
-
 void UI::setup(int width, int height)
 {
     renderer_2d = new Render2D();
@@ -29,7 +18,6 @@ void UI::setup(int width, int height)
 
     UIGrid *uigrid = new UIGrid(14, 4, {50, 50}, {0, 0}, color::windwaker_green);
 
-    events::MouseEvent::subscribe(&click_callback);
 }
 
 void UI::update()

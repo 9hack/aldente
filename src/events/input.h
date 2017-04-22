@@ -17,11 +17,5 @@ struct JoystickData {
 // A joystick input.
 extern signal<void (JoystickData &)> joystick_event;
 
-struct MouseData {
-  int x;
-  int y;
-};
-class MouseEvent : public Event<MouseData> {};
-
 }
 }
