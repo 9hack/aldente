@@ -43,7 +43,7 @@ void Aldente::start_game_loop() {
     AssetLoader::asset_loader->setup();
     Util::seed(0); // Seed PRNG.
 
-    std::vector<std::shared_ptr<Poller>> pollers {std::make_shared<InputPoller>(window)};
+    std::vector<std::shared_ptr<Poller>> pollers {std::make_shared<InputPoller>()};
 
     // TODO: disgusting
     Physics::physics->setup_bullet();
