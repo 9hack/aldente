@@ -18,7 +18,10 @@ Shadows::Shadows(Window &window)
 
     events::window_buffer_resize_event.connect([&](events::WindowSizeData d) {
         // TODO: Change to debug mode assertion or logging
-        if (d.window != &window) std::cerr << "window mismatch!" << std::endl;
+        if (d.window != &window) {
+            std::cerr << "window mismatch!" << std::endl;
+            return;
+        }
         screen_width = d.width;
         screen_height = d.height;
     });
@@ -33,7 +36,9 @@ void Shadows::shadow_pass(Scene *scene) {
     scene->camera->update_frustum_corners(screen_width, screen_height, far_plane);
 
     ShadowShader *ss = (ShadowShader *) ShaderManager::get_shader_program("shadow");
+    // Set resolution of shadow map.
     glViewport(0, 0, ss->size, ss->size);
+    // Render to the shadow shader's FBO.
     glBindFramebuffer(GL_FRAMEBUFFER, ss->FBO);
     glClear(GL_DEPTH_BUFFER_BIT);
     ss->use();
@@ -45,10 +50,10 @@ void Shadows::shadow_pass(Scene *scene) {
     glDisable(GL_CULL_FACE);
     // Render using scene graph.
     scene->pass(ss);
+    // Re-enable back face culling
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 // Debug shadows by rendering the shadow map texture to a quad.

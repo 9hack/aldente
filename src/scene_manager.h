@@ -10,6 +10,7 @@ private:
     SceneCamera *camera;
 
 public:
+    SceneManager();
     std::vector<Scene *> get_scenes(); // Gets list of all scenes in the game
     Scene *get_current_scene(); // Gets currently active scene
     SceneCamera *get_camera(); // Gets currently active camera

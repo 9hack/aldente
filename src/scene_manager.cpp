@@ -1,5 +1,24 @@
 #include "scene_manager.h"
 
+#include "events.h"
+#include "util/config.h"
+
+SceneManager::SceneManager() {
+    // Setup callbacks
+    events::window_buffer_resize_event.connect([&](events::WindowSizeData d) {
+        float far_plane, fov;
+        Config::config->get_value(Config::str_far_plane, far_plane);
+        Config::config->get_value(Config::str_fov, fov);
+
+        if (d.height > 0) {
+            for (Scene *s : get_scenes())
+                s->camera->P = glm::perspective(fov,
+                        (float) d.width / (float) d.height,
+                        0.1f, far_plane);
+        }
+    });
+}
+
 std::vector<Scene *> SceneManager::get_scenes() {
     return scenes;
 }

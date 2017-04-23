@@ -18,32 +18,19 @@ static double move_prev_ticks = prev_ticks;
 // TODO: this is disgusting
 DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) :
         window(window),
-		lmb_down(false), rmb_down(false), mouse_moved(false),
-	    last_cursor_pos(0, 0, 0), scene_manager(scene_manager), physics(p) {
-	std::fill(std::begin(keys), std::end(keys), false);
+        lmb_down(false), rmb_down(false), mouse_moved(false),
+        last_cursor_pos(0, 0, 0), scene_manager(scene_manager), physics(p) {
 
-    // Set up callbacks
-    // TODO: move this callback to classes that care about it (like scene manager)
-    // TODO: in real code, please guard all callbacks to check if window pointer matches.
-    auto resize_callback = [&](events::WindowSizeData d) {
-        // TODO: this is dirty
-        float far_plane, fov;
-        Config::config->get_value(Config::str_far_plane, far_plane);
-        Config::config->get_value(Config::str_fov, fov);
-
-        if (d.height > 0) {
-            for (Scene *s : scene_manager.get_scenes())
-                s->camera->P = glm::perspective(fov, (float) d.width / (float) d.height, 0.1f, far_plane);
-        }
-    };
-    events::window_buffer_resize_event.connect(resize_callback);
+    std::fill(std::begin(keys), std::end(keys), false);
 
     // Call resize_callback once to set initial fov, etc.
+    // TODO: This call should be placed elsewhere
     int w, h;
     std::tie(w, h) = window.get_size();
     events::WindowSizeData d = {&window, w, h};
-    resize_callback(d);
+    events::window_buffer_resize_event(d);
 
+    // Set up callbacks
     events::window_key_event.connect([&](events::WindowKeyData d) {
         // Check for a key press
         if (d.action == GLFW_PRESS) {
@@ -115,9 +102,7 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
             camera->recalculate();
         }
 
-
-
-		physics.raycast_mouse(d.x_pos, d.y_pos, width, height);
+        physics.raycast_mouse(d.x_pos, d.y_pos, width, height);
 
         last_cursor_pos = current_cursor_pos;
     });
@@ -166,9 +151,9 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                         "  state: %d\n",
                 d.id, d.is_button, d.input, d.state);
     });
-};
+}
 
-
+// TODO: change this to a "FrameEdge" event callback
 void DebugInput::handle_movement() {
     // FPS Control / Tracking
     frame++;
@@ -194,7 +179,7 @@ void DebugInput::handle_movement() {
         displacement -= glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
     if (keys[GLFW_KEY_D])
         displacement += glm::normalize(glm::cross(camera->cam_front, camera->cam_up)) * cam_step;
-	if (keys[GLFW_KEY_SPACE])
+    if (keys[GLFW_KEY_SPACE])
         displacement += cam_step * camera->cam_up;
 
     camera->displace_cam(displacement);
