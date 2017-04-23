@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include "scene_manager.h"
+#include "window.h"
 
 
 /*
@@ -11,7 +12,8 @@
 */
 class DebugInput {
 private:
-	bool keys[1024];
+    Window &window;
+    bool keys[1024];
     bool lmb_down;
     bool rmb_down;
     bool mouse_moved;
@@ -19,7 +21,7 @@ private:
     SceneManager &scene_manager;
 
 public:
-    DebugInput(SceneManager &scene_manager);
+    DebugInput(Window &window, SceneManager &scene_manager);
     void handle_movement();
 };
 

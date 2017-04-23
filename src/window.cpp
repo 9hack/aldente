@@ -25,8 +25,8 @@ void Window::init() {
 }
 
 Window::Window(const std::string &name, bool show_cursor,
-               int width, int height, GLFWmonitor *monitor, bool fullscreen) :
-        width(width), height(height) {
+               int width_, int height_, GLFWmonitor *monitor, bool fullscreen) :
+        width(width_), height(height_) {
 
     // Lazy one-time init
     if (!initted) {
@@ -57,25 +57,37 @@ Window::Window(const std::string &name, bool show_cursor,
         glfwSetInputMode(gl_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }
 
-    // Retrieve true width and height
+    // Ensure own width and height is accurate to glfw
     glfwGetFramebufferSize(gl_window, &width, &height);
+    events::window_buffer_resize_event.connect([&](events::WindowSizeData d) {
+        width = d.width;
+        height = d.height;
+    });
 
     // Set up event dispatchers
-    glfwSetFramebufferSizeCallback(gl_window, resize_callback);
+    glfwSetFramebufferSizeCallback(gl_window, [](GLFWwindow *window, int w, int h) {
+        glfwMakeContextCurrent(window);
+        events::WindowSizeData d({lookup(window), w, h});
+        events::window_buffer_resize_event(d);
+    });
     glfwSetKeyCallback(gl_window, [](GLFWwindow *window, int key, int scancode, int action, int mods) {
-        events::WindowKeyData d = {lookup(window), key, scancode, action, mods};
+        glfwMakeContextCurrent(window);
+        events::WindowKeyData d({lookup(window), key, scancode, action, mods});
         events::window_key_event(d);
     });
     glfwSetCursorPosCallback(gl_window, [](GLFWwindow *window, double x_pos, double y_pos) {
-        events::WindowCursorData d = {lookup(window), x_pos, y_pos};
+        glfwMakeContextCurrent(window);
+        events::WindowCursorData d({lookup(window), x_pos, y_pos});
         events::window_cursor_event(d);
     });
     glfwSetMouseButtonCallback(gl_window, [](GLFWwindow *window, int button, int action, int mods) {
-        events::WindowMouseButtonData d = {lookup(window), button, action, mods};
+        glfwMakeContextCurrent(window);
+        events::WindowMouseButtonData d({lookup(window), button, action, mods});
         events::window_mouse_button_event(d);
     });
     glfwSetScrollCallback(gl_window, [](GLFWwindow *window, double x_off, double y_off) {
-        events::WindowCursorData d = {lookup(window), x_off, y_off};
+        glfwMakeContextCurrent(window);
+        events::WindowCursorData d({lookup(window), x_off, y_off});
         events::window_cursor_event(d);
     });
 }
@@ -87,11 +99,6 @@ Window::~Window() {
 Window *Window::lookup(GLFWwindow * target) {
     auto found = registry.find(target);
     return found != registry.end() ? found->second : nullptr;
-}
-
-void Window::resize_callback(GLFWwindow *window, int w, int h) {
-    events::WindowSizeData d = {lookup(window), w, h};
-    events::window_resize_event(d);
 }
 
 void Window::close() {
@@ -120,8 +127,3 @@ std::pair<double, double> Window::get_cursor() const {
     glfwGetCursorPos(gl_window, &x_pos, &y_pos);
     return {x_pos, y_pos};
 };
-
-void Window::update_size() {
-    glfwGetFramebufferSize(gl_window, &width, &height);
-    resize_callback(gl_window, width, height);
-}

@@ -54,19 +54,16 @@ void Aldente::start_game_loop() {
     Shadows shadows(window);
     SceneManager scene_manager;
     Physics::set_scene(scene_manager.get_scene());
-    DebugInput debug_input(scene_manager);
+    DebugInput debug_input(window, scene_manager);
 
 
     while (!window.should_close()) {
         // Do polling
-        glfwPollEvents();
         for (auto &poller : pollers) {
             poller->poll();
         }
 
         debug_input.handle_movement();
-
-        window.update_size();
         Physics::physics->update();
 
         scene_manager.get_scene()->update();

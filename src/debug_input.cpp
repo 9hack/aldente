@@ -17,15 +17,15 @@ static double prev_ticks = glfwGetTime();
 static double move_prev_ticks = prev_ticks;
 
 // TODO: this is disgusting
-DebugInput::DebugInput(SceneManager &scene_manager) :
-        lmb_down(false), rmb_down(false), mouse_moved(false), last_cursor_pos(0, 0, 0), scene_manager(scene_manager) {
+DebugInput::DebugInput(Window &window, SceneManager &scene_manager) :
+        window(window),
+        lmb_down(false), rmb_down(false), mouse_moved(false),
+        last_cursor_pos(0, 0, 0), scene_manager(scene_manager) {
     std::fill(std::begin(keys), std::end(keys), false);
 
     // Set up callbacks
-    events::window_resize_event.connect([&](events::WindowSizeData d) {
-        // Set the viewport size. This is the only matrix that OpenGL maintains for us in modern OpenGL!
-        glViewport(0, 0, d.width, d.height);
-
+    // TODO: in real code, please guard all callbacks to check if window pointer matches.
+    auto resize_callback = [&](events::WindowSizeData d) {
         // TODO: this is dirty
         float far_plane, fov;
         Config::config->get_value(Config::str_far_plane, far_plane);
@@ -35,7 +35,14 @@ DebugInput::DebugInput(SceneManager &scene_manager) :
             for (Scene *s : scene_manager.get_scenes())
                 s->camera->P = glm::perspective(fov, (float) d.width / (float) d.height, 0.1f, far_plane);
         }
-    });
+    };
+    events::window_buffer_resize_event.connect(resize_callback);
+
+    // Call resize_callback once to set initial fov, etc.
+    int w, h;
+    std::tie(w, h) = window.get_size();
+    events::WindowSizeData d({&window, w, h});
+    resize_callback(d);
 
     events::window_key_event.connect([&](events::WindowKeyData d) {
         // Check for a key press

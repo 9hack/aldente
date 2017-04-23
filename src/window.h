@@ -15,7 +15,7 @@
 class Window {
 private:
     GLFWwindow *gl_window;
-    int width, height;
+    int width, height; // Required for clearing the window.
 
     // One-time init
     static bool initted;
@@ -25,9 +25,6 @@ private:
     // we get from a GLFW callback.
     static std::unordered_map<GLFWwindow *, Window *> registry;
     static Window *lookup(GLFWwindow * target);
-
-    // We explicitly define this because we need to call this in update_size().
-    static void resize_callback(GLFWwindow *window, int w, int h);
 
 public:
     Window(const std::string &name, bool show_cursor, int width, int height,
@@ -40,5 +37,4 @@ public:
     void clear();
     std::pair<int, int> get_size() const;
     std::pair<double, double> get_cursor() const;
-    void update_size();
 };

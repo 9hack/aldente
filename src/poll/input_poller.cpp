@@ -17,7 +17,7 @@ void InputPoller::poll() {
             const bool same = p_btns[i] == btns[i];
             p_btns[i] = btns[i];
             if (!same) {
-                events::JoystickData d = {1, true, i, btns[i] == GLFW_PRESS};
+                events::JoystickData d({1, true, i, btns[i] == GLFW_PRESS});
                 events::joystick_event(d);
             }
         }
@@ -33,7 +33,7 @@ void InputPoller::poll() {
             const bool same = p_axes[i] == level;
             p_axes[i] = level;
             if (!same) {
-                events::JoystickData d = {1, false, i, level};
+                events::JoystickData d({1, false, i, level});
                 events::joystick_event(d);
             }
         }
