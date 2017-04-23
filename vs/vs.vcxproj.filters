@@ -2158,6 +2158,9 @@
     <ClCompile Include="..\src\window.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\poll\glfw_poller.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\aldente.h">
@@ -4854,6 +4857,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\src\window.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\poll\glfw_poller.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

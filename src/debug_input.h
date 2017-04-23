@@ -5,13 +5,15 @@
 #include <glm/glm.hpp>
 #include "scene_manager.h"
 #include "physics.h"
+#include "window.h"
 
 /*
 	Handles GLFW calls for getting Mouse and Keyboard Input (also temporarily holds Camera for debugging)
 */
 class DebugInput {
 private:
-	bool keys[1024];
+    Window &window;
+    bool keys[1024];
     bool lmb_down;
     bool rmb_down;
     bool mouse_moved;
@@ -20,7 +22,7 @@ private:
 	Physics &physics;
 
 public:
-    DebugInput(SceneManager &scene_manager, Physics &p);
+    DebugInput(Window &window, SceneManager &scene_manager, Physics &p);
     void handle_movement();
 };
 

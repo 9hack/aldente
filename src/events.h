@@ -22,7 +22,7 @@ namespace events {
         int width;
         int height;
     };
-    extern signal<void(WindowSizeData &)> window_resize_event;
+    extern signal<void(WindowSizeData &)> window_buffer_resize_event;
 
     struct WindowKeyData {
         Window *window;

@@ -1,4 +1,5 @@
 #include "aldente.h"
+
 #include "window.h"
 #include "setup.h"
 #include "asset_loader.h"
@@ -7,6 +8,7 @@
 #include "scene_manager.h"
 #include "debug_input.h"
 #include "poll/poller.h"
+#include "poll/glfw_poller.h"
 #include "poll/input_poller.h"
 #include "util/config.h"
 
@@ -29,15 +31,12 @@ Aldente::~Aldente() {
 
 void Aldente::start_game_loop() {
 
-    // Make a window
-    Window::set_hints();
-
     int width, height;
     Config::config->get_value(Config::str_screen_width, width);
     Config::config->get_value(Config::str_screen_height, height);
     std::string game_name;
     Config::config->get_value(Config::str_game_name, game_name);
-    Window window(width, height, game_name);
+    Window window(game_name, true, width, height);
 
     // Setup stuff
     Setup::setup_opengl();
@@ -45,7 +44,10 @@ void Aldente::start_game_loop() {
     AssetLoader::asset_loader->setup();
     Util::seed(0); // Seed PRNG.
 
-    std::vector<Poller *> pollers {new InputPoller(window)};
+    std::vector<std::shared_ptr<Poller>> pollers {
+            std::make_shared<GlfwPoller>(),
+            std::make_shared<InputPoller>(),
+    };
 
 	Physics physics;
     Shadows shadows(window);
@@ -55,19 +57,15 @@ void Aldente::start_game_loop() {
 	MainScene* testScene = new MainScene();
 	physics.set_scene(testScene);
 	scene_manager.set_current_scene(testScene);
-    DebugInput debug_input(scene_manager,physics);
-
+    DebugInput debug_input(window, scene_manager, physics);
 
     while (!window.should_close()) {
         // Do polling
-        glfwPollEvents();
-        for (auto *poller : pollers) {
+        for (auto &poller : pollers) {
             poller->poll();
         }
 
         debug_input.handle_movement();
-
-        window.update_size();
         physics.update();
 
         scene_manager.get_current_scene()->update();
