@@ -20,6 +20,8 @@ private:
     static std::map<const char *, Shader *> shaders;
     static Shader *default_shader;
 public:
+    static void init();
+
     static void destroy();
 
     static void create_shader_program(const char *type);

@@ -6,6 +6,15 @@
 std::map<const char *, Shader *> ShaderManager::shaders;
 Shader *ShaderManager::default_shader;
 
+void ShaderManager::init() {
+    // Load shaders via a shader manager.
+    ShaderManager::create_shader_program("basic");
+    ShaderManager::create_shader_program("skybox");
+    ShaderManager::create_shader_program("shadow");
+    ShaderManager::create_shader_program("debug_shadow");
+    ShaderManager::set_default("basic");
+}
+
 void ShaderManager::destroy() {
     for (auto it = shaders.begin(); it != shaders.end(); ++it)
         delete (it->second);

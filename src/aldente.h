@@ -15,7 +15,6 @@
 */
 class Aldente {
 public:
-    Aldente();
     ~Aldente();
 
     // TODO: relocate these to a global flags module
