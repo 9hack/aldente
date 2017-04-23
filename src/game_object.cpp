@@ -1,6 +1,7 @@
 #include "game_object.h"
 
 GameObject::GameObject() {
+	model = new Model();
 }
 
 // Attaches a model to the game object

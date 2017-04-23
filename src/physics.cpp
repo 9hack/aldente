@@ -29,13 +29,13 @@ void Physics::set_scene(Scene *s) {
 
 	currentRigidSignal.disconnect();
 
-	//Make a new dynamicsWorld if scene was not previously
-	//used
+	//Make a new dynamicsWorld if scene was not previously used
 	if (scene_worlds.count(s) == 0) {
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 		dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
 		for (btRigidBody* rigid : s->rigids) {
-			dynamicsWorld->addRigidBody(rigid);
+			if(rigid)
+				dynamicsWorld->addRigidBody(rigid);
 		}
 		scene_worlds[s] = dynamicsWorld;
 	}

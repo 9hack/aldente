@@ -9,7 +9,7 @@
 	render the model in the scene.
 */
 class GameObject {
-private:
+protected:
     Model *model;
 public:
     GameObject();

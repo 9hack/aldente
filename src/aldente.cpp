@@ -55,7 +55,6 @@ void Aldente::start_game_loop() {
 	MainScene* testScene = new MainScene();
 	physics.set_scene(testScene);
 	scene_manager.set_current_scene(testScene);
-
     DebugInput debug_input(scene_manager,physics);
 
 

@@ -93,7 +93,7 @@ MainScene::MainScene() : Scene() {
 
 void MainScene::update() {
 	//hover = physics.hover;
-
+	hover = nullptr;
 	std::vector<std::vector<Tile *>> toAdd = grid->getGrid();
 	for (int i = 0; i < toAdd.size(); i++) {
 		std::vector<Tile *> currRow = toAdd[i];
@@ -102,5 +102,4 @@ void MainScene::update() {
 		}
 	}
 
-	Scene::update();
 }

@@ -25,5 +25,5 @@ public:
 
     std::vector<std::vector<Tile *>> getGrid() { return grid; };
 
-	void update();
+	//void update();
 };

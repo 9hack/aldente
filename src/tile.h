@@ -28,7 +28,7 @@ private:
 public:
     Tile();
 
-    virtual ~Tile();
+    ~Tile();
 
     Mesh *getMesh() { return mesh; };
 

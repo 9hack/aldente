@@ -1,7 +1,8 @@
 #include "tile.h"
 #include "util/colors.h"
 
-Tile::Tile() {}
+Tile::Tile() :
+	mesh(nullptr), rigidBody(nullptr) {}
 
 Tile::~Tile() {}
 
@@ -9,7 +10,7 @@ FloorTile::~FloorTile() {}
 
 WallTile::~WallTile() {}
 
-FloorTile::FloorTile(int x, int z) {
+FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     width = 1;
     height = 1;
     this->x = x;
@@ -22,11 +23,13 @@ FloorTile::FloorTile(int x, int z) {
     Material *mat = new Material(color::indian_red);
     mesh->material = mat;
 
+	model->add_mesh(mesh);
+	
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
             btQuaternion(), btVector3((btScalar) x, 0.0f, (btScalar) z)));
 
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-            1,                  // mass, in kg. 0 -> Static object, will never move.
+            0,                  // mass, in kg. 0 -> Static object, will never move.
             motionstate,
             ground,  // collision shape of body
             btVector3(0, 0, 0)    // local inertia
@@ -59,7 +62,7 @@ void FloorTile::update(Tile *hover) {
     fprintf(stderr, "%f\n", t.getOrigin().getY());*/
 }
 
-WallTile::WallTile(int x, int z) {
+WallTile::WallTile(int x, int z) : Tile::Tile() {
     width = 1;
     height = 1;
     this->x = x;
@@ -72,6 +75,8 @@ WallTile::WallTile(int x, int z) {
     mesh->shader = ShaderManager::get_default();
     Material *mat = new Material(color::indian_red);
     mesh->material = mat;
+
+	model->add_mesh(mesh);
 
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
             btQuaternion(), btVector3((btScalar) x, 0.5f, (btScalar) z)));
