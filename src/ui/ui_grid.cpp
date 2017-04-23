@@ -3,8 +3,8 @@
 #include "util/colors.h"
 
 UIGrid::~UIGrid() {
-    for (unsigned int i = 0; i < attach_points.size(); ++i)
-        delete attach_points[i];
+    for (unsigned int i = 0; i < children.size(); ++i)
+        delete children[i];
 }
 
 UIGrid::UIGrid(float start_x, float start_y,
@@ -19,7 +19,8 @@ UIGrid::UIGrid(float start_x, float start_y,
     element_width(element_width), element_height(element_height),
     grid_bg_color(grid_bg_color),
     border_width(border_width), inter_padding(inter_padding),
-    selection_halo_padding(selection_halo_padding) {
+    selection_halo_padding(selection_halo_padding),
+    selection_row(0), selection_col(0) {
 
     // Calculate number of rows.
     rows = (num_elements - 1) / columns + 1;
@@ -38,7 +39,6 @@ UIGrid::UIGrid(float start_x, float start_y,
     grid_bg = UIRectangle(start_x, start_y,
                           grid_width, grid_height,
                           grid_bg_color);
-    children.push_back(&grid_bg);
 
     // Build empty attachment points across the grid.
     float elt_start_x = start_x + border_width;
@@ -49,32 +49,67 @@ UIGrid::UIGrid(float start_x, float start_y,
             float adjusted_x = elt_start_x + (total_element_width * col);
             float adjusted_y = elt_start_y - (total_element_height * row);
 
-            UIContainer *attach_point = new UIContainer(adjusted_x, adjusted_y);
-            // Add to both children (for rendering), and attach_points (for attachment)
-            attach_points.push_back(attach_point);
+            UIHaloContainer *attach_point =
+                new UIHaloContainer(adjusted_x, adjusted_y,
+                    element_width, element_height, selection_halo_padding);
             children.push_back(attach_point);
-
-            UIElement *selection_halo =
-                new UIRectangle(-selection_halo_padding, -selection_halo_padding,
-                        element_width + selection_halo_padding * 2,
-                        element_height + selection_halo_padding * 2,
-                        color::windwaker_sand);
-            attach_point->attach(*selection_halo);
 
             curr_elt++;
             if (curr_elt == num_elements) break; // finished doing all the elements!
         }
     }
+
+    // First item in grid is selected by default (0,0)
+    toggle_current_selection_halo();
 }
 
 void UIGrid::attach_at(int row, int col, UIElement &child) {
     // Validate location
     if (row * columns + col >= num_elements) return; // log warning
-    attach_points[row * columns + col]->attach(child);
+    children[row * columns + col]->attach(child);
 }
 
 void UIGrid::detach_at(int row, int col, UIElement &child) {
     // Validate location
     if (row * columns + col >= num_elements) return; // log warning
-    attach_points[row * columns + col]->detach(child);
+    children[row * columns + col]->detach(child);
+}
+
+void UIGrid::draw(Render2D &renderer_2d,
+        float offset_x, float offset_y) {
+    grid_bg.draw(renderer_2d, offset_x, offset_y);
+    UIContainer::draw(renderer_2d, offset_x, offset_y);
+}
+
+void UIGrid::enable() {
+    grid_bg.enable();
+    UIContainer::enable();
+}
+
+void UIGrid::disable() {
+    grid_bg.disable();
+    UIContainer::disable();
+}
+
+void UIGrid::toggle_current_selection_halo() {
+    children[selection_row * columns + selection_col]->do_selection();
+}
+
+void UIGrid::move_selection(Direction d) {
+    switch (d) {
+        case Direction::UP:
+            selection_row = glm::max(0, selection_row-1);
+            break;
+        case Direction::RIGHT:
+            selection_col = glm::min(columns-1, selection_col+1);
+            break;
+        case Direction::DOWN:
+            selection_row = glm::min(rows-1, selection_row+1);
+            break;
+        case Direction::LEFT:
+            selection_col = glm::max(0, selection_col-1);
+            break;
+        default:
+            break;
+    }
 }

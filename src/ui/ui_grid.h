@@ -2,11 +2,14 @@
 
 #include "ui_container.h"
 #include "ui_rectangle.h"
+#include "ui_halo_container.h"
 
 #include <glm/glm.hpp>
 
 class UIGrid : public UIContainer {
 public:
+    enum Direction { UP, RIGHT, DOWN, LEFT };
+
     UIGrid(float start_x, float start_y,
            int num_elements, int columns,
            float element_width, float element_height,
@@ -17,7 +20,14 @@ public:
     ~UIGrid();
     void attach_at(int row, int col, UIElement &child);
     void detach_at(int row, int col, UIElement &child);
+    void draw(Render2D &renderer_2d,
+        float offset_x, float offset_y) override;
+    void enable() override;
+    void disable() override;
 private:
+    void move_selection(Direction d);
+    void toggle_current_selection_halo();
+
     int num_elements;
     int columns, rows; // grid dimensions
     float element_width, element_height;
@@ -31,5 +41,5 @@ private:
 
     UIRectangle grid_bg;
 
-    std::vector<UIContainer *> attach_points; // anchors for grid positions
+    int selection_row, selection_col;
 };
