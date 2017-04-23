@@ -1,6 +1,7 @@
 #include "ui_grid.h"
 
 #include "util/colors.h"
+#include "events.h"
 
 UIGrid::~UIGrid() {
     for (unsigned int i = 0; i < children.size(); ++i)
@@ -61,6 +62,11 @@ UIGrid::UIGrid(float start_x, float start_y,
 
     // First item in grid is selected by default (0,0)
     toggle_current_selection_halo();
+
+    // Set up callbacks.
+    // TODO: add semantic game logic abstraction layer
+    events::joystick_event.connect([&](events::JoystickData d) {
+            move_selection(Direction::DOWN);});
 }
 
 void UIGrid::attach_at(int row, int col, UIElement &child) {
@@ -96,6 +102,7 @@ void UIGrid::toggle_current_selection_halo() {
 }
 
 void UIGrid::move_selection(Direction d) {
+	toggle_current_selection_halo();
     switch (d) {
         case Direction::UP:
             selection_row = glm::max(0, selection_row-1);
@@ -112,4 +119,5 @@ void UIGrid::move_selection(Direction d) {
         default:
             break;
     }
+	toggle_current_selection_halo();
 }
