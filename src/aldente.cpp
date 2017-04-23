@@ -10,8 +10,6 @@
 #include <cfloat>
 #include <string>
 
-#include "events/input.h"
-#include "input/process.h"
 #include "util/util.h"
 #include "util/colors.h"
 #include "global.h"
@@ -20,12 +18,11 @@
 #include "ui/ui.h"
 #include "ui/ui_grid.h"
 #include "ui/render2d.h"
+#include "poll/poller.h"
+#include "poll/input_poller.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-namespace input = kuuhaku::input;
-namespace events = kuuhaku::events;
 
 /* global vars */
 Scene* scene;
@@ -219,11 +216,15 @@ void Aldente::go()
 		}
 	}
 	ui.attach(ui_grid);
+	std::vector<Poller *> pollers {new InputPoller()};
 
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        input::process();
+
+		for (auto *poller : pollers) {
+            poller->poll();
+        }
 
         frame++;
         double curr_time = glfwGetTime();
@@ -333,16 +334,6 @@ void Aldente::setup_callbacks()
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetFramebufferSizeCallback(window, resize_callback);
-
-    events::joystick_event.connect([](events::JoystickData &d) {
-        fprintf(stderr,
-                "JoystickEvent:\n"
-                "  id: %d\n"
-                "  is_button: %d\n"
-                "  input: %d\n"
-                "  state: %d\n",
-                d.id, d.is_button, d.input, d.state);
-    });
 }
 
 void Aldente::setup_opengl()
