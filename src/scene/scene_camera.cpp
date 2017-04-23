@@ -17,15 +17,11 @@ void SceneCamera::reset() {
 }
 
 void SceneCamera::displace_cam(glm::vec3 displacement) {
-    glm::vec3 new_pos = cam_pos + displacement;
-    new_pos = cam_pos + displacement;
-
-    cam_pos = new_pos;
+    cam_pos = cam_pos + displacement;
     recalculate();
 }
 
 // Frustum stuff is for shadow mapping
-
 void SceneCamera::update_frustum_corners(int width, int height, GLfloat far) {
     GLfloat aspect_ratio = (float) width / (float) height;
     glm::vec3 cam_right = glm::cross(cam_pos - (cam_pos + cam_front), cam_up);
@@ -50,7 +46,43 @@ void SceneCamera::update_frustum_corners(int width, int height, GLfloat far) {
     frustum_corners[7] = far_center - (cam_up * (far_height / 2)) + (cam_right * (far_width / 2));
 }
 
+glm::mat4 SceneCamera::frustum_ortho(glm::vec3 light_pos) {
+    // May need to do redo values below
+    const float FRINGE_X = 0; // 5.f * 1.7f;
+    const float FRINGE_Y = 0; // 5.f * 1.7f;
+    const float FRINGE_Z = 0; // 5.f * 1.7f;
+
+    glm::mat4 light_view = glm::lookAt(light_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    glm::vec3 corners_lightspace[8];
+
+    for (int i = 0; i < 8; ++i) {
+        corners_lightspace[i] = glm::vec3(light_view * glm::vec4(frustum_corners[i], 1.f));
+    }
+
+    glm::vec3 min = corners_lightspace[0];
+    glm::vec3 max = corners_lightspace[0];
+    for (int i = 0; i < 8; i++) {
+        if (corners_lightspace[i].x > max.x)
+            max.x = corners_lightspace[i].x;
+        else if (corners_lightspace[i].x < min.x)
+            min.x = corners_lightspace[i].x;
+        if (corners_lightspace[i].y > max.y)
+            max.y = corners_lightspace[i].y;
+        else if (corners_lightspace[i].y < min.y)
+            min.y = corners_lightspace[i].y;
+        if (corners_lightspace[i].z > max.z)
+            max.z = corners_lightspace[i].z;
+        else if (corners_lightspace[i].z < min.z)
+            min.z = corners_lightspace[i].z;
+    }
+
+    return glm::ortho(min.x - FRINGE_X, max.x + FRINGE_X, min.y - FRINGE_Y, max.y + FRINGE_Y, -max.z - FRINGE_Z,
+                      -min.z + FRINGE_Z);
+}
+
+
 /* ADAPTED FROM http://ruh.li/CameraViewFrustum.html */
+// Currently unused, can use for view frustum culling
 void SceneCamera::update_frustum_planes() {
     glm::mat4 m = P * V;
     frustum_planes[0].normal.x = m[0][3] + m[0][0];
@@ -96,39 +128,3 @@ void SceneCamera::update_frustum_planes() {
         frustum_planes[i].d = frustum_planes[i].d / length;
     }
 }
-
-glm::mat4 SceneCamera::frustum_ortho(glm::vec3 light_pos) {
-    // May need to do redo values below
-    const float FRINGE_X = 5.f * 1.7f;
-    const float FRINGE_Y = 5.f * 1.7f;
-    const float FRINGE_Z = 5.f * 1.7f;
-
-    static bool once = false;
-    glm::mat4 light_view = glm::lookAt(light_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    glm::vec3 corners_lightspace[8];
-
-    for (int i = 0; i < 8; ++i) {
-        corners_lightspace[i] = glm::vec3(light_view * glm::vec4(frustum_corners[i], 1.f));
-    }
-
-    glm::vec3 min = corners_lightspace[0];
-    glm::vec3 max = corners_lightspace[0];
-    for (int i = 0; i < 8; i++) {
-        if (corners_lightspace[i].x > max.x)
-            max.x = corners_lightspace[i].x;
-        else if (corners_lightspace[i].x < min.x)
-            min.x = corners_lightspace[i].x;
-        if (corners_lightspace[i].y > max.y)
-            max.y = corners_lightspace[i].y;
-        else if (corners_lightspace[i].y < min.y)
-            min.y = corners_lightspace[i].y;
-        if (corners_lightspace[i].z > max.z)
-            max.z = corners_lightspace[i].z;
-        else if (corners_lightspace[i].z < min.z)
-            min.z = corners_lightspace[i].z;
-    }
-
-    return glm::ortho(min.x - FRINGE_X, max.x + FRINGE_X, min.y - FRINGE_Y, max.y + FRINGE_Y, -max.z - FRINGE_Z,
-                      -min.z + FRINGE_Z);
-}
-

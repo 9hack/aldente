@@ -9,13 +9,13 @@
 #include "util/util.h"
 
 /*
-	A utility class containing functions for generating primitive 3D models with ease. 
+	A utility class containing functions for generating primitive 3D models with ease.
 */
 class GeometryGenerator {
 public:
     static std::vector<Geometry *> geometries;
 
-    static void clean_up();
+    static void destroy();
 
     static Geometry *generate_cube(GLfloat scale, bool with_normals);
 

@@ -2,7 +2,7 @@
 
 std::vector<Geometry *> GeometryGenerator::geometries;
 
-void GeometryGenerator::clean_up() {
+void GeometryGenerator::destroy() {
     for (auto it = geometries.begin(); it != geometries.end(); ++it)
         delete (*it);
 }

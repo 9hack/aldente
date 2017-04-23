@@ -18,11 +18,12 @@ static double move_prev_ticks = prev_ticks;
 // TODO: this is disgusting
 DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) :
         window(window),
-		lmb_down(false), rmb_down(false), mouse_moved(false), 
+		lmb_down(false), rmb_down(false), mouse_moved(false),
 	    last_cursor_pos(0, 0, 0), scene_manager(scene_manager), physics(p) {
 	std::fill(std::begin(keys), std::end(keys), false);
 
     // Set up callbacks
+    // TODO: move this callback to classes that care about it (like scene manager)
     // TODO: in real code, please guard all callbacks to check if window pointer matches.
     auto resize_callback = [&](events::WindowSizeData d) {
         // TODO: this is dirty
@@ -54,10 +55,7 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     d.window->close();
                     break;
                 case GLFW_KEY_Q:
-                    Aldente::debug_shadows = !Aldente::debug_shadows;
-                    break;
-                case GLFW_KEY_X:
-                    Aldente::shadows_on = !Aldente::shadows_on;
+                    events::toggle_debug_shadows_event();
                     break;
                 default:
                     break;
@@ -117,8 +115,8 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
             camera->recalculate();
         }
 
-        
-		
+
+
 		physics.raycast_mouse(d.x_pos, d.y_pos, width, height);
 
         last_cursor_pos = current_cursor_pos;
@@ -157,6 +155,17 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
         camera->cam_pos = glm::vec3(glm::translate(glm::mat4(1.0f), trans_vec) * glm::vec4(camera->cam_pos, 1.0f));
         camera->recalculate();
     });
+
+    // Test fire for joystick events
+    events::joystick_event.connect([](events::JoystickData &d) {
+        fprintf(stderr,
+                "JoystickEvent:\n"
+                        "  id: %d\n"
+                        "  is_button: %d\n"
+                        "  input: %d\n"
+                        "  state: %d\n",
+                d.id, d.is_button, d.input, d.state);
+    });
 };
 
 
@@ -188,6 +197,5 @@ void DebugInput::handle_movement() {
 	if (keys[GLFW_KEY_SPACE])
         displacement += cam_step * camera->cam_up;
 
-    camera->cam_pos += displacement;
-    camera->recalculate();
+    camera->displace_cam(displacement);
 }

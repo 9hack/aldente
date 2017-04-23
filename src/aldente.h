@@ -17,9 +17,5 @@ class Aldente {
 public:
     ~Aldente();
 
-    // TODO: relocate these to a global flags module
-    static bool shadows_on;
-    static bool debug_shadows;
-
     void start_game_loop();    // Main Game Loop
 };

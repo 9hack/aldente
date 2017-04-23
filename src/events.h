@@ -54,4 +54,6 @@ namespace events {
         double y_off;
     };
     extern signal<void(WindowScrollData &)> window_scroll_event;
+
+    extern signal<void()> toggle_debug_shadows_event;
 }

@@ -12,12 +12,9 @@
 #include "util/config.h"
 #include "events.h"
 
-bool Aldente::shadows_on = true;
-bool Aldente::debug_shadows = false;
-
 Aldente::~Aldente() {
     ShaderManager::destroy();
-    GeometryGenerator::clean_up();
+    GeometryGenerator::destroy();
     glfwTerminate();
 }
 
@@ -75,17 +72,6 @@ void Aldente::start_game_loop() {
             poller->poll();
         }
 
-        // Test fire for joystick events
-        events::joystick_event.connect([](events::JoystickData &d) {
-            fprintf(stderr,
-                    "JoystickEvent:\n"
-                            "  id: %d\n"
-                            "  is_button: %d\n"
-                            "  input: %d\n"
-                            "  state: %d\n",
-                    d.id, d.is_button, d.input, d.state);
-        });
-
         debug_input.handle_movement();
         physics.update();
 
@@ -98,8 +84,7 @@ void Aldente::start_game_loop() {
         window.clear();
         scene_manager.get_current_scene()->draw();
 
-        if (debug_shadows)
-            shadows.debug_shadows();
+        shadows.debug_shadows();
 
         window.swap_buffers();
     }
