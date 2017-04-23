@@ -209,10 +209,16 @@ void Aldente::go()
 
 	Render2D renderer_2d = Render2D(width, height, ShaderManager::get_shader_program("text"));
 	UI ui = UI(renderer_2d);
-	UIGrid ui_grid = UIGrid(0, 0, 20, 5, 1, 1, color::white);
-	UIRectangle rect = UIRectangle(50, 50, 5, 5, color::windwaker_green);
+	UIGrid ui_grid = UIGrid(0, 0, 20, 5, 5, 5, color::white);
+	UIRectangle rect = UIRectangle(0, 0, 5, 5, color::windwaker_green);
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 5; ++j)
+		{
+			ui_grid.attach_at(i, j, rect);
+		}
+	}
 	ui.attach(ui_grid);
-	ui.attach(rect);
 
     while (!glfwWindowShouldClose(window))
     {

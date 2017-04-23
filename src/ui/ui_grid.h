@@ -11,22 +11,25 @@ public:
            int num_elements, int columns,
            float element_width, float element_height,
            glm::vec3 grid_bg_color,
-           int border_width=10,
-           int inter_padding=10,
-           int selection_halo_padding=5); // hardcoded padding :(
-    void attach(UIElement &child) override;
-    void detach(UIElement &child) override;
+           float border_width=1.0f,
+           float inter_padding=0.75f,
+           float selection_halo_padding=0.3f); // hardcoded defaults :(
+    ~UIGrid();
+    void attach_at(int row, int col, UIElement &child);
+    void detach_at(int row, int col, UIElement &child);
 private:
     int num_elements;
     int columns, rows; // grid dimensions
     float element_width, element_height;
     glm::vec3 grid_bg_color;
-    int border_width; // border padding around grid
-    int inter_padding; // padding between elts
-    int selection_halo_padding; // width of selection halo
+    float border_width; // border padding around grid
+    float inter_padding; // padding between elts
+    float selection_halo_padding; // width of selection halo
 
-    int grid_width, grid_height; // size of entire grid rectangle
-    int total_element_width, total_element_height; // elt size incl padding
+    float grid_width, grid_height; // size of entire grid rectangle
+    float total_element_width, total_element_height; // elt size incl padding
 
     UIRectangle grid_bg;
+
+    std::vector<UIContainer *> attach_points; // anchors for grid positions
 };

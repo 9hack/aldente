@@ -2,13 +2,18 @@
 
 #include "util/colors.h"
 
+UIGrid::~UIGrid() {
+    for (unsigned int i = 0; i < attach_points.size(); ++i)
+        delete attach_points[i];
+}
+
 UIGrid::UIGrid(float start_x, float start_y,
         int num_elements, int columns,
         float element_width, float element_height,
         glm::vec3 grid_bg_color,
-        int border_width,
-        int inter_padding,
-        int selection_halo_padding)
+        float border_width,
+        float inter_padding,
+        float selection_halo_padding)
     : UIContainer(start_x, start_y),
     num_elements(num_elements), columns(columns),
     element_width(element_width), element_height(element_height),
@@ -29,45 +34,47 @@ UIGrid::UIGrid(float start_x, float start_y,
     total_element_width = element_width + inter_padding;
     total_element_height = element_height + inter_padding;
 
-    // Create grid background element
+    // Create grid background element and add to children
     grid_bg = UIRectangle(start_x, start_y,
                           grid_width, grid_height,
                           grid_bg_color);
     children.push_back(&grid_bg);
-}
 
-/*
-    // Create all grid elements.
-    int elt_start_x = border_width;
-    int elt_start_y = grid_height -border_width - element_height;
+    // Build empty attachment points across the grid.
+    float elt_start_x = start_x + border_width;
+    float elt_start_y = start_y + grid_height - border_width - element_height;
     int curr_elt = 0;
-    for (unsigned int row = 0; row < num_rows; ++row)
-    {
-        for (unsigned int col = 0; col < num_cols; ++col)
-        {
-            int adjusted_x = elt_start_x + (total_element_width * col);
-            int adjusted_y = elt_start_y - (total_element_height * row);
+    for (unsigned int row = 0; row < rows; ++row) {
+        for (unsigned int col = 0; col < columns; ++col) {
+            float adjusted_x = elt_start_x + (total_element_width * col);
+            float adjusted_y = elt_start_y - (total_element_height * row);
 
-            UI::ID ui_container = UI::ui->create_rectangle(grid_id,
-                    adjusted_x, adjusted_y,
-                    element_width, element_height,
-                    false, color::windwaker_sand);
-            UI::ID element_meat = UI::ui->create_rectangle(ui_container,
-                    halo_padding, halo_padding,
-                    element_width-halo_padding*2, element_height-halo_padding*2,
-                    false, color::indian_red);
-            UI::ui->set_enabled(ui_container, false, false);
+            UIContainer *attach_point = new UIContainer(adjusted_x, adjusted_y);
+            // Add to both children (for rendering), and attach_points (for attachment)
+            attach_points.push_back(attach_point);
+            children.push_back(attach_point);
+
+            UIElement *selection_halo =
+                new UIRectangle(-selection_halo_padding, -selection_halo_padding,
+                        element_width + selection_halo_padding * 2,
+                        element_height + selection_halo_padding * 2,
+                        color::windwaker_sand);
+            attach_point->attach(*selection_halo);
 
             curr_elt++;
             if (curr_elt == num_elements) break; // finished doing all the elements!
         }
     }
-*/
-
-void UIGrid::attach(UIElement &child) {
-
 }
 
-void UIGrid::detach(UIElement &child) {
+void UIGrid::attach_at(int row, int col, UIElement &child) {
+    // Validate location
+    if (row * columns + col >= num_elements) return; // log warning
+    attach_points[row * columns + col]->attach(child);
+}
 
+void UIGrid::detach_at(int row, int col, UIElement &child) {
+    // Validate location
+    if (row * columns + col >= num_elements) return; // log warning
+    attach_points[row * columns + col]->detach(child);
 }

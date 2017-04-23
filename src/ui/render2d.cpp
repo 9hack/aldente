@@ -196,9 +196,9 @@ void Render2D::render_rectP(GLfloat x, GLfloat y,
                             GLfloat width, GLfloat height,
                             glm::vec3 color, GLuint texture_ID) {
     GLfloat adj_x      = x      * UNIT_TO_PERCENT * screen_width;
-    GLfloat adj_y      = y      * UNIT_TO_PERCENT * screen_height;
+    GLfloat adj_y      = y      * UNIT_TO_PERCENT * screen_width;
     GLfloat adj_width  = width  * UNIT_TO_PERCENT * screen_width;
-    GLfloat adj_height = height * UNIT_TO_PERCENT * screen_height;
+    GLfloat adj_height = height * UNIT_TO_PERCENT * screen_width;
     render_rect(adj_x, adj_y, adj_width, adj_height, color, texture_ID);
 }
 
@@ -208,8 +208,8 @@ void Render2D::render_textP(std::string text,
                             GLfloat x_scale, GLfloat y_scale,
                             glm::vec3 color) {
     GLfloat adj_x        = x        * UNIT_TO_PERCENT * screen_width;
-    GLfloat adj_y        = y        * UNIT_TO_PERCENT * screen_height;
+    GLfloat adj_y        = y        * UNIT_TO_PERCENT * screen_width;
     GLfloat adj_x_scale  = x_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_width;
-    GLfloat adj_y_scale  = y_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_height;
+    GLfloat adj_y_scale  = y_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_width;
     render_text(text, adj_x, adj_y, adj_x_scale, adj_y_scale, color);
 }
