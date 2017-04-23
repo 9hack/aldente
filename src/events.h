@@ -22,7 +22,7 @@ namespace events {
         int width;
         int height;
     };
-    extern signal<void(WindowSizeData &)> window_resize_event;
+    extern signal<void(WindowSizeData &)> window_buffer_resize_event;
 
     struct WindowKeyData {
         Window *window;
@@ -54,4 +54,6 @@ namespace events {
         double y_off;
     };
     extern signal<void(WindowScrollData &)> window_scroll_event;
+
+    extern signal<void()> toggle_debug_shadows_event;
 }
