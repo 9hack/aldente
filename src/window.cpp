@@ -1,16 +1,49 @@
 #include "window.h"
 #include "events.h"
 
-static const bool FULLSCREEN = false;
-std::unordered_map<GLFWwindow *, Window *> Window::registry = 
-	std::unordered_map<GLFWwindow *, Window *>();
+std::mutex Window::init_lock;
+bool Window::initted = false;
+std::unordered_map<GLFWwindow *, Window *> Window::registry;
 
-Window::Window(int width, int height, const std::string &name) :
-    width(width), height(height) {
+void Window::init() {
+    // 4x antialiasing
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
+    // Platform-specific items
+#if defined(__linux) || defined(__APPLE__)
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+
+#ifdef __linux
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+#else // Apple is dumb, requires hinting 3.2 to use 3.3+ features
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+#endif
+
+    // Enable forward compatibility and allow a modern OpenGL context
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+}
+
+Window::Window(const std::string &name, bool show_cursor,
+               int width, int height, GLFWmonitor *monitor, bool fullscreen) :
+        width(width), height(height) {
+
+    // Lazy one-time init
+    {
+        std::unique_lock<std::mutex> lock(init_lock);
+        if (!initted) {
+            init();
+            initted = true;
+        }
+    }
+
+    // Ensure we have dimensions
+    assert(fullscreen || (width && height));
+
     // Create the GLFW window
-    GLFWmonitor *monitor = NULL;
-    if (FULLSCREEN) {
-        monitor = glfwGetPrimaryMonitor();
+    if (fullscreen) {
+        // Fullscreen
         const GLFWvidmode *mode = glfwGetVideoMode(monitor);
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
@@ -19,23 +52,17 @@ Window::Window(int width, int height, const std::string &name) :
         width = mode->width;
         height = mode->height;
     }
-    gl_window = glfwCreateWindow(width, height, name.c_str(), monitor, NULL);
-
-    // Check if the window could not be created
-    assert(gl_window);
+    gl_window = glfwCreateWindow(width, height, name.c_str(), monitor, nullptr);
     registry[gl_window] = this;
-
-    // Make the context of the window
     glfwMakeContextCurrent(gl_window);
-
-    // Set swap interval to 1
     glfwSwapInterval(1);
 
-    // Get the width and height of the framebuffer to properly resize the window
-    glfwGetFramebufferSize(gl_window, &width, &height);
+    if (!show_cursor) {
+        glfwSetInputMode(gl_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
 
-    // Don't show cursor
-    // glfwSetInputMode(gl_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    // Retrieve true width and height
+    glfwGetFramebufferSize(gl_window, &width, &height);
 
     // Set up event dispatchers
     glfwSetFramebufferSizeCallback(gl_window, resize_callback);
@@ -64,25 +91,6 @@ Window::~Window() {
 Window *Window::lookup(GLFWwindow * target) {
     auto found = registry.find(target);
     return found != registry.end() ? found->second : nullptr;
-}
-
-void Window::set_hints() {
-    // 4x antialiasing
-    glfwWindowHint(GLFW_SAMPLES, 4);
-#if defined(__linux) || defined(__APPLE__)
-    // Ensure minimum OpenGL version is 3.3
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-
-#ifdef __linux
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-#else // Apple is dumb
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-#endif
-
-    // Enable forward compatibility and allow a modern OpenGL context
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
 }
 
 void Window::resize_callback(GLFWwindow *window, int w, int h) {

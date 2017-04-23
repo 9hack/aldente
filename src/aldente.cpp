@@ -29,15 +29,12 @@ Aldente::~Aldente() {
 
 void Aldente::start_game_loop() {
 
-    // Make a window
-    Window::set_hints();
-
     int width, height;
     Config::config->get_value(Config::str_screen_width, width);
     Config::config->get_value(Config::str_screen_height, height);
     std::string game_name;
     Config::config->get_value(Config::str_game_name, game_name);
-    Window window(width, height, game_name);
+    Window window(game_name, true, width, height);
 
     // Setup stuff
     Setup::setup_opengl();

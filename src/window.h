@@ -7,15 +7,23 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <unordered_map>
+#include <mutex>
 
 /*
-	Handles GLFW calls for creating and resizing the window.
+	High-level GLFWwindow abstraction which dispatches lambda-friendly events.
 */
 class Window {
 private:
     GLFWwindow *gl_window;
     int width, height;
 
+    // One-time init
+    static std::mutex init_lock;
+    static bool initted;
+    static void init();
+
+    // A static registry of windows is required to statically obtain the Window pointer corresponding to the GLFWwindow
+    // we get from a GLFW callback.
     static std::unordered_map<GLFWwindow *, Window *> registry;
     static Window *lookup(GLFWwindow * target);
 
@@ -23,10 +31,10 @@ private:
     static void resize_callback(GLFWwindow *window, int w, int h);
 
 public:
-    Window(int width, int height, const std::string &name);
+    Window(const std::string &name, bool show_cursor, int width, int height,
+           GLFWmonitor *monitor = nullptr, bool fullscreen = false);
     ~Window();
 
-    static void set_hints();
     void clear();
     void close();
     int should_close();
