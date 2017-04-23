@@ -1,7 +1,6 @@
 #include "window.h"
 #include "events.h"
 
-std::mutex Window::init_lock;
 bool Window::initted = false;
 std::unordered_map<GLFWwindow *, Window *> Window::registry;
 
@@ -30,12 +29,9 @@ Window::Window(const std::string &name, bool show_cursor,
         width(width), height(height) {
 
     // Lazy one-time init
-    {
-        std::unique_lock<std::mutex> lock(init_lock);
-        if (!initted) {
-            init();
-            initted = true;
-        }
+    if (!initted) {
+        init();
+        initted = true;
     }
 
     // Ensure we have dimensions

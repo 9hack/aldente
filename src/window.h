@@ -18,7 +18,6 @@ private:
     int width, height;
 
     // One-time init
-    static std::mutex init_lock;
     static bool initted;
     static void init();
 
