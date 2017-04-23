@@ -1,4 +1,5 @@
 #include "aldente.h"
+
 #include "window.h"
 #include "setup.h"
 #include "asset_loader.h"
@@ -42,7 +43,7 @@ void Aldente::start_game_loop() {
     AssetLoader::asset_loader->setup();
     Util::seed(0); // Seed PRNG.
 
-    std::vector<Poller *> pollers {new InputPoller(window)};
+    std::vector<std::shared_ptr<Poller>> pollers {std::make_shared<InputPoller>(window)};
 
     // TODO: disgusting
     Physics::physics->setup_bullet();
@@ -55,7 +56,7 @@ void Aldente::start_game_loop() {
     while (!window.should_close()) {
         // Do polling
         glfwPollEvents();
-        for (auto *poller : pollers) {
+        for (auto &poller : pollers) {
             poller->poll();
         }
 

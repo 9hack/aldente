@@ -6,7 +6,7 @@ DEP_DIR         := .dep
 BUILD_DIR       := .build
 
 CC              := clang++
-CFLAGS          := -std=c++1y -O0 -g
+CFLAGS          := -std=c++14 -O0 -g
 INCS            := -I$(INC_DIR)
 HEADERS         := $(shell find $(INC_DIR) -name '*.h' -type 'f' | sort)
 MAIN_SOURCES    := $(shell find $(SRC_DIR) -name '*.cpp' -type 'f' | sort)
