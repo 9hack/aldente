@@ -120,48 +120,41 @@ Mesh *AssetLoader::processMesh(aiMesh *mesh, const aiScene *scene) {
     //Textures and Materials not yet loaded
 
     Mesh *final_mesh;
+    Material *loadMat = new Material();
+    aiMaterial *assimpMat = scene->mMaterials[mesh->mMaterialIndex];
+    aiColor3D diffuse(0, 0, 0);
+    assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+    aiColor3D ambient(0, 0, 0);
+    assimpMat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+    aiColor3D specular(0, 0, 0);
+    assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+    float shiny = 0.0f;
+    assimpMat->Get(AI_MATKEY_SHININESS, shiny);
+    loadMat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+    loadMat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+    loadMat->specular = glm::vec3(specular.r, specular.g, specular.b);
+    loadMat->shininess = shiny;
+    final_mesh = new Mesh(geo, loadMat, ShaderManager::get_default());
+    final_mesh->to_world = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f));
 
-    // If material exists for this mesh
-    if (mesh->mMaterialIndex >= 0) {
-        Material *loadMat = new Material();
-        aiMaterial *assimpMat = scene->mMaterials[mesh->mMaterialIndex];
-        aiColor3D diffuse(0, 0, 0);
-        assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-        aiColor3D ambient(0, 0, 0);
-        assimpMat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
-        aiColor3D specular(0, 0, 0);
-        assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
-        float shiny = 0.0f;
-        assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-        loadMat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
-        loadMat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-        loadMat->specular = glm::vec3(specular.r, specular.g, specular.b);
-        loadMat->shininess = shiny;
-        final_mesh = new Mesh(geo, loadMat, ShaderManager::get_default());
-        final_mesh->to_world = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f));
+    //If textures exist for this mesh
+    for (GLuint i = 0; i < assimpMat->GetTextureCount(aiTextureType_DIFFUSE); i++) {
+        aiString str;
+        assimpMat->GetTexture(aiTextureType_DIFFUSE, i, &str);
 
-        //If textures exist for this mesh
-        for (GLuint i = 0; i < assimpMat->GetTextureCount(aiTextureType_DIFFUSE); i++) {
-            aiString str;
-            assimpMat->GetTexture(aiTextureType_DIFFUSE, i, &str);
+        std::string temp(str.C_Str());
+        std::size_t found = temp.find_last_of("/\\");
+        std::string fileName = temp.substr(found + 1);
+        std::string toPass("assets/textures/");
+        toPass += fileName;
 
-            std::string temp(str.C_Str());
-            std::size_t found = temp.find_last_of("/\\");
-            std::string fileName = temp.substr(found + 1);
-            std::string toPass("assets/textures/");
-            toPass += fileName;
-
-            //Texture not loaded yet
-            if (textures.count(toPass) == 0) {
-                geo->attachNewTexture(toPass.c_str());
-                textures[toPass] = geo->getTextureGL();
-            } else {
-                geo->attachExistingTexture(textures[toPass]);
-            }
+        //Texture not loaded yet
+        if (textures.count(toPass) == 0) {
+            geo->attachNewTexture(toPass.c_str());
+            textures[toPass] = geo->getTextureGL();
+        } else {
+            geo->attachExistingTexture(textures[toPass]);
         }
-    } else {
-        Material *blank = new Material(color::white);
-        final_mesh = new Mesh(geo, blank, ShaderManager::get_default());
     }
 
     geo->populate_buffers();
@@ -177,7 +170,7 @@ Model *AssetLoader::getModel(std::string name) {
         std::string error("ERROR: Asset ");
         error += name;
         error += " was not loaded. Check for fbx file and double check filename.\n";
-        fprintf(stderr, error.c_str());
+        fprintf(stderr, "%s", error.c_str());
         Model *dflt = new Model();
         return dflt;
     }
