@@ -35,11 +35,11 @@ public:
            GLFWmonitor *monitor = nullptr, bool fullscreen = false);
     ~Window();
 
-    void clear();
     void close();
-    int should_close();
+    int should_close() const;
     void swap_buffers();
-    std::pair<int, int> get_size();
+    void clear();
+    std::pair<int, int> get_size() const;
+    std::pair<double, double> get_cursor() const;
     void update_size();
-    std::pair<double, double> get_cursor();
 };

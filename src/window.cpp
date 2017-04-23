@@ -102,7 +102,7 @@ void Window::close() {
     glfwSetWindowShouldClose(gl_window, GL_TRUE);
 }
 
-int Window::should_close() {
+int Window::should_close() const {
     return glfwWindowShouldClose(gl_window);
 }
 
@@ -115,17 +115,17 @@ void Window::clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-std::pair<int, int> Window::get_size() {
+std::pair<int, int> Window::get_size() const {
     return {width, height};
+};
+
+std::pair<double, double> Window::get_cursor() const {
+    double x_pos, y_pos;
+    glfwGetCursorPos(gl_window, &x_pos, &y_pos);
+    return {x_pos, y_pos};
 };
 
 void Window::update_size() {
     glfwGetFramebufferSize(gl_window, &width, &height);
     resize_callback(gl_window, width, height);
 }
-
-std::pair<double, double> Window::get_cursor() {
-    double x_pos, y_pos;
-    glfwGetCursorPos(gl_window, &x_pos, &y_pos);
-    return {x_pos, y_pos};
-};
