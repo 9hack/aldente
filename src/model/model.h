@@ -11,8 +11,7 @@
 #include "shaders/shader.h"
 #include "mesh.h"
 
-class Model :
-        public SceneNode {
+class Model : public SceneNode {
 public:
     std::vector<Mesh *> meshes;
     glm::mat4 model_mat;

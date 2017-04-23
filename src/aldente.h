@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "scene/main_scene.h"
+#include "scene/scene.h"
 #include "scene/scene_camera.h"
 
 /*

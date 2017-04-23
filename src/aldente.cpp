@@ -47,12 +47,15 @@ void Aldente::start_game_loop() {
 
     std::vector<Poller *> pollers {new InputPoller(window)};
 
-    // TODO: disgusting
-    Physics::physics->setup_bullet();
+	Physics physics;
     Shadows shadows(window);
     SceneManager scene_manager;
-    Physics::set_scene(scene_manager.get_scene());
-    DebugInput debug_input(scene_manager);
+
+	//Init the test scene
+	MainScene* testScene = new MainScene(physics);
+	physics.set_scene(testScene);
+	
+    DebugInput debug_input(scene_manager,physics);
 
 
     while (!window.should_close()) {
@@ -65,16 +68,16 @@ void Aldente::start_game_loop() {
         debug_input.handle_movement();
 
         window.update_size();
-        Physics::physics->update();
+        physics.update();
 
-        scene_manager.get_scene()->update();
+        scene_manager.get_current_scene()->update();
 
         // First pass: shadowmap.
-        shadows.shadow_pass(scene_manager.get_scene());
+        shadows.shadow_pass(scene_manager.get_current_scene());
 
         // Second pass: usual rendering.
         window.clear();
-        scene_manager.get_scene()->draw();
+        scene_manager.get_current_scene()->draw();
 
         if (debug_shadows)
             shadows.debug_shadows();

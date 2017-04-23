@@ -6,9 +6,9 @@
 
 #include "scene_node.h"
 #include "shaders/shader.h"
+#include <btBulletDynamicsCommon.h>
 
-class SceneGroup :
-        public SceneNode {
+class SceneGroup : public SceneNode {
 public:
     std::vector<SceneNode *> children;
 

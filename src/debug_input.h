@@ -17,9 +17,9 @@ private:
     bool mouse_moved;
     glm::vec3 last_cursor_pos;
     SceneManager &scene_manager;
-
+	Physics &physics;
 public:
-    DebugInput(SceneManager &scene_manager);
+    DebugInput(SceneManager &scene_manager, Physics &p);
     void handle_movement();
 };
 

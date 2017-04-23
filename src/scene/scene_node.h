@@ -17,6 +17,7 @@ public:
 
     virtual void pass(Shader *s) = 0;
 
+	//virtual void getRigids() = 0;
 protected:
     Scene *scene;
 };

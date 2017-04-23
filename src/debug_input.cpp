@@ -17,8 +17,9 @@ static double prev_ticks = glfwGetTime();
 static double move_prev_ticks = prev_ticks;
 
 // TODO: this is disgusting
-DebugInput::DebugInput(SceneManager &scene_manager) :
-        lmb_down(false), rmb_down(false), mouse_moved(false), last_cursor_pos(0, 0, 0), scene_manager(scene_manager) {
+DebugInput::DebugInput(SceneManager &scene_manager, Physics &p) :
+        lmb_down(false), rmb_down(false), mouse_moved(false), 
+	    last_cursor_pos(0, 0, 0), scene_manager(scene_manager), physics(p) {
     std::fill(std::begin(keys), std::end(keys), false);
 
     // Set up callbacks
@@ -66,7 +67,7 @@ DebugInput::DebugInput(SceneManager &scene_manager) :
         std::tie(width, height) = d.window->get_size();
         glm::vec3 current_cursor_pos(d.x_pos, d.y_pos, 0);
 
-        Scene *scene = scene_manager.get_scene();
+        Scene *scene = scene_manager.get_current_scene();
         SceneCamera *camera = scene_manager.get_camera();
 
         // First movement detected.
@@ -111,7 +112,9 @@ DebugInput::DebugInput(SceneManager &scene_manager) :
             camera->recalculate();
         }
 
-        Physics::physics->raycast_mouse(d.x_pos, d.y_pos, width, height);
+        
+		
+		physics.raycast_mouse(d.x_pos, d.y_pos, width, height);
 
         last_cursor_pos = current_cursor_pos;
     });

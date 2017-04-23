@@ -1,22 +1,29 @@
 #include "scene_manager.h"
 
-SceneManager::SceneManager() {
-    // Initial scene and cam.
-    main_scene = new MainScene();
-    main_scene->setup();
-    scene = main_scene;
-    scenes.push_back(scene);
-    camera = scene->camera;
-}
-
 std::vector<Scene *> SceneManager::get_scenes() {
     return scenes;
 }
 
-Scene *SceneManager::get_scene() {
-    return scene;
+Scene *SceneManager::get_current_scene() {
+    return current_scene;
 }
 
 SceneCamera *SceneManager::get_camera() {
     return camera;
+}
+
+void SceneManager::add_scene(Scene* scene) {
+	//Make sure you're not adding a duplicate scene
+	assert(std::find(scenes.begin(), scenes.end(), scene) == scenes.end());
+	scenes.push_back(scene);
+}
+
+void SceneManager::set_current_scene(Scene* scene) {
+	//Add the scene if not currently added
+	if (std::find(scenes.begin(), scenes.end(), scene) == scenes.end()) {
+		add_scene(scene);
+	}
+	current_scene = scene;
+	scenes.push_back(scene);
+	camera = scene->camera;
 }

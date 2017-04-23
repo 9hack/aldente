@@ -9,18 +9,16 @@
 
 class Physics {
 private:
-    Physics();
-
-    // TODO: truly the unsafest of things
-    static Scene *scene;
+	Scene *scene;
 
     //Bullet varaibles
     btBroadphaseInterface *broadphase;
     btDefaultCollisionConfiguration *collisionConfiguration;
     btCollisionDispatcher *dispatcher;
     btSequentialImpulseConstraintSolver *solver;
+	std::map<Scene*, btDiscreteDynamicsWorld*> scene_worlds;
 public:
-    static Physics *physics; // Singleton
+	Physics();
 
     ~Physics();
 
@@ -28,9 +26,7 @@ public:
     std::vector<btRigidBody *> rigidBodies;
     Tile *hover;
 
-    static void set_scene(Scene *s);
-
-    void setup_bullet();
+    void set_scene(Scene *s);
 
     void raycast_mouse(double xpos, double ypos, int width, int height);
 

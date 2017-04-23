@@ -2,35 +2,40 @@
 #include "scene/scene.h"
 #include "aldente.h"
 
-Physics *Physics::physics = new Physics();
+Physics::Physics() {
+	// Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
+	// even though we won't use most of this stuff.
 
-Scene *Physics::scene = nullptr;
+	// Build the broadphase
+	broadphase = new btDbvtBroadphase();
 
-Physics::Physics() {}
+	// Set up the collision configuration and dispatcher
+	collisionConfiguration = new btDefaultCollisionConfiguration();
+	dispatcher = new btCollisionDispatcher(collisionConfiguration);
+
+	// The actual physics solver
+	solver = new btSequentialImpulseConstraintSolver;
+
+	// The world.
+	
+	scene = nullptr;
+}
 
 Physics::~Physics() {}
 
 void Physics::set_scene(Scene *s) {
     scene = s;
-}
 
-void Physics::setup_bullet() {
-    // Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
-    // even though we won't use most of this stuff.
-
-    // Build the broadphase
-    broadphase = new btDbvtBroadphase();
-
-    // Set up the collision configuration and dispatcher
-    collisionConfiguration = new btDefaultCollisionConfiguration();
-    dispatcher = new btCollisionDispatcher(collisionConfiguration);
-
-    // The actual physics solver
-    solver = new btSequentialImpulseConstraintSolver;
-
-    // The world.
-    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-    dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+	//Make a new dynamicsWorld if scene was not previously
+	//used
+	if (scene_worlds.count(s) == 0) {
+		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+		dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+		scene_worlds[s] = dynamicsWorld;
+	}
+	else {
+		dynamicsWorld = scene_worlds[s];
+	}
 }
 
 void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {

@@ -7,8 +7,8 @@ SceneGroup::SceneGroup(Scene *scene) {
 }
 
 SceneGroup::~SceneGroup() {
-    for (auto it = children.begin(); it != children.end(); ++it)
-        delete (*it);
+    for (SceneNode* node : children)
+        delete (node);
 }
 
 void SceneGroup::add_child(SceneNode *node) {
@@ -16,14 +16,14 @@ void SceneGroup::add_child(SceneNode *node) {
 }
 
 void SceneGroup::remove_all() {
-    for (auto it = children.begin(); it != children.end(); ++it)
-        delete (*it);
+    for (SceneNode* node : children)
+        delete (node);
     children.clear();
 }
 
 void SceneGroup::draw() {
-    for (auto it = children.begin(); it != children.end(); ++it)
-        (*it)->draw();
+    for (SceneNode* node : children)
+        (node)->draw();
 }
 
 void SceneGroup::update() {
