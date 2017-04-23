@@ -22,8 +22,7 @@ class Render2D
     };
 
 public:
-    Render2D(int screen_width, int screen_height, Shader *shader_2d);
-    //void update_projection;
+    Render2D();
     void render_textP(std::string text, GLfloat x, GLfloat y, GLfloat x_scale, GLfloat y_scale, glm::vec3 color);
 	void render_rectP(GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID);
 private:

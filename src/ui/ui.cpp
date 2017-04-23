@@ -3,11 +3,7 @@
 #include "ui_grid.h"
 #include "util/colors.h"
 
-void ui_demo() {
-}
-
-UI::UI(Render2D &renderer_2d)
-    : renderer_2d(renderer_2d) {
+UI::UI() {
     root = UIContainer(0, 0);
 }
 

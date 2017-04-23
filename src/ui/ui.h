@@ -5,7 +5,7 @@
 
 class UI {
 public:
-    UI(Render2D &renderer_2d);
+    UI();
     void draw();
     void attach(UIElement &e);
     void detach(UIElement &e);

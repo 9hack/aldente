@@ -8,14 +8,23 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Render2D::Render2D(int screen_width, int screen_height, Shader *shader_2d)
-    : screen_width(screen_width), screen_height(screen_height), shader_2d(shader_2d) {
+#include "events.h"
+#include "shaders/shader_manager.h"
 
-    // Calculate projection matrix.
-    projection = glm::ortho(0.0f,
-                    static_cast<GLfloat>(screen_width),
+Render2D::Render2D() {
+    // Setup callbacks for window size.
+    events::window_buffer_resize_event.connect([&](events::WindowSizeData d) {
+	    screen_width = d.width;
+        screen_height = d.height;
+        // Calculate projection matrix.
+        projection = glm::ortho(0.0f,
+                    static_cast<GLfloat>(d.width),
                     0.0f,
-                    static_cast<GLfloat>(screen_height));
+                    static_cast<GLfloat>(d.height));
+    });
+
+    // Setup shader
+    shader_2d = ShaderManager::get_shader_program("text");
 
     // Generate textures for all glyphs.
     setup_glyphs();
@@ -35,12 +44,12 @@ Render2D::Render2D(int screen_width, int screen_height, Shader *shader_2d)
 void Render2D::setup_glyphs() {
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        std::cerr << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
     // Load font ("face")
     FT_Face face;
     if (FT_New_Face(ft, "assets/fonts/DejaVuSerif.ttf", 0, &face))
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+        std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
     // Width and height params. Width is 0 for dynamic resizing.
     FT_Set_Pixel_Sizes(face, 0, 48);
@@ -48,14 +57,14 @@ void Render2D::setup_glyphs() {
     // Set active glyph to a character
     // FT_LOAD_RENDER flag creates 8-bit grayscale bitmap image (access by face->glyph->bitmap)
     if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
-        std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+        std::cerr << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
     for (GLubyte c = 0; c < 128; c++) {
         // Load character glyph
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+            std::cerr << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
             continue;
         }
         // Generate texture

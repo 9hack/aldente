@@ -12,6 +12,7 @@ void ShaderManager::init() {
     ShaderManager::create_shader_program("skybox");
     ShaderManager::create_shader_program("shadow");
     ShaderManager::create_shader_program("debug_shadow");
+    ShaderManager::create_shader_program("text");
     ShaderManager::set_default("basic");
 }
 
