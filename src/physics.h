@@ -17,13 +17,15 @@ private:
     btCollisionDispatcher *dispatcher;
     btSequentialImpulseConstraintSolver *solver;
 	std::map<Scene*, btDiscreteDynamicsWorld*> scene_worlds;
+
+	boost::signals2::connection currentRigidSignal;
 public:
 	Physics();
 
     ~Physics();
 
     btDiscreteDynamicsWorld *dynamicsWorld;
-    std::vector<btRigidBody *> rigidBodies;
+    //std::vector<btRigidBody *> rigidBodies;
     Tile *hover;
 
     void set_scene(Scene *s);
@@ -31,5 +33,6 @@ public:
     void raycast_mouse(double xpos, double ypos, int width, int height);
 
     void update();
+
 };
 

@@ -1,11 +1,6 @@
 #include "game_object.h"
 
-GameObject::GameObject(Scene *scene) {
-    this->scene = scene;
-}
-
-
-GameObject::~GameObject() {
+GameObject::GameObject() {
 }
 
 // Attaches a model to the game object
@@ -14,17 +9,13 @@ void GameObject::attach_model(Model *m) {
 }
 
 // Renders model in scene
-void GameObject::draw() {
+void GameObject::draw(SceneCamera* camera) {
     if (model)
-        model->draw();
+        model->draw(camera);
 }
 
 // Updates Game Object Paramters
 void GameObject::update() {
-    // Updates Model if Needed Here,
-    // especially used if animation attached
-    if (model)
-        model->update();
 }
 
 // Used for passing seperate shaders, such as for shadows

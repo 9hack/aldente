@@ -17,33 +17,6 @@
     <ClCompile Include="..\src\aldente.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\asset_loader.cpp" />
-    <ClCompile Include="..\src\game_object.cpp" />
-    <ClCompile Include="..\src\grid.cpp" />
-    <ClCompile Include="..\src\input\process.cpp" />
-    <ClCompile Include="..\src\keyboard.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\model\geometry.cpp" />
-    <ClCompile Include="..\src\model\geometry_generator.cpp" />
-    <ClCompile Include="..\src\model\material.cpp" />
-    <ClCompile Include="..\src\model\mesh.cpp" />
-    <ClCompile Include="..\src\model\model.cpp" />
-    <ClCompile Include="..\src\physics.cpp" />
-    <ClCompile Include="..\src\scene\main_scene.cpp" />
-    <ClCompile Include="..\src\scene\scene.cpp" />
-    <ClCompile Include="..\src\scene\scene_camera.cpp" />
-    <ClCompile Include="..\src\scene\scene_group.cpp" />
-    <ClCompile Include="..\src\setup.cpp" />
-    <ClCompile Include="..\src\shaders\basic_shader.cpp" />
-    <ClCompile Include="..\src\shaders\shader.cpp" />
-    <ClCompile Include="..\src\shaders\shader_manager.cpp" />
-    <ClCompile Include="..\src\shaders\shadow_shader.cpp" />
-    <ClCompile Include="..\src\shaders\skybox_shader.cpp" />
-    <ClCompile Include="..\src\shadows.cpp" />
-    <ClCompile Include="..\src\tile.cpp" />
-    <ClCompile Include="..\src\util\config.cpp" />
-    <ClCompile Include="..\src\util\util.cpp" />
-    <ClCompile Include="..\src\window.cpp" />
     <ClCompile Include="..\src\aldente.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -823,8 +796,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\src\asset_loader.cpp" />
-    <ClCompile Include="..\src\debug_input.cpp" />
-    <ClCompile Include="..\src\events.cpp" />
     <ClCompile Include="..\src\game_object.cpp" />
     <ClCompile Include="..\src\grid.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -833,17 +804,11 @@
     <ClCompile Include="..\src\model\material.cpp" />
     <ClCompile Include="..\src\model\mesh.cpp" />
     <ClCompile Include="..\src\model\model.cpp" />
-    <ClCompile Include="..\src\NetworkManager.cpp" />
-    <ClCompile Include="..\src\net\Connection.cpp" />
-    <ClCompile Include="..\src\net\NetworkClient.cpp" />
-    <ClCompile Include="..\src\net\NetworkServer.cpp" />
     <ClCompile Include="..\src\physics.cpp" />
-    <ClCompile Include="..\src\poll\input_poller.cpp" />
     <ClCompile Include="..\src\scene\main_scene.cpp" />
     <ClCompile Include="..\src\scene\scene.cpp" />
     <ClCompile Include="..\src\scene\scene_camera.cpp" />
     <ClCompile Include="..\src\scene\scene_group.cpp" />
-    <ClCompile Include="..\src\scene_manager.cpp" />
     <ClCompile Include="..\src\setup.cpp" />
     <ClCompile Include="..\src\shaders\basic_shader.cpp" />
     <ClCompile Include="..\src\shaders\shader.cpp" />
@@ -2100,6 +2065,99 @@
     <ClCompile Include="..\src\window.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\scene\scene_camera.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\debug_input.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scene_manager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\asset_loader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\shaders\basic_shader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\config.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\Connection.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\events.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game_object.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\geometry.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\geometry_generator.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\grid.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\poll\input_poller.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\material.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\mesh.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\model.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\NetworkClient.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NetworkManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\NetworkServer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\physics.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scene\scene.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\setup.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\shaders\shader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\shaders\shader_manager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\shaders\shadow_shader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\shadows.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\shaders\skybox_shader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tile.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\util.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\aldente.h">
@@ -2108,37 +2166,6 @@
     <ClInclude Include="..\src\aldente.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\asset_loader.h" />
-    <ClInclude Include="..\src\events\event.h" />
-    <ClInclude Include="..\src\events\input.h" />
-    <ClInclude Include="..\src\game_object.h" />
-    <ClInclude Include="..\src\grid.h" />
-    <ClInclude Include="..\src\input\process.h" />
-    <ClInclude Include="..\src\keyboard.h" />
-    <ClInclude Include="..\src\model\geometry.h" />
-    <ClInclude Include="..\src\model\geometry_generator.h" />
-    <ClInclude Include="..\src\model\material.h" />
-    <ClInclude Include="..\src\model\mesh.h" />
-    <ClInclude Include="..\src\model\model.h" />
-    <ClInclude Include="..\src\model\plane.h" />
-    <ClInclude Include="..\src\physics.h" />
-    <ClInclude Include="..\src\scene\main_scene.h" />
-    <ClInclude Include="..\src\scene\scene.h" />
-    <ClInclude Include="..\src\scene\scene_camera.h" />
-    <ClInclude Include="..\src\scene\scene_group.h" />
-    <ClInclude Include="..\src\scene\scene_node.h" />
-    <ClInclude Include="..\src\setup.h" />
-    <ClInclude Include="..\src\shaders\basic_shader.h" />
-    <ClInclude Include="..\src\shaders\shader.h" />
-    <ClInclude Include="..\src\shaders\shader_manager.h" />
-    <ClInclude Include="..\src\shaders\shadow_shader.h" />
-    <ClInclude Include="..\src\shaders\skybox_shader.h" />
-    <ClInclude Include="..\src\shadows.h" />
-    <ClInclude Include="..\src\tile.h" />
-    <ClInclude Include="..\src\util\colors.h" />
-    <ClInclude Include="..\src\util\config.h" />
-    <ClInclude Include="..\src\util\util.h" />
-    <ClInclude Include="..\src\window.h" />
     <ClInclude Include="..\src\aldente.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -3156,8 +3183,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\src\asset_loader.h" />
-    <ClInclude Include="..\src\debug_input.h" />
-    <ClInclude Include="..\src\events.h" />
     <ClInclude Include="..\src\game_object.h" />
     <ClInclude Include="..\src\grid.h" />
     <ClInclude Include="..\src\model\geometry.h" />
@@ -3166,20 +3191,12 @@
     <ClInclude Include="..\src\model\mesh.h" />
     <ClInclude Include="..\src\model\model.h" />
     <ClInclude Include="..\src\model\plane.h" />
-    <ClInclude Include="..\src\NetworkManager.h" />
-    <ClInclude Include="..\src\net\Connection.h" />
-    <ClInclude Include="..\src\net\NetworkClient.h" />
-    <ClInclude Include="..\src\net\NetworkServer.h" />
-    <ClInclude Include="..\src\net\threadsafe_queue.h" />
     <ClInclude Include="..\src\physics.h" />
-    <ClInclude Include="..\src\poll\input_poller.h" />
-    <ClInclude Include="..\src\poll\poller.h" />
     <ClInclude Include="..\src\scene\main_scene.h" />
     <ClInclude Include="..\src\scene\scene.h" />
     <ClInclude Include="..\src\scene\scene_camera.h" />
     <ClInclude Include="..\src\scene\scene_group.h" />
     <ClInclude Include="..\src\scene\scene_node.h" />
-    <ClInclude Include="..\src\scene_manager.h" />
     <ClInclude Include="..\src\setup.h" />
     <ClInclude Include="..\src\shaders\basic_shader.h" />
     <ClInclude Include="..\src\shaders\shader.h" />
@@ -4705,6 +4722,108 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\src\scene\scene_node.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\setup.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shaders\shader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shaders\shader_manager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shaders\shadow_shader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shadows.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shaders\skybox_shader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\threadsafe_queue.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\tile.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\util.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\window.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scene\scene_camera.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\debug_input.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scene_manager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\asset_loader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shaders\basic_shader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\colors.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\config.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\Connection.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\events.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game_object.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\model\geometry.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\model\geometry_generator.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\grid.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\poll\input_poller.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\model\material.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\model\mesh.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\model\model.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\NetworkClient.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NetworkManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\NetworkServer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\physics.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\model\plane.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\poll\poller.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scene\scene.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\src\setup.h">

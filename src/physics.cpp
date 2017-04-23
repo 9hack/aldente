@@ -24,18 +24,34 @@ Physics::Physics() {
 Physics::~Physics() {}
 
 void Physics::set_scene(Scene *s) {
+	
     scene = s;
+
+	currentRigidSignal.disconnect();
 
 	//Make a new dynamicsWorld if scene was not previously
 	//used
 	if (scene_worlds.count(s) == 0) {
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 		dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+		for (btRigidBody* rigid : s->rigids) {
+			dynamicsWorld->addRigidBody(rigid);
+		}
 		scene_worlds[s] = dynamicsWorld;
 	}
 	else {
 		dynamicsWorld = scene_worlds[s];
 	}
+
+	
+	currentRigidSignal = s->rigidSignal.connect([&](std::pair<bool, btRigidBody*> p) {
+		if (p.first) {
+			dynamicsWorld->addRigidBody(p.second);
+		}
+		else {
+			dynamicsWorld->removeRigidBody(p.second);
+		}
+	});
 }
 
 void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {

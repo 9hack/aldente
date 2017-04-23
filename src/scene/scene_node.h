@@ -4,8 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "shaders/shader.h"
-
-class Scene;
+#include "scene/scene.h"
 
 class SceneNode {
 public:
@@ -17,8 +16,9 @@ public:
 
     virtual void pass(Shader *s) = 0;
 
-	//virtual void getRigids() = 0;
 protected:
     Scene *scene;
 };
+
+
 

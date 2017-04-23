@@ -26,7 +26,7 @@ void Shadows::shadow_pass(Scene *scene) {
 
     // TODO: disgusting
     if (Aldente::shadows_on) {
-        ss->light_proj = scene->camera->frustum_ortho();
+        ss->light_proj = scene->camera->frustum_ortho(scene->light_pos);
     } else {
         ss->light_proj = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 0.1f);
     }

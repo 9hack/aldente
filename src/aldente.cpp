@@ -52,9 +52,10 @@ void Aldente::start_game_loop() {
     SceneManager scene_manager;
 
 	//Init the test scene
-	MainScene* testScene = new MainScene(physics);
+	MainScene* testScene = new MainScene();
 	physics.set_scene(testScene);
-	
+	scene_manager.set_current_scene(testScene);
+
     DebugInput debug_input(scene_manager,physics);
 
 

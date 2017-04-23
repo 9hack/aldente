@@ -24,6 +24,5 @@ void SceneManager::set_current_scene(Scene* scene) {
 		add_scene(scene);
 	}
 	current_scene = scene;
-	scenes.push_back(scene);
 	camera = scene->camera;
 }

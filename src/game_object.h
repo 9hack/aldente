@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene/scene_node.h"
+#include "scene/scene_camera.h"
 #include "model/model.h"
 
 /*
@@ -8,21 +8,18 @@
 	Contains all the essential components required to
 	render the model in the scene.
 */
-class GameObject : public SceneNode {
+class GameObject {
 private:
     Model *model;
-
 public:
-    GameObject(Scene *scene);
-
-    virtual ~GameObject();
+    GameObject();
 
     void attach_model(Model *m);
 
-    virtual void draw();
+    void draw(SceneCamera* camera);
 
-    virtual void update();
+	void update();
 
-    virtual void pass(Shader *s);
+    void pass(Shader *s);
 };
 

@@ -26,7 +26,7 @@ FloorTile::FloorTile(int x, int z) {
             btQuaternion(), btVector3((btScalar) x, 0.0f, (btScalar) z)));
 
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-            0,                  // mass, in kg. 0 -> Static object, will never move.
+            1,                  // mass, in kg. 0 -> Static object, will never move.
             motionstate,
             ground,  // collision shape of body
             btVector3(0, 0, 0)    // local inertia

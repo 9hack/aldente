@@ -161,8 +161,6 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_filesystem-vc140.1.63.0.0\lib\native\
     <ClInclude Include="..\src\poll\poller.h" />
     <ClInclude Include="..\src\scene\scene.h" />
     <ClInclude Include="..\src\scene\scene_camera.h" />
-    <ClInclude Include="..\src\scene\scene_group.h" />
-    <ClInclude Include="..\src\scene\scene_node.h" />
     <ClInclude Include="..\src\scene_manager.h" />
     <ClInclude Include="..\src\setup.h" />
     <ClInclude Include="..\src\shaders\basic_shader.h" />
@@ -198,7 +196,6 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_filesystem-vc140.1.63.0.0\lib\native\
     <ClCompile Include="..\src\poll\input_poller.cpp" />
     <ClCompile Include="..\src\scene\scene.cpp" />
     <ClCompile Include="..\src\scene\scene_camera.cpp" />
-    <ClCompile Include="..\src\scene\scene_group.cpp" />
     <ClCompile Include="..\src\scene_manager.cpp" />
     <ClCompile Include="..\src\setup.cpp" />
     <ClCompile Include="..\src\shaders\basic_shader.cpp" />

@@ -1,20 +1,8 @@
 #include "scene_camera.h"
 #include "scene/scene.h"
 
-SceneCamera::SceneCamera(Scene *scene) {
-    this->scene = scene;
+SceneCamera::SceneCamera() {
     reset();
-}
-
-SceneCamera::~SceneCamera() {}
-
-void SceneCamera::draw() {
-}
-
-void SceneCamera::update() {
-}
-
-void SceneCamera::pass(Shader *s) {
 }
 
 void SceneCamera::recalculate() {
@@ -109,14 +97,14 @@ void SceneCamera::update_frustum_planes() {
     }
 }
 
-glm::mat4 SceneCamera::frustum_ortho() {
+glm::mat4 SceneCamera::frustum_ortho(glm::vec3 light_pos) {
     // May need to do redo values below
     const float FRINGE_X = 5.f * 1.7f;
     const float FRINGE_Y = 5.f * 1.7f;
     const float FRINGE_Z = 5.f * 1.7f;
 
     static bool once = false;
-    glm::mat4 light_view = glm::lookAt(scene->light_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    glm::mat4 light_view = glm::lookAt(light_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     glm::vec3 corners_lightspace[8];
 
     for (int i = 0; i < 8; ++i) {

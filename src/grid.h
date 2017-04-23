@@ -17,11 +17,13 @@ private:
     int width, height;
 
     Tile *hover;
-
+	
 public:
     Grid(int w, int h);
 
     ~Grid();
 
     std::vector<std::vector<Tile *>> getGrid() { return grid; };
+
+	void update();
 };

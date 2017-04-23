@@ -2,7 +2,6 @@
 
 #include <tuple>
 #include "aldente.h"
-#include "physics.h"
 #include "events.h"
 #include "util/config.h"
 
@@ -20,7 +19,7 @@ static double move_prev_ticks = prev_ticks;
 DebugInput::DebugInput(SceneManager &scene_manager, Physics &p) :
         lmb_down(false), rmb_down(false), mouse_moved(false), 
 	    last_cursor_pos(0, 0, 0), scene_manager(scene_manager), physics(p) {
-    std::fill(std::begin(keys), std::end(keys), false);
+	std::fill(std::begin(keys), std::end(keys), false);
 
     // Set up callbacks
     events::window_resize_event.connect([&](events::WindowSizeData d) {

@@ -14,7 +14,7 @@ public:
 
     SceneGroup();
 
-    SceneGroup(Scene *);
+    SceneGroup(Scene * scene);
 
     ~SceneGroup();
 

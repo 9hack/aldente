@@ -3,24 +3,25 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "scene_camera.h"
-#include "scene_group.h"
+#include "game_object.h"
 #include "shaders/shader.h"
 #include "model/plane.h"
 #include "grid.h"
-#include "physics.h"
+#include "boost/signals2.hpp"
 
 /*
 	Contains all the information for a single scene
 */
 class Scene {
 public:
-    SceneGroup *root;
-    SceneCamera *camera;
+	SceneCamera* camera;
+	//std::vector<SceneCamera*> cameras;
+	std::vector<GameObject*> objs;
     glm::vec3 light_pos;
-	Physics &physics;
+	std::vector<btRigidBody*> rigids;
+	boost::signals2::signal<void(std::pair<bool,btRigidBody*>)> rigidSignal;
 
-    Scene(Physics &p);
+    Scene();
 
     virtual ~Scene();
 
@@ -29,6 +30,10 @@ public:
     void pass(Shader *s);
 
     virtual void update();
+
+	void addRigid(btRigidBody* toAdd);
+
+
 };
 
 /*
@@ -44,6 +49,6 @@ private:
 	Grid *grid;
 	Tile *hover;
 public:
-	MainScene(Physics &p);
+	MainScene();
 	void update() override;
 };

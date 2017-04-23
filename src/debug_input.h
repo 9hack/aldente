@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include "scene_manager.h"
-
+#include "physics.h"
 
 /*
 	Handles GLFW calls for getting Mouse and Keyboard Input (also temporarily holds Camera for debugging)
@@ -18,6 +18,7 @@ private:
     glm::vec3 last_cursor_pos;
     SceneManager &scene_manager;
 	Physics &physics;
+
 public:
     DebugInput(SceneManager &scene_manager, Physics &p);
     void handle_movement();

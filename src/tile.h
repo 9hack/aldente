@@ -12,8 +12,9 @@
 #include "model/mesh.h"
 #include "model/geometry_generator.h"
 #include "btBulletDynamicsCommon.h"
+#include "game_object.h"
 
-class Tile {
+class Tile : public GameObject {
 protected:
     int width, height, x, z;
     bool traversable;
