@@ -3,41 +3,48 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "scene_camera.h"
-#include "scene_group.h"
+#include "game_object.h"
 #include "shaders/shader.h"
-#include "geometry/plane.h"
-#include "scene_trans_anim.h"
-#include "bounding_sphere.h"
+#include "model/plane.h"
+#include "grid.h"
+#include "boost/signals2.hpp"
 
-class Scene
-{
+/*
+    Contains all the information for a single scene
+*/
+class Scene {
 public:
-	SceneGroup *root;
-	SceneCamera *camera;
-	glm::mat4 P;
-	glm::vec3 light_pos;
-	Plane frustum_planes[6];
-	glm::vec3 frustum_corners[8];
-	std::vector< std::vector<GLfloat> > height_map;
-	std::vector<BoundingSphere *> interactable_objects;
+    SceneCamera camera;
+    //std::vector<SceneCamera*> cameras;
+    std::vector<GameObject*> objs;
+    glm::vec3 light_pos;
+    std::vector<btRigidBody*> rigids;
+    boost::signals2::signal<void(std::pair<bool,btRigidBody*>)> rigidSignal;
 
-	// portals
-	SceneGroup* in_house;
-	SceneTransAnim* out_house;
-	float in_height, out_height;
-	glm::vec2 in_area[2];
-	glm::vec2 in_point, out_point;
+    virtual ~Scene() {}
 
-	Scene();
-	~Scene();
-	void render();
-	void pass(Shader * s);
-	void update_frustum_corners(int width, int height, GLfloat);
-	void update_frustum_planes();
-	glm::mat4 frustum_ortho();
-	void displace_cam(glm::vec3 displacement);
+    void draw();
 
-	virtual void setup() {}
-	virtual GLfloat get_size() { return 0; }
+    void pass(Shader *s);
+
+    virtual void update();
+
+    void addRigid(btRigidBody* toAdd);
+};
+
+/*
+Main Scene for having stuff in our game, especially for testing.
+Anything that you would want to add to the game scene that is only
+used for the specific scene should be put here.
+In the future, the "Dungeon/Build Phase" would be its own scene, and
+then each mini game would likely all be its own scene. The title menu
+can also be its own scene.
+*/
+class MainScene : public Scene {
+private:
+    Grid *grid;
+    Tile *hover;
+public:
+    MainScene();
+    void update() override;
 };

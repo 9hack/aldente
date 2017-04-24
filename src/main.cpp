@@ -1,8 +1,7 @@
 #include "aldente.h"
 
-int main()
-{
-    Aldente grandma;
-    grandma.go();
+int main() {
+    Aldente aldente;
+    aldente.start_game_loop();
     exit(EXIT_SUCCESS);
 }
