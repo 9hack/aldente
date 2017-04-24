@@ -2,7 +2,7 @@
 #include "util/colors.h"
 
 Tile::Tile() :
-	mesh(nullptr), rigidBody(nullptr) {}
+    mesh(nullptr), rigidBody(nullptr) {}
 
 Tile::~Tile() {}
 
@@ -23,17 +23,17 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     Material *mat = new Material(color::indian_red);
     mesh->material = mat;
 
-	model->add_mesh(mesh);
-	
+    model->add_mesh(mesh);
+
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
-            btQuaternion(), btVector3((btScalar) x, 0.0f, (btScalar) z)));
+                btQuaternion(), btVector3((btScalar) x, 0.0f, (btScalar) z)));
 
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
             0,                  // mass, in kg. 0 -> Static object, will never move.
             motionstate,
             ground,  // collision shape of body
             btVector3(0, 0, 0)    // local inertia
-    );
+            );
     rigidBody = new btRigidBody(rigidBodyCI);
 
     // Will be used to know which object is picked.
@@ -76,17 +76,17 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     Material *mat = new Material(color::indian_red);
     mesh->material = mat;
 
-	model->add_mesh(mesh);
+    model->add_mesh(mesh);
 
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
-            btQuaternion(), btVector3((btScalar) x, 0.5f, (btScalar) z)));
+                btQuaternion(), btVector3((btScalar) x, 0.5f, (btScalar) z)));
 
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
             0,                  // mass, in kg. 0 -> Static object, will never move.
             motionstate,
             box,  // collision shape of body
             btVector3(0, 0, 0)    // local inertia
-    );
+            );
     rigidBody = new btRigidBody(rigidBodyCI);
 
     // Will be used to know which object is picked.

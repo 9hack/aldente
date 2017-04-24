@@ -10,6 +10,7 @@
 #pragma once
 
 #include "model/mesh.h"
+#include "model/material.h"
 #include "model/geometry_generator.h"
 #include "btBulletDynamicsCommon.h"
 #include "game_object.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-	A Model is made up of a bunch of meshes to form a 3D renderable object.
+    A Model is made up of a bunch of meshes to form a 3D renderable object.
 */
 
 #include <vector>
@@ -21,7 +21,7 @@ public:
 
     void combine_meshes();
 
-    void draw(SceneCamera* scene);
+    void draw(SceneCamera &scene);
 
     void update();
 

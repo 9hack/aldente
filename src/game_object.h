@@ -16,7 +16,7 @@ public:
 
     void attach_model(Model *m);
 
-    void draw(SceneCamera* camera);
+    void draw(SceneCamera &camera);
 
 	void update();
 

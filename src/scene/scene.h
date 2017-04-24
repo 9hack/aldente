@@ -10,20 +10,18 @@
 #include "boost/signals2.hpp"
 
 /*
-	Contains all the information for a single scene
+    Contains all the information for a single scene
 */
 class Scene {
 public:
-	SceneCamera* camera;
-	//std::vector<SceneCamera*> cameras;
-	std::vector<GameObject*> objs;
+    SceneCamera camera;
+    //std::vector<SceneCamera*> cameras;
+    std::vector<GameObject*> objs;
     glm::vec3 light_pos;
-	std::vector<btRigidBody*> rigids;
-	boost::signals2::signal<void(std::pair<bool,btRigidBody*>)> rigidSignal;
+    std::vector<btRigidBody*> rigids;
+    boost::signals2::signal<void(std::pair<bool,btRigidBody*>)> rigidSignal;
 
-    Scene();
-
-    virtual ~Scene();
+    virtual ~Scene() {}
 
     void draw();
 
@@ -31,9 +29,7 @@ public:
 
     virtual void update();
 
-	void addRigid(btRigidBody* toAdd);
-
-
+    void addRigid(btRigidBody* toAdd);
 };
 
 /*
@@ -46,9 +42,9 @@ can also be its own scene.
 */
 class MainScene : public Scene {
 private:
-	Grid *grid;
-	Tile *hover;
+    Grid *grid;
+    Tile *hover;
 public:
-	MainScene();
-	void update() override;
+    MainScene();
+    void update() override;
 };

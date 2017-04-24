@@ -16,6 +16,12 @@ class AssetLoader {
 private:
     AssetLoader();
 
+    void load(std::string path, bool isModel);
+
+    void process_node(aiNode *node, const aiScene *scene, bool isModel);
+
+    Mesh *process_mesh(aiMesh *mesh, const aiScene *scene);
+
     std::map<std::string, Model *> assets;
     std::map<std::string, GLuint> textures;
     Model *model;
@@ -27,13 +33,9 @@ public:
 
     void setup();
 
-    void load(std::string path, bool isModel);
+    Model *get_model(std::string name);
 
-    void processNode(aiNode *node, const aiScene *scene, bool isModel);
-
-    Mesh *processMesh(aiMesh *mesh, const aiScene *scene);
-
-    Model *getModel(std::string name);
+    GLuint get_texture(std::string name);
 };
 
 

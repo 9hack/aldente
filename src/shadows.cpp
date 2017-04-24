@@ -8,8 +8,8 @@
 
 #include <iostream>
 
-Shadows::Shadows(Window &window)
-    : window(window), debug_shadows_on(false) {
+Shadows::Shadows()
+    : debug_shadows_on(false) {
 
     // Set up callbacks
     events::toggle_debug_shadows_event.connect([&](void) {
@@ -17,11 +17,6 @@ Shadows::Shadows(Window &window)
     });
 
     events::window_buffer_resize_event.connect([&](events::WindowSizeData d) {
-        // TODO: Change to debug mode assertion or logging
-        if (d.window != &window) {
-            std::cerr << "window mismatch!" << std::endl;
-            return;
-        }
         screen_width = d.width;
         screen_height = d.height;
     });
@@ -33,7 +28,7 @@ void Shadows::shadow_pass(Scene *scene) {
     Config::config->get_value(Config::str_far_plane, far_plane);
 
     // Disgusting.
-    scene->camera->update_frustum_corners(screen_width, screen_height, far_plane);
+    scene->camera.update_frustum_corners(screen_width, screen_height, far_plane);
 
     ShadowShader *ss = (ShadowShader *) ShaderManager::get_shader_program("shadow");
     // Set resolution of shadow map.
@@ -44,7 +39,7 @@ void Shadows::shadow_pass(Scene *scene) {
     ss->use();
     ss->light_pos = scene->light_pos;
     // Calculate light projection matrix to use based on frustum intersection
-    ss->light_proj = scene->camera->frustum_ortho(scene->light_pos);
+    ss->light_proj = scene->camera.frustum_ortho(scene->light_pos);
 
     // Disable back face culling for shadow accuracy
     glDisable(GL_CULL_FACE);

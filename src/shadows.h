@@ -8,14 +8,12 @@
 */
 class Shadows {
 private:
-    Window &window;
-
     int screen_width, screen_height;
 
     bool debug_shadows_on;
 
 public:
-    Shadows(Window &window);
+    Shadows();
 
     void shadow_pass(Scene *scene);
 
