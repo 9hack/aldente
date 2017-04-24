@@ -63,16 +63,16 @@ void AssetLoader::load(std::string path, bool isModel) {
     }
 
     //this->directory = path.substr(0, path.find_last_of('/'));
-    processNode(scene->mRootNode, scene, isModel);
+    process_node(scene->mRootNode, scene, isModel);
 }
 
-void AssetLoader::processNode(aiNode *node, const aiScene *scene, bool isModel) {
+void AssetLoader::process_node(aiNode *node, const aiScene *scene, bool isModel) {
     // Gets all meshes and adds it to the model
 
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         if (isModel) {
-            model->add_mesh(processMesh(mesh, scene));
+            model->add_mesh(process_mesh(mesh, scene));
         } else {
             model->meshes[0]->inverseBoneMat = scene->mRootNode->mTransformation;
             model->meshes[0]->inverseBoneMat.Inverse();
@@ -80,11 +80,11 @@ void AssetLoader::processNode(aiNode *node, const aiScene *scene, bool isModel) 
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        processNode(node->mChildren[i], scene, isModel);
+        process_node(node->mChildren[i], scene, isModel);
     }
 }
 
-Mesh *AssetLoader::processMesh(aiMesh *mesh, const aiScene *scene) {
+Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     // Geometry handles all the vertex buffers and stuff
     Geometry *geo = new Geometry();
 
@@ -149,11 +149,11 @@ Mesh *AssetLoader::processMesh(aiMesh *mesh, const aiScene *scene) {
         toPass += fileName;
 
         //Texture not loaded yet
-        if (textures.count(toPass) == 0) {
+        if (textures.count(fileName) == 0) {
             geo->attachNewTexture(toPass.c_str());
-            textures[toPass] = geo->getTextureGL();
+            textures[fileName] = geo->getTextureGL();
         } else {
-            geo->attachExistingTexture(textures[toPass]);
+            geo->attachExistingTexture(textures[fileName]);
         }
     }
 
@@ -165,14 +165,25 @@ Mesh *AssetLoader::processMesh(aiMesh *mesh, const aiScene *scene) {
 
 //Use this function to access a model, pass in a path in the form of
 //"assets/fbx/the_model_you_want_here.fbx"
-Model *AssetLoader::getModel(std::string name) {
-    if (assets[name] == NULL) {
+Model *AssetLoader::get_model(std::string name) {
+    if (assets.find(name) == assets.end()) {
         std::string error("ERROR: Asset ");
         error += name;
         error += " was not loaded. Check for fbx file and double check filename.\n";
         fprintf(stderr, "%s", error.c_str());
-        Model *dflt = new Model();
+        Model *dflt = new Model(); // WHY?
         return dflt;
     }
     return assets[name];
+}
+
+GLuint AssetLoader::get_texture(std::string name) {
+    if (textures.find(name) == textures.end()) {
+        std::string error("ERROR: Texture ");
+        error += name;
+        error += " was not loaded.\n";
+        fprintf(stderr, "%s", error.c_str());
+        return 0;
+    }
+    return textures[name];
 }

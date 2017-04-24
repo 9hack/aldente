@@ -10,7 +10,7 @@ void GameObject::attach_model(Model *m) {
 }
 
 // Renders model in scene
-void GameObject::draw(SceneCamera* camera) {
+void GameObject::draw(SceneCamera &camera) {
     if (model)
         model->draw(camera);
 }

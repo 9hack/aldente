@@ -1,6 +1,5 @@
 #include "mesh.h"
 
-
 Mesh::Mesh(Geometry *geo,
            Material *mat,
            Shader *shader,
@@ -11,5 +10,3 @@ Mesh::Mesh(Geometry *geo,
         shader(shader),
         to_world(m),
         no_culling(no_cull) {}
-
-

@@ -3,55 +3,51 @@
 #include "aldente.h"
 
 Physics::Physics() {
-	// Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
-	// even though we won't use most of this stuff.
+    // Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
+    // even though we won't use most of this stuff.
 
-	// Build the broadphase
-	broadphase = new btDbvtBroadphase();
+    // Build the broadphase
+    broadphase = new btDbvtBroadphase();
 
-	// Set up the collision configuration and dispatcher
-	collisionConfiguration = new btDefaultCollisionConfiguration();
-	dispatcher = new btCollisionDispatcher(collisionConfiguration);
+    // Set up the collision configuration and dispatcher
+    collisionConfiguration = new btDefaultCollisionConfiguration();
+    dispatcher = new btCollisionDispatcher(collisionConfiguration);
 
-	// The actual physics solver
-	solver = new btSequentialImpulseConstraintSolver;
+    // The actual physics solver
+    solver = new btSequentialImpulseConstraintSolver;
 
-	// The world.
-	
-	scene = nullptr;
+    // The world.
+    scene = nullptr;
 }
 
 Physics::~Physics() {}
 
 void Physics::set_scene(Scene *s) {
-	
     scene = s;
 
-	currentRigidSignal.disconnect();
+    currentRigidSignal.disconnect();
 
-	//Make a new dynamicsWorld if scene was not previously used
-	if (scene_worlds.count(s) == 0) {
-		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-		dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
-		for (btRigidBody* rigid : s->rigids) {
-			if(rigid)
-				dynamicsWorld->addRigidBody(rigid);
-		}
-		scene_worlds[s] = dynamicsWorld;
-	}
-	else {
-		dynamicsWorld = scene_worlds[s];
-	}
+    //Make a new dynamicsWorld if scene was not previously used
+    if (scene_worlds.count(s) == 0) {
+        dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+        dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+        for (btRigidBody* rigid : s->rigids) {
+            if(rigid)
+                dynamicsWorld->addRigidBody(rigid);
+        }
+        scene_worlds[s] = dynamicsWorld;
+    }
+    else {
+        dynamicsWorld = scene_worlds[s];
+    }
 
-	
-	currentRigidSignal = s->rigidSignal.connect([&](std::pair<bool, btRigidBody*> p) {
-		if (p.first) {
-			dynamicsWorld->addRigidBody(p.second);
-		}
-		else {
-			dynamicsWorld->removeRigidBody(p.second);
-		}
-	});
+    currentRigidSignal = s->rigidSignal.connect([&](std::pair<bool, btRigidBody*> p) {
+        if (p.first) {
+            dynamicsWorld->addRigidBody(p.second);
+        } else {
+            dynamicsWorld->removeRigidBody(p.second);
+        }
+    });
 }
 
 void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
@@ -71,7 +67,7 @@ void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
             1.0f
     );
 
-    glm::mat4 M = glm::inverse(scene->camera->P * scene->camera->V);
+    glm::mat4 M = glm::inverse(scene->camera.P * scene->camera.V);
     glm::vec4 lRayStart_world = M * lRayStart_NDC;
     lRayStart_world /= lRayStart_world.w;
     glm::vec4 lRayEnd_world = M * lRayEnd_NDC;
