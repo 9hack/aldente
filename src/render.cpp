@@ -14,6 +14,4 @@ void Render::update() {
     scene_manager.get_current_scene()->draw();
 
     shadows.debug_shadows();
-
-    window.swap_buffers();
 }

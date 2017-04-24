@@ -62,7 +62,7 @@ void Aldente::start_game_loop() {
     SceneManager scene_manager;
     Render render(window, scene_manager);
 
-    TestUI ui = TestUI(10, 7);
+    TestUI ui = TestUI(5, 7);
 
     // Init the test scene.
     MainScene testScene;
@@ -82,5 +82,7 @@ void Aldente::start_game_loop() {
         scene_manager.get_current_scene()->update();
 
         render.update();
+        ui.draw();
+        window.swap_buffers();
     }
 }

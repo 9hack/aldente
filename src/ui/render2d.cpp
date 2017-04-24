@@ -14,7 +14,7 @@
 Render2D::Render2D() {
     // Setup callbacks for window size.
     events::window_buffer_resize_event.connect([&](events::WindowSizeData d) {
-	    screen_width = d.width;
+        screen_width = d.width;
         screen_height = d.height;
         // Calculate projection matrix.
         projection = glm::ortho(0.0f,
