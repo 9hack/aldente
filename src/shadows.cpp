@@ -8,8 +8,8 @@
 
 #include <iostream>
 
-Shadows::Shadows(Window &window)
-    : window(window), debug_shadows_on(false) {
+Shadows::Shadows()
+    : debug_shadows_on(false) {
 
     // Set up callbacks
     events::toggle_debug_shadows_event.connect([&](void) {
@@ -17,11 +17,6 @@ Shadows::Shadows(Window &window)
     });
 
     events::window_buffer_resize_event.connect([&](events::WindowSizeData d) {
-        // TODO: Change to debug mode assertion or logging
-        if (d.window != &window) {
-            std::cerr << "window mismatch!" << std::endl;
-            return;
-        }
         screen_width = d.width;
         screen_height = d.height;
     });
