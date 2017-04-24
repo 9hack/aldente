@@ -1,7 +1,11 @@
 #include "scene_camera.h"
 #include "scene/scene.h"
 
-SceneCamera::SceneCamera() {
+SceneCamera::SceneCamera(glm::vec3 default_pos,
+                         glm::vec3 default_front,
+                         glm::vec3 default_up)
+    : default_pos(default_pos), default_front(default_front),
+      default_up(default_up) {
     reset();
 }
 
@@ -10,9 +14,9 @@ void SceneCamera::recalculate() {
 }
 
 void SceneCamera::reset() {
-    cam_pos = DEFAULT_CAM_POS;
-    cam_front = DEFAULT_CAM_FRONT;
-    cam_up = DEFAULT_CAM_UP;
+    cam_pos = default_pos;
+    cam_front = default_front;
+    cam_up = default_up;
     recalculate();
 }
 

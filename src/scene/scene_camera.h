@@ -8,10 +8,9 @@
 
 class SceneCamera {
 private:
-    const glm::vec3 DEFAULT_CAM_POS = glm::vec3(0.0f, 0.0f, 20.0f);
-    const glm::vec3 DEFAULT_CAM_FRONT = glm::vec3(0.0f, 0.0f, -1.0f);
-    const glm::vec3 DEFAULT_CAM_UP = glm::vec3(0.0f, 1.0f, 0.0f);
-
+    glm::vec3 default_pos;
+    glm::vec3 default_front;
+    glm::vec3 default_up;
 public:
     glm::vec3 cam_pos;
     glm::vec3 cam_front;
@@ -24,7 +23,9 @@ public:
     Plane frustum_planes[6];
     glm::vec3 frustum_corners[8];
 
-    SceneCamera();
+    SceneCamera(glm::vec3 default_pos = glm::vec3(0.f, 0.f, 20.f),
+                glm::vec3 default_front = glm::vec3(0.f, 0.f, -1.f),
+                glm::vec3 default_up = glm::vec3(0.f, 1.f, 0.f));
 
     void recalculate();
 
