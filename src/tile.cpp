@@ -1,8 +1,7 @@
 #include "tile.h"
 #include "util/colors.h"
 
-Tile::Tile() :
-    mesh(nullptr), rigidBody(nullptr) {}
+Tile::Tile() : rigidBody(nullptr) {}
 
 Tile::~Tile() {}
 
@@ -15,7 +14,7 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     height = 1;
     this->x = x;
     this->z = z;
-    mesh = new Mesh();
+    Mesh* mesh = new Mesh();
 
     mesh->to_world = glm::mat4(1.0f);
     mesh->geometry = GeometryGenerator::generate_plane(0.5f, 0);
@@ -45,14 +44,14 @@ void FloorTile::update(Tile *hover) {
 
     // Get the transform from Bullet and into 't'
     rigidBody->getMotionState()->getWorldTransform(t);
-    mesh->to_world[3] = glm::vec4((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
+    to_world[3] = glm::vec4((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
                                   (float) t.getOrigin().getZ(), 1.0f);
     if (hover == this) {
         Material *mat = new Material(color::windwaker_green);
-        mesh->material = mat;
+        model->meshes[0]->material = mat;
     } else {
         Material *mat = new Material(color::indian_red);
-        mesh->material = mat;
+        model->meshes[0]->material = mat;
     }
     //fprintf(stderr, "%f\n", mesh->to_world[3].y);
     //mesh->to_world *= glm::translate(glm::mat4(1.f), glm::vec3(0, 5.0f, 0));
@@ -67,7 +66,7 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     height = 1;
     this->x = x;
     this->z = z;
-    mesh = new Mesh();
+    Mesh* mesh = new Mesh();
 
     mesh->to_world = glm::mat4(1.0f);
     //mesh->to_world *= glm::translate(glm::mat4(1.f), glm::vec3(0,0,0));
@@ -98,14 +97,14 @@ void WallTile::update(Tile *hover) {
 
     // Get the transform from Bullet and into 't'
     rigidBody->getMotionState()->getWorldTransform(t);
-    mesh->to_world[3] = glm::vec4((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
+    to_world[3] = glm::vec4((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
                                   (float) t.getOrigin().getZ(), 1.0f);
     if (hover == this) {
         Material *mat = new Material(color::windwaker_green);
-        mesh->material = mat;
+        model->meshes[0]->material = mat;
     } else {
         Material *mat = new Material(color::indian_red);
-        mesh->material = mat;
+        model->meshes[0]->material = mat;
     }
     //fprintf(stderr, "%f\n", mesh->to_world[3].y);
     //mesh->to_world *= glm::translate(glm::mat4(1.f), glm::vec3(0, 5.0f, 0));

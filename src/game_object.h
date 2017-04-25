@@ -11,6 +11,7 @@
 class GameObject {
 protected:
     Model *model;
+	glm::mat4 to_world;
 public:
     GameObject();
 
@@ -21,5 +22,11 @@ public:
 	void update();
 
     void pass(Shader *s);
+
+	glm::vec3 getPosition();
+
+	glm::vec3 setPosition(glm::vec3 toSet);
+
+
 };
 

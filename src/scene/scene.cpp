@@ -42,6 +42,7 @@ MainScene::MainScene() : Scene() {
     sky->attach_model(skybox_model);
     objs.push_back(sky);
 
+	/*
     // Cube
     Geometry *cube_geo = GeometryGenerator::generate_cube(1.f, true);
     Material *cube_mat = new Material(color::ocean_blue);
@@ -51,7 +52,7 @@ MainScene::MainScene() : Scene() {
     cube_model->add_mesh(cube_mesh);
     GameObject* cube = new GameObject();
     cube->attach_model(cube_model);
-    objs.push_back(cube);
+    objs.push_back(cube);*/
 
     //Setting up scene graph for Grid
 
@@ -60,12 +61,12 @@ MainScene::MainScene() : Scene() {
     for (int i = 0; i < toAdd.size(); i++) {
         std::vector<Tile *> currRow = toAdd[i];
         for (int j = 0; j < currRow.size(); j++) {
-            Model *currTile = new Model();
+            /*Model *currTile = new Model();
             currTile->add_mesh(currRow[j]->getMesh());
             GameObject* currObj = new GameObject();
             currObj->attach_model(currTile);
-            objs.push_back(currObj);
-
+            objs.push_back(currObj);*/
+			objs.push_back(currRow[j]);
 
             if (currRow[j]->getRigid() != NULL) {
                 //physics.dynamicsWorld->addRigidBody(currRow[j]->getRigid());
