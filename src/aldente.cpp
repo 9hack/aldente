@@ -62,7 +62,7 @@ void Aldente::start_game_loop() {
     SceneManager scene_manager;
     Render render(window, scene_manager);
 
-    TestUI ui = TestUI(5, 7);
+    TestUI ui = TestUI(5, 7, (float) width / (float) height);
 
     // Init the test scene.
     MainScene testScene;

@@ -7,8 +7,10 @@
 
 class TestUI : public UI {
 public:
-    TestUI(int grid_width, int grid_height);
+    TestUI(int num_cols, int num_rows, float aspect);
 private:
     UIGrid ui_grid;
     UIRectangle rect;
+    UIContainer info_panel;
+    UIRectangle info_rect;
 };

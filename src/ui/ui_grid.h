@@ -11,10 +11,10 @@ public:
     enum Direction { UP, RIGHT, DOWN, LEFT };
 
     UIGrid(float start_x, float start_y,
+           float grid_width, float grid_height,
            int num_elements, int columns,
            float element_width, float element_height,
            glm::vec3 grid_bg_color,
-           float border_width=1.0f,
            float inter_padding=0.75f,
            float selection_halo_padding=0.3f); // hardcoded defaults :(
     ~UIGrid();
@@ -28,15 +28,16 @@ private:
     void move_selection(Direction d);
     void toggle_current_selection_halo();
 
+    float grid_width, grid_height; // size of entire grid rectangle
     int num_elements;
     int columns, rows; // grid dimensions
     float element_width, element_height;
     glm::vec3 grid_bg_color;
-    float border_width; // border padding around grid
     float inter_padding; // padding between elts
     float selection_halo_padding; // width of selection halo
 
-    float grid_width, grid_height; // size of entire grid rectangle
+    float h_border_padding; // calculated horizontal border padding
+    float v_border_padding; // calculated vertical border padding
     float total_element_width, total_element_height; // elt size incl padding
 
     UIRectangle grid_bg;

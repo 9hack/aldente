@@ -9,29 +9,28 @@ UIGrid::~UIGrid() {
 }
 
 UIGrid::UIGrid(float start_x, float start_y,
+        float grid_width, float grid_height,
         int num_elements, int columns,
         float element_width, float element_height,
         glm::vec3 grid_bg_color,
-        float border_width,
         float inter_padding,
         float selection_halo_padding)
     : UIContainer(start_x, start_y),
+    grid_width(grid_width), grid_height(grid_height),
     num_elements(num_elements), columns(columns),
     element_width(element_width), element_height(element_height),
     grid_bg_color(grid_bg_color),
-    border_width(border_width), inter_padding(inter_padding),
+    inter_padding(inter_padding),
     selection_halo_padding(selection_halo_padding),
     selection_row(0), selection_col(0) {
 
     // Calculate number of rows.
     rows = (num_elements - 1) / columns + 1;
-    // Calculate grid dimension.
-    grid_height = 2 * border_width
-                  + rows * element_height
-                  + (rows - 1) * inter_padding;
-    grid_width = 2 * border_width
-                 + columns * element_width
-                 + (columns - 1) * inter_padding;
+    // Calculate grid border dimensions.
+    h_border_padding = 0.5f * (grid_width - (columns * element_width)
+                       - ((columns - 1) * inter_padding));
+    v_border_padding = 0.5f * (grid_height - (rows * element_height)
+                       - ((rows - 1) * inter_padding));
     // Size of elements including padding
     total_element_width = element_width + inter_padding;
     total_element_height = element_height + inter_padding;
@@ -42,8 +41,8 @@ UIGrid::UIGrid(float start_x, float start_y,
                           grid_bg_color);
 
     // Build empty attachment points across the grid.
-    float elt_start_x = start_x + border_width;
-    float elt_start_y = start_y + grid_height - border_width - element_height;
+    float elt_start_x = start_x + h_border_padding;
+    float elt_start_y = start_y + grid_height - v_border_padding - element_height;
     int curr_elt = 0;
     for (unsigned int row = 0; row < rows; ++row) {
         for (unsigned int col = 0; col < columns; ++col) {

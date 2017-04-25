@@ -2,15 +2,20 @@
 
 #include "util/colors.h"
 
-TestUI::TestUI(int grid_width, int grid_height)
+TestUI::TestUI(int num_cols, int num_rows, float aspect)
     : UI(), // explicit call base class dflt constructor
-      ui_grid(0, 0, grid_width*grid_height, grid_width, 5, 5, color::white),
-      rect(0, 0, 5, 5, color::windwaker_green) {
-
-    for (int i = 0; i < grid_height; ++i) {
-        for (int j = 0; j < grid_width; ++j) {
+      ui_grid(0, 0, 30.f * aspect, 80.f, num_cols*num_rows, num_cols, 9, 9, color::indian_red),
+      rect(0, 0, 9, 9, color::windwaker_green),
+      info_panel(0, 80.f),
+      info_rect(0, 0, 30.f * aspect, 20.f, color::ocean_blue)
+{
+    for (int i = 0; i < num_rows; ++i) {
+        for (int j = 0; j < num_cols; ++j) {
             ui_grid.attach_at(i, j, rect);
         }
     }
     attach(ui_grid);
+
+    info_panel.attach(info_rect);
+    attach(info_panel);
 }
