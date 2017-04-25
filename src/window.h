@@ -34,7 +34,6 @@ public:
     void close();
     int should_close() const;
     void swap_buffers();
-    void clear();
     std::pair<int, int> get_size() const;
     std::pair<double, double> get_cursor() const;
 };

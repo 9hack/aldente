@@ -113,11 +113,6 @@ void Window::swap_buffers() {
     glfwSwapBuffers(gl_window);
 }
 
-void Window::clear() {
-    glViewport(0, 0, width, height);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
 std::pair<int, int> Window::get_size() const {
     return {width, height};
 };

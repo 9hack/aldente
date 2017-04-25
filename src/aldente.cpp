@@ -60,7 +60,7 @@ void Aldente::start_game_loop() {
 
     Physics physics;
     SceneManager scene_manager;
-    Render render(window, scene_manager);
+    Render render(scene_manager);
 
     TestUI ui = TestUI(5, 7, (float) width / (float) height);
 

@@ -20,7 +20,6 @@ Shadows::Shadows()
         screen_width = d.width;
         screen_height = d.height;
     });
-
 }
 
 void Shadows::shadow_pass(Scene *scene) {
@@ -49,6 +48,10 @@ void Shadows::shadow_pass(Scene *scene) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Restore viewport.
+    glViewport(0, 0, screen_width, screen_height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 // Debug shadows by rendering the shadow map texture to a quad.
