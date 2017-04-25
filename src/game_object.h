@@ -2,6 +2,7 @@
 
 #include "scene/scene_camera.h"
 #include "model/model.h"
+#include "transform.h"
 
 /*
 	This represents an abstract object in the scene.
@@ -11,8 +12,10 @@
 class GameObject {
 protected:
     Model *model;
-	glm::mat4 to_world;
+	//glm::mat4 to_world; // World matrix now controlled using the Transform Component    
 public:
+    Transform transform;
+
     GameObject();
 
     void attach_model(Model *m);
@@ -22,11 +25,5 @@ public:
 	void update();
 
     void pass(Shader *s);
-
-	glm::vec3 getPosition();
-
-	glm::vec3 setPosition(glm::vec3 toSet);
-
-
 };
 
