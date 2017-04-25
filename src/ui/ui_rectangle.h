@@ -4,8 +4,7 @@
 
 #include <glm/glm.hpp>
 
-class UIRectangle : public UIElement
-{
+class UIRectangle : public UIElement {
 public:
     UIRectangle() {} // default ctor
     UIRectangle(float start_x, float start_y,

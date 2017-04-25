@@ -19,12 +19,10 @@ void UI::detach(UIElement &e) {
     root.detach(e);
 }
 
-void UI::enable()
-{
+void UI::enable() {
     root.enable();
 }
 
-void UI::disable()
-{
+void UI::disable() {
     root.disable();
 }

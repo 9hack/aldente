@@ -12,8 +12,7 @@
 #define UNIT_TO_PERCENT 0.01f
 #define GLYPH_UNIT      0.1f
 
-class Render2D
-{
+class Render2D {
     struct Character {
         GLuint     texture_ID; // ID handle of the glyph texture
         glm::ivec2 size;       // Size of glyph

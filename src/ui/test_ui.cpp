@@ -7,8 +7,7 @@ TestUI::TestUI(int num_cols, int num_rows, float aspect)
       ui_grid(0, 0, 30.f * aspect, 80.f, num_cols*num_rows, num_cols, 9, 9, color::indian_red),
       rect(0, 0, 9, 9, color::windwaker_green),
       info_panel(0, 80.f),
-      info_rect(0, 0, 30.f * aspect, 20.f, color::ocean_blue)
-{
+      info_rect(0, 0, 30.f * aspect, 20.f, color::ocean_blue) {
     for (int i = 0; i < num_rows; ++i) {
         for (int j = 0; j < num_cols; ++j) {
             ui_grid.attach_at(i, j, rect);
