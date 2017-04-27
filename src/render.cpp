@@ -13,7 +13,6 @@ void Render::update() {
     window.clear();
     scene_manager.get_current_scene()->draw();
 
+    // Debug shadows as necessary.
     shadows.debug_shadows();
-
-    window.swap_buffers();
 }

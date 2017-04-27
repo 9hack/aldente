@@ -10,7 +10,7 @@
 #include <mutex>
 
 /*
-	High-level GLFWwindow abstraction which dispatches lambda-friendly events.
+    High-level GLFWwindow abstraction which dispatches lambda-friendly events.
 */
 class Window {
 private:
@@ -34,7 +34,8 @@ public:
     void close();
     int should_close() const;
     void swap_buffers();
-    void clear();
+    void clear() const;
     std::pair<int, int> get_size() const;
     std::pair<double, double> get_cursor() const;
+    void broadcast_size();
 };

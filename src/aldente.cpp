@@ -11,6 +11,7 @@
 #include "poll/input_poller.h"
 #include "util/config.h"
 #include "events.h"
+#include "ui/test_ui.h"
 #include "render.h"
 
 Aldente::~Aldente() {
@@ -26,6 +27,8 @@ static void glSetup() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
@@ -53,19 +56,24 @@ void Aldente::start_game_loop() {
 
     // Set up list of polling objects.
     std::vector<std::shared_ptr<Poller>> pollers {
-            std::make_shared<GlfwPoller>(),
-            std::make_shared<InputPoller>(),
+        std::make_shared<GlfwPoller>(),
+        std::make_shared<InputPoller>(),
     };
 
-	Physics physics;
+    Physics physics;
     SceneManager scene_manager;
-	Render render(window, scene_manager);
+    Render render(window, scene_manager);
 
-	// Init the test scene.
-	MainScene testScene;
-	physics.set_scene(&testScene);
-	scene_manager.set_current_scene(&testScene);
+    TestUI ui = TestUI(5, 7, (float) width / (float) height);
+
+    // Init the test scene.
+    MainScene testScene;
+    physics.set_scene(&testScene);
+    scene_manager.set_current_scene(&testScene);
     DebugInput debug_input(window, scene_manager, physics);
+
+    // Have window fire off a resize event to update all interested systems.
+    window.broadcast_size();
 
     while (!window.should_close()) {
         // Do polling
@@ -78,6 +86,8 @@ void Aldente::start_game_loop() {
 
         scene_manager.get_current_scene()->update();
 
-		render.update();
+        render.update();
+        ui.draw();
+        window.swap_buffers();
     }
 }

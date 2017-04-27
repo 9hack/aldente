@@ -20,7 +20,6 @@ Shadows::Shadows()
         screen_width = d.width;
         screen_height = d.height;
     });
-
 }
 
 void Shadows::shadow_pass(Scene *scene) {
