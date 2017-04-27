@@ -16,7 +16,7 @@ void GameObject::draw(SceneCamera &camera) {
 }
 
 // Updates Game Object Paramters
-void GameObject::update() {
+void GameObject::update() {        
 }
 
 // Used for passing seperate shaders, such as for shadows

@@ -2,6 +2,11 @@
 
 #include <glm/glm.hpp>
 
+/*
+    Handles all matrix transformations for a game object. Gives a (hopefully) simple
+    interface for interacting with the game object's transformation, including
+    translations, rotations, and scaling. 
+*/
 class Transform {
 public:
     Transform();    
@@ -17,8 +22,8 @@ public:
 
     void translate(glm::vec3 position);
     void translate(float x, float y, float z);
-    void rotate(glm::vec3 angles);
-    void rotate(float x, float y, float z);
+    void rotate(glm::vec3 angles, bool local = true);
+    void rotate(float x, float y, float z, bool local = true);
 
     glm::mat4 get_world_mat();
     glm::vec3 get_position();

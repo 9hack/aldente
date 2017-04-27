@@ -44,8 +44,9 @@ void FloorTile::update(Tile *hover) {
 
     // Get the transform from Bullet and into 't'
     rigidBody->getMotionState()->getWorldTransform(t);
-    to_world[3] = glm::vec4((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
-                                  (float) t.getOrigin().getZ(), 1.0f);
+    transform.set_position(glm::vec3((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
+                                  (float) t.getOrigin().getZ()));    
+
     if (hover == this) {
         Material *mat = new Material(color::windwaker_green);
         model->meshes[0]->material = mat;
@@ -97,8 +98,9 @@ void WallTile::update(Tile *hover) {
 
     // Get the transform from Bullet and into 't'
     rigidBody->getMotionState()->getWorldTransform(t);
-    to_world[3] = glm::vec4((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
-                                  (float) t.getOrigin().getZ(), 1.0f);
+    transform.set_position(glm::vec3((float) t.getOrigin().getX(), (float) t.getOrigin().getY(), 
+        (float) t.getOrigin().getZ()));    
+
     if (hover == this) {
         Material *mat = new Material(color::windwaker_green);
         model->meshes[0]->material = mat;

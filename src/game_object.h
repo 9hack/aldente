@@ -12,18 +12,16 @@
 class GameObject {
 protected:
     Model *model;
-	//glm::mat4 to_world; // World matrix now controlled using the Transform Component    
 public:
-    Transform transform;
+    Transform transform; // World matrix now controlled using the Transform Component    
 
     GameObject();
 
     void attach_model(Model *m);
 
-    void draw(SceneCamera &camera);
-
-	void update();
-
+    void draw(SceneCamera &camera);	
     void pass(Shader *s);
+
+    virtual void update();
 };
 

@@ -3,7 +3,6 @@
 #include <iostream>
 
 // TODO : Work on more efficient algorithms for rotation and scaling. 
-// TODO : Test functionality of all functions
 
 Transform::Transform() {
     world_mat = glm::mat4(1.0f);    
@@ -63,20 +62,30 @@ void Transform::translate(float x, float y, float z) {
     world_mat = trans_mat * world_mat;
 }
 
-void Transform::rotate(glm::vec3 angles) {
-    rotate(angles.x, angles.y, angles.z);
+void Transform::rotate(glm::vec3 angles, bool local) {
+    rotate(angles.x, angles.y, angles.z, local);
 }
 
 // Rotates first around x-axis, then y-axis, then z-axis, 
 // starting from current orientation.
-void Transform::rotate(float x, float y, float z) {    
+void Transform::rotate(float x, float y, float z, bool local) { 
+
+    glm::vec3 current_pos = get_position();
+
+    // For Local, move to origin first, then rotate, then move back        
+    if (local)
+        translate(-current_pos);
+
     glm::mat4 rotate_x = glm::rotate(glm::mat4(1.0f), x, glm::vec3(1.f, 0.f, 0.f));
     glm::mat4 rotate_y = glm::rotate(glm::mat4(1.0f), y, glm::vec3(0.f, 1.f, 0.f));
     glm::mat4 rotate_z = glm::rotate(glm::mat4(1.0f), z, glm::vec3(0.f, 0.f, 1.f));
-
     glm::mat4 rotation = rotate_z * rotate_y * rotate_x;
 
     world_mat = rotation * world_mat;
+
+    if (local)
+        translate(current_pos);
+
 }
 
 glm::mat4 Transform::get_world_mat() {
