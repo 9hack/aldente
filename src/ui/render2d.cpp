@@ -43,30 +43,24 @@ Render2D::Render2D() {
 
 void Render2D::setup_glyphs() {
     FT_Library ft;
-    if (FT_Init_FreeType(&ft))
-        std::cerr << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+    assert(!FT_Init_FreeType(&ft));
 
     // Load font ("face")
     FT_Face face;
-    if (FT_New_Face(ft, "assets/fonts/DejaVuSerif.ttf", 0, &face))
-        std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
+    assert(!FT_New_Face(ft, "assets/fonts/DejaVuSerif.ttf", 0, &face))
 
     // Width and height params. Width is 0 for dynamic resizing.
     FT_Set_Pixel_Sizes(face, 0, 48);
 
     // Set active glyph to a character
     // FT_LOAD_RENDER flag creates 8-bit grayscale bitmap image (access by face->glyph->bitmap)
-    if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
-        std::cerr << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+    assert(!FT_Load_Char(face, 'X', FT_LOAD_RENDER));
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
     for (GLubyte c = 0; c < 128; c++) {
         // Load character glyph
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            std::cerr << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-            continue;
-        }
+        assert(!FT_Load_Char(face, c, FT_LOAD_RENDER));
         // Generate texture
         GLuint texture;
         glGenTextures(1, &texture);

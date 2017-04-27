@@ -9,8 +9,8 @@ public:
     void draw();
     void attach(UIElement &e);
     void detach(UIElement &e);
-    void enable();
-    void disable();
+    void enable();  // Enables visibility of all contained UI elts.
+    void disable(); // Disables visibliity.
 private:
     Render2D renderer_2d;
     UIContainer root;

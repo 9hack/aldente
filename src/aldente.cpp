@@ -27,8 +27,8 @@ static void glSetup() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
@@ -71,6 +71,13 @@ void Aldente::start_game_loop() {
     physics.set_scene(&testScene);
     scene_manager.set_current_scene(&testScene);
     DebugInput debug_input(window, scene_manager, physics);
+
+    // Have window fire off a resize event to update all interested systems.
+    // TODO: move into Window?
+    int w, h;
+    std::tie(w, h) = window.get_size();
+    events::WindowSizeData d = {&window, w, h};
+    events::window_buffer_resize_event(d);
 
     while (!window.should_close()) {
         // Do polling
