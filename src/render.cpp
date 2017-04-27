@@ -1,7 +1,7 @@
 #include "render.h"
 
-Render::Render(SceneManager &scene_manager)
-    : scene_manager(scene_manager) {}
+Render::Render(Window &window, SceneManager &scene_manager)
+    : window(window), scene_manager(scene_manager) {}
 
 // Render pipeline
 // Alternatively can acquire current scene via some ChangeScene event
@@ -10,6 +10,7 @@ void Render::update() {
     shadows.shadow_pass(scene_manager.get_current_scene());
 
     // Second pass: usual rendering.
+    window.clear();
     scene_manager.get_current_scene()->draw();
 
     // Debug shadows as necessary.

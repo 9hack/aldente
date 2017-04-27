@@ -113,12 +113,22 @@ void Window::swap_buffers() {
     glfwSwapBuffers(gl_window);
 }
 
+void Window::clear() const {
+    glViewport(0, 0, width, height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 std::pair<int, int> Window::get_size() const {
     return {width, height};
-};
+}
 
 std::pair<double, double> Window::get_cursor() const {
     double x_pos, y_pos;
     glfwGetCursorPos(gl_window, &x_pos, &y_pos);
     return {x_pos, y_pos};
-};
+}
+
+void Window::broadcast_size() {
+    events::WindowSizeData d = {this, width, height};
+    events::window_buffer_resize_event(d);
+}

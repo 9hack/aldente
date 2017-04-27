@@ -62,7 +62,7 @@ void Aldente::start_game_loop() {
 
     Physics physics;
     SceneManager scene_manager;
-    Render render(scene_manager);
+    Render render(window, scene_manager);
 
     TestUI ui = TestUI(5, 7, (float) width / (float) height);
 
@@ -73,11 +73,7 @@ void Aldente::start_game_loop() {
     DebugInput debug_input(window, scene_manager, physics);
 
     // Have window fire off a resize event to update all interested systems.
-    // TODO: move into Window?
-    int w, h;
-    std::tie(w, h) = window.get_size();
-    events::WindowSizeData d = {&window, w, h};
-    events::window_buffer_resize_event(d);
+    window.broadcast_size();
 
     while (!window.should_close()) {
         // Do polling
