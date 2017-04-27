@@ -14,6 +14,7 @@
 #include "model/geometry_generator.h"
 #include "btBulletDynamicsCommon.h"
 #include "game_object.h"
+#include "construct.h"
 
 class Tile : public GameObject {
 protected:
@@ -22,7 +23,7 @@ protected:
     btRigidBody *rigidBody;
     btBoxShape *box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
     btBoxShape *ground = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));
-
+    Construct *construct;
 private:
 
 public:
@@ -38,7 +39,11 @@ public:
 
     virtual void update(Tile *hover) = 0;
 
+    void draw(SceneCamera &camera);
+
     btRigidBody *getRigid() { return rigidBody; };
+
+    void set_construct(Construct* to_set) { construct = to_set; };
 };
 
 class FloorTile : public Tile {

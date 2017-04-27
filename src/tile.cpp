@@ -1,9 +1,18 @@
 #include "tile.h"
 #include "util/colors.h"
 
-Tile::Tile() : rigidBody(nullptr) {}
+Tile::Tile() :
+    rigidBody(nullptr),
+    construct(nullptr) {}
 
 Tile::~Tile() {}
+
+void Tile::draw(SceneCamera &camera) {
+    model->draw(camera, transform.get_world_mat());
+    if (construct) {
+        construct->draw(camera);
+    }
+}
 
 FloorTile::~FloorTile() {}
 

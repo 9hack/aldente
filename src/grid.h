@@ -10,12 +10,13 @@
 
 #include <vector>
 #include "tile.h"
+#include "util/colors.h"
 
 class Grid {
 private:
     std::vector<std::vector<Tile *>> grid;
     int width, height;
-
+    int hoverX, hoverZ;
     Tile *hover;
 	
 public:
@@ -25,5 +26,8 @@ public:
 
     std::vector<std::vector<Tile *>> getGrid() { return grid; };
 
-	//void update();
+    void update();
+
+    //void build(bool is_chest);
+
 };

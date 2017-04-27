@@ -14,7 +14,7 @@ void Model::draw(SceneCamera &camera, glm::mat4 to_world) {
         mesh->shader->send_mesh_model(mesh->to_world);
         mesh->shader->set_material(mesh->material);
         mesh->shader->set_culling(!mesh->no_culling);
-        mesh->shader->draw(mesh->geometry,to_world);
+        mesh->shader->draw(mesh->geometry, to_world);
     }
 }
 

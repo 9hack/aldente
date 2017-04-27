@@ -96,4 +96,6 @@ void MainScene::update() {
             currRow[j]->update(hover);
         }
     }
+
+    grid->update();
 }
