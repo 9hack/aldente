@@ -15,14 +15,17 @@
 
 class AssetLoader {
 private:
-    static void load(Model *model, std::string path);
-
-    static void process_scene(Model *model, const aiScene *scene);
-    static void process_node(Model *model, aiNode *node, const aiScene *scene);
-    static void process_mesh(Model *model, aiMesh *mesh, const aiScene *scene);
-
     static std::map<std::string, Model *> models;
     static std::map<std::string, GLuint> textures;
+
+    static void load(Model *model, std::string path);
+
+    static void process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat);
+    static Mesh *process_mesh(aiMesh *mesh, const aiScene *scene);
+    static void process_bones(Model *model, Mesh *mesh, aiMesh *aimesh);
+
+    static void add_bone_to_geo(Geometry *geo, unsigned int vertex_id, unsigned int bone_index, float weight);
+    static glm::mat4 convert_matrix(aiMatrix4x4 ai_mat);
 public:
     static void setup();
 

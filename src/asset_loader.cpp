@@ -5,6 +5,9 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
+std::map<std::string, Model *> AssetLoader::models;
+std::map<std::string, GLuint> AssetLoader::textures;
+
 /*
     Loads all fbx models located in assets/fbx
     (animations and textures attached to file)
@@ -45,36 +48,29 @@ void AssetLoader::load(Model *model, std::string path) {
 
     std::cerr << "Reading from : " << path << std::endl;
 
-    process_node(model, scene->mRootNode, scene);
+    process_node(model, scene, scene->mRootNode, glm::mat4(1.0f));
 }
 
-void AssetLoader::process_scene(Model *model, aiScene *scene) {
-    for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
-        aiMesh *new_mesh = scene->mMeshes[i];
-        process_mesh
-    }
-}
+void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat) {
 
-void AssetLoader::process_node(Model *model, aiNode *node, const aiScene *scene, bool isModel) {
-    // Gets all meshes and adds it to the model
-
-    std::string test = node->mName.data;
-    std::cerr << "Processing Node : " << test  << std::endl;
-
+    std::cerr << "Processing Node : " << node->mName.data << std::endl;
     std::cerr << "Number of Animations : " << scene->mNumAnimations << std::endl;
 
+    model_mat = model_mat * convert_matrix(node->mTransformation);
+
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        if (isModel) {
-            model->add_mesh(process_mesh(mesh, scene));
-        } else {
-            model->meshes[0]->inverseBoneMat = scene->mRootNode->mTransformation;
-            model->meshes[0]->inverseBoneMat.Inverse();
-        }
+        aiMesh *aimesh = scene->mMeshes[node->mMeshes[i]];
+        Mesh *mesh = process_mesh(aimesh, scene);
+        mesh->to_world = model_mat;
+        model->add_mesh(mesh);
+
+        process_bones(model, mesh, aimesh);
+
+        mesh->geometry->populate_buffers();
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        process_node(node->mChildren[i], scene, isModel);
+        process_node(model, scene, node->mChildren[i], model_mat);
     }
 }
 
@@ -116,7 +112,6 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     }
 
     //Textures and Materials not yet loaded
-
     Mesh *final_mesh;
     Material *loadMat = new Material();
     aiMaterial *assimpMat = scene->mMaterials[mesh->mMaterialIndex];
@@ -150,49 +145,44 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
         geo->texture = textures[fileName];
     }
 
+    geo->populate_buffers();
+    return final_mesh;
+}
+
+void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
     // Loading in BONES for Rigging
 
-    // TEsting
+    std::cerr << "Number of Bones : " << aimesh->mNumBones << std::endl;
 
-    std::cerr << "Number of Bones : " << mesh->mNumBones << std::endl;
+    Geometry *geo = mesh->geometry;
+    geo->has_bones = true;
+    geo->bone_ids.resize(geo->vertices.size);
+    geo->weights.resize(geo->vertices.size);
 
-    for (int i = 0; i < mesh->mNumBones; i++) {
-        std::cerr << "Bone : " << mesh->mBones[i]->mName.data << std::endl;
-    }
+    for (int i = 0; i < aimesh->mNumBones; i++) {
 
-    /*
-    bool newBone = true; // Testing
-    int numBone = 0; // Testing, should be static and persisitent
+        std::cerr << "Bone : " << aimesh->mBones[i]->mName.data << std::endl;
 
-    for (int i = 0; i < mesh->mNumBones; i++) {
+        int bone_index = 0;
+        std::string bone_name(aimesh->mBones[i]->mName.data);
 
-        Bone bone;
-
-        int BoneIndex = 0;
-        std::string BoneName(mesh->mBones[i]->mName.data);
-
-        if (newBone) {
-            BoneIndex = numBone;
-            numBone++;
+        if (model->bone_mapping.find(bone_name) == model->bone_mapping.end()) {
+            bone_index = model->bones.size;
+            model->bones.push_back(glm::mat4(1.0f));
         }
         else {
-            //BoneIndex = m_BoneMapping[BoneName];
+            bone_index = model->bone_mapping[bone_name];
         }
 
-        // m_BoneMapping[BoneName] = BoneIndex;
-        // m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix;
+        model->bone_mapping[bone_name] = bone_index;
+        model->bones[bone_index] = convert_matrix(aimesh->mBones[i]->mOffsetMatrix);
 
-        for (int j = 0; j < mesh->mBones[i]->mNumWeights; j++) {
-            float bone_weight = mesh->mBones[i]->mWeights[j].mWeight;
-            bone.id = BoneIndex;
-            bone.weight = bone_weight;
+        for (unsigned int j = 0; j < aimesh->mBones[i]->mNumWeights; j++) {
+            unsigned int vertex_id = aimesh->mBones[i]->mWeights[j].mVertexId;
+            float weight = aimesh->mBones[i]->mWeights[j].mWeight;
+            add_bone_to_geo(geo, vertex_id, bone_index, weight);
         }
     }
-    */
-
-    geo->populate_buffers();
-
-    return final_mesh;
 }
 
 
@@ -241,4 +231,25 @@ void AssetLoader::load_texture(std::string path) {
     std::size_t found = path.find_last_of("/\\");
     std::string fileName = path.substr(found + 1);
     textures[fileName] = texture;
+}
+
+glm::mat4 AssetLoader::convert_matrix(aiMatrix4x4 ai_mat) {
+    return{ ai_mat.a1, ai_mat.a2, ai_mat.a3, ai_mat.a4,
+            ai_mat.b1, ai_mat.b2, ai_mat.b3, ai_mat.b4,
+            ai_mat.c1, ai_mat.c2, ai_mat.c3, ai_mat.c4,
+            ai_mat.d1, ai_mat.d2, ai_mat.d3, ai_mat.d4 };
+}
+
+void AssetLoader::add_bone_to_geo(Geometry *geo, unsigned int vertex_id,
+                                unsigned int bone_index, float weight) {
+
+    // Finds spot for bone, only possible to have up to four bones attached
+    // to a single vertex
+    for (int i = 0; i < 4; i++) {
+        if (geo->weights[vertex_id][i] == 0.0f) {
+            geo->bone_ids[vertex_id][i] = bone_index;
+            geo->weights[vertex_id][i] == weight;
+            return;
+        }
+    }
 }

@@ -7,12 +7,6 @@
 
 #include "geometry.h"
 #include "material.h"
-
-struct Anim {
-    std::vector<unsigned int> bones;
-    std::vector<float> weight;
-};
-
 class Mesh {
 public:
     Mesh(Geometry *geo = NULL,
@@ -27,6 +21,4 @@ public:
 
     // map<string, Anim*> animations();
     aiMatrix4x4 inverseBoneMat;
-
-    std::vector<Bone> bones;
 };

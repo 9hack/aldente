@@ -7,10 +7,15 @@
 class Geometry {
 public:
     bool has_texture;
+    bool has_bones;
+
     GLuint texture;
+
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> tex_coords;
+    std::vector<glm::ivec4> bone_ids;
+    std::vector<glm::vec4> weights;
     std::vector<GLuint> indices;
 
     GLenum draw_type = GL_TRIANGLES;
@@ -34,5 +39,5 @@ public:
     void bind();
 
 private:
-    GLuint VAO, VBO, NBO, TBO, EBO;
+    GLuint VAO, VBO, NBO, TBO, EBO, BBO, WBO;
 };

@@ -77,10 +77,13 @@ MainScene::MainScene() : Scene() {
     }
 
     // Test Model loading
-    Model *tmodel = AssetLoader::asset_loader->get_model(std::string("boy_anim.fbx"));
+    Model *tmodel = AssetLoader::get_model(std::string("boy_anim.fbx"));
     GameObject *testObj = new GameObject();
     testObj->attach_model(tmodel);
-    tmodel->model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.01f, 0.01f, 0.01f)) * tmodel->model_mat;
+    tmodel->model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f)) * tmodel->model_mat;
+    tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0)) * tmodel->model_mat;
+    tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-30.0f), glm::vec3(0, 1, 0)) * tmodel->model_mat;
+    tmodel->model_mat = glm::translate(glm::mat4(1.0f),glm::vec3(0, 2.0f, 0)) * tmodel->model_mat;
     objs.push_back(testObj);
 }
 
