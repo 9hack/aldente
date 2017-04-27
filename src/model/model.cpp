@@ -1,17 +1,11 @@
 #include "model.h"
 #include "util/util.h"
 
-Model::Model() {
-    // No Scene Set. Assumes that it will be manually
-    // set later before it can be drawn.
-    model_mat = glm::mat4(1.0f);
-}
-
 void Model::add_mesh(Mesh *m) {
     meshes.push_back(m);
 }
 
-void Model::draw(SceneCamera &camera) {
+void Model::draw(SceneCamera &camera, glm::mat4 to_world) {
     // Loop over meshes and their respective shader programs.
     for (Mesh *mesh : meshes) {
         mesh->shader->use();
@@ -20,15 +14,15 @@ void Model::draw(SceneCamera &camera) {
         mesh->shader->send_mesh_model(mesh->to_world);
         mesh->shader->set_material(mesh->material);
         mesh->shader->set_culling(!mesh->no_culling);
-        mesh->shader->draw(mesh->geometry, model_mat);
+        mesh->shader->draw(mesh->geometry,to_world);
     }
 }
 
-void Model::pass(Shader *s) {
+void Model::pass(Shader *s, glm::mat4 to_world) {
     for (Mesh *mesh : meshes) {
         if (mesh->geometry) {
             s->send_mesh_model(mesh->to_world);
-            s->draw(mesh->geometry, model_mat);
+            s->draw(mesh->geometry, to_world);
         }
     }
 }

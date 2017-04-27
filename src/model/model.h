@@ -13,18 +13,15 @@
 class Model {
 public:
     std::vector<Mesh *> meshes;
-    glm::mat4 model_mat;
-
-    Model();
 
     void add_mesh(Mesh *m);
 
     void combine_meshes();
 
-    void draw(SceneCamera &scene);
+    void draw(SceneCamera &scene, glm::mat4 to_world);
 
     void update();
 
-    void pass(Shader *s);
+    void pass(Shader *s, glm::mat4 to_world);
 };
 

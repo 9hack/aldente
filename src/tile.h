@@ -19,7 +19,6 @@ class Tile : public GameObject {
 protected:
     int width, height, x, z;
     bool traversable;
-    Mesh *mesh;
     btRigidBody *rigidBody;
     btBoxShape *box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
     btBoxShape *ground = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));
@@ -31,7 +30,7 @@ public:
 
     ~Tile();
 
-    Mesh *getMesh() { return mesh; };
+    //Mesh *getMesh() { return mesh; };
 
     int getX() { return x; };
 
