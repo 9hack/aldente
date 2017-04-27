@@ -1,9 +1,8 @@
-#include "aldente.h"
+#include "aldente_client.h"
 
 #include "window.h"
 #include "asset_loader.h"
 #include "physics.h"
-#include "shadows.h"
 #include "scene_manager.h"
 #include "debug_input.h"
 #include "poll/poller.h"
@@ -16,7 +15,7 @@
 #include "game/phase.h"
 #include "game/game_state.h"
 
-Aldente::~Aldente() {
+AldenteClient::~AldenteClient() {
     ShaderManager::destroy();
     GeometryGenerator::destroy();
     glfwTerminate();
@@ -34,7 +33,7 @@ static void glSetup() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void Aldente::start_game_loop() {
+void AldenteClient::start() {
     Util::seed(0); // Seed PRNG.
 
     // Set up GLFW.
