@@ -24,3 +24,9 @@ void GameObject::pass(Shader *s) {
     if (model)
         model->pass(s, transform.get_world_mat());
 }
+
+void GameObject::set_color(glm::vec3 color) {
+    for (Mesh* mesh : model->meshes) {
+        mesh->material->diffuse = color;
+    }
+}

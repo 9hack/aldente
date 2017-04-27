@@ -19,9 +19,12 @@ public:
 
     void attach_model(Model *m);
 
-    void draw(SceneCamera &camera);	
+    virtual void draw(SceneCamera &camera);
+
+	virtual void update();
+
     void pass(Shader *s);
 
-    virtual void update();
+    void set_color(glm::vec3 color);
 };
 

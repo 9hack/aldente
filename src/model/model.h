@@ -18,7 +18,7 @@ public:
 
     void combine_meshes();
 
-    void draw(SceneCamera &scene, glm::mat4 to_world);
+    void draw(SceneCamera &camera, glm::mat4 to_world);
 
     void update();
 
