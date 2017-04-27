@@ -27,4 +27,6 @@ public:
 
     // map<string, Anim*> animations();
     aiMatrix4x4 inverseBoneMat;
+
+    std::vector<Bone> bones;
 };

@@ -15,30 +15,19 @@
 
 class AssetLoader {
 private:
-    AssetLoader();
+    static void load(Model *model, std::string path);
 
-    void load(std::string path, bool isModel);
+    static void process_scene(Model *model, const aiScene *scene);
+    static void process_node(Model *model, aiNode *node, const aiScene *scene);
+    static void process_mesh(Model *model, aiMesh *mesh, const aiScene *scene);
 
-    void process_node(aiNode *node, const aiScene *scene, bool isModel);
-
-    Mesh *process_mesh(aiMesh *mesh, const aiScene *scene);
-
-    void load_texture(std::string path);
-
-    std::map<std::string, Model *> assets;
-    std::map<std::string, GLuint> textures;
-    Model *model;
-    Assimp::Importer import;
+    static std::map<std::string, Model *> models;
+    static std::map<std::string, GLuint> textures;
 public:
-    static AssetLoader *asset_loader;
+    static void setup();
 
-    ~AssetLoader();
-
-    void setup();
-
-    Model *get_model(std::string name);
-
-    GLuint get_texture(std::string name);
+    static Model *get_model(std::string name);
+    static GLuint get_texture(std::string name);
 };
 
 

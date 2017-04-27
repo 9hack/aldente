@@ -73,14 +73,14 @@ MainScene::MainScene() : Scene() {
                 //physics.rigidBodies.push_back(currRow[j]->getRigid());
                 addRigid(currRow[j]->getRigid());
             }
-
         }
     }
 
     // Test Model loading
-    Model *tmodel = AssetLoader::asset_loader->get_model(std::string("textured.fbx"));
+    Model *tmodel = AssetLoader::asset_loader->get_model(std::string("boy_anim.fbx"));
     GameObject *testObj = new GameObject();
     testObj->attach_model(tmodel);
+    tmodel->model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.01f, 0.01f, 0.01f)) * tmodel->model_mat;
     objs.push_back(testObj);
 }
 

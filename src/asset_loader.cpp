@@ -5,65 +5,36 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
-AssetLoader *AssetLoader::asset_loader = new AssetLoader();
-
-AssetLoader::AssetLoader() {}
-
+/*
+    Loads all fbx models located in assets/fbx
+    (animations and textures attached to file)
+*/
 void AssetLoader::setup() {
-    //Load Textures
-    boost::filesystem::path path = boost::filesystem::path("assets/textures");
-    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
-        std::string filepath = std::string("assets/textures/");
-        filepath += entry.path().filename().string();
+    boost::filesystem::path path = boost::filesystem::path("assets/fbx");
 
-        load_texture(filepath);
-    }
-
-    //Load Models
-    path = boost::filesystem::path("assets/fbx");
     for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
-        std::size_t found = entry.path().filename().string().find_first_of("@");
 
         std::string filepath = std::string("assets/fbx/");
         filepath += entry.path().filename().string();
 
-        // If @ is not in filename (meaning that its a model and not an animation)
-        if (found == std::string::npos) {
-            model = new Model();
-            load(filepath, true);
-            assets[entry.path().filename().string().c_str()] = model;
-        }
-            // Else it is an animation
-        else {
-            load(filepath, false);
-        }
+        Model *model = new Model();
+        load(model, filepath);
+        models[entry.path().filename().string().c_str()] = model;
     }
-
-    // Test
 }
 
-void AssetLoader::load(std::string path, bool isModel) {
+/*
+    Loads a model (assuming .fbx) from the file location,
+    along with any textures, animations, and bones that
+    is connected to the file.
+*/
+void AssetLoader::load(Model *model, std::string path) {
+
+    Assimp::Importer import;
+
     unsigned int processFlags =
-            aiProcess_CalcTangentSpace | // calculate tangents and bitangents if possible
-            aiProcess_JoinIdenticalVertices | // join identical vertices/ optimize indexing
-            //aiProcess_ValidateDataStructure  | // perform a full validation of the loader's output
-            aiProcess_Triangulate | // Ensure all verticies are triangulated (each 3 vertices are triangle)
-            //aiProcess_ConvertToLeftHanded | // convert everything to D3D left handed space (by default right-handed, for OpenGL)
-            aiProcess_SortByPType | // ?
-            aiProcess_ImproveCacheLocality | // improve the cache locality of the output vertices
-            aiProcess_RemoveRedundantMaterials | // remove redundant materials
-            aiProcess_FindDegenerates | // remove degenerated polygons from the import
-            aiProcess_FindInvalidData | // detect invalid model data, such as invalid normal vectors
-            aiProcess_GenUVCoords | // convert spherical, cylindrical, box and planar mapping to proper UVs
-            aiProcess_TransformUVCoords | // preprocess UV transformations (scaling, translation ...)
-            aiProcess_FindInstances | // search for instanced meshes and remove them by references to one master
-            aiProcess_LimitBoneWeights | // limit bone weights to 4 per vertex
-            aiProcess_OptimizeMeshes | // join small meshes, if possible;
-            aiProcess_SplitByBoneCount |
-            // split meshes with too many bones. Necessary for our (limited) hardware skinning shader
-            aiProcess_PreTransformVertices | //-- fixes the transformation issue.
-            //aiProcess_FlipUVs | // flips UV coords
-            0;
+        aiProcess_Triangulate // Makes sure we use triangle primitives
+        ;
 
     const aiScene *scene = import.ReadFile(path, processFlags);
 
@@ -72,12 +43,25 @@ void AssetLoader::load(std::string path, bool isModel) {
         return;
     }
 
-    //this->directory = path.substr(0, path.find_last_of('/'));
-    process_node(scene->mRootNode, scene, isModel);
+    std::cerr << "Reading from : " << path << std::endl;
+
+    process_node(model, scene->mRootNode, scene);
 }
 
-void AssetLoader::process_node(aiNode *node, const aiScene *scene, bool isModel) {
+void AssetLoader::process_scene(Model *model, aiScene *scene) {
+    for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
+        aiMesh *new_mesh = scene->mMeshes[i];
+        process_mesh
+    }
+}
+
+void AssetLoader::process_node(Model *model, aiNode *node, const aiScene *scene, bool isModel) {
     // Gets all meshes and adds it to the model
+
+    std::string test = node->mName.data;
+    std::cerr << "Processing Node : " << test  << std::endl;
+
+    std::cerr << "Number of Animations : " << scene->mNumAnimations << std::endl;
 
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
@@ -95,6 +79,10 @@ void AssetLoader::process_node(aiNode *node, const aiScene *scene, bool isModel)
 }
 
 Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
+
+    std::string test = mesh->mName.data;
+    std::cerr << "Mesh : " << test << std::endl;
+
     // Geometry handles all the vertex buffers and stuff
     Geometry *geo = new Geometry();
 
@@ -162,6 +150,46 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
         geo->texture = textures[fileName];
     }
 
+    // Loading in BONES for Rigging
+
+    // TEsting
+
+    std::cerr << "Number of Bones : " << mesh->mNumBones << std::endl;
+
+    for (int i = 0; i < mesh->mNumBones; i++) {
+        std::cerr << "Bone : " << mesh->mBones[i]->mName.data << std::endl;
+    }
+
+    /*
+    bool newBone = true; // Testing
+    int numBone = 0; // Testing, should be static and persisitent
+
+    for (int i = 0; i < mesh->mNumBones; i++) {
+
+        Bone bone;
+
+        int BoneIndex = 0;
+        std::string BoneName(mesh->mBones[i]->mName.data);
+
+        if (newBone) {
+            BoneIndex = numBone;
+            numBone++;
+        }
+        else {
+            //BoneIndex = m_BoneMapping[BoneName];
+        }
+
+        // m_BoneMapping[BoneName] = BoneIndex;
+        // m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix;
+
+        for (int j = 0; j < mesh->mBones[i]->mNumWeights; j++) {
+            float bone_weight = mesh->mBones[i]->mWeights[j].mWeight;
+            bone.id = BoneIndex;
+            bone.weight = bone_weight;
+        }
+    }
+    */
+
     geo->populate_buffers();
 
     return final_mesh;
@@ -171,14 +199,14 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
 //Use this function to access a model, pass in a path in the form of
 //"assets/fbx/the_model_you_want_here.fbx"
 Model *AssetLoader::get_model(std::string name) {
-    if (assets.find(name) == assets.end()) {
+    if (models.find(name) == models.end()) {
         std::string error("ERROR: Asset ");
         error += name;
         error += " was not loaded. Check for fbx file and double check filename.\n";
         fprintf(stderr, "%s", error.c_str());
         return nullptr;
     }
-    return assets[name];
+    return models[name];
 }
 
 GLuint AssetLoader::get_texture(std::string name) {
