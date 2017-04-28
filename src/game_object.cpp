@@ -1,4 +1,8 @@
 #include "game_object.h"
+#include <GLFW/glfw3.h>
+
+double last_time = 0;
+double cur_time = 0;
 
 GameObject::GameObject() {
 	model = new Model();
@@ -15,7 +19,17 @@ void GameObject::draw(Shader *shader, SceneInfo &scene_info) {
 }
 
 // Updates Game Object Paramters
-void GameObject::update() {        
+void GameObject::update() {
+    cur_time += (glfwGetTime() - last_time) * 0.8f;
+
+    if (cur_time > 3)
+        cur_time = 0;
+
+    if (model->animations.size() > 0) {
+        player.play(cur_time, model->animations[0], model);
+    }
+
+    last_time = glfwGetTime();
 }
 
 void GameObject::set_color(glm::vec3 color) {

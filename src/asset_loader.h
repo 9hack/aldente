@@ -25,7 +25,7 @@ private:
     static void process_bones(Model *model, Mesh *mesh, aiMesh *aimesh);
 
     static void add_bone_to_geo(Geometry *geo, unsigned int vertex_id, unsigned int bone_index, float weight);
-    static glm::mat4 convert_matrix(aiMatrix4x4 ai_mat);
+    static glm::mat4 convert_ai_matrix(aiMatrix4x4 ai_mat);
 public:
     static void setup();
 

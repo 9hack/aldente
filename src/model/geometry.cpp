@@ -13,6 +13,8 @@ Geometry::Geometry(GLenum draw, GLint wrap, GLint filter) :
     glGenBuffers(1, &NBO);
     glGenBuffers(1, &TBO);
     glGenBuffers(1, &EBO);
+    glGenBuffers(1, &BBO);
+    glGenBuffers(1, &WBO);
 }
 
 Geometry::~Geometry() {}
@@ -51,7 +53,7 @@ void Geometry::populate_buffers() {
         glBindBuffer(GL_ARRAY_BUFFER, BBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(glm::ivec4) * bone_ids.size(), bone_ids.data(), GL_STATIC_DRAW);
         glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 4, GL_INT, GL_FALSE, 0, 0);
+        glVertexAttribIPointer(3, 4, GL_INT, 0, 0);
 
         glBindBuffer(GL_ARRAY_BUFFER, WBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * weights.size(), weights.data(), GL_STATIC_DRAW);

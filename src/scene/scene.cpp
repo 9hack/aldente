@@ -31,7 +31,7 @@ void Scene::addRigid(btRigidBody* toAdd) {
 }
 
 MainScene::MainScene() : Scene() {
-    light_pos = glm::vec3(0.f, 2.f, 1.f);
+    light_pos = glm::vec3(0.f, 1.f, 1.f);
 
     /*
     // Skybox
@@ -80,10 +80,10 @@ MainScene::MainScene() : Scene() {
     Model *tmodel = AssetLoader::get_model(std::string("boy_anim.fbx"));
     GameObject *testObj = new GameObject();
     testObj->attach_model(tmodel);
-    tmodel->model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f)) * tmodel->model_mat;
-    tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0)) * tmodel->model_mat;
-    tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-30.0f), glm::vec3(0, 1, 0)) * tmodel->model_mat;
-    tmodel->model_mat = glm::translate(glm::mat4(1.0f),glm::vec3(0, 2.0f, 0)) * tmodel->model_mat;
+    tmodel->model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.008f, 0.008f, 0.008f)) * tmodel->model_mat;
+    //tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0)) * tmodel->model_mat;
+    //tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-30.0f), glm::vec3(0, 1, 0)) * tmodel->model_mat;
+    tmodel->model_mat = glm::translate(glm::mat4(1.0f),glm::vec3(0, 1.0f, 0)) * tmodel->model_mat;
     objs.push_back(testObj);
 }
 
