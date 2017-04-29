@@ -8,9 +8,12 @@
 */
 class AnimationPlayer {
 public:    
-    void play(float time_in_secs, Animation *animation, Model *model);    
+    void play(Model *model, std::string anim_name);
+
+    void set_speed(float speed);
 
 private:    
+    float speed;
 
     void process_animation(float anim_time, const aiAnimation *anim, Model *model, const aiNode *node, glm::mat4 parent_mat);
 

@@ -1,12 +1,25 @@
 #include "animation_player.h"
 
-void AnimationPlayer::play(float time_in_secs, Animation *animation, Model *model) {
+double last_time = 0;
+double cur_time = 0;
+
+void AnimationPlayer::play(Model *model, std::string anim_name) {
+
+    Animation *animation = model->animations[anim_name];
+
+    cur_time += (glfwGetTime() - last_time) * speed;
 
     float ticks_per_sec = (float)(animation->get_anim()->mTicksPerSecond);
-    float time_in_ticks = time_in_secs * ticks_per_sec;
+    float time_in_ticks = cur_time *  ticks_per_sec;
     float animation_time = fmod(time_in_ticks, (float)animation->get_anim()->mDuration);    
 
     process_animation(animation_time, animation->get_anim(), model, animation->get_root(), glm::mat4(1.0f));
+
+    last_time = glfwGetTime();
+}
+
+void AnimationPlayer::set_speed(float speed) {
+    this->speed = speed;
 }
 
 void AnimationPlayer::process_animation(float anim_time, const aiAnimation *anim, Model *model, const aiNode *node, glm::mat4 parent_mat) {

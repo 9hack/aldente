@@ -77,7 +77,7 @@ MainScene::MainScene() : Scene() {
     }
 
     // Test Model loading
-    Model *tmodel = AssetLoader::get_model(std::string("boy"));
+    Model *tmodel = AssetLoader::get_model(std::string("boy_two"));
     GameObject *testObj = new GameObject();
     testObj->attach_model(tmodel);
     tmodel->model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.008f, 0.008f, 0.008f)) * tmodel->model_mat;
