@@ -8,31 +8,29 @@
 std::map<std::string, Model *> AssetLoader::models;
 std::map<std::string, GLuint> AssetLoader::textures;
 
-// TODO : Gargbage Collection
+const std::string model_loc = "assets/models/";
+const std::string anim_loc = "assets/animations/";
+
+// TODO : Garbage Collection
 
 /*
-    Loads all fbx models located in assets/fbx
+    Loads all fbx models located in assets/models
+    Then loads all fbx animations located in assets/animations
+    Assumes that animation file names are "model_name@anim_name" format
     (animation and textures attached to file)
 */
 void AssetLoader::setup() {
-    boost::filesystem::path path = boost::filesystem::path("assets/fbx");
+    boost::filesystem::path path = boost::filesystem::path(model_loc);
 
-    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
-
-        std::string filepath = std::string("assets/fbx/");
-        filepath += entry.path().filename().string();
-
-        Model *model = new Model();
-        load(model, filepath);
-        models[entry.path().filename().string().c_str()] = model;
-        if (model->animations.size() > 0)
-            model->animations[0]->get_anim();
+    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(model_loc), {})) {
+        load(model_loc, entry.path().filename().string());
     }
 
-    // TODO : Add logic for importing seperate animations for .fbx files with the same models,
-    // but with different animations. Example, boy@run.fbx and boy@walk.fbx.
-    // These Animations should be attached to the same "Model".
-    // Need to be able to parse the file name string.
+    path = boost::filesystem::path(anim_loc);
+
+    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(anim_loc), {})) {
+        load(anim_loc, entry.path().filename().string());
+    }
 }
 
 /*
@@ -40,32 +38,57 @@ void AssetLoader::setup() {
     along with any textures, animations, and bones that
     is connected to the file.
 */
-void AssetLoader::load(Model *model, std::string path) {
+void AssetLoader::load(std::string file_loc, std::string file_name) {
 
-    Assimp::Importer *import = new Assimp::Importer();
+    std::string path = file_loc + file_name;
+
+    Assimp::Importer *import = new Assimp::Importer(); // Should change to Heap TODO, without affecting Animation
 
     unsigned int processFlags =
         aiProcess_Triangulate // Makes sure we use triangle primitives
         ;
 
+    std::cerr << "Reading from : " << path << std::endl;
     const aiScene *scene = import->ReadFile(path, processFlags);
 
     if (!scene) {
-        std::cout << "ERROR::ASSIMP::" << import->GetErrorString() << std::endl;
+        std::cerr << "ERROR::ASSIMP::" << import->GetErrorString() << std::endl;
         return;
     }
 
-    std::cerr << "Reading from : " << path << std::endl;
+    // Checks to see if file is a model or animation (denoted by @)
+    std::size_t at_found = file_name.find_first_of("@");
 
-    // Saves Model and Bone Information
-    process_node(model, scene, scene->mRootNode, glm::mat4(1.0f));
+    if (at_found == std::string::npos) {
 
-    // Save Animation if Available, Only one per fbx
-    if (scene->mNumAnimations > 0) {
-        std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
-        Animation *animation = new Animation(scene, scene->mAnimations[0]);
-        model->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
-        model->animations.push_back(animation);
+        // File is only a model
+        std::size_t dot_found = file_name.find_first_of(".");
+        std::string model_name = file_name.substr(0, dot_found);
+
+        std::cerr << "Model Name : " << model_name << std::endl;
+
+        Model *model = new Model();
+        process_node(model, scene, scene->mRootNode, glm::mat4(1.0f));
+        models[model_name] = model;
+
+    }
+    else {
+        std::size_t dot_found = file_name.find_first_of(".");
+        std::string model_name = file_name.substr(0, at_found);
+        std::string anim_name = file_name.substr(at_found + 1, dot_found - at_found - 1);
+
+        std::cerr << "Finding Model : " << model_name << std::endl;
+        std::cerr << "Saving Animation : " << anim_name << std::endl;
+
+        Model *model = get_model(model_name);
+
+        // Save Animation if Available, Only one per fbx
+        if (scene->mNumAnimations > 0) {
+            std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
+            Animation *animation = new Animation(scene, scene->mAnimations[0]);
+            model->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
+            model->animations[anim_name] = animation;
+        }
     }
 }
 
@@ -255,12 +278,6 @@ void AssetLoader::load_texture(std::string path) {
 }
 
 glm::mat4 AssetLoader::convert_ai_matrix(aiMatrix4x4 ai_mat) {
-    /*
-    return{ ai_mat.a1, ai_mat.a2, ai_mat.a3, ai_mat.a4,
-            ai_mat.b1, ai_mat.b2, ai_mat.b3, ai_mat.b4,
-            ai_mat.c1, ai_mat.c2, ai_mat.c3, ai_mat.c4,
-            ai_mat.d1, ai_mat.d2, ai_mat.d3, ai_mat.d4 };
-            */
     return{ ai_mat.a1, ai_mat.b1, ai_mat.c1, ai_mat.d1,
         ai_mat.a2, ai_mat.b2, ai_mat.c2, ai_mat.d2,
         ai_mat.a3, ai_mat.b3, ai_mat.c3, ai_mat.d3,

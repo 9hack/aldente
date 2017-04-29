@@ -11,7 +11,7 @@
 #include "mesh.h"
 #include "scene/scene_info.h"
 
-#include "animation\animation.h"
+#include "animation/animation.h"
 
 class Model {
 private:
@@ -25,7 +25,7 @@ public:
     std::vector<glm::mat4> bones_final; // Final transformation matrix for bone, including animation
     std::vector<glm::mat4> bone_offsets; // Initial offset matrix for bone
     glm::mat4 global_inv_trans; // Global Inverse Transform 
-    std::vector<Animation *> animations;
+    std::map<std::string, Animation *> animations;
     glm::mat4 model_mat;
 >>>>>>> Got models working, loading bones
 

@@ -26,7 +26,10 @@ void GameObject::update() {
         cur_time = 0;
 
     if (model->animations.size() > 0) {
-        player.play(cur_time, model->animations[0], model);
+        if (cur_time < 1.5f)
+            player.play(cur_time, model->animations["look"], model);
+        else 
+            player.play(cur_time, model->animations["wave"], model);
     }
 
     last_time = glfwGetTime();

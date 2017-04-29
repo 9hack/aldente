@@ -18,7 +18,7 @@ private:
     static std::map<std::string, Model *> models;
     static std::map<std::string, GLuint> textures;
 
-    static void load(Model *model, std::string path);
+    static void load(std::string file_loc, std::string file_name);
 
     static void process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat);
     static Mesh *process_mesh(aiMesh *mesh, const aiScene *scene);
