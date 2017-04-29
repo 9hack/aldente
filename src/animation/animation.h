@@ -4,7 +4,8 @@
 #include <assimp/scene.h>
 
 /*
-    Uses assimp's node structure to save animation
+    Uses assimp's node structure to save animations to be played later.
+    (Too much trouble to properly split the assimp animation node)
 */
 class Animation {
 public:            

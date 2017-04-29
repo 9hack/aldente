@@ -1,24 +1,19 @@
 #include "animation_player.h"
 
-AnimationPlayer::AnimationPlayer() {
-
-}
-
-AnimationPlayer::~AnimationPlayer() {
-
-}
-
 void AnimationPlayer::play(float time_in_secs, Animation *animation, Model *model) {
+
     float ticks_per_sec = (float)(animation->get_anim()->mTicksPerSecond);
     float time_in_ticks = time_in_secs * ticks_per_sec;
-    float animation_time = fmod(time_in_ticks, (float)animation->get_anim()->mDuration);
-
-    // std::cerr << "Playing Animation at time : " << animation_time << std::endl;
+    float animation_time = fmod(time_in_ticks, (float)animation->get_anim()->mDuration);    
 
     process_animation(animation_time, animation->get_anim(), model, animation->get_root(), glm::mat4(1.0f));
 }
 
 void AnimationPlayer::process_animation(float anim_time, const aiAnimation *anim, Model *model, const aiNode *node, glm::mat4 parent_mat) {
+
+    if (!anim)
+        return;
+    
     std::string node_name(node->mName.data);    
 
     glm::mat4 node_trans = convert_ai_matrix(node->mTransformation);
@@ -27,29 +22,29 @@ void AnimationPlayer::process_animation(float anim_time, const aiAnimation *anim
 
     if (node_anim) { 
         // Interpolate scaling and generate scaling transformation matrix
-        aiVector3D Scaling;
-        CalcInterpolatedScaling(Scaling, anim_time, node_anim);
-        glm::mat4 ScalingM = glm::scale(glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z));
+        aiVector3D scaling;
+        calc_interpolated_scaling(scaling, anim_time, node_anim);
+        glm::mat4 scaling_mat = glm::scale(glm::mat4(1.0f), glm::vec3(scaling.x, scaling.y, scaling.z));
 
         // Interpolate rotation and generate rotation transformation matrix
-        aiQuaternion RotationQ;
-        CalcInterpolatedRotation(RotationQ, anim_time, node_anim);
-        glm::mat4 RotationM = glm::mat4(convert_ai_matrix(aiMatrix4x4(RotationQ.GetMatrix())));
+        aiQuaternion rotation;
+        calc_interpolated_rotation(rotation, anim_time, node_anim);
+        glm::mat4 rotation_mat = glm::mat4(convert_ai_matrix(aiMatrix4x4(rotation.GetMatrix())));
 
         // Interpolate translation and generate translation transformation matrix
-        aiVector3D Translation;
-        CalcInterpolatedPosition(Translation, anim_time, node_anim);
-        glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z));
+        aiVector3D translation;
+        calc_interpolated_position(translation, anim_time, node_anim);
+        glm::mat4 trans_mat = glm::translate(glm::mat4(1.0f), glm::vec3(translation.x, translation.y, translation.z));
 
         // Combine the above transformations
-        node_trans = TranslationM * RotationM * ScalingM;
+        node_trans = trans_mat * rotation_mat * scaling_mat;
     }
 
     glm::mat4 global_trans = parent_mat * node_trans;
 
     if (model->bone_mapping.find(node_name) != model->bone_mapping.end()) {
         unsigned int bone_index = model->bone_mapping[node_name];
-        model->bones_final[bone_index] = model->global_inv_trans * global_trans * model->bone_offsets[bone_index];  //model->bone_offsets[bone_index];
+        model->bones_final[bone_index] = model->global_inv_trans * global_trans * model->bone_offsets[bone_index];
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
@@ -62,14 +57,111 @@ const aiNodeAnim* AnimationPlayer::find_node_anim(const aiAnimation *anim, const
     // std::cerr << "Finding Node Animtion " << anim->mNumChannels << std::endl;
 
     for (unsigned int i = 0; i < anim->mNumChannels; i++) {
-        const aiNodeAnim* pNodeAnim = anim->mChannels[i];
+        const aiNodeAnim* node_anim = anim->mChannels[i];
 
-        if (std::string(pNodeAnim->mNodeName.data) == node_name) {
-            return pNodeAnim;
+        if (std::string(node_anim->mNodeName.data) == node_name) {
+            return node_anim;
         }
     }
 
     return NULL;
+}
+
+unsigned int AnimationPlayer::find_position(float anim_time, const aiNodeAnim *node_anim) {
+    for (unsigned int i = 0; i < node_anim->mNumPositionKeys - 1; i++) {
+        if (anim_time < (float)node_anim->mPositionKeys[i + 1].mTime) {
+            return i;
+        }
+    }
+
+    assert(0);
+    return 0;
+}
+
+
+unsigned int AnimationPlayer::find_rotation(float anim_time, const aiNodeAnim *node_anim) {
+    assert(node_anim->mNumRotationKeys > 0);
+
+    for (unsigned int i = 0; i < node_anim->mNumRotationKeys - 1; i++) {
+        if (anim_time < (float)node_anim->mRotationKeys[i + 1].mTime) {
+            return i;
+        }
+    }
+
+    assert(0);
+    return 0;
+}
+
+
+unsigned int AnimationPlayer::find_scaling(float anim_time, const aiNodeAnim *node_anim) {
+    assert(node_anim->mNumScalingKeys > 0);
+
+    for (unsigned int i = 0; i < node_anim->mNumScalingKeys - 1; i++) {
+        if (anim_time < (float)node_anim->mScalingKeys[i + 1].mTime) {
+            return i;
+        }
+    }
+
+    assert(0);
+    return 0;
+}
+
+
+void AnimationPlayer::calc_interpolated_position(aiVector3D &out, float anim_time, const aiNodeAnim *node_anim) {
+    if (node_anim->mNumPositionKeys == 1) {
+        out = node_anim->mPositionKeys[0].mValue;
+        return;
+    }
+
+    unsigned int position_index = find_position(anim_time, node_anim);
+    unsigned int next_position_index = (position_index + 1);
+    assert(next_position_index < node_anim->mNumPositionKeys);
+    float deltaTime = (float)(node_anim->mPositionKeys[next_position_index].mTime - node_anim->mPositionKeys[position_index].mTime);
+    float factor = (anim_time - (float)node_anim->mPositionKeys[position_index].mTime) / deltaTime;
+    assert(factor >= 0.0f && factor <= 1.0f);
+    const aiVector3D &start = node_anim->mPositionKeys[position_index].mValue;
+    const aiVector3D &end = node_anim->mPositionKeys[next_position_index].mValue;
+    aiVector3D delta = end - start;
+    out = start + factor * delta;
+}
+
+
+void AnimationPlayer::calc_interpolated_rotation(aiQuaternion &out, float anim_time, const aiNodeAnim *node_anim) {
+    // we need at least two values to interpolate...
+    if (node_anim->mNumRotationKeys == 1) {
+        out = node_anim->mRotationKeys[0].mValue;
+        return;
+    }
+
+    unsigned int rotation_index = find_rotation(anim_time, node_anim);
+    unsigned int next_rotation_index = (rotation_index + 1);
+    assert(next_rotation_index < node_anim->mNumRotationKeys);
+    float deltaTime = (float)(node_anim->mRotationKeys[next_rotation_index].mTime - node_anim->mRotationKeys[rotation_index].mTime);
+    float factor = (anim_time - (float)node_anim->mRotationKeys[rotation_index].mTime) / deltaTime;
+    assert(factor >= 0.0f && factor <= 1.0f);
+    const aiQuaternion &startRotationQ = node_anim->mRotationKeys[rotation_index].mValue;
+    const aiQuaternion &endRotationQ = node_anim->mRotationKeys[next_rotation_index].mValue;
+    aiQuaternion::Interpolate(out, startRotationQ, endRotationQ, factor);
+    out = out.Normalize();
+}
+
+
+void AnimationPlayer::calc_interpolated_scaling(aiVector3D &out, float anim_time, const aiNodeAnim *node_anim) {
+    if (node_anim->mNumScalingKeys == 1) {
+        out = node_anim->mScalingKeys[0].mValue;
+        return;
+    }
+
+    unsigned int scaling_index = find_scaling(anim_time, node_anim);
+    unsigned int next_scaling_index = (scaling_index + 1);
+    assert(next_scaling_index < node_anim->mNumScalingKeys);
+    float deltaTime = (float)(node_anim->mScalingKeys[next_scaling_index].mTime - node_anim->mScalingKeys[scaling_index].mTime);
+    float factor = (anim_time - (float)node_anim->mScalingKeys[scaling_index].mTime) / deltaTime;
+    assert(factor >= 0.0f && factor <= 1.0f);
+    const aiVector3D &start = node_anim->mScalingKeys[scaling_index].mValue;
+    const aiVector3D &end = node_anim->mScalingKeys[next_scaling_index].mValue;
+    aiVector3D delta = end - start;
+    out = start + factor * delta;
 }
 
 glm::mat4 AnimationPlayer::convert_ai_matrix(aiMatrix4x4 ai_mat) {
@@ -77,104 +169,4 @@ glm::mat4 AnimationPlayer::convert_ai_matrix(aiMatrix4x4 ai_mat) {
         ai_mat.a2, ai_mat.b2, ai_mat.c2, ai_mat.d2,
         ai_mat.a3, ai_mat.b3, ai_mat.c3, ai_mat.d3,
         ai_mat.a4, ai_mat.b4, ai_mat.c4, ai_mat.d4 };
-}
-
-
-
-
-unsigned int AnimationPlayer::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim) {
-    for (unsigned int i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++) {
-        if (AnimationTime < (float)pNodeAnim->mPositionKeys[i + 1].mTime) {
-            return i;
-        }
-    }
-
-    assert(0);
-    return 0;
-}
-
-
-unsigned int AnimationPlayer::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim) {
-    assert(pNodeAnim->mNumRotationKeys > 0);
-
-    for (unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++) {
-        if (AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime) {
-            return i;
-        }
-    }
-
-    assert(0);
-    return 0;
-}
-
-
-unsigned int AnimationPlayer::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim) {
-    assert(pNodeAnim->mNumScalingKeys > 0);
-
-    for (unsigned int i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++) {
-        if (AnimationTime < (float)pNodeAnim->mScalingKeys[i + 1].mTime) {
-            return i;
-        }
-    }
-
-    assert(0);
-    return 0;
-}
-
-
-void AnimationPlayer::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim) {
-    if (pNodeAnim->mNumPositionKeys == 1) {
-        Out = pNodeAnim->mPositionKeys[0].mValue;
-        return;
-    }
-
-    unsigned int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
-    unsigned int NextPositionIndex = (PositionIndex + 1);
-    assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
-    float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
-    float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
-    const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
-    const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
-    aiVector3D Delta = End - Start;
-    Out = Start + Factor * Delta;
-}
-
-
-void AnimationPlayer::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim) {
-    // we need at least two values to interpolate...
-    if (pNodeAnim->mNumRotationKeys == 1) {
-        Out = pNodeAnim->mRotationKeys[0].mValue;
-        return;
-    }
-
-    unsigned int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
-    unsigned int NextRotationIndex = (RotationIndex + 1);
-    assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
-    float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
-    float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
-    const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
-    const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
-    aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
-    Out = Out.Normalize();
-}
-
-
-void AnimationPlayer::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim) {
-    if (pNodeAnim->mNumScalingKeys == 1) {
-        Out = pNodeAnim->mScalingKeys[0].mValue;
-        return;
-    }
-
-    unsigned int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
-    unsigned int NextScalingIndex = (ScalingIndex + 1);
-    assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
-    float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-    float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
-    const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
-    const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
-    aiVector3D Delta = End - Start;
-    Out = Start + Factor * Delta;
 }

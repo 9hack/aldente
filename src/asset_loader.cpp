@@ -5,6 +5,7 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
+Assimp::Importer AssetLoader::import;
 std::map<std::string, Model *> AssetLoader::models;
 std::map<std::string, GLuint> AssetLoader::textures;
 
@@ -12,6 +13,8 @@ const std::string model_loc = "assets/models/";
 const std::string anim_loc = "assets/animations/";
 
 // TODO : Garbage Collection
+void AssetLoader::destroy() {
+}
 
 /*
     Loads all fbx models located in assets/models
@@ -42,17 +45,15 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
 
     std::string path = file_loc + file_name;
 
-    Assimp::Importer *import = new Assimp::Importer(); // Should change to Heap TODO, without affecting Animation
-
     unsigned int processFlags =
         aiProcess_Triangulate // Makes sure we use triangle primitives
         ;
 
-    std::cerr << "Reading from : " << path << std::endl;
-    const aiScene *scene = import->ReadFile(path, processFlags);
+    //std::cerr << "Reading from : " << path << std::endl;
+    const aiScene *scene = import.ReadFile(path, processFlags);
 
     if (!scene) {
-        std::cerr << "ERROR::ASSIMP::" << import->GetErrorString() << std::endl;
+        std::cerr << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
         return;
     }
 
@@ -65,7 +66,7 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
         std::size_t dot_found = file_name.find_first_of(".");
         std::string model_name = file_name.substr(0, dot_found);
 
-        std::cerr << "Model Name : " << model_name << std::endl;
+        //std::cerr << "Model Name : " << model_name << std::endl;
 
         Model *model = new Model();
         process_node(model, scene, scene->mRootNode, glm::mat4(1.0f));
@@ -77,15 +78,15 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
         std::string model_name = file_name.substr(0, at_found);
         std::string anim_name = file_name.substr(at_found + 1, dot_found - at_found - 1);
 
-        std::cerr << "Finding Model : " << model_name << std::endl;
-        std::cerr << "Saving Animation : " << anim_name << std::endl;
+        //std::cerr << "Finding Model : " << model_name << std::endl;
+        //std::cerr << "Saving Animation : " << anim_name << std::endl;
 
         Model *model = get_model(model_name);
 
         // Save Animation if Available, Only one per fbx
         if (scene->mNumAnimations > 0) {
-            std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
-            Animation *animation = new Animation(scene, scene->mAnimations[0]);
+            //std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
+            Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);
             model->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
             model->animations[anim_name] = animation;
         }
@@ -94,8 +95,8 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
 
 void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat) {
 
-    std::cerr << "Processing Node : " << node->mName.data << std::endl;
-    std::cerr << "Number of Animations : " << scene->mNumAnimations << std::endl;
+    //std::cerr << "Processing Node : " << node->mName.data << std::endl;
+    //std::cerr << "Number of Animations : " << scene->mNumAnimations << std::endl;
 
     model_mat = model_mat * convert_ai_matrix(node->mTransformation);
 
@@ -118,7 +119,7 @@ void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node,
 Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
 
     std::string test = mesh->mName.data;
-    std::cerr << "Mesh : " << test << std::endl;
+    //std::cerr << "Mesh : " << test << std::endl;
 
     // Geometry handles all the vertex buffers and stuff
     Geometry *geo = new Geometry();
@@ -154,7 +155,7 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
 
     //Textures and Materials not yet loaded
     Mesh *final_mesh;
-    Material *loadMat = new Material();
+    Material *load_mat = new Material();
     aiMaterial *assimpMat = scene->mMaterials[mesh->mMaterialIndex];
     aiColor3D diffuse(0, 0, 0);
     assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
@@ -164,12 +165,11 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
     float shiny = 0.0f;
     assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-    loadMat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
-    loadMat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-    loadMat->specular = glm::vec3(specular.r, specular.g, specular.b);
-    loadMat->shininess = shiny;
-    final_mesh = new Mesh(geo, loadMat);
-    final_mesh->local_transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    load_mat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+    load_mat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+    load_mat->specular = glm::vec3(specular.r, specular.g, specular.b);
+    load_mat->shininess = shiny;
+    final_mesh = new Mesh(geo, load_mat, ShaderManager::get_shader_program("basic_anim"));
 
     //If textures exist for this mesh
     for (GLuint i = 0; i < assimpMat->GetTextureCount(aiTextureType_DIFFUSE); i++) {
@@ -190,9 +190,9 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     return final_mesh;
 }
 
+// Loading in BONES for Rigging
 void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
-    // Loading in BONES for Rigging
-    std::cerr << "Number of Bones : " << aimesh->mNumBones << std::endl;
+    //std::cerr << "Number of Bones : " << aimesh->mNumBones << std::endl;
 
     Geometry *geo = mesh->geometry;
     geo->has_bones = true;
@@ -201,7 +201,7 @@ void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
 
     for (unsigned int i = 0; i < aimesh->mNumBones; i++) {
 
-        std::cerr << "Bone : " << aimesh->mBones[i]->mName.data << std::endl;
+        // std::cerr << "Bone : " << aimesh->mBones[i]->mName.data << std::endl;
 
         unsigned int bone_index = 0;
         std::string bone_name(aimesh->mBones[i]->mName.data);
@@ -226,20 +226,18 @@ void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
             add_bone_to_geo(geo, vertex_id, bone_index, weight);
         }
     }
-
-    std::cerr << "DEBUG Weight Sum : " << geo->weights[3][0] << geo->weights[3][0] << geo->weights[3][1] << geo->weights[3][2] << geo->weights[3][3] << std::endl;
 }
 
-//Use this function to access a model, pass in a path in the form of
-//"assets/fbx/the_model_you_want_here.fbx"
+//Use this function to access a model, pass in model name
 Model *AssetLoader::get_model(std::string name) {
     if (models.find(name) == models.end()) {
         std::string error("ERROR: Asset ");
         error += name;
         error += " was not loaded. Check for fbx file and double check filename.\n";
         fprintf(stderr, "%s", error.c_str());
-        return nullptr;
+        return NULL;
     }
+
     return models[name];
 }
 
@@ -249,7 +247,7 @@ GLuint AssetLoader::get_texture(std::string name) {
         error += name;
         error += " was not loaded.\n";
         fprintf(stderr, "%s", error.c_str());
-        return 0;
+        return NULL;
     }
     return textures[name];
 }
@@ -277,18 +275,11 @@ void AssetLoader::load_texture(std::string path) {
     textures[fileName] = texture;
 }
 
-glm::mat4 AssetLoader::convert_ai_matrix(aiMatrix4x4 ai_mat) {
-    return{ ai_mat.a1, ai_mat.b1, ai_mat.c1, ai_mat.d1,
-        ai_mat.a2, ai_mat.b2, ai_mat.c2, ai_mat.d2,
-        ai_mat.a3, ai_mat.b3, ai_mat.c3, ai_mat.d3,
-        ai_mat.a4, ai_mat.b4, ai_mat.c4, ai_mat.d4 };
-}
-
+// Finds spot for bone, only possible to have up to four bones attached
+// to a single vertex
 void AssetLoader::add_bone_to_geo(Geometry *geo, unsigned int vertex_id,
                                 unsigned int bone_index, float weight) {
 
-    // Finds spot for bone, only possible to have up to four bones attached
-    // to a single vertex
     for (int i = 0; i < 4; i++) {
         if (geo->weights[vertex_id][i] == 0.0f) {
             geo->bone_ids[vertex_id][i] = bone_index;
@@ -296,4 +287,12 @@ void AssetLoader::add_bone_to_geo(Geometry *geo, unsigned int vertex_id,
             return;
         }
     }
+}
+
+// Converts from assimp matrix to glm matrix
+glm::mat4 AssetLoader::convert_ai_matrix(aiMatrix4x4 ai_mat) {
+    return{ ai_mat.a1, ai_mat.b1, ai_mat.c1, ai_mat.d1,
+        ai_mat.a2, ai_mat.b2, ai_mat.c2, ai_mat.d2,
+        ai_mat.a3, ai_mat.b3, ai_mat.c3, ai_mat.d3,
+        ai_mat.a4, ai_mat.b4, ai_mat.c4, ai_mat.d4 };
 }

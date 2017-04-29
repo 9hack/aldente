@@ -49,9 +49,10 @@ void main()
 
 	color = vec4(result, 1.0f);
 
+	// Bootleg Hack for no lighting. Too lazy to properly remove stuff
 	bool no_lighting = true;
 	if (no_lighting){
-		color = vec4(material.diffuse, 1.0f);
+		color = vec4(material.diffuse, 1.0f);		
 	}    
 }
 

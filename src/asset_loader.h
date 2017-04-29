@@ -15,6 +15,8 @@
 
 class AssetLoader {
 private:
+    static Assimp::Importer import;
+
     static std::map<std::string, Model *> models;
     static std::map<std::string, GLuint> textures;
 
@@ -28,6 +30,7 @@ private:
     static glm::mat4 convert_ai_matrix(aiMatrix4x4 ai_mat);
 public:
     static void setup();
+    static void destroy();
 
     static Model *get_model(std::string name);
     static GLuint get_texture(std::string name);

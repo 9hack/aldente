@@ -78,7 +78,7 @@ GLuint Geometry::get_texture() {
 }
 
 void Geometry::draw() {
-    glDrawElements(draw_type, (GLsizei) indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(draw_type, (GLsizei) indices.size(), GL_UNSIGNED_INT, 0);    
 }
 
 void Geometry::bind() {

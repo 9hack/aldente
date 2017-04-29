@@ -20,6 +20,7 @@ void GameObject::draw(Shader *shader, SceneInfo &scene_info) {
 
 // Updates Game Object Paramters
 void GameObject::update() {
+    // Test code for playing animation for the boy
     cur_time += (glfwGetTime() - last_time) * 0.8f;
 
     if (cur_time > 3)
@@ -28,7 +29,7 @@ void GameObject::update() {
     if (model->animations.size() > 0) {
         if (cur_time < 1.5f)
             player.play(cur_time, model->animations["look"], model);
-        else 
+        else
             player.play(cur_time, model->animations["wave"], model);
     }
 

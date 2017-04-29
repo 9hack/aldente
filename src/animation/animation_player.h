@@ -1,12 +1,13 @@
 #pragma once
 
-#include "model\model.h"
+#include "model/model.h"
 
+/*
+    Used for actually processing the animations and adjusting the bone matrices to actually
+    pose the model
+*/
 class AnimationPlayer {
-public:
-    AnimationPlayer();
-    ~AnimationPlayer();
-
+public:    
     void play(float time_in_secs, Animation *animation, Model *model);    
 
 private:    
@@ -16,10 +17,10 @@ private:
     const aiNodeAnim *find_node_anim(const aiAnimation *anim, const std::string node_name);
     glm::mat4 convert_ai_matrix(aiMatrix4x4 ai_mat);
 
-    void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-    void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-    void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-    unsigned int FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
-    unsigned int FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
-    unsigned int FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+    void calc_interpolated_scaling(aiVector3D& out, float anim_time, const aiNodeAnim* node_anim);
+    void calc_interpolated_rotation(aiQuaternion& out, float anim_time, const aiNodeAnim* node_anim);
+    void calc_interpolated_position(aiVector3D& out, float anim_time, const aiNodeAnim* node_anim);
+    unsigned int find_scaling(float anim_time, const aiNodeAnim* node_anim);
+    unsigned int find_rotation(float anim_time, const aiNodeAnim* node_anim);
+    unsigned int find_position(float anim_time, const aiNodeAnim* node_anim);
 };

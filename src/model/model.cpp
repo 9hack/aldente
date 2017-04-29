@@ -1,5 +1,9 @@
 #include "model.h"
 
+Model::~Model() {
+    // TODO : Garbage Collect Mesges
+}
+
 void Model::add_mesh(Mesh *m) {
     meshes.push_back(m);
 }
