@@ -20,6 +20,8 @@ LIBS            += -lprotobuf
 INCS            += $(shell pkg-config bullet --cflags)
 ifeq ($(shell uname),Darwin)
 	LIBS += -framework OpenGL -framework GLUT
+	INCS += -I/usr/local/include/freetype2
+	INCS += -I/usr/local/include/SOIL
 else
 	LIBS += -lGL -lGLU
 endif
