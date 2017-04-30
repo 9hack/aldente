@@ -5,12 +5,13 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
+#define MODEL_DIR_PATH   "assets/models/"
+#define ANIM_DIR_PATH    "assets/animations/"
+#define TEXTURE_DIR_PATH "assets/textures/"
+
 Assimp::Importer AssetLoader::import;
 std::map<std::string, Model *> AssetLoader::models;
 std::map<std::string, GLuint> AssetLoader::textures;
-
-const std::string model_loc = "assets/models/";
-const std::string anim_loc = "assets/animations/";
 
 // TODO : Garbage Collection
 void AssetLoader::destroy() {
@@ -23,16 +24,28 @@ void AssetLoader::destroy() {
     (animation and textures attached to file)
 */
 void AssetLoader::setup() {
-    boost::filesystem::path path = boost::filesystem::path(model_loc);
-
-    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(model_loc), {})) {
-        load(model_loc, entry.path().filename().string());
+    // Load models.
+    boost::filesystem::path path = boost::filesystem::path(MODEL_DIR_PATH);
+    for (auto &entry : boost::make_iterator_range(
+                boost::filesystem::directory_iterator(path),
+                {})) {
+        load(MODEL_DIR_PATH, entry.path().filename().string());
     }
 
-    path = boost::filesystem::path(anim_loc);
+    // Load animations.
+    path = boost::filesystem::path(ANIM_DIR_PATH);
+    for (auto &entry : boost::make_iterator_range(
+                boost::filesystem::directory_iterator(path),
+                {})) {
+        load(ANIM_DIR_PATH, entry.path().filename().string());
+    }
 
-    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(anim_loc), {})) {
-        load(anim_loc, entry.path().filename().string());
+    // Load textures.
+    path = boost::filesystem::path(TEXTURE_DIR_PATH);
+    for (auto &entry : boost::make_iterator_range(
+                boost::filesystem::directory_iterator(path),
+                {})) {
+        load_texture(TEXTURE_DIR_PATH + entry.path().filename().string());
     }
 }
 
@@ -59,9 +72,27 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
 
     // Checks to see if file is a model or animation (denoted by @)
     std::size_t at_found = file_name.find_first_of("@");
+    bool is_animation = at_found != std::string::npos;
 
-    if (at_found == std::string::npos) {
+    if (is_animation) {
+        std::size_t dot_found = file_name.find_first_of(".");
+        std::string model_name = file_name.substr(0, at_found);
+        std::string anim_name = file_name.substr(at_found + 1, dot_found - at_found - 1);
 
+        //std::cerr << "Finding Model : " << model_name << std::endl;
+        //std::cerr << "Saving Animation : " << anim_name << std::endl;
+
+        Model *model = get_model(model_name);
+        //model->set_shader(ShaderManager::animation);
+
+        // Save Animation if Available, Only one per fbx
+        if (scene->mNumAnimations > 0) {
+            //std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
+            Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);
+            model->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
+            model->animations[anim_name] = animation;
+        }
+    } else {
         // File is only a model
         std::size_t dot_found = file_name.find_first_of(".");
         std::string model_name = file_name.substr(0, dot_found);
@@ -71,30 +102,10 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
         Model *model = new Model();
         process_node(model, scene, scene->mRootNode, glm::mat4(1.0f));
         models[model_name] = model;
-
-    }
-    else {
-        std::size_t dot_found = file_name.find_first_of(".");
-        std::string model_name = file_name.substr(0, at_found);
-        std::string anim_name = file_name.substr(at_found + 1, dot_found - at_found - 1);
-
-        //std::cerr << "Finding Model : " << model_name << std::endl;
-        //std::cerr << "Saving Animation : " << anim_name << std::endl;
-
-        Model *model = get_model(model_name);
-
-        // Save Animation if Available, Only one per fbx
-        if (scene->mNumAnimations > 0) {
-            //std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
-            Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);
-            model->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
-            model->animations[anim_name] = animation;
-        }
     }
 }
 
 void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat) {
-
     //std::cerr << "Processing Node : " << node->mName.data << std::endl;
     //std::cerr << "Number of Animations : " << scene->mNumAnimations << std::endl;
 
@@ -103,7 +114,7 @@ void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node,
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh *aimesh = scene->mMeshes[node->mMeshes[i]];
         Mesh *mesh = process_mesh(aimesh, scene);
-        mesh->to_world = model_mat;
+        mesh->local_transform = model_mat;
         model->add_mesh(mesh);
 
         process_bones(model, mesh, aimesh);
@@ -169,7 +180,7 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     load_mat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
     load_mat->specular = glm::vec3(specular.r, specular.g, specular.b);
     load_mat->shininess = shiny;
-    final_mesh = new Mesh(geo, load_mat, ShaderManager::get_shader_program("basic_anim"));
+    final_mesh = new Mesh(geo, load_mat);
 
     //If textures exist for this mesh
     for (GLuint i = 0; i < assimpMat->GetTextureCount(aiTextureType_DIFFUSE); i++) {

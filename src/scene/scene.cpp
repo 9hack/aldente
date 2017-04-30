@@ -80,10 +80,8 @@ MainScene::MainScene() : Scene() {
     Model *tmodel = AssetLoader::get_model(std::string("boy_two"));
     GameObject *testObj = new GameObject();
     testObj->attach_model(tmodel);
-    tmodel->model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.008f, 0.008f, 0.008f)) * tmodel->model_mat;
-    //tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0)) * tmodel->model_mat;
-    //tmodel->model_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-30.0f), glm::vec3(0, 1, 0)) * tmodel->model_mat;
-    tmodel->model_mat = glm::translate(glm::mat4(1.0f),glm::vec3(0, 1.0f, 0)) * tmodel->model_mat;
+    testObj->transform.set_scale({0.008f, 0.008f, 0.008f});
+    testObj->transform.translate({0.f, 1.f, 0.f});
     objs.push_back(testObj);
 }
 

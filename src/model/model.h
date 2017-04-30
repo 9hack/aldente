@@ -27,6 +27,8 @@ public:
 
     Model(Shader *shader = &ShaderManager::basic) : model_shader(shader) {}
 
+    void set_shader(Shader *shader) { model_shader = shader; }
+
     void add_mesh(Mesh *m);
 
     void draw(Shader *shader, SceneInfo &scene_info, glm::mat4 to_world);

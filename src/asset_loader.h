@@ -22,6 +22,8 @@ private:
 
     static void load(std::string file_loc, std::string file_name);
 
+    static void load_texture(std::string path);
+
     static void process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat);
     static Mesh *process_mesh(aiMesh *mesh, const aiScene *scene);
     static void process_bones(Model *model, Mesh *mesh, aiMesh *aimesh);

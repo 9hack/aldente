@@ -1,5 +1,7 @@
 #include "animation_player.h"
 
+#include <GLFW/glfw3.h>
+
 double last_time = 0;
 double cur_time = 0;
 
@@ -11,7 +13,7 @@ void AnimationPlayer::play(Model *model, std::string anim_name) {
 
     float ticks_per_sec = (float)(animation->get_anim()->mTicksPerSecond);
     float time_in_ticks = cur_time *  ticks_per_sec;
-    float animation_time = fmod(time_in_ticks, (float)animation->get_anim()->mDuration);    
+    float animation_time = fmod(time_in_ticks, (float)animation->get_anim()->mDuration);
 
     process_animation(animation_time, animation->get_anim(), model, animation->get_root(), glm::mat4(1.0f));
 
@@ -26,14 +28,14 @@ void AnimationPlayer::process_animation(float anim_time, const aiAnimation *anim
 
     if (!anim)
         return;
-    
-    std::string node_name(node->mName.data);    
+
+    std::string node_name(node->mName.data);
 
     glm::mat4 node_trans = convert_ai_matrix(node->mTransformation);
 
     const aiNodeAnim *node_anim = find_node_anim(anim, node_name);
 
-    if (node_anim) { 
+    if (node_anim) {
         // Interpolate scaling and generate scaling transformation matrix
         aiVector3D scaling;
         calc_interpolated_scaling(scaling, anim_time, node_anim);
