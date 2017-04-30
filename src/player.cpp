@@ -81,4 +81,5 @@ void Player::do_movement() {
     //transform.translate(to_moveX * speed, 0, to_moveZ * speed);
     rigidBody->setActivationState(true);
     rigidBody->setLinearVelocity(btVector3(to_moveX * speed, 0, to_moveZ * speed));
+    transform.look_at(glm::vec3(to_moveX * speed, 0, to_moveZ * speed));
 }
