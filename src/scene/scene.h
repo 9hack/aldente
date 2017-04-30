@@ -30,4 +30,6 @@ public:
     virtual void update();
 
     void addRigid(btRigidBody* toAdd);
+
+    void remove_rigid(btRigidBody *to_remove);
 };

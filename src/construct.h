@@ -11,6 +11,7 @@ protected:
 public:
     Construct(Scene *scene, int x, int z);
     virtual void interact_trigger() = 0;
+    btRigidBody *get_rigid() { return rigidBody; };
 };
 
 class Crate : public Construct {

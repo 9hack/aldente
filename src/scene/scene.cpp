@@ -23,3 +23,7 @@ void Scene::addRigid(btRigidBody* toAdd) {
     rigids.push_back(toAdd);
     rigidSignal({ true, toAdd });
 }
+
+void Scene::remove_rigid(btRigidBody* to_remove) {
+    rigidSignal({ false, to_remove });
+}

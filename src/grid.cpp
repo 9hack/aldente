@@ -86,6 +86,10 @@ void Grid::build(ConstructType type, int x, int z) {
     }
     case REMOVE: {
         // TODO Make destructor for construct
+        if (candidate->get_construct()) {
+            scene->remove_rigid(candidate->get_construct()->get_rigid());
+        }
+        
         candidate->set_construct(nullptr);
         candidate->buildable = true;
     }
