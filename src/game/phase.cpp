@@ -62,7 +62,7 @@ void DungeonPhase::setup() {
     joystick_conn = events::joystick_event.connect([&](events::JoystickData d) {
         // A button pressed.
         if (d.is_button == true && d.input == 0 && d.state == 0) {
-            //Interact
+            events::dungeon::player_interact_event();
         }
 
         // B button pressed.

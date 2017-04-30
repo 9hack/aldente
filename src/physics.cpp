@@ -18,6 +18,10 @@ Physics::Physics() {
 
     // The world.
     scene = nullptr;
+
+    events::dungeon::player_request_raycast_event.connect([&](glm::vec3 position, glm::vec3 dir) {
+        raycast(position, dir);
+    });
 }
 
 Physics::~Physics() {}
@@ -107,4 +111,28 @@ void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
 void Physics::update() {
     //Step in simulation
     dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+}
+
+void Physics::raycast(glm::vec3 position, glm::vec3 dir) {
+    glm::vec3 out_end = glm::normalize(dir) * 0.5f;
+    position.y = 0.1f;
+    out_end += position;
+
+    btCollisionWorld::ClosestRayResultCallback RayCallback(
+        btVector3(position.x, position.y, position.z),
+        btVector3(out_end.x, out_end.y, out_end.z)
+    );
+    dynamicsWorld->rayTest(
+        btVector3(position.x, position.y, position.z),
+        btVector3(out_end.x, out_end.y, out_end.z),
+        RayCallback
+    );
+
+    if (RayCallback.hasHit()) {
+        GameObject *bt_hit = static_cast<GameObject*>(RayCallback.m_collisionObject->getUserPointer());
+        events::dungeon::player_raycast_response_event(bt_hit);
+    }
+    else {
+        events::dungeon::player_raycast_response_event(nullptr);
+    }
 }

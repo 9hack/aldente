@@ -5,6 +5,7 @@
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
+#include "game_object.h"
 
 namespace events {
 
@@ -99,5 +100,14 @@ namespace events {
     namespace dungeon {
         // Player movement
         extern signal<void(Direction)> player_move_event;
+
+        // Player interact (e.g opening a chest)
+        extern signal<void()> player_interact_event;
+
+        // Player class asks physics for a raycast check
+        extern signal<void(glm::vec3 position, glm::vec3 dir)> player_request_raycast_event;
+
+        // Physics answer to event above
+        extern signal<void(GameObject *bt_hit)> player_raycast_response_event;
     }
 }

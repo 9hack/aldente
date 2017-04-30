@@ -7,9 +7,12 @@
 #include "game_object.h"
 #include "game/direction.h"
 #include "btBulletDynamicsCommon.h"
+#include "construct.h"
 
 class Player : public GameObject {
 private:
+    glm::vec3 direction;
+
     // to_move is for saving the joystick input in each frame. This
     // logic will most likely change after the joystick changes.
     int to_moveX;
@@ -25,4 +28,5 @@ public:
     void update();
     void do_movement();
     void setup_listeners();
+    void interact();
 };

@@ -6,6 +6,7 @@ Player::Player(Scene *scene) : GameObject(scene) {
     to_moveX = 0;
     to_moveZ = 0;
     speed = 10.0f;
+    direction = glm::vec3(0.0f);
 
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
         btQuaternion(), btVector3(2.0f, 0.0f, 2.0f)));
@@ -22,7 +23,7 @@ Player::Player(Scene *scene) : GameObject(scene) {
     rigidBody->setUserPointer(this);
     
     // Lock y-axis
-    rigidBody->setLinearFactor(btVector3(1, 0, 1));
+    rigidBody->setLinearFactor(btVector3(1, 0.0f, 1));
 
     scene->addRigid(rigidBody);
 
@@ -59,6 +60,17 @@ void Player::setup_listeners() {
             break;
         }
     });
+
+    events::dungeon::player_interact_event.connect([&]() {
+        interact();
+    });
+
+    events::dungeon::player_raycast_response_event.connect([&](GameObject *bt_hit) {
+        // Second part of the interact function.
+        if (dynamic_cast<Construct*>(bt_hit)) {
+            dynamic_cast<Construct*>(bt_hit)->interact_trigger();
+        }
+    });
 }
 
 // Just calls do_movement for now, can have more
@@ -70,16 +82,24 @@ void Player::update() {
 
     // Get the transform from Bullet and into 't'
     rigidBody->getMotionState()->getWorldTransform(t);
-    fprintf(stderr, "%f,%f,%f\n", t.getOrigin().getX(), t.getOrigin().getY(), t.getOrigin().getZ());
-    transform.set_position(glm::vec3((float)t.getOrigin().getX(), (float)t.getOrigin().getY(),
-        (float)t.getOrigin().getZ()));
+    btVector3 to_set = t.getOrigin();
+
+    transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
+        (float)to_set.getZ()));
 }
 
 void Player::do_movement() {
     // Should account for deltatime so movement is
-    // framerate independent.
-    //transform.translate(to_moveX * speed, 0, to_moveZ * speed);
+    // framerate independent? Unsure how Bullet handles framerate.
     rigidBody->setActivationState(true);
     rigidBody->setLinearVelocity(btVector3(to_moveX * speed, 0, to_moveZ * speed));
     transform.look_at(glm::vec3(to_moveX * speed, 0, to_moveZ * speed));
+    direction = glm::vec3(to_moveX * speed, 0, to_moveZ * speed);
+}
+
+void Player::interact() {
+    // Asks physics for a raycast to check if the player
+    // is facing a construct.
+    if(direction.x != 0.0f || direction.z != 0.0f)
+        events::dungeon::player_request_raycast_event(transform.get_position(), direction);
 }

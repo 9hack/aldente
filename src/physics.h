@@ -6,6 +6,8 @@
 #include "tile.h"
 #include "scene/scene.h"
 #include <vector>
+#include "events.h"
+#include "game_object.h"
 
 class Physics {
 private:
@@ -34,5 +36,6 @@ public:
 
     void update();
 
+    void raycast(glm::vec3 position, glm::vec3 dir);
 };
 
