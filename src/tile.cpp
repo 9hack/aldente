@@ -33,6 +33,8 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
 
     model->add_mesh(mesh);
 
+    transform.set_position(x, 0, z);
+    /*
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
                 btQuaternion(), btVector3((btScalar) x, 0.0f, (btScalar) z)));
 
@@ -45,16 +47,16 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     rigidBody = new btRigidBody(rigidBodyCI);
 
     // Will be used to know which object is picked.
-    rigidBody->setUserPointer(this);
+    rigidBody->setUserPointer(this);*/
 }
 
-void FloorTile::update(Tile *hover) {
-    btTransform t;
+void FloorTile::update() {
+    /*btTransform t;
 
     // Get the transform from Bullet and into 't'
     rigidBody->getMotionState()->getWorldTransform(t);
     transform.set_position(glm::vec3((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
-                                  (float) t.getOrigin().getZ()));
+                                  (float) t.getOrigin().getZ()));    */
     /*
     if (hover == this) {
         Material *mat = new Material(color::windwaker_green);
@@ -87,6 +89,7 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     mesh->material = mat;
 
     model->add_mesh(mesh);
+    transform.set_position(x, 0, z);
 
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
                 btQuaternion(), btVector3((btScalar) x, 0.5f, (btScalar) z)));
@@ -103,13 +106,13 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     rigidBody->setUserPointer(this);
 }
 
-void WallTile::update(Tile *hover) {
-    btTransform t;
+void WallTile::update() {
+    /*btTransform t;
 
     // Get the transform from Bullet and into 't'
     rigidBody->getMotionState()->getWorldTransform(t);
-    transform.set_position(glm::vec3((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
-        (float) t.getOrigin().getZ()));
+    transform.set_position(glm::vec3((float) t.getOrigin().getX(), (float) t.getOrigin().getY(), 
+        (float) t.getOrigin().getZ()));    */
     /*
     if (hover == this) {
         Material *mat = new Material(color::windwaker_green);

@@ -31,7 +31,7 @@ public:
     // Whether a construct buildable on this tile.
     bool buildable;
 
-    Tile();
+    Tile(Scene *scene);
 
     ~Tile();
 
@@ -41,7 +41,7 @@ public:
 
     int getZ() { return z; };
 
-    virtual void update(Tile *hover) = 0;
+    virtual void update() = 0;
 
     void draw(Shader *shader, SceneInfo &scene_info) override;
 
@@ -56,19 +56,19 @@ public:
 class FloorTile : public Tile {
 
 public:
-    FloorTile(int x, int z);
+    FloorTile(Scene *scene, int x, int z);
 
     ~FloorTile();
 
-    void update(Tile *hover);
+    void update();
 };
 
 class WallTile : public Tile {
 
 public:
-    WallTile(int x, int z);
+    WallTile(Scene *scene, int x, int z);
 
     ~WallTile();
 
-    void update(Tile *hover);
+    void update();
 };

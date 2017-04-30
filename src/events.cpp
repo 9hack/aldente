@@ -24,4 +24,8 @@ namespace events {
         signal<void(proto::Construct &)> respond_build_event;
         signal<void(proto::Construct &)> update_build_event;
     }
+
+    namespace dungeon {
+        signal<void(Direction)> player_move_event;
+    }
 }

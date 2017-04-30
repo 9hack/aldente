@@ -14,6 +14,8 @@
 #include "game/construct_types.h"
 #include "game/direction.h"
 
+class Scene;
+
 class Grid {
 private:
     void setup_listeners();
@@ -22,9 +24,10 @@ private:
     int width, height;
     int hoverX, hoverZ;
     Tile *hover;
+    Scene *scene;
     ConstructType selected = ConstructType::REMOVE;
 public:
-    Grid(int w, int h);
+    Grid(Scene *scene, int w, int h);
 
     ~Grid();
 

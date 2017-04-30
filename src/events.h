@@ -95,4 +95,9 @@ namespace events {
         // Client updates local grid with newly built construct.
         extern signal<void(proto::Construct &)> update_build_event;
     }
+
+    namespace dungeon {
+        // Player movement
+        extern signal<void(Direction)> player_move_event;
+    }
 }

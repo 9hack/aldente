@@ -4,10 +4,11 @@
 #include "game_objects/game_object.h"
 
 class Construct : public GameObject {
-
+public:
+    Construct(Scene *scene, int x, int z);
 };
 
 class Crate : public Construct {
 public:
-    Crate(int x, int z);
+    Crate(Scene *scene, int x, int z);
 };

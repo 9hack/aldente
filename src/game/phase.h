@@ -31,10 +31,11 @@ private:
 
 class DungeonPhase : public Phase {
 public:
-    void setup() {}
+    void setup();
     Phase* update() { return nullptr; }
-    void teardown() {}
+    void teardown();
 private:
+    boost::signals2::connection joystick_conn;
 };
 
 class MinigamePhase : public Phase {
