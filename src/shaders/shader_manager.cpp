@@ -16,6 +16,7 @@ ShadowShader ShaderManager::shadow;
 TextShader ShaderManager::text;
 DebugShadowShader ShaderManager::debug_shadow;
 UIShader ShaderManager::ui;
+BasicShader ShaderManager::unlit;
 
 GLuint ShaderManager::create_shader_program(std::string type) {
     GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);

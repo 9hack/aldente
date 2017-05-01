@@ -1,15 +1,20 @@
 #include "animation_player.h"
-
 #include <GLFW/glfw3.h>
+#include <iostream>
 
-double last_time = 0;
-double cur_time = 0;
+float last_time = 0;
+float cur_time = 0;
 
 void AnimationPlayer::play(Model *model, std::string anim_name) {
 
     Animation *animation = model->animations[anim_name];
 
-    cur_time += (glfwGetTime() - last_time) * speed;
+    if (animation == NULL) {
+        std::cerr << "Error : Animation " << anim_name << " not found." << std::endl;
+        return;
+    }        
+
+    cur_time += ((float) glfwGetTime() - last_time) * speed;
 
     float ticks_per_sec = (float)(animation->get_anim()->mTicksPerSecond);
     float time_in_ticks = cur_time *  ticks_per_sec;
@@ -59,7 +64,9 @@ void AnimationPlayer::process_animation(float anim_time, const aiAnimation *anim
 
     if (model->bone_mapping.find(node_name) != model->bone_mapping.end()) {
         unsigned int bone_index = model->bone_mapping[node_name];
-        model->bones_final[bone_index] = model->global_inv_trans * global_trans * model->bone_offsets[bone_index];
+        // Need to figure out why global_inv_trans is needed, since it causes a bug with mesh_model matrix being
+        // multiplied twice in basic shader.
+        model->bones_final[bone_index] =  model->global_inv_trans * global_trans * model->bone_offsets[bone_index];
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {

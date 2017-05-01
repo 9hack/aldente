@@ -11,12 +11,13 @@
 class ShaderManager {
 public:
     // Single static instances of each shader
-    static BasicShader basic;
+    static BasicShader basic;    
     static SkyboxShader skybox;
     static ShadowShader shadow;
     static TextShader text;
     static DebugShadowShader debug_shadow;
     static UIShader ui;
+    static BasicShader unlit;
 
     // Utility shader function to load and compile shader program from file.
     // Returns program ID assigned to the shader program.
@@ -36,5 +37,7 @@ public:
         debug_shadow.init();
         ui.set_id(create_shader_program("ui"));
         ui.init();
+        unlit.set_id(create_shader_program("unlit"));
+        unlit.init();
     }
 };

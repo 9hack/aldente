@@ -6,8 +6,6 @@ Geometry::Geometry(GLenum draw, GLint wrap, GLint filter) :
         wrap_type(wrap),
         filter_type(filter){
 
-    has_bones = false;
-
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &NBO);
@@ -49,17 +47,15 @@ void Geometry::populate_buffers() {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
     }
 
-    if (has_bones) {
-        glBindBuffer(GL_ARRAY_BUFFER, BBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::ivec4) * bone_ids.size(), bone_ids.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(3);
-        glVertexAttribIPointer(3, 4, GL_INT, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, BBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::ivec4) * bone_ids.size(), bone_ids.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(3);
+    glVertexAttribIPointer(3, 4, GL_INT, 0, 0);
 
-        glBindBuffer(GL_ARRAY_BUFFER, WBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * weights.size(), weights.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(4);
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);
-    }
+    glBindBuffer(GL_ARRAY_BUFFER, WBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * weights.size(), weights.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);    
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);

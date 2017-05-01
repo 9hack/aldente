@@ -9,4 +9,5 @@ public:
     virtual void post_draw() override;
     virtual void draw(Mesh *mesh, SceneInfo &scene_info,
                       glm::mat4 to_world) override;
+    void set_bones(std::vector<glm::mat4> bones);
 };

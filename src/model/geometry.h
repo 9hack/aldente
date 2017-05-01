@@ -6,8 +6,7 @@
 
 class Geometry {
 public:
-    bool has_texture;
-    bool has_bones;
+    bool has_texture;    
 
     GLuint texture;
 
