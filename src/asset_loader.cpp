@@ -5,96 +5,144 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
-AssetLoader *AssetLoader::asset_loader = new AssetLoader();
+#define MODEL_DIR_PATH   "assets/models/"
+#define ANIM_DIR_PATH    "assets/animations/"
+#define TEXTURE_DIR_PATH "assets/textures/"
 
-AssetLoader::AssetLoader() {}
+Assimp::Importer AssetLoader::import;
+std::map<std::string, Model *> AssetLoader::models;
+std::map<std::string, GLuint> AssetLoader::textures;
 
-void AssetLoader::setup() {
-    //Load Textures
-    boost::filesystem::path path = boost::filesystem::path("assets/textures");
-    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
-        std::string filepath = std::string("assets/textures/");
-        filepath += entry.path().filename().string();
-
-        load_texture(filepath);
-    }
-
-    //Load Models
-    path = boost::filesystem::path("assets/fbx");
-    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
-        std::size_t found = entry.path().filename().string().find_first_of("@");
-
-        std::string filepath = std::string("assets/fbx/");
-        filepath += entry.path().filename().string();
-
-        // If @ is not in filename (meaning that its a model and not an animation)
-        if (found == std::string::npos) {
-            model = new Model();
-            load(filepath, true);
-            assets[entry.path().filename().string().c_str()] = model;
-        }
-            // Else it is an animation
-        else {
-            load(filepath, false);
-        }
-    }
-
-    // Test
+// TODO : Garbage Collection
+void AssetLoader::destroy() {
 }
 
-void AssetLoader::load(std::string path, bool isModel) {
-    unsigned int processFlags =
-            aiProcess_CalcTangentSpace | // calculate tangents and bitangents if possible
-            aiProcess_JoinIdenticalVertices | // join identical vertices/ optimize indexing
-            //aiProcess_ValidateDataStructure  | // perform a full validation of the loader's output
-            aiProcess_Triangulate | // Ensure all verticies are triangulated (each 3 vertices are triangle)
-            //aiProcess_ConvertToLeftHanded | // convert everything to D3D left handed space (by default right-handed, for OpenGL)
-            aiProcess_SortByPType | // ?
-            aiProcess_ImproveCacheLocality | // improve the cache locality of the output vertices
-            aiProcess_RemoveRedundantMaterials | // remove redundant materials
-            aiProcess_FindDegenerates | // remove degenerated polygons from the import
-            aiProcess_FindInvalidData | // detect invalid model data, such as invalid normal vectors
-            aiProcess_GenUVCoords | // convert spherical, cylindrical, box and planar mapping to proper UVs
-            aiProcess_TransformUVCoords | // preprocess UV transformations (scaling, translation ...)
-            aiProcess_FindInstances | // search for instanced meshes and remove them by references to one master
-            aiProcess_LimitBoneWeights | // limit bone weights to 4 per vertex
-            aiProcess_OptimizeMeshes | // join small meshes, if possible;
-            aiProcess_SplitByBoneCount |
-            // split meshes with too many bones. Necessary for our (limited) hardware skinning shader
-            aiProcess_PreTransformVertices | //-- fixes the transformation issue.
-            //aiProcess_FlipUVs | // flips UV coords
-            0;
+/*
+    Loads all fbx models located in assets/models
+    Then loads all fbx animations located in assets/animations
+    Assumes that animation file names are "model_name@anim_name" format
+    (animation and textures attached to file)
+*/
+void AssetLoader::setup() {
+    // Load models.
+    boost::filesystem::path path = boost::filesystem::path(MODEL_DIR_PATH);
+    for (auto &entry : boost::make_iterator_range(
+                boost::filesystem::directory_iterator(path),
+                {})) {
+        load(MODEL_DIR_PATH, entry.path().filename().string());
+    }
 
+    // Load animations.
+    path = boost::filesystem::path(ANIM_DIR_PATH);
+    for (auto &entry : boost::make_iterator_range(
+                boost::filesystem::directory_iterator(path),
+                {})) {
+        load(ANIM_DIR_PATH, entry.path().filename().string());
+    }
+
+    // Load textures.
+    path = boost::filesystem::path(TEXTURE_DIR_PATH);
+    for (auto &entry : boost::make_iterator_range(
+                boost::filesystem::directory_iterator(path),
+                {})) {
+        load_texture(TEXTURE_DIR_PATH + entry.path().filename().string());
+    }
+}
+
+/*
+    Loads a model (assuming .fbx) from the file location,
+    along with any textures, animations, and bones that
+    is connected to the file.
+*/
+void AssetLoader::load(std::string file_loc, std::string file_name) {
+
+    std::string path = file_loc + file_name;
+
+    unsigned int processFlags =
+        aiProcess_Triangulate // Makes sure we use triangle primitives
+        ;
+
+    //std::cerr << "Reading from : " << path << std::endl;
     const aiScene *scene = import.ReadFile(path, processFlags);
 
     if (!scene) {
-        std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+        std::cerr << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
         return;
     }
 
-    //this->directory = path.substr(0, path.find_last_of('/'));
-    process_node(scene->mRootNode, scene, isModel);
+    // Checks to see if file is a model or animation (denoted by @)
+    std::size_t at_found = file_name.find_first_of("@");
+    bool is_animation = at_found != std::string::npos;
+
+    if (is_animation) {
+        std::size_t dot_found = file_name.find_first_of(".");
+        std::string model_name = file_name.substr(0, at_found);
+        std::string anim_name = file_name.substr(at_found + 1, dot_found - at_found - 1);
+
+        //std::cerr << "Finding Model : " << model_name << std::endl;
+        //std::cerr << "Saving Animation : " << anim_name << std::endl;
+
+        Model *model = get_model(model_name);
+
+        // Save Animation if Available, Only one per fbx
+        if (scene->mNumAnimations > 0) {
+            //std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
+            Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);
+            model->animations[anim_name] = animation;
+        }
+    } else {
+        // File is only a model
+        std::size_t dot_found = file_name.find_first_of(".");
+        std::string model_name = file_name.substr(0, dot_found);
+
+        //std::cerr << "Model Name : " << model_name << std::endl;
+
+        Model *model = new Model();
+
+        // Sets global inverse transform, used for bone transformations if available
+        model->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
+
+        // Goes through assimp node structure to load meshes for models
+        process_node(model, scene, scene->mRootNode, glm::mat4(1.0f));
+
+        // Stores model
+        models[model_name] = model;
+    }
 }
 
-void AssetLoader::process_node(aiNode *node, const aiScene *scene, bool isModel) {
-    // Gets all meshes and adds it to the model
+void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat) {
+    //std::cerr << "Processing Node : " << node->mName.data << std::endl;
+    //std::cerr << "Number of Animations : " << scene->mNumAnimations << std::endl;
+
+    model_mat = model_mat * convert_ai_matrix(node->mTransformation);
 
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        if (isModel) {
-            model->add_mesh(process_mesh(mesh, scene));
-        } else {
-            model->meshes[0]->inverseBoneMat = scene->mRootNode->mTransformation;
-            model->meshes[0]->inverseBoneMat.Inverse();
-        }
+
+        // Process Meshes
+        aiMesh *aimesh = scene->mMeshes[node->mMeshes[i]];
+        Mesh *mesh = process_mesh(aimesh, scene);
+
+        // Add mesh to model
+        mesh->local_transform = model_mat;
+        model->add_mesh(mesh);
+
+        // Process bones
+        process_bones(model, mesh, aimesh);
+
+        // Update vertex buffers for mesh
+        mesh->geometry->populate_buffers();
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        process_node(node->mChildren[i], scene, isModel);
+        process_node(model, scene, node->mChildren[i], model_mat);
     }
 }
 
 Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
+
+    std::string test = mesh->mName.data;
+    //std::cerr << "Mesh : " << test << std::endl;
+
     // Geometry handles all the vertex buffers and stuff
     Geometry *geo = new Geometry();
 
@@ -128,9 +176,8 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     }
 
     //Textures and Materials not yet loaded
-
     Mesh *final_mesh;
-    Material *loadMat = new Material();
+    Material *load_mat = new Material();
     aiMaterial *assimpMat = scene->mMaterials[mesh->mMaterialIndex];
     aiColor3D diffuse(0, 0, 0);
     assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
@@ -140,12 +187,11 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
     float shiny = 0.0f;
     assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-    loadMat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
-    loadMat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-    loadMat->specular = glm::vec3(specular.r, specular.g, specular.b);
-    loadMat->shininess = shiny;
-    final_mesh = new Mesh(geo, loadMat);
-    final_mesh->local_transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    load_mat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+    load_mat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+    load_mat->specular = glm::vec3(specular.r, specular.g, specular.b);
+    load_mat->shininess = shiny;
+    final_mesh = new Mesh(geo, load_mat);
 
     //If textures exist for this mesh
     for (GLuint i = 0; i < assimpMat->GetTextureCount(aiTextureType_DIFFUSE); i++) {
@@ -163,22 +209,57 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     }
 
     geo->populate_buffers();
-
     return final_mesh;
 }
 
+// Loading in BONES for Rigging
+void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
+    //std::cerr << "Number of Bones : " << aimesh->mNumBones << std::endl;
 
-//Use this function to access a model, pass in a path in the form of
-//"assets/fbx/the_model_you_want_here.fbx"
+    Geometry *geo = mesh->geometry;
+    geo->bone_ids.resize(geo->vertices.size());
+    geo->weights.resize(geo->vertices.size());
+
+    for (unsigned int i = 0; i < aimesh->mNumBones; i++) {
+
+        // std::cerr << "Bone : " << aimesh->mBones[i]->mName.data << std::endl;
+
+        unsigned int bone_index = 0;
+        std::string bone_name(aimesh->mBones[i]->mName.data);
+
+        if (model->bone_mapping.find(bone_name) == model->bone_mapping.end()) {
+            bone_index = (unsigned int) model->bone_offsets.size();
+            model->bone_offsets.push_back(glm::mat4(1.0f));
+            model->bones_final.push_back(glm::mat4(1.0f));
+
+            model->bone_mapping[bone_name] = bone_index;
+        }
+        else {
+            bone_index = model->bone_mapping[bone_name];
+        }
+
+        model->bone_offsets[bone_index] = convert_ai_matrix(aimesh->mBones[i]->mOffsetMatrix);
+        model->bones_final[bone_index] = mesh->local_transform; // Fixes bug with model_mesh in shader. May cause problems in future.
+
+        for (unsigned int j = 0; j < aimesh->mBones[i]->mNumWeights; j++) {
+            unsigned int vertex_id = aimesh->mBones[i]->mWeights[j].mVertexId;
+            float weight = aimesh->mBones[i]->mWeights[j].mWeight;
+            add_bone_to_geo(geo, vertex_id, bone_index, weight);
+        }
+    }
+}
+
+//Use this function to access a model, pass in model name
 Model *AssetLoader::get_model(std::string name) {
-    if (assets.find(name) == assets.end()) {
+    if (models.find(name) == models.end()) {
         std::string error("ERROR: Asset ");
         error += name;
         error += " was not loaded. Check for fbx file and double check filename.\n";
         fprintf(stderr, "%s", error.c_str());
-        return nullptr;
+        return NULL;
     }
-    return assets[name];
+
+    return models[name];
 }
 
 GLuint AssetLoader::get_texture(std::string name) {
@@ -187,7 +268,7 @@ GLuint AssetLoader::get_texture(std::string name) {
         error += name;
         error += " was not loaded.\n";
         fprintf(stderr, "%s", error.c_str());
-        return 0;
+        return NULL;
     }
     return textures[name];
 }
@@ -213,4 +294,26 @@ void AssetLoader::load_texture(std::string path) {
     std::size_t found = path.find_last_of("/\\");
     std::string fileName = path.substr(found + 1);
     textures[fileName] = texture;
+}
+
+// Finds spot for bone, only possible to have up to four bones attached
+// to a single vertex
+void AssetLoader::add_bone_to_geo(Geometry *geo, unsigned int vertex_id,
+                                unsigned int bone_index, float weight) {
+
+    for (int i = 0; i < 4; i++) {
+        if (geo->weights[vertex_id][i] == 0.0f) {
+            geo->bone_ids[vertex_id][i] = bone_index;
+            geo->weights[vertex_id][i] = weight;
+            return;
+        }
+    }
+}
+
+// Converts from assimp matrix to glm matrix
+glm::mat4 AssetLoader::convert_ai_matrix(aiMatrix4x4 ai_mat) {
+    return{ ai_mat.a1, ai_mat.b1, ai_mat.c1, ai_mat.d1,
+        ai_mat.a2, ai_mat.b2, ai_mat.c2, ai_mat.d2,
+        ai_mat.a3, ai_mat.b3, ai_mat.c3, ai_mat.d3,
+        ai_mat.a4, ai_mat.b4, ai_mat.c4, ai_mat.d4 };
 }

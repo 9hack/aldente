@@ -5,11 +5,14 @@ Geometry::Geometry(GLenum draw, GLint wrap, GLint filter) :
         draw_type(draw),
         wrap_type(wrap),
         filter_type(filter){
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &NBO);
     glGenBuffers(1, &TBO);
     glGenBuffers(1, &EBO);
+    glGenBuffers(1, &BBO);
+    glGenBuffers(1, &WBO);
 }
 
 Geometry::~Geometry() {}
@@ -42,6 +45,20 @@ void Geometry::populate_buffers() {
     if (indices.size() != 0) {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
+    }
+
+    if (bone_ids.size() != 0) {
+        glBindBuffer(GL_ARRAY_BUFFER, BBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::ivec4) * bone_ids.size(), bone_ids.data(), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(3);
+        glVertexAttribIPointer(3, 4, GL_INT, 0, 0);
+    }
+
+    if (weights.size() != 0) {
+        glBindBuffer(GL_ARRAY_BUFFER, WBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * weights.size(), weights.data(), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);

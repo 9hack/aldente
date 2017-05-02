@@ -46,7 +46,8 @@ void ShadowShader::pre_draw(SceneInfo &scene_info) {
     light_matrix = light_proj * light_view;
 
     // Send updated light matrix as uniform.
-    glUniformMatrix4fv(get_uni("view_projection"), 1, GL_FALSE, &light_matrix[0][0]);
+    set_uni("view_projection", light_matrix);
+
 }
 
 void ShadowShader::post_draw() {
@@ -57,8 +58,8 @@ void ShadowShader::post_draw() {
 }
 
 void ShadowShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
-    glUniformMatrix4fv(get_uni("mesh_model"), 1, GL_FALSE, &mesh->local_transform[0][0]);
-    glUniformMatrix4fv(get_uni("model"), 1, GL_FALSE, &to_world[0][0]);
+    set_uni("mesh_model", mesh->local_transform);
+    set_uni("model", to_world);
     mesh->geometry->bind();
     mesh->geometry->draw();
     glBindVertexArray(0);

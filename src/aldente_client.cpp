@@ -54,7 +54,7 @@ void AldenteClient::start() {
     // Setup subsystems after window creation.
     glSetup();
     ShaderManager::init();
-    AssetLoader::asset_loader->setup();
+    AssetLoader::setup();
 
     // Set up list of polling objects.
     std::vector<std::shared_ptr<Poller>> pollers {

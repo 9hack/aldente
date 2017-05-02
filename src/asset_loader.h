@@ -10,35 +10,32 @@
 #include <iostream>
 
 /*
-	Class for loading all assets on startup.
+    Class for loading all assets on startup.
 */
 
 class AssetLoader {
 private:
-    AssetLoader();
+    static Assimp::Importer import;
 
-    void load(std::string path, bool isModel);
+    static std::map<std::string, Model *> models;
+    static std::map<std::string, GLuint> textures;
 
-    void process_node(aiNode *node, const aiScene *scene, bool isModel);
+    static void load(std::string file_loc, std::string file_name);
 
-    Mesh *process_mesh(aiMesh *mesh, const aiScene *scene);
+    static void load_texture(std::string path);
 
-    void load_texture(std::string path);
+    static void process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat);
+    static Mesh *process_mesh(aiMesh *mesh, const aiScene *scene);
+    static void process_bones(Model *model, Mesh *mesh, aiMesh *aimesh);
 
-    std::map<std::string, Model *> assets;
-    std::map<std::string, GLuint> textures;
-    Model *model;
-    Assimp::Importer import;
+    static void add_bone_to_geo(Geometry *geo, unsigned int vertex_id, unsigned int bone_index, float weight);
+    static glm::mat4 convert_ai_matrix(aiMatrix4x4 ai_mat);
 public:
-    static AssetLoader *asset_loader;
+    static void setup();
+    static void destroy();
 
-    ~AssetLoader();
-
-    void setup();
-
-    Model *get_model(std::string name);
-
-    GLuint get_texture(std::string name);
+    static Model *get_model(std::string name);
+    static GLuint get_texture(std::string name);
 };
 
 

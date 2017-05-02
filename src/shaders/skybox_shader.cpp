@@ -71,8 +71,8 @@ void SkyboxShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
     glm::mat4 view = glm::mat4(glm::mat3(scene_info.camera->V));
 
     // Send view and projection matrices
-    glUniformMatrix4fv(get_uni("view"), 1, GL_FALSE, &view[0][0]);
-    glUniformMatrix4fv(get_uni("projection"), 1, GL_FALSE, &scene_info.camera->P[0][0]);
+    set_uni("view", view);
+    set_uni("projection", scene_info.camera->P);
 
     // Bind active texture.
     glActiveTexture(GL_TEXTURE0);

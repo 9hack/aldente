@@ -8,7 +8,7 @@
 #include "window.h"
 
 /*
-	Handles GLFW calls for getting Mouse and Keyboard Input (also temporarily holds Camera for debugging)
+    Handles GLFW calls for getting Mouse and Keyboard Input (also temporarily holds Camera for debugging)
 */
 class DebugInput {
 private:
@@ -19,7 +19,7 @@ private:
     bool mouse_moved;
     glm::vec3 last_cursor_pos;
     SceneManager &scene_manager;
-	Physics &physics;
+    Physics &physics;
 
 public:
     DebugInput(Window &window, SceneManager &scene_manager, Physics &p);

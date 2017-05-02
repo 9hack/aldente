@@ -3,7 +3,7 @@
 #include "game/phase.h"
 
 Grid::Grid(int w, int h) :
-		hover(nullptr) {
+        hover(nullptr) {
     width = w;
     height = h;
     hoverX = 0;
@@ -14,10 +14,10 @@ Grid::Grid(int w, int h) :
         for (int j = 0; j < height; j++) {
             if (i == 0 || i == width - 1 || j == 0 || j == height - 1) {
                 WallTile* toAdd = new WallTile(i, j);
-				newRow.push_back(toAdd);
+                newRow.push_back(toAdd);
             } else {
-				FloorTile* toAdd = new FloorTile(i, j);
-				newRow.push_back(toAdd);
+                FloorTile* toAdd = new FloorTile(i, j);
+                newRow.push_back(toAdd);
             }
         }
         grid.push_back(newRow);

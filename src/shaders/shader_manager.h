@@ -17,6 +17,9 @@ public:
     static TextShader text;
     static DebugShadowShader debug_shadow;
     static UIShader ui;
+    static BasicShader unlit;
+    static BasicShader anim_basic;
+    static BasicShader anim_unlit;
 
     // Utility shader function to load and compile shader program from file.
     // Returns program ID assigned to the shader program.
@@ -36,5 +39,11 @@ public:
         debug_shadow.init();
         ui.set_id(create_shader_program("ui"));
         ui.init();
+        unlit.set_id(create_shader_program("unlit"));
+        unlit.init();
+        anim_basic.set_id(create_shader_program("anim_basic"));
+        anim_basic.init();
+        anim_unlit.set_id(create_shader_program("anim_unlit"));
+        anim_unlit.init();
     }
 };

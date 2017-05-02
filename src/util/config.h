@@ -15,15 +15,15 @@ const std::string str_template_settings_file = "cfg/settings_template.cfg";
 class Config {
 
 public:
-	static std::string str_screen_width;
-	static std::string str_screen_height;
-	static std::string str_full_screen;
-	static std::string str_game_name;
-	static std::string str_fov;
-	static std::string str_far_plane;
-	static std::string str_is_server;
-	static std::string str_server_ip;
-	static std::string str_port;
+    static std::string str_screen_width;
+    static std::string str_screen_height;
+    static std::string str_full_screen;
+    static std::string str_game_name;
+    static std::string str_fov;
+    static std::string str_far_plane;
+    static std::string str_is_server;
+    static std::string str_server_ip;
+    static std::string str_port;
 
 public:
     static Config *config; // Use this static reference instead of your own call to the constructor

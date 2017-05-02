@@ -10,8 +10,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 /*
-	A compilation of random functions that may be useful for debugging or for
-	miscellaneous calculations.  
+    A compilation of random functions that may be useful for debugging or for
+    miscellaneous calculations.
 */
 class Util {
 public:

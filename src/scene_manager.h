@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scene/scene.h"
+#include "scene/main_scene.h"
 #include "scene/scene_camera.h"
 
 class SceneManager {
@@ -15,6 +16,6 @@ public:
     Scene *get_current_scene(); // Gets currently active scene
     SceneCamera *get_camera(); // Gets currently active camera
 
-	void add_scene(Scene* scene);
-	void set_current_scene(Scene* scene);
+    void add_scene(Scene* scene);
+    void set_current_scene(Scene* scene);
 };

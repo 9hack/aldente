@@ -9,7 +9,7 @@
 #include "util/util.h"
 
 /*
-	A utility class containing functions for generating primitive 3D models with ease.
+    A utility class containing functions for generating primitive 3D models with ease.
 */
 class GeometryGenerator {
 public:

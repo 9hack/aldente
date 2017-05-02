@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "events.h"
 #include "shaders/shader_manager.h"
@@ -100,7 +99,7 @@ void Render2D::render_text(std::string text,
 
     // Activate corresponding render state
     ShaderManager::text.use();
-    ShaderManager::text.uni_vec3("baseColor", color);
+    ShaderManager::text.set_uni("baseColor", color);
     glUniformMatrix4fv(ShaderManager::text.get_uni("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     glActiveTexture(GL_TEXTURE0);
@@ -153,15 +152,16 @@ void Render2D::render_rect(GLfloat x, GLfloat y,
 
     // Send uniforms to the text shader
     ShaderManager::ui.use();
-    ShaderManager::ui.uni_vec3("baseColor", color);
-    glUniformMatrix4fv(ShaderManager::ui.get_uni("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform1i(ShaderManager::ui.get_uni("hasTexture"), true);
-    glUniform1f(ShaderManager::ui.get_uni("alpha"), alpha);
+
+    ShaderManager::ui.set_uni("baseColor", color);
+    ShaderManager::ui.set_uni("projection", projection);
+    ShaderManager::ui.set_uni("hasTexture", true);
+    ShaderManager::ui.set_uni("alpha", alpha);
 
     if (texture_ID == 0)
-        glUniform1i(ShaderManager::ui.get_uni("hasTexture"), false);
+        ShaderManager::ui.set_uni("hasTexture", false);
     else
-        glUniform1i(ShaderManager::ui.get_uni("hasTexture"), true);
+        ShaderManager::ui.set_uni("hasTexture", true);
 
     // Set active arrays
     glBindVertexArray(VAO);
@@ -171,12 +171,12 @@ void Render2D::render_rect(GLfloat x, GLfloat y,
 
     // Update VBO for this rect
     GLfloat vertices[6][4] = {
-        { x,     	 y + height,   0.0, 0.0 },
-        { x,     	 y,       	   0.0, 1.0 },
-        { x + width, y,       	   1.0, 1.0 },
+        { x,         y + height,   0.0, 0.0 },
+        { x,         y,            0.0, 1.0 },
+        { x + width, y,            1.0, 1.0 },
 
         { x,         y + height,   0.0, 0.0 },
-        { x + width, y,       	   1.0, 1.0 },
+        { x + width, y,            1.0, 1.0 },
         { x + width, y + height,   1.0, 0.0 }
     };
     // Update content of VBO memory
