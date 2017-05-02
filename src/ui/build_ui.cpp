@@ -24,7 +24,7 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
             ui_grid.attach_at(i, j, rect);
 
             UIImageNode* item_image = new UIImageNode(1, 1, 10, 10, 
-                AssetLoader::asset_loader->get_texture(constructs[i * num_cols + j].image));
+                AssetLoader::get_texture(constructs[i * num_cols + j].image));
             ui_grid.attach_at(i, j, *item_image);
             images.push_back(item_image);
         }
