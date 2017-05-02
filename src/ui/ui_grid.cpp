@@ -45,8 +45,8 @@ UIGrid::UIGrid(float start_x, float start_y,
     float elt_start_x = start_x + h_border_padding;
     float elt_start_y = start_y + grid_height - v_border_padding - element_height;
     int curr_elt = 0;
-    for (unsigned int row = 0; row < rows; ++row) {
-        for (unsigned int col = 0; col < columns; ++col) {
+    for (int row = 0; row < rows; ++row) {
+        for (int col = 0; col < columns; ++col) {
             float adjusted_x = elt_start_x + (total_element_width * col);
             float adjusted_y = elt_start_y - (total_element_height * row);
 
@@ -64,14 +64,13 @@ UIGrid::UIGrid(float start_x, float start_y,
     toggle_current_selection_halo();
 
     // Set up callbacks.
-    events::build::select_grid_move_event.connect([&](Direction dir) {
+    events::build::select_grid_move_event.connect([&, columns](Direction dir) {
         move_selection(dir);
+        events::ui_grid_selection_event(selection_row * columns + selection_col);
     });
 
-    events::build::select_grid_confirm_event.connect([&]() {
-        events::build::construct_changed_event(
-            selection_row == 0 && selection_col == 0 ?
-            ConstructType::CHEST : ConstructType::REMOVE);
+    events::build::select_grid_confirm_event.connect([&, columns]() {
+        events::ui_grid_selection_event(selection_row * columns + selection_col);
     });
 }
 
@@ -96,6 +95,11 @@ void UIGrid::draw(Render2D &renderer_2d,
 void UIGrid::enable() {
     grid_bg.enable();
     UIContainer::enable();
+
+    // Deselects all children except for the currently selected.
+    for (int i = 0; i < num_elements; i++)
+        if (i != selection_row * columns + selection_col)
+            children[i]->do_selection();
 }
 
 void UIGrid::disable() {

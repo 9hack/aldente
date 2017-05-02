@@ -61,6 +61,9 @@ namespace events {
     extern signal<void()> toggle_debug_shadows_event;
     extern signal<void()> toggle_ui_event;
 
+    // The user has made a selection on the UI grid.
+    extern signal<void(int)> ui_grid_selection_event;
+
     namespace build {
         // Move the selection in the 2D selection grid.
         extern signal<void(Direction)> select_grid_move_event;
@@ -73,6 +76,9 @@ namespace events {
 
         // Confirm placement in the 3D build grid.
         extern signal<void()> build_grid_place_event;
+
+        // Return to the select grid from the place grid.
+        extern signal<void()> select_grid_return_event;
 
         // The selected construct type has changed.
         extern signal<void(ConstructType)> construct_changed_event;

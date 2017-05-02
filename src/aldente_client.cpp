@@ -10,9 +10,10 @@
 #include "poll/input_poller.h"
 #include "util/config.h"
 #include "events.h"
-#include "ui/test_ui.h"
+#include "ui/build_ui.h"
 #include "render.h"
 #include "game/game_state.h"
+#include "game/construct_types.h"
 #include "net/network_manager.h"
 #include "shaders/shader_manager.h"
 
@@ -65,7 +66,14 @@ void AldenteClient::start() {
     SceneManager scene_manager;
     Render render(window, scene_manager);
 
-    TestUI ui = TestUI(5, 7, (float) width / (float) height);
+    std::vector<ConstructData> constructs;
+    for (int i = 0; i < 12; i++) {
+        if (i % 2 == 0)
+            constructs.push_back(Constructs::CHEST);
+        else
+            constructs.push_back(Constructs::REMOVE);
+    }
+    BuildUI ui = BuildUI(3, 4, (float) width / (float) height, constructs);
 
     // Init the test scene.
     MainScene testScene;
