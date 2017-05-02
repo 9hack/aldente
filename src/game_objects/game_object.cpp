@@ -17,16 +17,10 @@ void GameObject::draw(Shader *shader, SceneInfo &scene_info) {
 // Updates Game Object Paramters
 void GameObject::update() {
     // Test code for playing animation for the boy
-    player.set_speed(3.0f);
+    anim_player.set_speed(3.0f);
 
     if (model->animations.size() > 0) {
-        player.play(model, "walk");
-        /*
-        if (cur_time < 1.5f)
-            player.play(cur_time, model->animations["look"], model);
-        else
-            player.play(cur_time, model->animations["wave"], model);
-        */
+        anim_player.play(model, "walk");        
     }
 }
 

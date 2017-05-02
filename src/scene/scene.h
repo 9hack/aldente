@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "game_object.h"
+#include "game_objects/game_object.h"
 #include "shaders/shader.h"
 #include "model/plane.h"
 #include "grid.h"

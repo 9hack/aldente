@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+// Currently, animation player keeps track of its own timer. May change to a global timer event.
 float last_time = 0;
 float cur_time = 0;
 
@@ -86,6 +87,9 @@ const aiNodeAnim* AnimationPlayer::find_node_anim(const aiAnimation *anim, const
         }
     }
 
+    // Could not find specified animation node, error.    
+
+    std::cerr << "Error : Animation Node " << node_name << " not found." << std::endl;
     return NULL;
 }
 
@@ -95,36 +99,33 @@ unsigned int AnimationPlayer::find_position(float anim_time, const aiNodeAnim *n
             return i;
         }
     }
-
-    assert(0);
+    
+    // If animation node is structured correctly, this should never be called
+    std::cerr << "Error : Position Key for " << node_anim->mNodeName.data << " not found." << std::endl;
     return 0;
 }
 
-
 unsigned int AnimationPlayer::find_rotation(float anim_time, const aiNodeAnim *node_anim) {
-    assert(node_anim->mNumRotationKeys > 0);
-
     for (unsigned int i = 0; i < node_anim->mNumRotationKeys - 1; i++) {
         if (anim_time < (float)node_anim->mRotationKeys[i + 1].mTime) {
             return i;
         }
     }
 
-    assert(0);
+    // If animation node is structured correctly, this should never be called
+    std::cerr << "Error : Rotation Key for " << node_anim->mNodeName.data << " not found." << std::endl;
     return 0;
 }
 
-
 unsigned int AnimationPlayer::find_scaling(float anim_time, const aiNodeAnim *node_anim) {
-    assert(node_anim->mNumScalingKeys > 0);
-
     for (unsigned int i = 0; i < node_anim->mNumScalingKeys - 1; i++) {
         if (anim_time < (float)node_anim->mScalingKeys[i + 1].mTime) {
             return i;
         }
     }
 
-    assert(0);
+    // If animation node is structured correctly, this should never be called
+    std::cerr << "Error : Scaling Key for " << node_anim->mNodeName.data << " not found." << std::endl;
     return 0;
 }
 
@@ -137,10 +138,19 @@ void AnimationPlayer::calc_interpolated_position(aiVector3D &out, float anim_tim
 
     unsigned int position_index = find_position(anim_time, node_anim);
     unsigned int next_position_index = (position_index + 1);
-    assert(next_position_index < node_anim->mNumPositionKeys);
+    if (next_position_index < node_anim->mNumPositionKeys) {
+        // If animation node is structured correctly, this should never be called
+        std::cerr << "Error : Position Index for " << node_anim->mNodeName.data << " incorrect." << std::endl;
+    }
+
     float deltaTime = (float)(node_anim->mPositionKeys[next_position_index].mTime - node_anim->mPositionKeys[position_index].mTime);
     float factor = (anim_time - (float)node_anim->mPositionKeys[position_index].mTime) / deltaTime;
-    assert(factor >= 0.0f && factor <= 1.0f);
+
+    if (factor < 0.0f || factor > 1.0f) {
+        // If animation node is structured correctly, this should never be called
+        std::cerr << "Error : Position Factor for " << node_anim->mNodeName.data << " incorrect." << std::endl;
+    }
+
     const aiVector3D &start = node_anim->mPositionKeys[position_index].mValue;
     const aiVector3D &end = node_anim->mPositionKeys[next_position_index].mValue;
     aiVector3D delta = end - start;
@@ -157,10 +167,20 @@ void AnimationPlayer::calc_interpolated_rotation(aiQuaternion &out, float anim_t
 
     unsigned int rotation_index = find_rotation(anim_time, node_anim);
     unsigned int next_rotation_index = (rotation_index + 1);
-    assert(next_rotation_index < node_anim->mNumRotationKeys);
+    
+    if (next_rotation_index >= node_anim->mNumRotationKeys) {
+        // If animation node is structured correctly, this should never be called
+        std::cerr << "Error : Rotation Index for " << node_anim->mNodeName.data << " incorrect." << std::endl;
+    }
+
     float deltaTime = (float)(node_anim->mRotationKeys[next_rotation_index].mTime - node_anim->mRotationKeys[rotation_index].mTime);
     float factor = (anim_time - (float)node_anim->mRotationKeys[rotation_index].mTime) / deltaTime;
-    assert(factor >= 0.0f && factor <= 1.0f);
+
+    if (factor >= 0.0f && factor <= 1.0f) {
+        // If animation node is structured correctly, this should never be called
+        std::cerr << "Error : Rotation Factor for " << node_anim->mNodeName.data << " incorrect." << std::endl;
+    }
+
     const aiQuaternion &startRotationQ = node_anim->mRotationKeys[rotation_index].mValue;
     const aiQuaternion &endRotationQ = node_anim->mRotationKeys[next_rotation_index].mValue;
     aiQuaternion::Interpolate(out, startRotationQ, endRotationQ, factor);
@@ -176,10 +196,20 @@ void AnimationPlayer::calc_interpolated_scaling(aiVector3D &out, float anim_time
 
     unsigned int scaling_index = find_scaling(anim_time, node_anim);
     unsigned int next_scaling_index = (scaling_index + 1);
-    assert(next_scaling_index < node_anim->mNumScalingKeys);
+
+    if (next_scaling_index >= node_anim->mNumScalingKeys) {
+        // If animation node is structured correctly, this should never be called
+        std::cerr << "Error : Scaling Index for " << node_anim->mNodeName.data << " incorrect." << std::endl;
+    }
+
     float deltaTime = (float)(node_anim->mScalingKeys[next_scaling_index].mTime - node_anim->mScalingKeys[scaling_index].mTime);
     float factor = (anim_time - (float)node_anim->mScalingKeys[scaling_index].mTime) / deltaTime;
-    assert(factor >= 0.0f && factor <= 1.0f);
+
+    if (factor < 0.0f || factor > 1.0f) {
+        // If animation node is structured correctly, this should never be called
+        std::cerr << "Error : Scaling Factor for " << node_anim->mNodeName.data << " incorrect." << std::endl;
+    }
+
     const aiVector3D &start = node_anim->mScalingKeys[scaling_index].mValue;
     const aiVector3D &end = node_anim->mScalingKeys[next_scaling_index].mValue;
     aiVector3D delta = end - start;

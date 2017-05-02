@@ -20,6 +20,8 @@ private:
     const aiNodeAnim *find_node_anim(const aiAnimation *anim, const std::string node_name);
     glm::mat4 convert_ai_matrix(aiMatrix4x4 ai_mat);
 
+    // Math Calculation stuff taken from Assimp Tutorial
+    // http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html
     void calc_interpolated_scaling(aiVector3D& out, float anim_time, const aiNodeAnim* node_anim);
     void calc_interpolated_rotation(aiQuaternion& out, float anim_time, const aiNodeAnim* node_anim);
     void calc_interpolated_position(aiVector3D& out, float anim_time, const aiNodeAnim* node_anim);

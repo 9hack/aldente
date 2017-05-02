@@ -14,7 +14,7 @@
 class GameObject {
 protected:
     Model *model;
-    AnimationPlayer player;
+    AnimationPlayer anim_player;
 
 public:
     Transform transform; // World matrix now controlled using the Transform Component
