@@ -1,29 +1,18 @@
 #include "main_scene.h"
 #include "game_objects/test_chest.h"
-#include "game_objects/player.h"
+#include "player.h"
 
 MainScene::MainScene() : Scene() {
     light_pos = glm::vec3(0.f, 1.f, 1.f);
 
     //Setting up scene graph for Grid
-
     grid = new Grid(20, 20);
     std::vector<std::vector<Tile *>> toAdd = grid->getGrid();
     for (int i = 0; i < toAdd.size(); i++) {
         std::vector<Tile *> currRow = toAdd[i];
         for (int j = 0; j < currRow.size(); j++) {
-            /*Model *currTile = new Model();
-            currTile->add_mesh(currRow[j]->getMesh());
-            GameObject* currObj = new GameObject();
-            currObj->attach_model(currTile);
-            objs.push_back(currObj);*/
             objs.push_back(currRow[j]);
-
-            if (currRow[j]->getRigid() != NULL) {
-                //physics.dynamicsWorld->addRigidBody(currRow[j]->getRigid());
-                //physics.rigidBodies.push_back(currRow[j]->getRigid());
-                addRigid(currRow[j]->getRigid());
-            }
+            addRigid(currRow[j]->getRigid());
         }
     }
 
@@ -35,6 +24,7 @@ MainScene::MainScene() : Scene() {
     player->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     player->transform.translate({ 4.f, 0.05f, 4.f });
     objs.push_back(player);
+    addRigid(player->getRigid());
 
     Model *chestg_model = AssetLoader::get_model(std::string("chest_good"));
     TestChest *chestg = new TestChest();
@@ -62,7 +52,7 @@ void MainScene::update() {
     for (int i = 0; i < toAdd.size(); i++) {
         std::vector<Tile *> currRow = toAdd[i];
         for (int j = 0; j < currRow.size(); j++) {
-            currRow[j]->update(hover);
+            currRow[j]->update();
         }
     }
 

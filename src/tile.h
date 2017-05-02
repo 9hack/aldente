@@ -31,7 +31,7 @@ public:
     // Whether a construct buildable on this tile.
     bool buildable;
 
-    Tile(Scene *scene);
+    Tile();
 
     ~Tile();
 
@@ -56,7 +56,7 @@ public:
 class FloorTile : public Tile {
 
 public:
-    FloorTile(Scene *scene, int x, int z);
+    FloorTile(int x, int z);
 
     ~FloorTile();
 
@@ -66,7 +66,7 @@ public:
 class WallTile : public Tile {
 
 public:
-    WallTile(Scene *scene, int x, int z);
+    WallTile(int x, int z);
 
     ~WallTile();
 

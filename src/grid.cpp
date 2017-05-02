@@ -85,10 +85,11 @@ void Grid::build(ConstructType type, int x, int z) {
         break;
     }
     case REMOVE: {
-        // TODO Make destructor for construct
+        // TODO: Move destructor to construct's destructor.
+        /*
         if (candidate->get_construct()) {
             scene->remove_rigid(candidate->get_construct()->get_rigid());
-        }
+        }*/
         
         candidate->set_construct(nullptr);
         candidate->buildable = true;

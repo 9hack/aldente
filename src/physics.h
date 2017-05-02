@@ -7,7 +7,6 @@
 #include "scene/scene.h"
 #include <vector>
 #include "events.h"
-#include "game_object.h"
 
 class Physics {
 private:

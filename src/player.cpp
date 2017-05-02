@@ -2,7 +2,8 @@
 
 #include "asset_loader.h"
 #include "events.h"
-Player::Player(Scene *scene) : GameObject(scene) {
+
+Player::Player() : GameObject() {
     to_moveX = 0;
     to_moveZ = 0;
     speed = 10.0f;
@@ -26,8 +27,6 @@ Player::Player(Scene *scene) : GameObject(scene) {
     rigidBody->setLinearFactor(btVector3(1, 0.0f, 1));
     //Lock angular rotation
     rigidBody->setAngularFactor(0);
-
-    scene->addRigid(rigidBody);
 
     setup_listeners();
 
@@ -78,6 +77,14 @@ void Player::setup_listeners() {
 // Just calls do_movement for now, can have more
 // functionality later.
 void Player::update() {
+
+    // Test code for playing animation for the boy
+    anim_player.set_speed(3.0f);
+
+    if (model->animations.size() > 0) {
+        anim_player.play(model, "walk");
+    }
+
     do_movement();
 
     btTransform t;

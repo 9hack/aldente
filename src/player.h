@@ -4,7 +4,7 @@
 * gameobject such as health, gold, movement, etc.
 */
 
-#include "game_object.h"
+#include "game_objects/game_object.h"
 #include "game/direction.h"
 #include "btBulletDynamicsCommon.h"
 #include "construct.h"
@@ -24,9 +24,10 @@ private:
     btCapsuleShape *capsule = new btCapsuleShape(0.5f, 1.0f);
     btRigidBody *rigidBody;
 public:
-    Player(Scene *scene);
-    void update();
+    Player();
+    void update() override;
     void do_movement();
     void setup_listeners();
     void interact();
+    btRigidBody *getRigid() { return rigidBody; } // TODO: make this a virtual function of GameObject please.
 };

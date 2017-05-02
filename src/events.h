@@ -5,7 +5,7 @@
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
-#include "game_object.h"
+#include "game_objects/game_object.h"
 
 namespace events {
 

@@ -1,10 +1,13 @@
 #include "construct.h"
 #include "asset_loader.h"
 
-Crate::Crate(int x, int z) {
-    model = AssetLoader::get_model("textured");
-    transform.set_position(x, 0.5f, z);
-    transform.set_scale(0.5f, 0.5f, 0.5f);
+Construct::Construct(int x, int z) {
+    transform.set_position(x, 0.0f, z);
+}
+
+Crate::Crate(int x, int z) : Construct(x, z) {
+    model = AssetLoader::get_model("chest_good");
+    transform.set_scale(0.75f, 0.75f, 0.75f);
 
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
         btQuaternion(), btVector3((btScalar)x, 0.5f, (btScalar)z)));
@@ -20,10 +23,10 @@ Crate::Crate(int x, int z) {
     // Will be used to know which object is picked.
     rigidBody->setUserPointer(this);
 
-    scene->addRigid(rigidBody);
+    // TODO: Add rigid body to scene.
 }
 
 // Activated when a player presses A on it
 void Crate::interact_trigger() {
-    model = AssetLoader::get_model("veggie.fbx");
+    model = AssetLoader::get_model("veggie");
 }
