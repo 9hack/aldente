@@ -21,7 +21,7 @@ private:
     // movement speed;
     float speed;
 
-    btBoxShape *box = new btBoxShape(btVector3(0.5f, 1.0f, 0.5f));
+    btCapsuleShape *capsule = new btCapsuleShape(0.5f, 1.0f);
     btRigidBody *rigidBody;
 public:
     Player(Scene *scene);

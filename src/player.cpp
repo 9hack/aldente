@@ -14,7 +14,7 @@ Player::Player(Scene *scene) : GameObject(scene) {
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
         1,                  
         motionstate,
-        box,  // collision shape of body
+        capsule,  // collision shape of body
         btVector3(0, 0, 0)    // local inertia
     );
     rigidBody = new btRigidBody(rigidBodyCI);
@@ -24,6 +24,8 @@ Player::Player(Scene *scene) : GameObject(scene) {
     
     // Lock y-axis
     rigidBody->setLinearFactor(btVector3(1, 0.0f, 1));
+    //Lock angular rotation
+    rigidBody->setAngularFactor(0);
 
     scene->addRigid(rigidBody);
 
