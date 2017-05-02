@@ -82,12 +82,12 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
         //std::cerr << "Finding Model : " << model_name << std::endl;
         //std::cerr << "Saving Animation : " << anim_name << std::endl;
 
-        Model *model = get_model(model_name);        
+        Model *model = get_model(model_name);
 
         // Save Animation if Available, Only one per fbx
         if (scene->mNumAnimations > 0) {
             //std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
-            Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);            
+            Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);
             model->animations[anim_name] = animation;
         }
     } else {
@@ -216,7 +216,7 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
 void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
     //std::cerr << "Number of Bones : " << aimesh->mNumBones << std::endl;
 
-    Geometry *geo = mesh->geometry;    
+    Geometry *geo = mesh->geometry;
     geo->bone_ids.resize(geo->vertices.size());
     geo->weights.resize(geo->vertices.size());
 

@@ -12,7 +12,7 @@ void AnimationPlayer::play(Model *model, std::string anim_name) {
     if (animation == NULL) {
         std::cerr << "Error : Animation " << anim_name << " not found." << std::endl;
         return;
-    }        
+    }
 
     cur_time += ((float) glfwGetTime() - last_time) * speed;
 

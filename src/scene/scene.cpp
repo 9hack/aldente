@@ -74,13 +74,13 @@ MainScene::MainScene() : Scene() {
                 addRigid(currRow[j]->getRigid());
             }
         }
-    }        
+    }
 
     // Test Model loading
     Model *tmodel = AssetLoader::get_model(std::string("boy_two"));
     GameObject *testObj = new GameObject();
     tmodel->set_shader(&ShaderManager::unlit);
-    testObj->attach_model(tmodel);    
+    testObj->attach_model(tmodel);
     testObj->transform.set_scale({0.008f, 0.008f, 0.008f});
     testObj->transform.translate({0.f, 1.f, 0.f});
     objs.push_back(testObj);

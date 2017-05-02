@@ -1,7 +1,7 @@
 #include "game_object.h"
 
 GameObject::GameObject() {
-	model = new Model();
+    model = new Model();
 }
 
 // Attaches a model to the game object
@@ -27,7 +27,7 @@ void GameObject::update() {
         else
             player.play(cur_time, model->animations["wave"], model);
         */
-    }    
+    }
 }
 
 void GameObject::set_color(glm::vec3 color) {

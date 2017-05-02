@@ -154,7 +154,7 @@ void Render2D::render_rect(GLfloat x, GLfloat y,
     ShaderManager::ui.use();
 
     ShaderManager::ui.set_uni("baseColor", color);
-    ShaderManager::ui.set_uni("projection", projection);    
+    ShaderManager::ui.set_uni("projection", projection);
     ShaderManager::ui.set_uni("hasTexture", true);
     ShaderManager::ui.set_uni("alpha", alpha);
 
@@ -171,12 +171,12 @@ void Render2D::render_rect(GLfloat x, GLfloat y,
 
     // Update VBO for this rect
     GLfloat vertices[6][4] = {
-        { x,     	 y + height,   0.0, 0.0 },
-        { x,     	 y,       	   0.0, 1.0 },
-        { x + width, y,       	   1.0, 1.0 },
+        { x,         y + height,   0.0, 0.0 },
+        { x,         y,            0.0, 1.0 },
+        { x + width, y,            1.0, 1.0 },
 
         { x,         y + height,   0.0, 0.0 },
-        { x + width, y,       	   1.0, 1.0 },
+        { x + width, y,            1.0, 1.0 },
         { x + width, y + height,   1.0, 0.0 }
     };
     // Update content of VBO memory

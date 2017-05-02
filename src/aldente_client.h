@@ -9,8 +9,8 @@
 #include "aldente.h"
 
 /*
-	Main Game Function.
-	Game loop and scene setup happens here
+    Main Game Function.
+    Game loop and scene setup happens here
 */
 class AldenteClient : public Aldente {
 public:

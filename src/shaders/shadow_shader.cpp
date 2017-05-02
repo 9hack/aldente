@@ -47,7 +47,7 @@ void ShadowShader::pre_draw(SceneInfo &scene_info) {
 
     // Send updated light matrix as uniform.
     set_uni("view_projection", light_matrix);
-    
+
 }
 
 void ShadowShader::post_draw() {

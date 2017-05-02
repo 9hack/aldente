@@ -70,7 +70,7 @@ UIGrid::UIGrid(float start_x, float start_y,
 
     events::build::select_grid_confirm_event.connect([&]() {
         events::build::construct_changed_event(
-            selection_row == 0 && selection_col == 0 ? 
+            selection_row == 0 && selection_col == 0 ?
             ConstructType::CHEST : ConstructType::REMOVE);
     });
 }

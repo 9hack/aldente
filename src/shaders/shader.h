@@ -20,7 +20,7 @@ public:
     // Convenience for passing uniforms.
     void set_uni(const char *uniform, int val) { glUniform1i(get_uni(uniform), val); }
     void set_uni(const char *uniform, float val) { glUniform1f(get_uni(uniform), val); }
-    void set_uni(const char *uniform, glm::mat4 mat) { glUniformMatrix4fv(get_uni(uniform), 1, GL_FALSE, glm::value_ptr(mat)); }    
+    void set_uni(const char *uniform, glm::mat4 mat) { glUniformMatrix4fv(get_uni(uniform), 1, GL_FALSE, glm::value_ptr(mat)); }
     void set_uni(const char *uniform, glm::vec3 v) { glUniform3f(get_uni(uniform), v.x, v.y, v.z); }
 
     // Set GL state to use this shader program.

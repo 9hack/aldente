@@ -27,34 +27,34 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
     set_uni("material.shininess", mesh->material->shininess);
     set_uni("shadows_enabled", mesh->material->shadows);
 
-    // Send texture uniforms.    
+    // Send texture uniforms.
     set_uni("texture_enabled", mesh->geometry->has_texture);
     // Bind Texture.
     if (mesh->geometry->has_texture) {
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, mesh->geometry->texture);        
+        glBindTexture(GL_TEXTURE_2D, mesh->geometry->texture);
         set_uni("texture_map", 1); // ID of this texture=1
     }
 
     /* SHADOW AND TRANSFORMATION MATRICES */
-    // Send shadow uniforms and bind its texture.    
+    // Send shadow uniforms and bind its texture.
     set_uni("light_matrix", ShaderManager::shadow.light_matrix);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, ShaderManager::shadow.shadow_map_tex);    
+    glBindTexture(GL_TEXTURE_2D, ShaderManager::shadow.shadow_map_tex);
     set_uni("shadow_map", 0); // ID of this texture=0
 
     // Send lighting uniforms.
     set_uni("dir_light.direction", -scene_info.light_pos);
-    set_uni("dir_light.color", color::white); // white light    
+    set_uni("dir_light.color", color::white); // white light
     set_uni("dir_light.ambient_coeff", 0.2f);
 
     // Send camera position uniform.
     set_uni("cam_pos", scene_info.camera->cam_pos);
     // Send projection and view matrices of camera.
     set_uni("projection", scene_info.camera->P);
-    set_uni("view", scene_info.camera->V);    
+    set_uni("view", scene_info.camera->V);
 
-    // Send model_to_world matrix.        
+    // Send model_to_world matrix.
     set_uni("model", to_world);
 
     /* ALL DONE. START DRAWING */

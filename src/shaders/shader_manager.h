@@ -11,7 +11,7 @@
 class ShaderManager {
 public:
     // Single static instances of each shader
-    static BasicShader basic;    
+    static BasicShader basic;
     static SkyboxShader skybox;
     static ShadowShader shadow;
     static TextShader text;

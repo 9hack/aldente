@@ -8,12 +8,12 @@
     (Too much trouble to properly split the assimp animation node)
 */
 class Animation {
-public:            
+public:
     Animation(const aiScene *scene, const aiAnimation *anim);
     aiNode *get_root();
-    const aiAnimation *get_anim();    
+    const aiAnimation *get_anim();
 
-private:   
+private:
     const aiScene *scene;
-    const aiAnimation *anim;    
+    const aiAnimation *anim;
 };

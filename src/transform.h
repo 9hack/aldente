@@ -5,11 +5,11 @@
 /*
     Handles all matrix transformations for a game object. Gives a (hopefully) simple
     interface for interacting with the game object's transformation, including
-    translations, rotations, and scaling. 
+    translations, rotations, and scaling.
 */
 class Transform {
 public:
-    Transform();    
+    Transform();
 
     void set_world_mat(glm::mat4 mat);
 
@@ -30,9 +30,9 @@ public:
     glm::vec3 get_rotation();
     glm::vec3 get_scale();
 
-private:  
+private:
     glm::mat4 world_mat;
-    
+
     glm::mat4 get_translation_mat();
     glm::mat4 get_rotation_mat();
     glm::mat4 get_scale_mat();

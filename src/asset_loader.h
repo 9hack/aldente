@@ -10,7 +10,7 @@
 #include <iostream>
 
 /*
-	Class for loading all assets on startup.
+    Class for loading all assets on startup.
 */
 
 class AssetLoader {

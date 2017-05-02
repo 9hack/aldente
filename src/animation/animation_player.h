@@ -7,12 +7,12 @@
     pose the model
 */
 class AnimationPlayer {
-public:    
+public:
     void play(Model *model, std::string anim_name);
 
     void set_speed(float speed);
 
-private:    
+private:
     float speed;
 
     void process_animation(float anim_time, const aiAnimation *anim, Model *model, const aiNode *node, glm::mat4 parent_mat);

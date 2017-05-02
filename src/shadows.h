@@ -4,7 +4,7 @@
 #include "window.h"
 
 /*
-	Handles low level calls needed for running shadows
+    Handles low level calls needed for running shadows
 */
 class Shadows {
 private:

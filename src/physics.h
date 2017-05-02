@@ -9,18 +9,18 @@
 
 class Physics {
 private:
-	Scene *scene;
+    Scene *scene;
 
     //Bullet varaibles
     btBroadphaseInterface *broadphase;
     btDefaultCollisionConfiguration *collisionConfiguration;
     btCollisionDispatcher *dispatcher;
     btSequentialImpulseConstraintSolver *solver;
-	std::map<Scene*, btDiscreteDynamicsWorld*> scene_worlds;
+    std::map<Scene*, btDiscreteDynamicsWorld*> scene_worlds;
 
-	boost::signals2::connection currentRigidSignal;
+    boost::signals2::connection currentRigidSignal;
 public:
-	Physics();
+    Physics();
 
     ~Physics();
 
