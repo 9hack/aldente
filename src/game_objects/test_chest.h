@@ -2,7 +2,7 @@
 
 #include "game_objects/game_object.h"
 
-class Player : public GameObject {
+class TestChest : public GameObject {
 public:
 
 private:

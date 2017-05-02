@@ -20,15 +20,12 @@ public:
     Transform transform; // World matrix now controlled using the Transform Component
 
     GameObject();
-
-    void attach_model(Model *m);
-
+    
     virtual void draw(Shader *shader, SceneInfo &scene_info);
-
-    void update();
-
-    void set_color(glm::vec3 color);
+    virtual void update();
 
     Model* get_model() { return model; };
+    void attach_model(Model *m);
+    void set_color(glm::vec3 color);    
 };
 
