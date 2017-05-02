@@ -87,9 +87,6 @@ const aiNodeAnim* AnimationPlayer::find_node_anim(const aiAnimation *anim, const
         }
     }
 
-    // Could not find specified animation node, error.    
-
-    std::cerr << "Error : Animation Node " << node_name << " not found." << std::endl;
     return NULL;
 }
 
@@ -138,7 +135,7 @@ void AnimationPlayer::calc_interpolated_position(aiVector3D &out, float anim_tim
 
     unsigned int position_index = find_position(anim_time, node_anim);
     unsigned int next_position_index = (position_index + 1);
-    if (next_position_index < node_anim->mNumPositionKeys) {
+    if (next_position_index >= node_anim->mNumPositionKeys) {
         // If animation node is structured correctly, this should never be called
         std::cerr << "Error : Position Index for " << node_anim->mNodeName.data << " incorrect." << std::endl;
     }
@@ -176,7 +173,7 @@ void AnimationPlayer::calc_interpolated_rotation(aiQuaternion &out, float anim_t
     float deltaTime = (float)(node_anim->mRotationKeys[next_rotation_index].mTime - node_anim->mRotationKeys[rotation_index].mTime);
     float factor = (anim_time - (float)node_anim->mRotationKeys[rotation_index].mTime) / deltaTime;
 
-    if (factor >= 0.0f && factor <= 1.0f) {
+    if (factor < 0.0f || factor > 1.0f) {
         // If animation node is structured correctly, this should never be called
         std::cerr << "Error : Rotation Factor for " << node_anim->mNodeName.data << " incorrect." << std::endl;
     }

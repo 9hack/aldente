@@ -33,27 +33,6 @@ void Scene::addRigid(btRigidBody* toAdd) {
 MainScene::MainScene() : Scene() {
     light_pos = glm::vec3(0.f, 1.f, 1.f);
 
-    /*
-    // Skybox
-    Material *default_material = new Material();
-    Mesh *skybox_mesh = new Mesh(nullptr, default_material, ShaderManager::get_shader_program("skybox"));
-    Model *skybox_model = new Model();
-    skybox_model->add_mesh(skybox_mesh);
-    GameObject* sky = new GameObject();
-    sky->attach_model(skybox_model);
-    objs.push_back(sky);
-
-    // Cube
-    Geometry *cube_geo = GeometryGenerator::generate_cube(1.f, true);
-    Material *cube_mat = new Material(color::ocean_blue);
-    Mesh *cube_mesh = new Mesh(cube_geo, cube_mat);
-    Model *cube_model = new Model();
-    cube_model->model_mat *= glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 6.0f, 3.0f));
-    cube_model->add_mesh(cube_mesh);
-    GameObject* cube = new GameObject();
-    cube->attach_model(cube_model);
-    objs.push_back(cube);*/
-
     //Setting up scene graph for Grid
 
     grid = new Grid(20, 20);
@@ -77,9 +56,9 @@ MainScene::MainScene() : Scene() {
     }
 
     // Test Model loading
-    Model *tmodel = AssetLoader::get_model(std::string("boy_two"));
+    Model *tmodel = AssetLoader::get_model(std::string("chest_good"));
     GameObject *testObj = new GameObject();
-    tmodel->set_shader(&ShaderManager::unlit);
+    tmodel->set_shader(&ShaderManager::anim_unlit);
     testObj->attach_model(tmodel);
     testObj->transform.set_scale({0.008f, 0.008f, 0.008f});
     testObj->transform.translate({0.f, 1.f, 0.f});
