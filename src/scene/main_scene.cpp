@@ -17,28 +17,28 @@ MainScene::MainScene() : Scene() {
     }
 
     // Test Model loading
-    Model *player_model = AssetLoader::get_model(std::string("boy_two"));
+    Model *player_model = AssetLoader::get_model(std::string("boy_two_scaled"));
     Player *player = new Player();
     player_model->set_shader(&ShaderManager::anim_unlit);
     player->attach_model(player_model);
-    player->transform.set_scale({ 0.006f, 0.006f, 0.006f });
+    //player->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     player->transform.translate({ 4.f, 0.05f, 4.f });
     objs.push_back(player);
     addRigid(player->getRigid());
 
-    Model *chestg_model = AssetLoader::get_model(std::string("chest_good"));
+    Model *chestg_model = AssetLoader::get_model(std::string("chest_good_scaled"));
     TestChest *chestg = new TestChest();
     chestg_model->set_shader(&ShaderManager::anim_unlit);
     chestg->attach_model(chestg_model);
-    chestg->transform.set_scale({ 0.006f, 0.006f, 0.006f });
+    //chestg->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     chestg->transform.translate({ 5.f, 0.05f, 4.f });
     objs.push_back(chestg);
 
-    Model *chestb_model = AssetLoader::get_model(std::string("chest_bad"));
+    Model *chestb_model = AssetLoader::get_model(std::string("chest_bad_scaled"));
     TestChest *chestb = new TestChest();
     chestb_model->set_shader(&ShaderManager::anim_unlit);
     chestb->attach_model(chestb_model);
-    chestb->transform.set_scale({ 0.006f, 0.006f, 0.006f });
+    //ychestb->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     chestb->transform.translate({ 3.f, 0.05f, 4.f });
     objs.push_back(chestb);
 }
