@@ -90,15 +90,12 @@ void Transform::rotate(float x, float y, float z, bool local) {
 
 void Transform::look_at(glm::vec3 dir) {
     if (dir.x != 0 || dir.z != 0) {
-        glm::vec3 scale = get_scale();
-        glm::vec4 temp = world_mat[3];
-        world_mat[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-        glm::vec3 face = glm::vec3(-dir.x, dir.y, dir.z);
-        glm::mat4 rot = glm::lookAt(glm::vec3(0.0f), glm::normalize(face), glm::vec3(0.0f, 1.0f, 0.0f));
-        world_mat = glm::scale(rot, scale);
-        world_mat[3] = temp;
+        float angle = atan2(dir.x, dir.z);
+        glm::mat4 new_world = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f));
+        new_world = glm::scale(new_world, get_scale());
+        new_world[3] = world_mat[3];
+        world_mat = new_world;
     }
-  
 }
 
 glm::mat4 Transform::get_world_mat() {
