@@ -1,6 +1,6 @@
 #include "main_scene.h"
 #include "game_objects/test_chest.h"
-#include "player.h"
+#include "game_objects/player.h"
 
 MainScene::MainScene() : Scene() {
     light_pos = glm::vec3(0.f, 1.f, 1.f);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "game_objects/game_object.h"
+#include "game_object.h"
 #include "btBulletDynamicsCommon.h"
 
 class Construct : public GameObject {

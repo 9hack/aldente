@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "btBulletDynamicsCommon.h"
-#include "tile.h"
+#include "game_objects/tile.h"
 #include "scene/scene.h"
 #include <vector>
 #include "events.h"

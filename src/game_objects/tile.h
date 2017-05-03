@@ -13,7 +13,7 @@
 #include "model/material.h"
 #include "model/geometry_generator.h"
 #include "btBulletDynamicsCommon.h"
-#include "game_objects/game_object.h"
+#include "game_object.h"
 #include "construct.h"
 
 class Tile : public GameObject {

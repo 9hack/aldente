@@ -4,7 +4,7 @@
 * gameobject such as health, gold, movement, etc.
 */
 
-#include "game_objects/game_object.h"
+#include "game_object.h"
 #include "game/direction.h"
 #include "btBulletDynamicsCommon.h"
 #include "construct.h"
