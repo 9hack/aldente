@@ -5,7 +5,7 @@
 #include "conceptual_translator.h"
 #include "raw_maps/debug.h"
 #include "raw_maps/xbox.h"
-#include "event.h"
+#include "events.h"
 
 TEST_CASE("ConceptualTranslator", "input") {
     GIVEN("A ConceptualTranslator with a keyboard map") {
