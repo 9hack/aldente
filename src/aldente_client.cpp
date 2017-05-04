@@ -1,6 +1,11 @@
 #include "aldente_client.h"
 
 #include "window.h"
+#include "input/conceptual_translator.h"
+#include "input/axis_combiner.h"
+#include "input/raw_maps/xbox.h"
+#include "input/raw_maps/matricom.h"
+#include "input/raw_maps/debug.h"
 #include "asset_loader.h"
 #include "physics.h"
 #include "scene_manager.h"
@@ -50,6 +55,10 @@ void AldenteClient::start() {
     std::string game_name;
     Config::config->get_value(Config::str_game_name, game_name);
     Window window(game_name, true, width, height);
+
+    // Create input handlers.
+    input::ConceptualTranslator translator(input::BTN_MAP_MATRICOM, input::KBD_MAP_DEBUG);
+    input::AxisCombiner stick_handler(translator, input::STICKS_DEFAULT);
 
     // Setup subsystems after window creation.
     glSetup();

@@ -187,15 +187,22 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
         camera->recalculate();
     });
 
-    // Test fire for joystick events
-    events::joystick_event.connect([](events::JoystickData &d) {
-        /*fprintf(stderr,
-                "JoystickEvent:\n"
+    // Test fire for button events and stick events
+    events::button_event.connect([](events::ButtonData &d) {
+        fprintf(stderr,
+                "ButtonEvent:\n"
                         "  id: %d\n"
-                        "  is_button: %d\n"
                         "  input: %d\n"
                         "  state: %d\n",
-                d.id, d.is_button, d.input, d.state);*/
+                d.id, d.input, d.state);
+    });
+    events::stick_event.connect([](events::StickData &d) {
+        fprintf(stderr,
+                "StickEvent:\n"
+                        "  id: %d\n"
+                        "  input: %d\n"
+                        "  state: (%d, %d)\n",
+                d.id, d.input, d.state.first, d.state.second);
     });
 }
 
