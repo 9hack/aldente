@@ -6,6 +6,7 @@
 #include "game/construct_types.h"
 #include "game/direction.h"
 #include "game_objects/game_object.h"
+#include "btBulletDynamicsCommon.h"
 
 namespace events {
 
@@ -96,6 +97,18 @@ namespace events {
 
     // The user has made a selection on the UI grid.
     extern signal<void(int)> ui_grid_selection_event;
+
+    // Struct for parameters for rigidbody initialization
+    struct RigidBodyData {
+        glm::vec3 position;
+        float mass;
+        btCollisionShape *shape;
+        glm::vec3 inertia;
+
+        //Object that has the rigidBody
+        GameObject *object;
+    };
+    extern signal<void(RigidBodyData d)> request_rigidbody_event;
 
     namespace build {
         // Move the selection in the 2D selection grid.

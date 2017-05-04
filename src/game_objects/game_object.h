@@ -5,6 +5,7 @@
 #include "transform.h"
 #include "shaders/shader.h"
 #include "animation/animation_player.h"
+#include "btBulletDynamicsCommon.h"
 
 /*
     This represents an abstract object in the scene.
@@ -15,7 +16,7 @@ class GameObject {
 protected:
     Model *model;
     AnimationPlayer anim_player;
-
+    btRigidBody *rigidbody;
 public:
     Transform transform; // World matrix now controlled using the Transform Component
 
@@ -26,6 +27,7 @@ public:
 
     Model* get_model() { return model; };
     void attach_model(Model *m);
-    void set_color(glm::vec3 color);    
+    void set_color(glm::vec3 color);   
+    void set_rigid(btRigidBody *to_add) { rigidbody = to_add; };
 };
 

@@ -9,28 +9,23 @@ Player::Player() : GameObject() {
     speed = 2.0f;
     direction = glm::vec3(0.0f);
 
-    btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
-        btQuaternion(), btVector3(2.0f, 0.0f, 2.0f)));
-
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-        1,                  
-        motionstate,
-        capsule,  // collision shape of body
-        btVector3(0, 0, 0)    // local inertia
-    );
-    rigidBody = new btRigidBody(rigidBodyCI);
-
-    // Will be used to know which object is picked.
-    rigidBody->setUserPointer(this);
+    events::RigidBodyData rigid = {
+        glm::vec3(10,0.0f,10), //position
+        1, //mass
+        capsule, //btshape
+        glm::vec3(0,0,0), //inertia
+        this //the gameobject
+    };
+    events::request_rigidbody_event(rigid);
     
     // Lock y-axis
-    rigidBody->setLinearFactor(btVector3(1, 0.0f, 1));
+    rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
     //Lock angular rotation
-    rigidBody->setAngularFactor(0);
+    rigidbody->setAngularFactor(0);
 
     setup_listeners();
 
-    transform.set_position(2.0f, 0.0f, 2.0f);
+    transform.set_position(10.0f, 0.0f, 10.0f);
 }
 
 void Player::setup_listeners() {
@@ -66,9 +61,10 @@ void Player::update() {
     do_movement();
 
     btTransform t;
+    t.setIdentity();
 
     // Get the transform from Bullet and into 't'
-    rigidBody->getMotionState()->getWorldTransform(t);
+    rigidbody->getMotionState()->getWorldTransform(t);
     btVector3 to_set = t.getOrigin();
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
@@ -78,8 +74,8 @@ void Player::update() {
 void Player::do_movement() {
     // Should account for deltatime so movement is
     // framerate independent? Unsure how Bullet handles framerate.
-    rigidBody->setActivationState(true);
-    rigidBody->setLinearVelocity(btVector3(to_moveX * speed, 0, to_moveZ * speed));
+    rigidbody->setActivationState(true);
+    rigidbody->setLinearVelocity(btVector3(to_moveX * speed, 0, to_moveZ * speed));
     transform.look_at(glm::vec3(to_moveX * speed, 0, to_moveZ * speed));
     direction = glm::vec3(to_moveX * speed, 0, to_moveZ * speed);
 }

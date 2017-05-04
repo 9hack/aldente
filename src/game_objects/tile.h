@@ -15,13 +15,13 @@
 #include "btBulletDynamicsCommon.h"
 #include "game_object.h"
 #include "construct.h"
+#include "events.h"
 
 class Tile : public GameObject {
 protected:
     int width, height, x, z;
     bool traversable;
 
-    btRigidBody *rigidBody;
     btBoxShape *box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
     btBoxShape *ground = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));
     Construct *construct;
@@ -44,8 +44,6 @@ public:
     virtual void update() = 0;
 
     void draw(Shader *shader, SceneInfo &scene_info) override;
-
-    btRigidBody *getRigid() { return rigidBody; };
 
     void set_construct(Construct* to_set) { construct = to_set; };
     Construct* get_construct() { return construct; };

@@ -22,6 +22,10 @@ Physics::Physics() {
     events::dungeon::player_request_raycast_event.connect([&](glm::vec3 position, glm::vec3 dir) {
         raycast(position, dir);
     });
+
+    events::request_rigidbody_event.connect([&](events::RigidBodyData d) {
+        add_rigid(d);
+    });
 }
 
 Physics::~Physics() {}
@@ -29,29 +33,15 @@ Physics::~Physics() {}
 void Physics::set_scene(Scene *s) {
     scene = s;
 
-    currentRigidSignal.disconnect();
-
     //Make a new dynamicsWorld if scene was not previously used
     if (scene_worlds.count(s) == 0) {
         dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
         dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
-        for (btRigidBody* rigid : s->rigids) {
-            if(rigid)
-                dynamicsWorld->addRigidBody(rigid);
-        }
         scene_worlds[s] = dynamicsWorld;
     }
     else {
         dynamicsWorld = scene_worlds[s];
     }
-
-    currentRigidSignal = s->rigidSignal.connect([&](std::pair<bool, btRigidBody*> p) {
-        if (p.first) {
-            dynamicsWorld->addRigidBody(p.second);
-        } else {
-            dynamicsWorld->removeRigidBody(p.second);
-        }
-    });
 }
 
 void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
@@ -114,8 +104,8 @@ void Physics::update() {
 }
 
 void Physics::raycast(glm::vec3 position, glm::vec3 dir) {
-    glm::vec3 out_end = glm::normalize(dir) * 0.5f;
-    position.y = 0.1f;
+    glm::vec3 out_end = glm::normalize(dir) * 0.6f;
+    position.y = 0.5f;
     out_end += position;
 
     btCollisionWorld::ClosestRayResultCallback RayCallback(
@@ -135,4 +125,26 @@ void Physics::raycast(glm::vec3 position, glm::vec3 dir) {
     else {
         events::dungeon::player_raycast_response_event(nullptr);
     }
+}
+
+void Physics::add_rigid(events::RigidBodyData d) {
+
+    btVector3 pos = btVector3(d.position.x, d.position.y, d.position.z);
+    btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
+        btQuaternion(), pos));
+
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
+        d.mass,                  // mass, in kg. 0 -> Static object, will never move.
+        motionstate,
+        d.shape,  // collision shape of body
+        btVector3(d.inertia.x, d.inertia.y, d.inertia.z)    // local inertia
+    );
+
+    btRigidBody *rigidbody = new btRigidBody(rigidBodyCI);
+
+    // Will be used to know which object is picked.
+    rigidbody->setUserPointer(d.object);
+    d.object->set_rigid(rigidbody);
+
+    dynamicsWorld->addRigidBody(rigidbody);
 }

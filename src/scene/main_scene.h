@@ -19,4 +19,5 @@ private:
 public:
     MainScene();
     void update() override;
+    void setup_scene() override;
 };

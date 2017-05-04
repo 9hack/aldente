@@ -2,7 +2,6 @@
 #include "util/colors.h"
 
 Tile::Tile() :
-    rigidBody(nullptr),
     construct(nullptr) {}
 
 Tile::~Tile() {}
@@ -33,44 +32,10 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
 
     model->add_mesh(mesh);
 
-    transform.set_position(x, 0, z);
-    /*
-    btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
-                btQuaternion(), btVector3((btScalar) x, 0.0f, (btScalar) z)));
-
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-            0,                  // mass, in kg. 0 -> Static object, will never move.
-            motionstate,
-            ground,  // collision shape of body
-            btVector3(0, 0, 0)    // local inertia
-            );
-    rigidBody = new btRigidBody(rigidBodyCI);
-
-    // Will be used to know which object is picked.
-    rigidBody->setUserPointer(this);*/
+    transform.set_position((float)x, 0.0f, (float)z);
 }
 
 void FloorTile::update() {
-    /*btTransform t;
-
-    // Get the transform from Bullet and into 't'
-    rigidBody->getMotionState()->getWorldTransform(t);
-    transform.set_position(glm::vec3((float) t.getOrigin().getX(), (float) t.getOrigin().getY(),
-                                  (float) t.getOrigin().getZ()));    */
-    /*
-    if (hover == this) {
-        Material *mat = new Material(color::windwaker_green);
-        model->meshes[0]->material = mat;
-    } else {
-        Material *mat = new Material(color::indian_red);
-        model->meshes[0]->material = mat;
-    }*/
-    //fprintf(stderr, "%f\n", mesh->to_world[3].y);
-    //mesh->to_world *= glm::translate(glm::mat4(1.f), glm::vec3(0, 5.0f, 0));
-    // Convert the btTransform into the GLM matrix using 'glm::value_ptr'
-    /*t.getOpenGLMatrix(glm::value_ptr(mesh->to_world));
-    mesh->to_world = glm::transpose(mesh->to_world);
-    fprintf(stderr, "%f\n", t.getOrigin().getY());*/
 }
 
 WallTile::WallTile(int x, int z) : Tile::Tile() {
@@ -91,40 +56,15 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     model->add_mesh(mesh);
     transform.set_position(x, 0, z);
 
-    btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
-                btQuaternion(), btVector3((btScalar) x, 0.5f, (btScalar) z)));
-
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-            0,                  // mass, in kg. 0 -> Static object, will never move.
-            motionstate,
-            box,  // collision shape of body
-            btVector3(0, 0, 0)    // local inertia
-            );
-    rigidBody = new btRigidBody(rigidBodyCI);
-
-    // Will be used to know which object is picked.
-    rigidBody->setUserPointer(this);
+    events::RigidBodyData rigid = {
+        glm::vec3(x,0.5f,z), //position
+        0, //mass
+        box, //btshape
+        glm::vec3(0,0,0), //inertia
+        this //the gameobject
+    };
+    events::request_rigidbody_event(rigid);
 }
 
 void WallTile::update() {
-    /*btTransform t;
-
-    // Get the transform from Bullet and into 't'
-    rigidBody->getMotionState()->getWorldTransform(t);
-    transform.set_position(glm::vec3((float) t.getOrigin().getX(), (float) t.getOrigin().getY(), 
-        (float) t.getOrigin().getZ()));    */
-    /*
-    if (hover == this) {
-        Material *mat = new Material(color::windwaker_green);
-        model->meshes[0]->material = mat;
-    } else {
-        Material *mat = new Material(color::indian_red);
-        model->meshes[0]->material = mat;
-    }*/
-    //fprintf(stderr, "%f\n", mesh->to_world[3].y);
-    //mesh->to_world *= glm::translate(glm::mat4(1.f), glm::vec3(0, 5.0f, 0));
-    // Convert the btTransform into the GLM matrix using 'glm::value_ptr'
-    /*t.getOpenGLMatrix(glm::value_ptr(mesh->to_world));
-    mesh->to_world = glm::transpose(mesh->to_world);
-    fprintf(stderr, "%f\n", t.getOrigin().getY());*/
 }

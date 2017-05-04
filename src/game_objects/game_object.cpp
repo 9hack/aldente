@@ -2,6 +2,7 @@
 
 GameObject::GameObject() {
     model = new Model();
+    rigidbody = nullptr;
 }
 
 // Attaches a model to the game object

@@ -18,14 +18,3 @@ void Scene::update() {
         gameObj->update();
     }
 }
-
-void Scene::addRigid(btRigidBody* toAdd) {
-    if (toAdd != NULL) {
-        rigids.push_back(toAdd);
-        rigidSignal({true, toAdd});
-    }
-}
-
-void Scene::remove_rigid(btRigidBody* to_remove) {
-    rigidSignal({ false, to_remove });
-}

@@ -6,24 +6,17 @@ Construct::Construct(int x, int z) {
 }
 
 Crate::Crate(int x, int z) : Construct(x, z) {
-    model = AssetLoader::get_model("chest_good");
+    model = AssetLoader::get_model("chest_good_scaled");
     transform.set_scale(0.75f, 0.75f, 0.75f);
 
-    btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
-        btQuaternion(), btVector3((btScalar)x, 0.5f, (btScalar)z)));
-
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-        0,                  // mass, in kg. 0 -> Static object, will never move.
-        motionstate,
-        box,  // collision shape of body
-        btVector3(0, 0, 0)    // local inertia
-    );
-    rigidBody = new btRigidBody(rigidBodyCI);
-
-    // Will be used to know which object is picked.
-    rigidBody->setUserPointer(this);
-
-    // TODO: Add rigid body to scene.
+    events::RigidBodyData rigid = {
+        glm::vec3(x,0.5f,z), //position
+        0, //mass
+        box, //btshape
+        glm::vec3(0,0,0), //inertia
+        this //the gameobject
+    };
+    events::request_rigidbody_event(rigid);
 }
 
 // Activated when a player presses A on it
