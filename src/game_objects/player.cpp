@@ -6,7 +6,7 @@
 Player::Player() : GameObject() {
     to_moveX = 0;
     to_moveZ = 0;
-    speed = 10.0f;
+    speed = 2.0f;
     direction = glm::vec3(0.0f);
 
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
@@ -34,32 +34,9 @@ Player::Player() : GameObject() {
 }
 
 void Player::setup_listeners() {
-    events::dungeon::player_move_event.connect([&](Direction dir) {
-
-        // Sets the to_move as 1 for now but should parse
-        // the degree of the joystick as well i.e a slight
-        // push should move the player less than a full push.
-        // Also should account for more than one axis.
-        switch (dir) {
-        case UP:
-            to_moveZ = -1;
-            to_moveX = 0;
-            break;
-        case DOWN:
-            to_moveZ = 1;
-            to_moveX = 0;
-            break;
-        case LEFT:
-            to_moveX = -1;
-            to_moveZ = 0;
-            break;
-        case RIGHT:
-            to_moveX = 1;
-            to_moveZ = 0;
-            break;
-        default:
-            break;
-        }
+    events::dungeon::player_move_event.connect([&](events::StickData d) {
+        to_moveX = d.state.first;
+        to_moveZ = d.state.second;
     });
 
     events::dungeon::player_interact_event.connect([&]() {
@@ -81,6 +58,7 @@ void Player::update() {
     // Test code for playing animation for the boy
     anim_player.set_speed(3.0f);
 
+    //Should change animation stuff. Add a stop
     if (model->animations.size() > 0) {
         anim_player.play(model, "walk");
     }

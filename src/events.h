@@ -131,7 +131,7 @@ namespace events {
 
     namespace dungeon {
         // Player movement
-        extern signal<void(Direction)> player_move_event;
+        extern signal<void(StickData d)> player_move_event;
 
         // Player interact (e.g opening a chest)
         extern signal<void()> player_interact_event;

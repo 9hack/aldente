@@ -28,7 +28,7 @@ namespace events {
     }
 
     namespace dungeon {
-        signal<void(Direction)> player_move_event;
+        signal<void(StickData d)> player_move_event;
         signal<void()> player_interact_event;
         signal<void(glm::vec3 position, glm::vec3 dir)> player_request_raycast_event;
         signal<void(GameObject *bt_hit)> player_raycast_response_event;
