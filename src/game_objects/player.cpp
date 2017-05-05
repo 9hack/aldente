@@ -40,8 +40,9 @@ void Player::setup_listeners() {
 
     events::dungeon::player_raycast_response_event.connect([&](GameObject *bt_hit) {
         // Second part of the interact function.
-        if (dynamic_cast<Construct*>(bt_hit)) {
-            dynamic_cast<Construct*>(bt_hit)->interact_trigger();
+        Construct *construct = dynamic_cast<Construct*>(bt_hit);
+        if (construct) {
+            construct->interact_trigger();
         }
     });
 }

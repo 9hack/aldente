@@ -76,6 +76,7 @@ void DungeonPhase::setup() {
 
 void DungeonPhase::teardown() {
     joystick_conn.disconnect();
+    button_conn.disconnect();
 }
 
 
