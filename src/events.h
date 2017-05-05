@@ -5,6 +5,8 @@
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
+#include "game_objects/game_object.h"
+#include "btBulletDynamicsCommon.h"
 
 namespace events {
 
@@ -96,6 +98,19 @@ namespace events {
     // The user has made a selection on the UI grid.
     extern signal<void(int)> ui_grid_selection_event;
 
+    // Struct for parameters for rigidbody initialization
+    struct RigidBodyData {
+        glm::vec3 position;
+        float mass;
+        btCollisionShape *shape;
+        glm::vec3 inertia;
+
+        //Object that has the rigidBody
+        GameObject *object;
+    };
+    extern signal<void(RigidBodyData d)> add_rigidbody_event;
+    extern signal<void(GameObject *obj)> remove_rigidbody_event;
+
     namespace build {
         // Move the selection in the 2D selection grid.
         extern signal<void(Direction)> select_grid_move_event;
@@ -126,5 +141,17 @@ namespace events {
 
         // Client updates local grid with newly built construct.
         extern signal<void(proto::Construct &)> update_build_event;
+    }
+
+    namespace dungeon {
+        // Player movement
+        extern signal<void(StickData d)> player_move_event;
+
+        // Player interact (e.g opening a chest)
+        extern signal<void()> player_interact_event;
+
+        // Player class asks physics for a raycast check
+        extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
+
     }
 }

@@ -13,6 +13,8 @@ namespace events {
     signal<void()> toggle_debug_shadows_event;
     signal<void()> toggle_ui_event;
     signal<void(int)> ui_grid_selection_event;
+    signal<void(RigidBodyData d)> add_rigidbody_event;
+    signal<void(GameObject *obj)> remove_rigidbody_event;
 
     namespace build {
         signal<void(Direction)> select_grid_move_event;
@@ -25,5 +27,11 @@ namespace events {
         signal<void(proto::Construct &)> try_build_event;
         signal<void(proto::Construct &)> respond_build_event;
         signal<void(proto::Construct &)> update_build_event;
+    }
+
+    namespace dungeon {
+        signal<void(StickData d)> player_move_event;
+        signal<void()> player_interact_event;
+        signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
     }
 }

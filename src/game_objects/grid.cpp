@@ -85,9 +85,12 @@ void Grid::build(ConstructType type, int x, int z) {
         break;
     }
     case REMOVE: {
-        // TODO Make destructor for construct
-        candidate->set_construct(nullptr);
-        candidate->buildable = true;
+        // TODO: Move destructor to construct's destructor.
+        if (candidate->get_construct() != nullptr) {
+            events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
+            candidate->set_construct(nullptr);
+            candidate->buildable = true;
+        }
     }
     default:
         break;

@@ -18,8 +18,3 @@ void Scene::update() {
         gameObj->update();
     }
 }
-
-void Scene::addRigid(btRigidBody* toAdd) {
-    rigids.push_back(toAdd);
-    rigidSignal({ true, toAdd });
-}

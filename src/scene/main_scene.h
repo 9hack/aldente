@@ -2,7 +2,7 @@
 
 #include "scene/scene.h"
 #include "asset_loader.h"
-#include "grid.h"
+#include "game_objects/grid.h"
 
 /*
 Main Scene for having stuff in our game, especially for testing.
@@ -19,4 +19,5 @@ private:
 public:
     MainScene();
     void update() override;
+    void setup_scene() override;
 };

@@ -17,8 +17,6 @@ public:
     //std::vector<SceneCamera*> cameras;
     std::vector<GameObject*> objs;
     glm::vec3 light_pos;
-    std::vector<btRigidBody*> rigids;
-    boost::signals2::signal<void(std::pair<bool,btRigidBody*>)> rigidSignal;
 
     virtual ~Scene() {}
 
@@ -28,6 +26,5 @@ public:
     void draw_skybox();
 
     virtual void update();
-
-    void addRigid(btRigidBody* toAdd);
+    virtual void setup_scene() = 0;
 };

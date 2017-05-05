@@ -13,17 +13,17 @@
 #include "model/material.h"
 #include "model/geometry_generator.h"
 #include "btBulletDynamicsCommon.h"
-#include "game_objects/game_object.h"
+#include "game_object.h"
 #include "construct.h"
+#include "events.h"
 
 class Tile : public GameObject {
 protected:
     int width, height, x, z;
     bool traversable;
 
-    btRigidBody *rigidBody;
-    btBoxShape *box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
-    btBoxShape *ground = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));
+    btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
+    btBoxShape *hit_plane = new btBoxShape(btVector3(0.5f, 0.05f, 0.5f));
     Construct *construct;
 private:
 
@@ -33,19 +33,15 @@ public:
 
     Tile();
 
-    ~Tile();
-
     //Mesh *getMesh() { return mesh; };
 
     int getX() { return x; };
 
     int getZ() { return z; };
 
-    virtual void update(Tile *hover) = 0;
+    virtual void update() = 0;
 
     void draw(Shader *shader, SceneInfo &scene_info) override;
-
-    btRigidBody *getRigid() { return rigidBody; };
 
     void set_construct(Construct* to_set) { construct = to_set; };
     Construct* get_construct() { return construct; };
@@ -58,9 +54,7 @@ class FloorTile : public Tile {
 public:
     FloorTile(int x, int z);
 
-    ~FloorTile();
-
-    void update(Tile *hover);
+    void update();
 };
 
 class WallTile : public Tile {
@@ -68,7 +62,5 @@ class WallTile : public Tile {
 public:
     WallTile(int x, int z);
 
-    ~WallTile();
-
-    void update(Tile *hover);
+    void update();
 };

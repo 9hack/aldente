@@ -2,6 +2,7 @@
 
 GameObject::GameObject() {
     model = new Model();
+    rigidbody = nullptr;
 }
 
 // Attaches a model to the game object
@@ -15,7 +16,7 @@ void GameObject::draw(Shader *shader, SceneInfo &scene_info) {
 }
 
 // Updates Game Object Paramters
-void GameObject::update() {    
+void GameObject::update() {
 }
 
 void GameObject::set_color(glm::vec3 color) {
