@@ -38,5 +38,6 @@ namespace events {
         signal<void(StickData d)> player_move_event;
         signal<void()> player_interact_event;
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
+        signal<void(glm::vec3)> player_position_event;
     }
 }

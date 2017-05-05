@@ -155,5 +155,6 @@ namespace events {
         // Player class asks physics for a raycast check
         extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
 
+        extern signal<void(glm::vec3)> player_position_event;
     }
 }

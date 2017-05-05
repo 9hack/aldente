@@ -1,5 +1,6 @@
 #include "scene_camera.h"
 #include "scene/scene.h"
+#include "events.h"
 
 SceneCamera::SceneCamera(glm::vec3 default_pos,
                          glm::vec3 default_front,
@@ -7,6 +8,18 @@ SceneCamera::SceneCamera(glm::vec3 default_pos,
     : default_pos(default_pos), default_front(default_front),
       default_up(default_up) {
     reset();
+
+    setup_listeners();
+}
+
+void SceneCamera::setup_listeners() {
+    events::dungeon::player_position_event.connect([&](glm::vec3 pos) {
+        cam_pos = pos + glm::vec3(0, 6.0f, 6.0f);
+        cam_front = glm::normalize(pos - cam_pos);
+        glm::vec3 right = glm::cross(glm::vec3(0, 1, 0), cam_front);
+        cam_up = glm::cross(cam_front, right);
+        recalculate();
+    });
 }
 
 void SceneCamera::recalculate() {
