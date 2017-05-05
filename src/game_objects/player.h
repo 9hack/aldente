@@ -13,20 +13,20 @@ class Player : public GameObject {
 private:
     glm::vec3 direction;
 
-    // to_move is for saving the joystick input in each frame. This
-    // logic will most likely change after the joystick changes.
+    // to_move is for saving the joystick input in each frame.
     int to_moveX;
     int to_moveZ;
 
-    // movement speed;
-    float speed;
+    float move_speed;
 
-    btCapsuleShape *capsule = new btCapsuleShape(0.5f, 1.0f);
+    btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
 public:
     Player();
     void update() override;
     void do_movement();
     void setup_listeners();
+
+    // Called when the player tries to interacts with an object (e.g pressing A)
     void interact();
 
     void start_walk();

@@ -86,10 +86,6 @@ void Grid::build(ConstructType type, int x, int z) {
     }
     case REMOVE: {
         // TODO: Move destructor to construct's destructor.
-        /*
-        if (candidate->get_construct()) {
-            scene->remove_rigid(candidate->get_construct()->get_rigid());
-        }*/
         if (candidate->get_construct() != nullptr) {
             events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
             candidate->set_construct(nullptr);

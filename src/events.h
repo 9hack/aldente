@@ -108,7 +108,7 @@ namespace events {
         //Object that has the rigidBody
         GameObject *object;
     };
-    extern signal<void(RigidBodyData d)> request_rigidbody_event;
+    extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
 
     namespace build {
@@ -151,9 +151,7 @@ namespace events {
         extern signal<void()> player_interact_event;
 
         // Player class asks physics for a raycast check
-        extern signal<void(glm::vec3 position, glm::vec3 dir)> player_request_raycast_event;
+        extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
 
-        // Physics answer to event above
-        extern signal<void(GameObject *bt_hit)> player_raycast_response_event;
     }
 }

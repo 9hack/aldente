@@ -2,21 +2,22 @@
 
 #include "asset_loader.h"
 #include "events.h"
+#include "assert.h"
 
 Player::Player() : GameObject() {
     to_moveX = 0;
     to_moveZ = 0;
-    speed = 2.0f;
+    move_speed = 2.0f;
     direction = glm::vec3(0.0f);
 
     events::RigidBodyData rigid = {
         glm::vec3(10,0.0f,10), //position
         1, //mass
-        capsule, //btshape
+        hit_capsule, //btshape
         glm::vec3(0,0,0), //inertia
-        this //the gameobject
+        this, //the gameobject
     };
-    events::request_rigidbody_event(rigid);
+    events::add_rigidbody_event(rigid);
     
     // Lock y-axis
     rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
@@ -37,14 +38,6 @@ void Player::setup_listeners() {
     events::dungeon::player_interact_event.connect([&]() {
         interact();
     });
-
-    events::dungeon::player_raycast_response_event.connect([&](GameObject *bt_hit) {
-        // Second part of the interact function.
-        Construct *construct = dynamic_cast<Construct*>(bt_hit);
-        if (construct) {
-            construct->interact_trigger();
-        }
-    });
 }
 
 // Just calls do_movement for now, can have more
@@ -61,9 +54,9 @@ void Player::update() {
     rigidbody->getMotionState()->getWorldTransform(t);
     btVector3 to_set = t.getOrigin();
 
-    if (std::isnan(to_set.getX()) || std::isnan(to_set.getZ())) {
-        fprintf(stderr, "Bullet messed up, please inform Kavin");
-    }
+    // If asserts fail, please inform Kavin
+    assert(!std::isnan(to_set.getX()));
+    assert(!std::isnan(to_set.getZ())); 
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
         (float)to_set.getZ()));
@@ -73,9 +66,9 @@ void Player::do_movement() {
     // Should account for deltatime so movement is
     // framerate independent? Unsure how Bullet handles framerate.
     rigidbody->setActivationState(true);
-    rigidbody->setLinearVelocity(btVector3(to_moveX * speed, 0, to_moveZ * speed));
-    transform.look_at(glm::vec3(to_moveX * speed, 0, to_moveZ * speed));
-    direction = glm::vec3(to_moveX * speed, 0, to_moveZ * speed);
+    rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
+    transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
+    direction = glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed);
     if (to_moveX == 0 && to_moveZ == 0) {
         if (!anim_player.check_paused()) {
             anim_player.stop();
@@ -92,8 +85,14 @@ void Player::do_movement() {
 void Player::interact() {
     // Asks physics for a raycast to check if the player
     // is facing a construct.
-    if (direction.x != 0.0f || direction.z != 0.0f)
-        events::dungeon::player_request_raycast_event(transform.get_position(), direction);
+    if (direction.x != 0 || direction.z != 0)
+        events::dungeon::player_request_raycast_event(transform.get_position(), direction, 
+            [&](GameObject *bt_hit) {
+                Construct *construct = dynamic_cast<Construct*>(bt_hit);
+                if (construct) {
+                    construct->interact_trigger();
+                }
+    });
 }
 
 void Player::stop_walk() {

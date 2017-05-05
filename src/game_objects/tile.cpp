@@ -4,17 +4,11 @@
 Tile::Tile() :
     construct(nullptr) {}
 
-Tile::~Tile() {}
-
 // TODO: GET RID OF THIS. DO NOT OVERRIDE GAMEOBJECT::DRAW.
 void Tile::draw(Shader *shader, SceneInfo &scene_info) {
     GameObject::draw(shader, scene_info);
     if (construct) construct->draw(shader, scene_info);
 }
-
-FloorTile::~FloorTile() {}
-
-WallTile::~WallTile() {}
 
 FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     width = 1;
@@ -25,6 +19,7 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
 
     Mesh* mesh = new Mesh();
 
+    // Set's the mesh's location relative to the model
     mesh->local_transform = glm::mat4(1.0f);
     mesh->geometry = GeometryGenerator::generate_plane(0.5f, 0);
     Material *mat = new Material(color::indian_red);
@@ -47,8 +42,8 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
 
     Mesh* mesh = new Mesh();
 
+    // Set's the mesh's location relative to the model
     mesh->local_transform = glm::mat4(1.0f);
-    //mesh->to_world *= glm::translate(glm::mat4(1.f), glm::vec3(0,0,0));
     mesh->geometry = GeometryGenerator::generate_cube(1.0f);
     Material *mat = new Material(color::indian_red);
     mesh->material = mat;
@@ -59,11 +54,11 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position
         0, //mass
-        box, //btshape
+        hit_box, //btshape
         glm::vec3(0,0,0), //inertia
-        this //the gameobject
+        this, //the gameobject
     };
-    events::request_rigidbody_event(rigid);
+    events::add_rigidbody_event(rigid);
 }
 
 void WallTile::update() {

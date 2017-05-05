@@ -12,11 +12,11 @@ Crate::Crate(int x, int z) : Construct(x, z) {
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position
         0, //mass
-        box, //btshape
+        hit_box, //btshape
         glm::vec3(0,0,0), //inertia
-        this //the gameobject
+        this, //the gameobject
     };
-    events::request_rigidbody_event(rigid);
+    events::add_rigidbody_event(rigid);
 }
 
 // Activated when a player presses A on it
