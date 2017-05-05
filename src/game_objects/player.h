@@ -28,4 +28,7 @@ public:
     void do_movement();
     void setup_listeners();
     void interact();
+
+    void start_walk();
+    void stop_walk();
 };

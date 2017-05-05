@@ -50,14 +50,8 @@ void Player::setup_listeners() {
 // Just calls do_movement for now, can have more
 // functionality later.
 void Player::update() {
-
     // Test code for playing animation for the boy
-    anim_player.set_speed(3.0f);
-
-    //Should change animation stuff. Add a stop
-    if (model->animations.size() > 0) {
-        anim_player.play(model, "walk");
-    }
+    anim_player.update();
 
     do_movement();
 
@@ -82,11 +76,33 @@ void Player::do_movement() {
     rigidbody->setLinearVelocity(btVector3(to_moveX * speed, 0, to_moveZ * speed));
     transform.look_at(glm::vec3(to_moveX * speed, 0, to_moveZ * speed));
     direction = glm::vec3(to_moveX * speed, 0, to_moveZ * speed);
+    if (to_moveX == 0 && to_moveZ == 0) {
+        if (!anim_player.check_paused()) {
+            anim_player.stop();
+        }
+    }
+    else {
+        if (anim_player.check_paused()) {
+            anim_player.play();
+        }
+    }
+    
 }
 
 void Player::interact() {
     // Asks physics for a raycast to check if the player
     // is facing a construct.
-    if(direction.x != 0.0f || direction.z != 0.0f)
+    if (direction.x != 0.0f || direction.z != 0.0f)
         events::dungeon::player_request_raycast_event(transform.get_position(), direction);
+}
+
+void Player::stop_walk() {
+    anim_player.stop();
+}
+
+void Player::start_walk() {
+    anim_player.set_speed(3.0f);
+    anim_player.set_anim(model, "walk");
+    anim_player.set_loop(true);
+    anim_player.play();
 }

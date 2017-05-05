@@ -68,7 +68,7 @@ void DungeonPhase::setup() {
 
     button_conn = events::button_event.connect([&](events::ButtonData d) {
         // A button pressed.
-        if (d.input == events::BTN_A && d.state == 1.0f) {
+        if (d.input == events::BTN_A && d.state == 1) {
             events::dungeon::player_interact_event();
         }
     });
