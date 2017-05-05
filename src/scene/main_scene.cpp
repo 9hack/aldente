@@ -32,6 +32,7 @@ MainScene::MainScene() : Scene() {
     Player *player = new Player();
     player_model->set_shader(&ShaderManager::anim_unlit);
     player->attach_model(player_model);
+    player->start_walk();
     player->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     player->transform.translate({ 4.f, 0.05f, 4.f });
     objs.push_back(player);
@@ -40,6 +41,7 @@ MainScene::MainScene() : Scene() {
     TestChest *chestg = new TestChest();
     chestg_model->set_shader(&ShaderManager::anim_unlit);
     chestg->attach_model(chestg_model);
+    chestg->open_chest();
     chestg->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     chestg->transform.translate({ 5.f, 0.05f, 4.f });
     objs.push_back(chestg);
@@ -48,6 +50,7 @@ MainScene::MainScene() : Scene() {
     TestChest *chestb = new TestChest();
     chestb_model->set_shader(&ShaderManager::anim_unlit);
     chestb->attach_model(chestb_model);
+    chestb->open_chest();
     chestb->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     chestb->transform.translate({ 3.f, 0.05f, 4.f });
     objs.push_back(chestb);

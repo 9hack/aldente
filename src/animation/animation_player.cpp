@@ -2,34 +2,85 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+AnimationPlayer::AnimationPlayer() {
+    last_time = 0.0f;
+    cur_time = 0.0f;
+
+    // Default Values
+    speed = 1.0f;
+    loop = false;
+    is_paused = true;
+}
+
 // Currently, animation player keeps track of its own timer. May change to a global timer event.
-float last_time = 0;
-float cur_time = 0;
+void AnimationPlayer::update() {
 
-void AnimationPlayer::play(Model *model, std::string anim_name) {
+    // No animation detected
+    if (!animation)
+        return;
 
-    Animation *animation = model->animations[anim_name];
+    if (!is_paused) {
+        cur_time += ((float)glfwGetTime() - last_time) * speed;
+
+        float ticks_per_sec = (float)(animation->get_anim()->mTicksPerSecond);
+        float time_in_ticks = cur_time *  ticks_per_sec;
+
+        // Check if Animation has Ended
+        if (time_in_ticks > animation->get_anim()->mDuration) {
+            if (!loop) {
+                is_paused = true;
+                cur_time = 0.0f;
+                return;
+            }
+        }
+
+        float animation_time = fmod(time_in_ticks, (float)animation->get_anim()->mDuration);
+
+        process_animation(animation_time, animation->get_anim(), model, animation->get_root(), glm::mat4(1.0f));
+    }
+
+    last_time = glfwGetTime();
+}
+
+void AnimationPlayer::set_anim(Model *model, std::string anim_name) {
+    this->model = model;
+    animation = model->animations[anim_name];    
 
     if (animation == NULL) {
         std::cerr << "Error : Animation " << anim_name << " not found." << std::endl;
         return;
     }
 
-    cur_time += ((float) glfwGetTime() - last_time) * speed;
+    stop();
+}
 
-    float ticks_per_sec = (float)(animation->get_anim()->mTicksPerSecond);
-    float time_in_ticks = cur_time *  ticks_per_sec;
-    float animation_time = fmod(time_in_ticks, (float)animation->get_anim()->mDuration);
-
-    process_animation(animation_time, animation->get_anim(), model, animation->get_root(), glm::mat4(1.0f));
-
+void AnimationPlayer::play() {
+    is_paused = false;
     last_time = glfwGetTime();
+}
+
+void AnimationPlayer::pause() {
+    is_paused = true;
+}
+
+void AnimationPlayer::stop() {
+    is_paused = true;
+    cur_time = 0.0f;
 }
 
 void AnimationPlayer::set_speed(float speed) {
     this->speed = speed;
 }
 
+void AnimationPlayer::set_loop(bool will_loop) {
+    this->loop = will_loop;
+}
+
+bool AnimationPlayer::check_paused() {
+    return is_paused;
+}
+
+// Processes Animation Node using Assimp's node structure
 void AnimationPlayer::process_animation(float anim_time, const aiAnimation *anim, Model *model, const aiNode *node, glm::mat4 parent_mat) {
 
     if (!anim)
