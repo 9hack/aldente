@@ -29,5 +29,6 @@ public:
     void attach_model(Model *m);
     void set_color(glm::vec3 color);   
     void set_rigid(btRigidBody *to_add) { rigidbody = to_add; };
+    btRigidBody *get_rigid() { return rigidbody; };
 };
 

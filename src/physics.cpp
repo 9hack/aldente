@@ -26,6 +26,10 @@ Physics::Physics() {
     events::request_rigidbody_event.connect([&](events::RigidBodyData d) {
         add_rigid(d);
     });
+
+    events::remove_rigidbody_event.connect([&](GameObject *obj) {
+        remove_rigid(obj);
+    });
 }
 
 Physics::~Physics() {}
@@ -147,4 +151,9 @@ void Physics::add_rigid(events::RigidBodyData d) {
     d.object->set_rigid(rigidbody);
 
     dynamicsWorld->addRigidBody(rigidbody);
+}
+
+void Physics::remove_rigid(GameObject *obj) {
+    dynamicsWorld->removeRigidBody(obj->get_rigid());
+    obj->set_rigid(nullptr);
 }

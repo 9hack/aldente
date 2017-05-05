@@ -61,11 +61,15 @@ void Player::update() {
     do_movement();
 
     btTransform t;
-    t.setIdentity();
 
     // Get the transform from Bullet and into 't'
     rigidbody->getMotionState()->getWorldTransform(t);
     btVector3 to_set = t.getOrigin();
+
+    if (to_set.getX() == NAN) {
+        t.setIdentity();
+        to_set = t.getOrigin();
+    }
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
         (float)to_set.getZ()));

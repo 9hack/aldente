@@ -36,5 +36,7 @@ public:
     void raycast(glm::vec3 position, glm::vec3 dir);
 
     void add_rigid(events::RigidBodyData d);
+
+    void remove_rigid(GameObject *obj);
 };
 

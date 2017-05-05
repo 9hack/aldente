@@ -90,9 +90,11 @@ void Grid::build(ConstructType type, int x, int z) {
         if (candidate->get_construct()) {
             scene->remove_rigid(candidate->get_construct()->get_rigid());
         }*/
-        
-        candidate->set_construct(nullptr);
-        candidate->buildable = true;
+        if (candidate->get_construct() != nullptr) {
+            events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
+            candidate->set_construct(nullptr);
+            candidate->buildable = true;
+        }
     }
     default:
         break;

@@ -14,6 +14,7 @@ namespace events {
     signal<void()> toggle_ui_event;
     signal<void(int)> ui_grid_selection_event;
     signal<void(RigidBodyData d)> request_rigidbody_event;
+    signal<void(GameObject *obj)> remove_rigidbody_event;
 
     namespace build {
         signal<void(Direction)> select_grid_move_event;

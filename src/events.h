@@ -109,6 +109,7 @@ namespace events {
         GameObject *object;
     };
     extern signal<void(RigidBodyData d)> request_rigidbody_event;
+    extern signal<void(GameObject *obj)> remove_rigidbody_event;
 
     namespace build {
         // Move the selection in the 2D selection grid.
