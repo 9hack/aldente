@@ -8,12 +8,30 @@
 */
 class AnimationPlayer {
 public:
-    void play(Model *model, std::string anim_name);
+    AnimationPlayer();
+
+    void set_anim(Model *model, std::string anim_name);
+
+    void update(); // Updates bone matrices for model based on animation playing
+    void play(); // Tells the animation player to start playing
+    void pause(); // Pauses the animation player without reseting animation loop
+    void stop(); // Pauses the animation player and resets the animation loop
 
     void set_speed(float speed);
+    void set_loop(bool speed);
+
+    bool check_paused();
 
 private:
+    float last_time;
+    float cur_time;
+    
+    Animation *animation; // Current Animation Being Played
+    Model *model; // Current model playing animation
+
     float speed;
+    bool loop;
+    bool is_paused;
 
     void process_animation(float anim_time, const aiAnimation *anim, Model *model, const aiNode *node, glm::mat4 parent_mat);
 
