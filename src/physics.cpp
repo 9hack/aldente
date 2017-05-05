@@ -133,9 +133,9 @@ void Physics::raycast(glm::vec3 position, glm::vec3 dir) {
 
 void Physics::add_rigid(events::RigidBodyData d) {
 
-    btVector3 pos = btVector3(d.position.x, d.position.y, d.position.z);
+    btVector3 pos = btVector3((btScalar)d.position.x, (btScalar)d.position.y, (btScalar)d.position.z);
     btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(
-        btQuaternion(), pos));
+        btQuaternion().getIdentity(), pos));
 
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
         d.mass,                  // mass, in kg. 0 -> Static object, will never move.

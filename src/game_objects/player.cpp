@@ -66,9 +66,8 @@ void Player::update() {
     rigidbody->getMotionState()->getWorldTransform(t);
     btVector3 to_set = t.getOrigin();
 
-    if (to_set.getX() == NAN) {
-        t.setIdentity();
-        to_set = t.getOrigin();
+    if (std::isnan(to_set.getX()) || std::isnan(to_set.getZ())) {
+        fprintf(stderr, "Bullet messed up, please inform Kavin");
     }
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
