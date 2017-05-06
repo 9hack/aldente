@@ -23,8 +23,11 @@ void MainScene::update() {
     grid->update();
 
     // Rotate light source just to test shadows.
-    if (lights_debug_on)
-        light_pos = glm::vec3(glm::rotate(glm::mat4(1.f), 0.01f, glm::vec3(0.f, 0.f, 1.f)) * glm::vec4(light_pos, 1.f));
+    if (lights_debug_on) {
+        for (int i = 0; i < info.dir_lights.size(); ++i) {
+            info.dir_lights[i].transform.rotate(0.f, 0.f, 0.01f, false);
+        }
+    }
 }
 
 void MainScene::setup_scene() {
@@ -33,7 +36,8 @@ void MainScene::setup_scene() {
         lights_debug_on = !lights_debug_on;
     });
 
-    light_pos = glm::vec3(0.f, 2.f, 1.f);
+    // TODO: Setup lights.
+    info.dir_lights.push_back(DirectionalLight(glm::vec3(0.f, -1.f, -1.f)));
 
     //Setting up scene graph for Grid
     grid = new Grid("assets/maps/dungeon_test.txt");

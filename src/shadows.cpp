@@ -6,7 +6,6 @@
 #include "events.h"
 
 #include <iostream>
-#include "scene/scene_info.h"
 
 Shadows::Shadows()
     : debug_shadows_on(false) {
@@ -27,24 +26,22 @@ void Shadows::shadow_pass(Scene *scene) {
     // Should be done every frame, but elsewhere.
     float far_plane;
     Config::config->get_value(Config::str_far_plane, far_plane);
-    scene->camera.update_frustum_corners(screen_width, screen_height, far_plane);
+    scene->get_cam().update_frustum_corners(screen_width, screen_height, far_plane);
 
     // TODO: refactor scene_info as member of scene
-    SceneInfo scene_info = { &scene->camera, scene->light_pos };
     ShaderManager::shadow.use();
-    ShaderManager::shadow.pre_draw(scene_info);
+    ShaderManager::shadow.pre_draw(scene->info);
     // Render using scene graph.
     scene->draw(&ShaderManager::shadow);
     ShaderManager::shadow.post_draw();
 }
 
 // Debug shadows by rendering the shadow map texture to a quad.
-void Shadows::debug_shadows() {
+void Shadows::debug_shadows(Scene *scene) {
     if (!debug_shadows_on) return;
     glViewport(0, 0, screen_width / 3, screen_height / 3);
     ShaderManager::debug_shadow.use();
-    SceneInfo temp = { NULL, glm::vec3(1.f) }; // hacky, but works
-    ShaderManager::debug_shadow.draw(NULL, temp);
+    ShaderManager::debug_shadow.draw(NULL, scene->info);
     // Restore viewport
     glViewport(0, 0, screen_width, screen_height);
 }

@@ -68,11 +68,11 @@ void SkyboxShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
     glDisable(GL_CULL_FACE);
 
     // Strip translation from view matrix to make skybox appear infinitely large.
-    glm::mat4 view = glm::mat4(glm::mat3(scene_info.camera->V));
+    glm::mat4 view = glm::mat4(glm::mat3(scene_info.camera.V));
 
     // Send view and projection matrices
     set_uni("view", view);
-    set_uni("projection", scene_info.camera->P);
+    set_uni("projection", scene_info.camera.P);
 
     // Bind active texture.
     glActiveTexture(GL_TEXTURE0);

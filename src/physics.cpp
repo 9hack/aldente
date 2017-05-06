@@ -65,7 +65,7 @@ void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
             1.0f
     );
 
-    glm::mat4 M = glm::inverse(scene->camera.P * scene->camera.V);
+    glm::mat4 M = glm::inverse(scene->get_cam().P * scene->get_cam().V);
     glm::vec4 lRayStart_world = M * lRayStart_NDC;
     lRayStart_world /= lRayStart_world.w;
     glm::vec4 lRayEnd_world = M * lRayEnd_NDC;

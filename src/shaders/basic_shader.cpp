@@ -2,6 +2,8 @@
 
 #include "util/color.h"
 #include "shader_manager.h"
+#include "scene/directional_light.h"
+#include "scene/point_light.h"
 
 void BasicShader::init() {
     // Nothing to be done. For now.
@@ -36,23 +38,27 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
         set_uni("texture_map", 1); // ID of this texture=1
     }
 
-    /* SHADOW AND TRANSFORMATION MATRICES */
+    /* SHADOW MATRICES */
     // Send shadow uniforms and bind its texture.
     set_uni("light_matrix", ShaderManager::shadow.light_matrix);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, ShaderManager::shadow.shadow_map_tex);
     set_uni("shadow_map", 0); // ID of this texture=0
 
-    // Send lighting uniforms.
-    set_uni("dir_light.direction", -scene_info.light_pos);
-    set_uni("dir_light.color", Color::WHITE.to_vec()); // white light
-    set_uni("dir_light.ambient_coeff", 0.2f);
+    /* LIGHTS */
+    // Send directional lights.
+    for (int i = 0; i < scene_info.dir_lights.size(); ++i) {
+        set_uni("dir_light.direction", scene_info.dir_lights[i].get_direction());
+        set_uni("dir_light.color", scene_info.dir_lights[i].color.to_vec());
+        set_uni("dir_light.ambient_coeff", scene_info.dir_lights[i].ambient_coeff);
+    }
 
+    /* TRANSFORMATION MATRICES */
     // Send camera position uniform.
-    set_uni("cam_pos", scene_info.camera->cam_pos);
+    set_uni("cam_pos", scene_info.camera.cam_pos);
     // Send projection and view matrices of camera.
-    set_uni("projection", scene_info.camera->P);
-    set_uni("view", scene_info.camera->V);
+    set_uni("projection", scene_info.camera.P);
+    set_uni("view", scene_info.camera.V);
 
     // Send model_to_world matrix.
     set_uni("model", to_world);
