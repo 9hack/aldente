@@ -23,6 +23,18 @@ struct PointLight {
 };
 #define MAX_POINT_LIGHTS 20
 
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+    vec3 color;
+    float angle;
+    float taper;
+    float intensity;
+    float quadratic;
+    float ambient_coeff;
+};
+#define MAX_SPOT_LIGHTS 10
+
 in vec3 frag_pos;
 in vec3 frag_normal;
 in vec4 frag_pos_light;
@@ -35,8 +47,10 @@ uniform Material material;
 
 uniform DirLight dir_lights[MAX_DIR_LIGHTS];
 uniform PointLight point_lights[MAX_POINT_LIGHTS];
+uniform SpotLight spot_lights[MAX_SPOT_LIGHTS];
 uniform int num_dir_lights;
 uniform int num_point_lights;
+uniform int num_spot_lights;
 
 uniform bool texture_enabled;
 uniform sampler2D texture_map;
@@ -46,6 +60,7 @@ uniform sampler2D shadow_map;
 
 vec3 calc_dir_light(DirLight light, Material mat, vec3 normal, vec3 view_dir, bool is_shadow_light);
 vec3 calc_point_light(PointLight light, Material mat, vec3 normal, vec3 view_dir, bool is_shadow_light);
+vec3 calc_spot_light(SpotLight light, Material mat, vec3 normal, vec3 view_dir, bool is_shadow_light);
 vec3 calc_color(Material mat, vec3 normal, vec3 view_dir, vec3 light_dir, float light_intensity, vec3 light_color, float ambient_coeff, bool is_shadow_light);
 float calc_shadows(vec4 pos_from_light, vec3 light_dir);
 
@@ -74,6 +89,9 @@ void main()
     }
     for (int i = 0; i < num_point_lights; ++i) {
         result += calc_point_light(point_lights[i], mat, normal, view_dir, false);
+    }
+    for (int i = 0; i < num_spot_lights; ++i) {
+        result += calc_spot_light(spot_lights[i], mat, normal, view_dir, false);
     }
 
     color = vec4(result, 1.0f);
@@ -104,6 +122,30 @@ vec3 calc_point_light(PointLight light, Material mat,
         light.color, light.ambient_coeff,
         is_shadow_light);
 }
+
+vec3 calc_spot_light(SpotLight light, Material mat,
+    vec3 normal, vec3 view_dir,
+    bool is_shadow_light)
+{
+    vec3 light_dir = normalize(light.position - frag_pos);
+    vec3 spotlight_dir = normalize(light.direction);
+
+    float distance = length(light.position - frag_pos);
+    float attenuation = 1.0f / (light.quadratic * distance * distance);
+
+    vec3 light_color = vec3(0.0f);
+    float light_intensity = light.intensity * attenuation;
+    // Check that point is within the beam
+    if (dot(-light_dir, spotlight_dir) > cos(light.angle)) {
+        light_color = light.color * pow(dot(-light_dir, spotlight_dir), light.taper);
+    }
+
+    return calc_color(mat, normal, view_dir,
+        light_dir, light_intensity,
+        light_color, light.ambient_coeff,
+        is_shadow_light);
+}
+
 
 // Colors fragment (triangle) based on material parameters
 vec3 calc_color(Material mat,
