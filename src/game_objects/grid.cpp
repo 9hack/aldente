@@ -1,7 +1,7 @@
 #include "grid.h"
 #include "events.h"
 #include "game/phase.h"
-#include "util/colors.h"
+#include "util/color.h"
 
 #include <fstream>
 
@@ -9,9 +9,9 @@
 #define WALL_TILE 5
 
 // Default color is white, meaning that it only uses texture
-glm::vec3 default_color = color::white;
+Color default_color = Color::WHITE;
 // When selected, will tint the tile green, but keeps texture
-glm::vec3 select_color = color::green;
+Color select_color = Color::GREEN;
 
 Grid::Grid(const char *map_loc) :
         hover(nullptr) {

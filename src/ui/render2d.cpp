@@ -93,13 +93,13 @@ void Render2D::setup_glyphs() {
 void Render2D::render_text(std::string text,
                            GLfloat x, GLfloat y,
                            GLfloat x_scale, GLfloat y_scale,
-                           glm::vec3 color) {
+                           Color color) {
     // Always render UI regardless of depth.
     glDisable(GL_DEPTH_TEST);
 
     // Activate corresponding render state
     ShaderManager::text.use();
-    ShaderManager::text.set_uni("baseColor", color);
+    ShaderManager::text.set_uni("baseColor", color.to_vec());
     glUniformMatrix4fv(ShaderManager::text.get_uni("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     glActiveTexture(GL_TEXTURE0);
@@ -145,7 +145,7 @@ void Render2D::render_text(std::string text,
 
 void Render2D::render_rect(GLfloat x, GLfloat y,
                            GLfloat width, GLfloat height,
-                           glm::vec3 color, GLuint texture_ID,
+                           Color color, GLuint texture_ID,
                            GLfloat alpha) {
     // Always render UI regardless of depth.
     glDisable(GL_DEPTH_TEST);
@@ -153,7 +153,7 @@ void Render2D::render_rect(GLfloat x, GLfloat y,
     // Send uniforms to the text shader
     ShaderManager::ui.use();
 
-    ShaderManager::ui.set_uni("baseColor", color);
+    ShaderManager::ui.set_uni("baseColor", color.to_vec());
     ShaderManager::ui.set_uni("projection", projection);
     ShaderManager::ui.set_uni("hasTexture", true);
     ShaderManager::ui.set_uni("alpha", alpha);
@@ -196,7 +196,7 @@ void Render2D::render_rect(GLfloat x, GLfloat y,
 // Render rectangle in terms of percentages of screen width and height.
 void Render2D::render_rectP(GLfloat x, GLfloat y,
                             GLfloat width, GLfloat height,
-                            glm::vec3 color, GLuint texture_ID,
+                            Color color, GLuint texture_ID,
                             GLfloat alpha) {
     GLfloat adj_x      = x      * UNIT_TO_PERCENT * screen_height;
     GLfloat adj_y      = y      * UNIT_TO_PERCENT * screen_height;
@@ -209,7 +209,7 @@ void Render2D::render_rectP(GLfloat x, GLfloat y,
 void Render2D::render_textP(std::string text,
                             GLfloat x, GLfloat y,
                             GLfloat x_scale, GLfloat y_scale,
-                            glm::vec3 color) {
+                            Color color) {
     GLfloat adj_x        = x        * UNIT_TO_PERCENT * screen_height;
     GLfloat adj_y        = y        * UNIT_TO_PERCENT * screen_height;
     GLfloat adj_x_scale  = x_scale  * UNIT_TO_PERCENT * GLYPH_UNIT * screen_height;

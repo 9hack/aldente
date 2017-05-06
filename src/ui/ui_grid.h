@@ -4,6 +4,7 @@
 #include "ui_rectangle.h"
 #include "ui_halo_container.h"
 #include "game/direction.h"
+#include "util/color.h"
 
 #include <glm/glm.hpp>
 
@@ -13,7 +14,7 @@ public:
            float grid_width, float grid_height,
            int num_elements, int columns,
            float element_width, float element_height,
-           glm::vec3 grid_bg_color,
+           Color grid_bg_color,
            float inter_padding=0.75f,
            float selection_halo_padding=0.3f); // hardcoded defaults :(
     ~UIGrid();
@@ -31,7 +32,7 @@ private:
     int num_elements;
     int columns, rows; // grid dimensions
     float element_width, element_height;
-    glm::vec3 grid_bg_color;
+    Color grid_bg_color;
     float inter_padding; // padding between elts
     float selection_halo_padding; // width of selection halo
 

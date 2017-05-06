@@ -6,6 +6,7 @@
 #include "shaders/shader.h"
 #include "animation/animation_player.h"
 #include "btBulletDynamicsCommon.h"
+#include "util/color.h"
 
 #include <string>
 
@@ -33,7 +34,7 @@ public:
 
     Model* get_model() { return model; };
     void attach_model(Model *m);
-    void set_color(glm::vec3 color);   
+    void set_color(Color color);
     void set_rigid(btRigidBody *to_add) { rigidbody = to_add; };
     btRigidBody *get_rigid() { return rigidbody; };
 };
