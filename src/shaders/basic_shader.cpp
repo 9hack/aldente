@@ -47,10 +47,24 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
 
     /* LIGHTS */
     // Send directional lights.
+    set_uni("num_dir_lights", (int) scene_info.dir_lights.size());
     for (int i = 0; i < scene_info.dir_lights.size(); ++i) {
-        set_uni("dir_light.direction", scene_info.dir_lights[i].get_direction());
-        set_uni("dir_light.color", scene_info.dir_lights[i].color.to_vec());
-        set_uni("dir_light.ambient_coeff", scene_info.dir_lights[i].ambient_coeff);
+        std::string idx = std::to_string(i);
+        set_uni("dir_lights[" + idx + "].direction", scene_info.dir_lights[i].get_direction());
+        set_uni("dir_lights[" + idx + "].color", scene_info.dir_lights[i].color.to_vec());
+        set_uni("dir_lights[" + idx + "].ambient_coeff", scene_info.dir_lights[i].ambient_coeff);
+        set_uni("dir_lights[" + idx + "].intensity", scene_info.dir_lights[i].intensity);
+    }
+
+    // Send point lights.
+    set_uni("num_point_lights", (int) scene_info.point_lights.size());
+    for (int i = 0; i < scene_info.point_lights.size(); ++i) {
+        std::string idx = std::to_string(i);
+        set_uni("point_lights[" + idx + "].position", scene_info.point_lights[i].get_position());
+        set_uni("point_lights[" + idx + "].color", scene_info.point_lights[i].color.to_vec());
+        set_uni("point_lights[" + idx + "].ambient_coeff", scene_info.point_lights[i].ambient_coeff);
+        set_uni("point_lights[" + idx + "].intensity", scene_info.point_lights[i].intensity);
+        set_uni("point_lights[" + idx + "].quadratic", scene_info.point_lights[i].quadratic);
     }
 
     /* TRANSFORMATION MATRICES */
