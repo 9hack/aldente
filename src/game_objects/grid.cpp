@@ -14,7 +14,7 @@ glm::vec3 default_color = color::white;
 glm::vec3 select_color = color::green;
 
 Grid::Grid(const char *map_loc) :
-        hover(nullptr) {
+        hover(nullptr), hoverX(0), hoverZ(0) {
     load_map(map_loc);
 
     hover = grid[0][0];
