@@ -7,6 +7,10 @@
 #include "shaders/shader.h"
 #include "scene_info.h"
 
+// These constants should be equivalent to those in the shaders!
+#define MAX_DIR_LIGHTS 10
+#define MAX_POINT_LIGHTS 20
+
 /*
     Contains all the information for a single scene
 */
@@ -23,6 +27,8 @@ public:
     void draw(Shader *shader = NULL);
     void draw_skybox();
     SceneCamera &get_cam();
+    void add_light(DirectionalLight l);
+    void add_light(PointLight l);
 
     virtual void update();
     virtual void setup_scene() = 0;

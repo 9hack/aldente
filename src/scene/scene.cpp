@@ -20,3 +20,17 @@ void Scene::update() {
         gameObj->update();
     }
 }
+
+void Scene::add_light(DirectionalLight l) {
+    if (info.dir_lights.size() < MAX_DIR_LIGHTS)
+        info.dir_lights.push_back(l);
+    else
+        assert(false); // stop adding so many lights, you lightmongerer!
+}
+
+void Scene::add_light(PointLight l) {
+    if (info.point_lights.size() < MAX_POINT_LIGHTS)
+        info.point_lights.push_back(l);
+    else
+        assert(false); // stop adding so many lights, light-mongrel!
+}
