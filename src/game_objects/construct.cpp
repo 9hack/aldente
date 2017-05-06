@@ -7,7 +7,7 @@ Construct::Construct(int x, int z) {
 
 Crate::Crate(int x, int z) : Construct(x, z) {
     model = AssetLoader::get_model("chest_good_scaled");
-    transform.set_scale(0.75f, 0.75f, 0.75f);
+    transform.set_scale(0.6f, 0.6f, 0.6f);
 
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position

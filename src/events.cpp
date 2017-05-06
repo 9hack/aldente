@@ -32,6 +32,9 @@ namespace events {
         signal<void(proto::Construct &)> try_build_event;
         signal<void(proto::Construct &)> respond_build_event;
         signal<void(proto::Construct &)> update_build_event;
+        signal<void(StickData)> pan_camera_event;
+        signal<void()> start_build_event;
+        signal<void()> end_build_event;
     }
 
     namespace dungeon {

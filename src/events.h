@@ -143,6 +143,15 @@ namespace events {
 
         // Client updates local grid with newly built construct.
         extern signal<void(proto::Construct &)> update_build_event;
+
+        // Pans camera during build phase
+        extern signal<void(StickData)> pan_camera_event;
+
+        // Signals that the build phase has started
+        extern signal<void()> start_build_event;
+
+        // Signals that the build phase has ended
+        extern signal<void()> end_build_event;
     }
 
     namespace dungeon {
@@ -155,6 +164,7 @@ namespace events {
         // Player class asks physics for a raycast check
         extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
 
+        // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_event;
     }
 }

@@ -27,6 +27,7 @@ public:
     static bool is_menu;
 private:
     boost::signals2::connection joystick_conn;
+    boost::signals2::connection button_conn;
 };
 
 class DungeonPhase : public Phase {

@@ -11,6 +11,8 @@ private:
     glm::vec3 default_pos;
     glm::vec3 default_front;
     glm::vec3 default_up;
+
+    bool follow_player;
 public:
     glm::vec3 cam_pos;
     glm::vec3 cam_front;

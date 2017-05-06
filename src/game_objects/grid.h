@@ -17,7 +17,7 @@ class Grid {
 private:
     void setup_listeners();
 
-    std::vector<std::vector<Tile *>> grid;
+    std::vector<std::vector<Tile *>> grid; // Uses grid[row][column], or row[z][x]
     int width, height;
     int hoverX, hoverZ;
     Tile *hover;
@@ -35,7 +35,7 @@ public:
     void update();
 
     // Returns true if this construct is allowed to be built.
-    bool verify_build(ConstructType type, int x, int z);
+    bool verify_build(ConstructType type, int row, int col);
 
     // Builds a construct at a location.
     void build(ConstructType type, int x, int z);

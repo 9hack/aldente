@@ -95,7 +95,7 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
             last_cursor_pos = current_cursor_pos;
             return;
         }
-
+        /*
         glm::vec3 cursor_delta = current_cursor_pos - last_cursor_pos;
         if (lmb_down && keys[GLFW_KEY_LEFT_CONTROL]) {
             int dir = cursor_delta.x > 0 ? 1 : -1;
@@ -130,6 +130,7 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
             camera->cam_front = glm::normalize(front);
             camera->recalculate();
         }
+        */
 
         physics.raycast_mouse(d.x_pos, d.y_pos, width, height);
 
@@ -163,11 +164,13 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
     });
 
     events::window_scroll_event.connect([&](events::WindowScrollData d) {
+        /*
         SceneCamera *camera = scene_manager.get_camera();
         glm::vec3 trans_vec = (float) d.y_off * glm::normalize(camera->cam_front);
         // Only y is relevant here, -1 is down, +1 is up
         camera->cam_pos = glm::vec3(glm::translate(glm::mat4(1.0f), trans_vec) * glm::vec4(camera->cam_pos, 1.0f));
         camera->recalculate();
+        */
     });
 
     // Test fire for button events and stick events
@@ -218,5 +221,5 @@ void DebugInput::handle_movement() {
     if (keys[GLFW_KEY_SPACE])
         displacement += cam_step * camera->cam_up;
 
-    camera->displace_cam(displacement);
+    // camera->displace_cam(displacement);
 }

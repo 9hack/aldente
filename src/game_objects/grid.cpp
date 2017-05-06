@@ -53,15 +53,15 @@ void Grid::setup_listeners() {
 }
 
 void Grid::update() {
-    if (grid[hoverX][hoverZ] != hover) {
+    if (grid[hoverZ][hoverX] != hover) {
         hover->set_color(default_color);
-        hover = grid[hoverX][hoverZ];
+        hover = grid[hoverZ][hoverX];
         hover->set_color(select_color);
     }
 }
 
 bool Grid::verify_build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[x][z];
+    Tile* candidate = grid[z][x];
     if (type == REMOVE) {
         return candidate->get_construct() != nullptr;
     }
@@ -70,7 +70,7 @@ bool Grid::verify_build(ConstructType type, int x, int z) {
 }
 
 void Grid::build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[x][z];
+    Tile* candidate = grid[z][x];
 
     switch (type) {
     case CHEST: {
