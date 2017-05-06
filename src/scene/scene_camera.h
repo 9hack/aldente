@@ -22,6 +22,8 @@ public:
     GLfloat pitch;
     GLfloat yaw = -90.f;
 
+    bool disable_movement;
+
     Plane frustum_planes[6];
     glm::vec3 frustum_corners[8];
 

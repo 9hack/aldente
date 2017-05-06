@@ -81,6 +81,7 @@ void AldenteClient::start() {
     SceneManager scene_manager;
     Render render(window, scene_manager);
 
+    // TODO : BuildUI initialiaziation should be done in BuildPhase setup()
     std::vector<ConstructData> constructs;
     for (int i = 0; i < 12; i++) {
         if (i % 2 == 0)
@@ -114,8 +115,6 @@ void AldenteClient::start() {
 
         NetworkManager::update();
         GameState::update();
-
-        debug_input.handle_movement();
         physics.update();
 
         scene_manager.get_current_scene()->update();

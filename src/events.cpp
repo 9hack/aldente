@@ -15,6 +15,7 @@ namespace events {
         signal<void()> toggle_debug_shadows_event;
         signal<void()> toggle_ui_event;
         signal<void()> toggle_light_rotation_event;
+        signal<void()> toggle_debug_input_event;
     }
 
     signal<void(int)> ui_grid_selection_event;

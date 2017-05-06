@@ -22,8 +22,8 @@ void SceneCamera::setup_listeners() {
         follow_player = false;
         cam_pos = glm::vec3(0, 6.0f, 5.0f);
         cam_front = glm::normalize(-cam_pos);
-        glm::vec3 right = glm::cross(glm::vec3(0, 1, 0), cam_front);
-        cam_up = glm::cross(cam_front, right);
+        glm::vec3 left = glm::cross(glm::vec3(0, 1, 0), cam_front);
+        cam_up = glm::cross(cam_front, left);
         recalculate();
     });
 
@@ -32,6 +32,9 @@ void SceneCamera::setup_listeners() {
     });
 
     events::build::pan_camera_event.connect([&](events::StickData d) {
+        if (disable_movement)
+            return;
+
         // TODO: Currently this causes the camera to move discreetly in one
         // direction, but we want it to move smoothly. This will require an update function though.
         if (!follow_player) {
@@ -40,11 +43,14 @@ void SceneCamera::setup_listeners() {
     });
 
     events::dungeon::player_position_event.connect([&](glm::vec3 pos) {
+        if (disable_movement)
+            return;
+
         if (follow_player) {
             cam_pos = pos + glm::vec3(0, 6.0f, 6.0f);
             cam_front = glm::normalize(pos - cam_pos);
-            glm::vec3 right = glm::cross(glm::vec3(0, 1, 0), cam_front);
-            cam_up = glm::cross(cam_front, right);
+            glm::vec3 left = glm::cross(glm::vec3(0, 1, 0), cam_front);
+            cam_up = glm::cross(cam_front, left);
             recalculate();
         }
     });
