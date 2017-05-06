@@ -23,11 +23,14 @@ private:
     Tile *hover;
     ConstructType selected = ConstructType::REMOVE;
 public:
-    Grid(int w, int h);
+    Grid(const char *map_loc);
 
     ~Grid();
 
     std::vector<std::vector<Tile *>> getGrid() { return grid; };
+
+    void load_map(const char *map_loc);
+    Tile *make_tile(int tile_id, int x, int z);
 
     void update();
 

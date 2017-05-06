@@ -1,5 +1,6 @@
 #include "tile.h"
 #include "util/color.h"
+#include "asset_loader.h"
 
 Tile::Tile() :
     construct(nullptr) {}
@@ -21,9 +22,10 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
 
     // Set's the mesh's location relative to the model
     mesh->local_transform = glm::mat4(1.0f);
-    mesh->geometry = GeometryGenerator::generate_plane(0.5f, 0);
-    Material *mat = new Material(Color::INDIAN_RED);
+    mesh->geometry = GeometryGenerator::generate_plane(1.f, true);
+    Material *mat = new Material(Color::WHITE);
     mesh->material = mat;
+    mesh->geometry->attach_texture(AssetLoader::get_texture("cobblestone.png"));
 
     model->add_mesh(mesh);
 
@@ -45,11 +47,12 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     // Set's the mesh's location relative to the model
     mesh->local_transform = glm::mat4(1.0f);
     mesh->geometry = GeometryGenerator::generate_cube(1.0f);
-    Material *mat = new Material(Color::INDIAN_RED);
+    Material *mat = new Material(Color::WHITE);
     mesh->material = mat;
+    mesh->geometry->attach_texture(AssetLoader::get_texture("wall.png"));
 
     model->add_mesh(mesh);
-    transform.set_position(x, 0, z);
+    transform.set_position(x, 0.5f, z);
 
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position

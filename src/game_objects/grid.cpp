@@ -1,29 +1,24 @@
 #include "grid.h"
 #include "events.h"
 #include "game/phase.h"
+#include "util/color.h"
 
-Grid::Grid(int w, int h) :
+#include <fstream>
+
+#define FLOOR_TILE 3
+#define WALL_TILE 5
+
+// Default color is white, meaning that it only uses texture
+Color default_color = Color::WHITE;
+// When selected, will tint the tile green, but keeps texture
+Color select_color = Color::GREEN;
+
+Grid::Grid(const char *map_loc) :
         hover(nullptr) {
-    width = w;
-    height = h;
-    hoverX = 0;
-    hoverZ = 0;
+    load_map(map_loc);
 
-    for (int i = 0; i < width; i++) {
-        std::vector<Tile *> newRow;
-        for (int j = 0; j < height; j++) {
-            if (i == 0 || i == width - 1 || j == 0 || j == height - 1) {
-                WallTile* toAdd = new WallTile(i, j);
-                newRow.push_back(toAdd);
-            } else {
-                FloorTile* toAdd = new FloorTile(i, j);
-                newRow.push_back(toAdd);
-            }
-        }
-        grid.push_back(newRow);
-    }
+    hover = grid[0][0];
 
-    hover = grid[hoverX][hoverZ];
     setup_listeners();
 }
 
@@ -59,9 +54,9 @@ void Grid::setup_listeners() {
 
 void Grid::update() {
     if (grid[hoverX][hoverZ] != hover) {
-        hover->set_color(Color::INDIAN_RED);
+        hover->set_color(default_color);
         hover = grid[hoverX][hoverZ];
-        hover->set_color(Color::WINDWAKER_GREEN);
+        hover->set_color(select_color);
     }
 }
 
@@ -114,4 +109,68 @@ void Grid::move_selection(Direction d) {
     default:
         break;
     }
+}
+
+void Grid::load_map(const char *map_loc) {
+    // Loads map from file
+    std::ifstream fin;
+    fin.open(map_loc);
+
+    // File does not exist, exit
+    if (!fin.good())
+        return;
+
+    std::string str_buf;
+    int int_buf;
+
+    // Parse File
+    while (!fin.eof()) {
+        fin >> str_buf;
+        if (str_buf == "height") {
+            fin >> int_buf;
+            height = int_buf;
+        }
+        else if (str_buf == "width") {
+            fin >> int_buf;
+            width = int_buf;
+        }
+        else if (str_buf == "tag") {
+            // To implement later, if we want some automated way
+            // in the file to check what number corresponds to what type of tile
+            // Currently, tile_ids are hardcoded.
+        }
+        else if (str_buf == "data") {
+            // Parses data and creates grid
+            for (int r = 0; r < height; r++) {
+                std::vector<Tile *> new_row;
+
+                for (int c = 0; c < width; c++) {
+                    fin >> int_buf;
+                    new_row.push_back(make_tile(int_buf, c, r));
+                }
+
+                grid.push_back(new_row);
+            }
+        }
+    }
+
+    fin.close();
+}
+
+Tile *Grid::make_tile(int tile_id, int x, int z) {
+
+    Tile *new_tile = nullptr;
+
+    switch (tile_id) {
+    case FLOOR_TILE:
+        new_tile = new FloorTile(x, z);
+        break;
+    case WALL_TILE:
+        new_tile = new WallTile(x, z);
+        break;
+    default:
+        break;
+    }
+
+    return new_tile;
 }
