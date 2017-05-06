@@ -10,6 +10,7 @@
 // These constants should be equivalent to those in the shaders!
 #define MAX_DIR_LIGHTS 10
 #define MAX_POINT_LIGHTS 20
+#define MAX_SPOT_LIGHTS 10
 
 /*
     Contains all the information for a single scene
@@ -27,8 +28,11 @@ public:
     void draw(Shader *shader = NULL);
     void draw_skybox();
     SceneCamera &get_cam();
+
+    // Add lights to the scene, in accordance with max number of respective light
     void add_light(DirectionalLight l);
     void add_light(PointLight l);
+    void add_light(SpotLight l);
 
     virtual void update();
     virtual void setup_scene() = 0;

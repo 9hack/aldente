@@ -43,6 +43,11 @@ void MainScene::setup_scene() {
     PointLight bulb2 = PointLight(glm::vec3(7.f, 2.f, 10.f), Color::WINDWAKER_GREEN);
     add_light(bulb2);
 
+    SpotLight spot_light = SpotLight(glm::vec3(10.f, 4.f, 5.f),
+                                     glm::vec3(0.f, -1.f, 0.f),
+                                     Color::MAGENTA);
+    add_light(spot_light);
+
     // Setup light debug callback.
     events::debug::toggle_light_rotation_event.connect([&](void) {
         lights_debug_on = !lights_debug_on;

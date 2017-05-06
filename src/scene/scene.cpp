@@ -34,3 +34,10 @@ void Scene::add_light(PointLight l) {
     else
         assert(false); // stop adding so many lights, light-mongrel!
 }
+
+void Scene::add_light(SpotLight l) {
+    if (info.spot_lights.size() < MAX_SPOT_LIGHTS)
+        info.spot_lights.push_back(l);
+    else
+        assert(false); // stop adding so many lights, light-advocate!
+}
