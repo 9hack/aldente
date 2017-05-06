@@ -2,6 +2,7 @@
 #include "game_objects/test_chest.h"
 #include "game_objects/player.h"
 #include "events.h"
+#include "util/color.h"
 
 MainScene::MainScene() : Scene() {
 
@@ -35,6 +36,12 @@ void MainScene::setup_scene() {
     // Setup lights.
     DirectionalLight sun = DirectionalLight(glm::vec3(0.f, -1.f, -1.f));
     add_light(sun);
+
+    PointLight bulb = PointLight(glm::vec3(5.f, 2.f, 5.f), Color::BONE_WHITE);
+    add_light(bulb);
+
+    PointLight bulb2 = PointLight(glm::vec3(7.f, 2.f, 10.f), Color::WINDWAKER_GREEN);
+    add_light(bulb2);
 
     // Setup light debug callback.
     events::debug::toggle_light_rotation_event.connect([&](void) {
