@@ -19,7 +19,7 @@ void GameObject::draw(Shader *shader, SceneInfo &scene_info) {
 void GameObject::update() {
 }
 
-void GameObject::set_color(glm::vec3 color) {
+void GameObject::set_color(Color color) {
     for (Mesh* mesh : model->meshes) {
         mesh->material->diffuse = color;
     }

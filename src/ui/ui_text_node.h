@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_element.h"
+#include "util/color.h"
 
 #include <string>
 
@@ -9,7 +10,7 @@ public:
     UITextNode(std::string text,
                float start_x, float start_y,
                float x_scale, float y_scale,
-               glm::vec3 color)
+               Color color)
         : text(text), UIElement(start_x, start_y),
           x_scale(x_scale), y_scale(y_scale),
           color(color) {}
@@ -18,5 +19,5 @@ public:
 private:
     std::string text;
     float x_scale, y_scale;
-    glm::vec3 color;
+    Color color;
 };

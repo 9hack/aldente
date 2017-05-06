@@ -1,6 +1,5 @@
 #include "ui_grid.h"
 
-#include "util/colors.h"
 #include "events.h"
 #include "game/phase.h"
 
@@ -13,7 +12,7 @@ UIGrid::UIGrid(float start_x, float start_y,
         float grid_width, float grid_height,
         int num_elements, int columns,
         float element_width, float element_height,
-        glm::vec3 grid_bg_color,
+        Color grid_bg_color,
         float inter_padding,
         float selection_halo_padding)
     : UIContainer(start_x, start_y),

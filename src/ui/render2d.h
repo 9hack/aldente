@@ -8,6 +8,7 @@
 #include <string>
 
 #include "shaders/shader.h"
+#include "util/color.h"
 
 #define UNIT_TO_PERCENT 0.01f
 #define GLYPH_UNIT      0.1f
@@ -22,12 +23,12 @@ class Render2D {
 
 public:
     Render2D();
-    void render_textP(std::string text, GLfloat x, GLfloat y, GLfloat x_scale, GLfloat y_scale, glm::vec3 color);
-    void render_rectP(GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID, GLfloat alpha);
+    void render_textP(std::string text, GLfloat x, GLfloat y, GLfloat x_scale, GLfloat y_scale, Color color);
+    void render_rectP(GLfloat x, GLfloat y, GLfloat width, GLfloat height, Color color, GLuint texture_ID, GLfloat alpha);
 private:
     void setup_glyphs();
-    void render_text(std::string text, GLfloat x, GLfloat y, GLfloat x_scale, GLfloat y_scale, glm::vec3 color);
-    void render_rect(GLfloat x, GLfloat y, GLfloat width, GLfloat height, glm::vec3 color, GLuint texture_ID, GLfloat alpha);
+    void render_text(std::string text, GLfloat x, GLfloat y, GLfloat x_scale, GLfloat y_scale, Color color);
+    void render_rect(GLfloat x, GLfloat y, GLfloat width, GLfloat height, Color color, GLuint texture_ID, GLfloat alpha);
 
     std::map<GLchar, Character> characters;
     GLuint VAO, VBO;

@@ -1,23 +1,23 @@
 #include "build_ui.h"
 
-#include "util/colors.h"
+#include "util/color.h"
 #include "events.h"
 #include "asset_loader.h"
 
 BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<ConstructData>& constructs)
     : UI(), // explicit call base class dflt constructor
       constructs(constructs),
-      ui_grid(0, 0, 30.f * aspect, 70.f, num_cols*num_rows, num_cols, 12, 12, color::loz_green, 3, 1.f),
-      rect(0, 0, 12, 12, color::loz_light_green),
+      ui_grid(0, 0, 30.f * aspect, 70.f, num_cols*num_rows, num_cols, 12, 12, Color::LOZ_GREEN, 3, 1.f),
+      rect(0, 0, 12, 12, Color::LOZ_LIGHT_GREEN),
       info_panel(0, 80.f),
       player_panel(0, 0),
       shop_panel(0, 10.f),
-      info_rect(0, 0, 30.f * aspect, 20.f, color::loz_dark_green),
-      player_rect(0, 0, 30.f * aspect, 10.f, color::loz_dark_green),
-      title_label("Select a block...", 2, 12, 1.f, 1.f, color::white),
-      description_label("", 2, 6, 0.6f, 0.6f, color::white),
-      cost_label("0", 40, 12, 1.f, 1.f, color::white),
-      balance_label("100g", 20, 4, 1.f, 1.f, color::white) {
+      info_rect(0, 0, 30.f * aspect, 20.f, Color::LOZ_DARK_GREEN),
+      player_rect(0, 0, 30.f * aspect, 10.f, Color::LOZ_DARK_GREEN),
+      title_label("Select a block...", 2, 12, 1.f, 1.f, Color::WHITE),
+      description_label("", 2, 6, 0.6f, 0.6f, Color::WHITE),
+      cost_label("0", 40, 12, 1.f, 1.f, Color::WHITE),
+      balance_label("100g", 20, 4, 1.f, 1.f, Color::WHITE) {
     
     for (int i = 0; i < num_rows; ++i) {
         for (int j = 0; j < num_cols; ++j) {

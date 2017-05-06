@@ -59,9 +59,9 @@ void Grid::setup_listeners() {
 
 void Grid::update() {
     if (grid[hoverX][hoverZ] != hover) {
-        hover->set_color(color::indian_red);
+        hover->set_color(Color::INDIAN_RED);
         hover = grid[hoverX][hoverZ];
-        hover->set_color(color::windwaker_green);
+        hover->set_color(Color::WINDWAKER_GREEN);
     }
 }
 

@@ -1,5 +1,5 @@
 #include "tile.h"
-#include "util/colors.h"
+#include "util/color.h"
 
 Tile::Tile() :
     construct(nullptr) {}
@@ -22,7 +22,7 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     // Set's the mesh's location relative to the model
     mesh->local_transform = glm::mat4(1.0f);
     mesh->geometry = GeometryGenerator::generate_plane(0.5f, 0);
-    Material *mat = new Material(color::indian_red);
+    Material *mat = new Material(Color::INDIAN_RED);
     mesh->material = mat;
 
     model->add_mesh(mesh);
@@ -45,7 +45,7 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     // Set's the mesh's location relative to the model
     mesh->local_transform = glm::mat4(1.0f);
     mesh->geometry = GeometryGenerator::generate_cube(1.0f);
-    Material *mat = new Material(color::indian_red);
+    Material *mat = new Material(Color::INDIAN_RED);
     mesh->material = mat;
 
     model->add_mesh(mesh);

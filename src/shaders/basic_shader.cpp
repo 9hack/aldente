@@ -1,6 +1,6 @@
 #include "basic_shader.h"
 
-#include "util/colors.h"
+#include "util/color.h"
 #include "shader_manager.h"
 
 void BasicShader::init() {
@@ -21,9 +21,9 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
     set_uni("mesh_model", mesh->local_transform);
 
     // Send material.
-    set_uni("material.diffuse", mesh->material->diffuse);
-    set_uni("material.specular", mesh->material->specular);
-    set_uni("material.ambient", mesh->material->ambient);
+    set_uni("material.diffuse", mesh->material->diffuse.to_vec());
+    set_uni("material.specular", mesh->material->specular.to_vec());
+    set_uni("material.ambient", mesh->material->ambient.to_vec());
     set_uni("material.shininess", mesh->material->shininess);
     set_uni("shadows_enabled", mesh->material->shadows);
 
@@ -45,7 +45,7 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
 
     // Send lighting uniforms.
     set_uni("dir_light.direction", -scene_info.light_pos);
-    set_uni("dir_light.color", color::white); // white light
+    set_uni("dir_light.color", Color::WHITE.to_vec()); // white light
     set_uni("dir_light.ambient_coeff", 0.2f);
 
     // Send camera position uniform.
