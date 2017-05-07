@@ -19,5 +19,6 @@ public:
         return glm::vec3(transform.get_world_mat() * glm::vec4(default_position, 1.f));
     }
 
-    float quadratic; // inverse square falloff factor
+    float quadratic; // quadratic attenuation factor for inverse square falloff
+    // read more here: https://developer.valvesoftware.com/wiki/Constant-Linear-Quadratic_Falloff
 };

@@ -48,7 +48,7 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
 
     /* LIGHTS */
     // Send directional lights.
-    std::string uni_prefix = "dir_lights[";
+    std::string uni_prefix = "dir_lights["; // Uniform prefix for directional light array.
     set_uni("num_dir_lights", (int) scene_info.dir_lights.size());
     for (int i = 0; i < scene_info.dir_lights.size(); ++i) {
         DirectionalLight l = scene_info.dir_lights[i];
@@ -61,7 +61,7 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
 
     // Send point lights.
     set_uni("num_point_lights", (int) scene_info.point_lights.size());
-    uni_prefix = "point_lights[";
+    uni_prefix = "point_lights["; // Uniform prefix for point light array.
     for (int i = 0; i < scene_info.point_lights.size(); ++i) {
         PointLight l = scene_info.point_lights[i];
         std::string idx = std::to_string(i);
@@ -74,7 +74,7 @@ void BasicShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
 
     // Send spot lights.
     set_uni("num_spot_lights", (int) scene_info.spot_lights.size());
-    uni_prefix = "spot_lights[";
+    uni_prefix = "spot_lights["; // Uniform prefix for spot light array.
     for (int i = 0; i < scene_info.spot_lights.size(); ++i) {
         SpotLight l = scene_info.spot_lights[i];
         std::string idx = std::to_string(i);
