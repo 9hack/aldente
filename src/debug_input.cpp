@@ -83,14 +83,6 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
         last_cursor_pos = current_cursor_pos;
     });
 
-    events::window_mouse_button_event.connect([&](events::WindowMouseButtonData d) {
-        // No longer needed
-    });
-
-    events::window_scroll_event.connect([&](events::WindowScrollData d) {
-        // No longer needed
-    });
-
     // Test fire for button events and stick events
     events::button_event.connect([](events::ButtonData &d) {
         fprintf(stderr,

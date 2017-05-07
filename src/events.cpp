@@ -33,7 +33,7 @@ namespace events {
         signal<void(proto::Construct &)> try_build_event;
         signal<void(proto::Construct &)> respond_build_event;
         signal<void(proto::Construct &)> update_build_event;
-        signal<void(StickData)> pan_camera_event;
+        signal<void(std::pair<int, int>)> pan_camera_event;
         signal<void()> start_build_event;
         signal<void()> end_build_event;
     }
@@ -42,6 +42,6 @@ namespace events {
         signal<void(StickData d)> player_move_event;
         signal<void()> player_interact_event;
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
-        signal<void(glm::vec3)> player_position_event;
+        signal<void(glm::vec3)> player_position_updated_event;
     }
 }

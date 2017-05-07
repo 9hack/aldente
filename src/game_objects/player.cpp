@@ -62,7 +62,7 @@ void Player::update() {
         (float)to_set.getZ()));
 
     // Fires player position whenever player moves
-    events::dungeon::player_position_event(transform.get_position());
+    events::dungeon::player_position_updated_event(transform.get_position());
 }
 
 void Player::do_movement() {

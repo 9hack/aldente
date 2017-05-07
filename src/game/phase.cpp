@@ -32,7 +32,7 @@ void BuildPhase::setup() {
             }
         }
         else if (d.input == events::STICK_RIGHT) {
-            events::build::pan_camera_event(d);
+            events::build::pan_camera_event(d.state);
         }
     });
 

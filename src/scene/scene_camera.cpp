@@ -31,18 +31,18 @@ void SceneCamera::setup_listeners() {
         follow_player = true;
     });
 
-    events::build::pan_camera_event.connect([&](events::StickData d) {
+    events::build::pan_camera_event.connect([&](std::pair<int, int> state) {
         if (disable_movement)
             return;
 
         // TODO: Currently this causes the camera to move discreetly in one
         // direction, but we want it to move smoothly. This will require an update function though.
         if (!follow_player) {
-            displace_cam(glm::vec3(d.state.first, 0, d.state.second) * PAN_SPEED);
+            displace_cam(glm::vec3(state.first, 0, state.second) * PAN_SPEED);
         }
     });
 
-    events::dungeon::player_position_event.connect([&](glm::vec3 pos) {
+    events::dungeon::player_position_updated_event.connect([&](glm::vec3 pos) {
         if (disable_movement)
             return;
 
