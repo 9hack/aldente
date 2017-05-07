@@ -15,6 +15,7 @@ Crate::Crate(int x, int z) : Construct(x, z) {
         hit_box, //btshape
         glm::vec3(0,0,0), //inertia
         this, //the gameobject
+        true, // is a ghost object
     };
     events::add_rigidbody_event(rigid);
 }

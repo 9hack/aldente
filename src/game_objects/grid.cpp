@@ -1,7 +1,7 @@
 #include "grid.h"
 #include "events.h"
 #include "game/phase.h"
-#include "util/colors.h"
+#include "util/color.h"
 
 #include <fstream>
 
@@ -9,12 +9,12 @@
 #define WALL_TILE 5
 
 // Default color is white, meaning that it only uses texture
-glm::vec3 default_color = color::white;
+Color default_color = Color::WHITE;
 // When selected, will tint the tile green, but keeps texture
-glm::vec3 select_color = color::green;
+Color select_color = Color::GREEN;
 
 Grid::Grid(const char *map_loc) :
-        hover(nullptr), hoverX(0), hoverZ(0) {
+        hover(nullptr), hover_col(0), hover_row(0) {
     load_map(map_loc);
 
     hover = grid[0][0];
@@ -53,15 +53,14 @@ void Grid::setup_listeners() {
 }
 
 void Grid::update() {
-    if (grid[hoverZ][hoverX] != hover) {
+    if (grid[hover_row][hover_col] != hover) {
         hover->set_color(default_color);
-        hover = grid[hoverZ][hoverX];
+        hover = grid[hover_row][hover_col];
         hover->set_color(select_color);
     }
 }
-
-bool Grid::verify_build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[z][x];
+bool Grid::verify_build(ConstructType type, int col, int row) {
+    Tile* candidate = grid[row][col];
     if (type == REMOVE) {
         return candidate->get_construct() != nullptr;
     }
@@ -69,12 +68,12 @@ bool Grid::verify_build(ConstructType type, int x, int z) {
     return candidate->buildable;
 }
 
-void Grid::build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[z][x];
+void Grid::build(ConstructType type, int col, int row) {
+    Tile* candidate = grid[row][col];
 
     switch (type) {
     case CHEST: {
-        Construct* to_add = new Crate(x, z);
+        Construct* to_add = new Crate(col, row);
         candidate->set_construct(to_add);
         candidate->buildable = false;
         break;
@@ -95,16 +94,16 @@ void Grid::build(ConstructType type, int x, int z) {
 void Grid::move_selection(Direction d) {
     switch (d) {
     case UP:
-        hoverZ = glm::max(0, hoverZ - 1);
+        hover_row = glm::max(0, hover_row - 1);
         break;
     case RIGHT:
-        hoverX = glm::min(width - 1, hoverX + 1);
+        hover_col = glm::min(width - 1, hover_col + 1);
         break;
     case DOWN:
-        hoverZ = glm::min(height - 1, hoverZ + 1);
+        hover_row = glm::min(height - 1, hover_row + 1);
         break;
     case LEFT:
-        hoverX = glm::max(0, hoverX - 1);
+        hover_col = glm::max(0, hover_col - 1);
         break;
     default:
         break;

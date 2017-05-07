@@ -17,5 +17,5 @@ void Render::update() {
     curr_scene->draw_skybox(); // Skybox rendered last for optimization
 
     // Debug shadows as necessary.
-    shadows.debug_shadows();
+    shadows.debug_shadows(curr_scene);
 }

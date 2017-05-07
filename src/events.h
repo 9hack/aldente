@@ -110,6 +110,8 @@ namespace events {
 
         //Object that has the rigidBody
         GameObject *object;
+        // whether this rigidbody is a ghost/trigger
+        bool is_ghost;
     };
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;

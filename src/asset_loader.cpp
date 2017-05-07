@@ -1,6 +1,6 @@
 #include "asset_loader.h"
 #include "aldente_client.h"
-#include "util/colors.h"
+#include "util/color.h"
 
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
@@ -187,9 +187,9 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
     float shiny = 0.0f;
     assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-    load_mat->ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
-    load_mat->diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-    load_mat->specular = glm::vec3(specular.r, specular.g, specular.b);
+    load_mat->ambient = Color(ambient.r, ambient.g, ambient.b);
+    load_mat->diffuse = Color(diffuse.r, diffuse.g, diffuse.b);
+    load_mat->specular = Color(specular.r, specular.g, specular.b);
     load_mat->shininess = shiny;
     final_mesh = new Mesh(geo, load_mat);
 
@@ -212,14 +212,16 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     return final_mesh;
 }
 
-// Loading in BONES for Rigging
+// Loading in BONES for Rigging using assimp structure
 void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
     //std::cerr << "Number of Bones : " << aimesh->mNumBones << std::endl;
 
+    // Need to add bone paramters to vertex buffers
     Geometry *geo = mesh->geometry;
     geo->bone_ids.resize(geo->vertices.size());
     geo->weights.resize(geo->vertices.size());
 
+    // Loops through all bones attached to mesh
     for (unsigned int i = 0; i < aimesh->mNumBones; i++) {
 
         // std::cerr << "Bone : " << aimesh->mBones[i]->mName.data << std::endl;
@@ -227,9 +229,11 @@ void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
         unsigned int bone_index = 0;
         std::string bone_name(aimesh->mBones[i]->mName.data);
 
+        // Check if bone already registered on model
         if (model->bone_mapping.find(bone_name) == model->bone_mapping.end()) {
             bone_index = (unsigned int) model->bone_offsets.size();
             model->bone_offsets.push_back(glm::mat4(1.0f));
+            model->bones_default.push_back(glm::mat4(1.0f));
             model->bones_final.push_back(glm::mat4(1.0f));
 
             model->bone_mapping[bone_name] = bone_index;
@@ -238,9 +242,11 @@ void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
             bone_index = model->bone_mapping[bone_name];
         }
 
+        // Set necessary bone matrices
         model->bone_offsets[bone_index] = convert_ai_matrix(aimesh->mBones[i]->mOffsetMatrix);
-        model->bones_final[bone_index] = mesh->local_transform; // Fixes bug with model_mesh in shader. May cause problems in future.
+        model->bones_default[bone_index] = mesh->local_transform;
 
+        // Attaches bones to vertex buffer on geometry
         for (unsigned int j = 0; j < aimesh->mBones[i]->mNumWeights; j++) {
             unsigned int vertex_id = aimesh->mBones[i]->mWeights[j].mVertexId;
             float weight = aimesh->mBones[i]->mWeights[j].mWeight;

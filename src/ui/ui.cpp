@@ -1,7 +1,6 @@
 #include "ui.h"
 
 #include "ui_grid.h"
-#include "util/colors.h"
 
 UI::UI() {
     root = UIContainer(0, 0);

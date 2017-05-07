@@ -17,5 +17,5 @@ public:
 
     void shadow_pass(Scene *scene);
 
-    void debug_shadows();
+    void debug_shadows(Scene *scene);
 };
