@@ -65,7 +65,7 @@ void MainScene::setup_scene() {
     }
 }
 
-void MainScene::graphical_setup_scene() {
+void MainScene::graphical_setup() {
     grid->graphical_setup();
 
     // Player instantiation will be here for now until we start working on
