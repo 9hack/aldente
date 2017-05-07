@@ -15,10 +15,13 @@ public:
 
     // Callback for when a player presses A on this construct
     virtual void interact_trigger() = 0;
+
+    virtual void setup_model() = 0;
 };
 
 class Crate : public Construct {
 public:
     Crate(int x, int z);
     void interact_trigger();
+    void setup_model();
 };

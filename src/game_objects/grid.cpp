@@ -75,6 +75,7 @@ void Grid::build(ConstructType type, int col, int row) {
     switch (type) {
     case CHEST: {
         Construct* to_add = new Crate(col, row);
+        to_add->setup_model();
         candidate->set_construct(to_add);
         candidate->buildable = false;
         break;
@@ -173,4 +174,12 @@ Tile *Grid::make_tile(int tile_id, int x, int z) {
     }
 
     return new_tile;
+}
+
+void Grid::graphical_setup() {
+    for (std::vector<Tile*> row : grid) {
+        for (Tile* tile : row) {
+            tile->setup_model();
+        }
+    }
 }

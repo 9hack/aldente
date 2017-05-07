@@ -41,4 +41,7 @@ public:
     void build(ConstructType type, int col , int row);
 
     void move_selection(Direction d);
+
+    // Loads tile models, only call this on client
+    void graphical_setup();
 };

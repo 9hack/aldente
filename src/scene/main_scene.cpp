@@ -45,32 +45,23 @@ void MainScene::setup_scene() {
             objs.push_back(currRow[j]);
         }
     }
+}
 
-    // Test Model loading
+void MainScene::graphical_setup_scene() {
+    grid->graphical_setup();
+
+    // Player instantiation will be here for now until we start working on
+    // scene management.
     Model *player_model = AssetLoader::get_model(std::string("boy_two_scaled"));
     Player *player = new Player();
-    player_model->set_shader(&ShaderManager::anim_unlit);
-    player->attach_model(player_model);
     player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
-    player->start_walk();
     player->transform.translate({ 2.f, 0.f, 2.f });
     objs.push_back(player);
+    player_model->set_shader(&ShaderManager::anim_unlit);
+    player->attach_model(player_model);
+    player->start_walk();
 
-    Model *chestg_model = AssetLoader::get_model(std::string("chest_good_scaled"));
-    TestChest *chestg = new TestChest();
-    chestg_model->set_shader(&ShaderManager::anim_unlit);
-    chestg->attach_model(chestg_model);
-    chestg->transform.set_scale({ 0.6f, 0.6f, 0.6f });
-    chestg->open_chest();
-    chestg->transform.translate({ 4.f, 0.05f, 1.f });
-    objs.push_back(chestg);
-
-    Model *chestb_model = AssetLoader::get_model(std::string("chest_bad_scaled"));
-    TestChest *chestb = new TestChest();
-    chestb_model->set_shader(&ShaderManager::anim_unlit);
-    chestb->attach_model(chestb_model);
-    chestb->transform.set_scale({ 0.6f, 0.6f, 0.6f });
-    chestb->open_chest();
-    chestb->transform.translate({ 29.f, 0.05f, 18.f });
-    objs.push_back(chestb);
+    for (GameObject *obj : objs) {
+        obj->setup_model();
+    }
 }
