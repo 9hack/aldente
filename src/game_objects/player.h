@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * Player Class:
 * This class will contain all functionality concerning a player 

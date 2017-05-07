@@ -6,6 +6,7 @@ message ServerMessage {
   oneof message_type {
     string message = 1;
     Construct build_update = 2;
+    JoinResponse join_response = 3;
   }
 }
 
@@ -13,6 +14,7 @@ message ClientMessage {
   oneof message_type {
     string message = 1;
     Construct build_request = 2;
+    string join_request = 3;
   }
 }
 
@@ -22,6 +24,19 @@ message Construct {
   optional int32 z = 3;
   optional int32 id = 4;
   optional bool status = 5;
+}
+
+message JoinResponse {
+  optional bool status = 1;
+  optional int32 num_players = 2;
+  repeated Player players = 3;
+}
+
+message Player {
+  optional int32 id = 1;
+  optional int32 x = 2;
+  optional int32 z = 3;
+  optional string name = 4;
 }
 
 // Below is currently unused.
