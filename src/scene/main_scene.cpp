@@ -1,6 +1,5 @@
 #include "main_scene.h"
 #include "game_objects/test_chest.h"
-#include "game_objects/player.h"
 #include "events.h"
 #include "util/color.h"
 
@@ -68,8 +67,12 @@ void MainScene::setup_scene() {
 void MainScene::graphical_setup() {
     grid->graphical_setup();
 
-    // Player instantiation will be here for now until we start working on
-    // scene management.
+    for (GameObject *obj : objs) {
+        obj->setup_model();
+    }
+}
+
+Player* MainScene::spawn_player() {
     Model *player_model = AssetLoader::get_model(std::string("boy_two_scaled"));
     Player *player = new Player();
     player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
@@ -78,8 +81,5 @@ void MainScene::graphical_setup() {
     player_model->set_shader(&ShaderManager::anim_unlit);
     player->attach_model(player_model);
     player->start_walk();
-
-    for (GameObject *obj : objs) {
-        obj->setup_model();
-    }
+    return player;
 }

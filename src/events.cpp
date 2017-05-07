@@ -22,6 +22,12 @@ namespace events {
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
 
+    namespace menu {
+        signal<void(std::string &)> request_join_event;
+        signal<void(proto::JoinResponse &)> respond_join_event;
+        signal<void(proto::Player &)> spawn_player_event;
+    }
+
     namespace build {
         signal<void(Direction)> select_grid_move_event;
         signal<void(Direction)> build_grid_move_event;

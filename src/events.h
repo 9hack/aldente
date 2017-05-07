@@ -116,6 +116,12 @@ namespace events {
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
 
+    namespace menu {
+        extern signal<void(std::string &)> request_join_event;
+        extern signal<void(proto::JoinResponse &)> respond_join_event;
+        extern signal<void(proto::Player &)> spawn_player_event;
+    }
+
     namespace build {
         // Move the selection in the 2D selection grid.
         extern signal<void(Direction)> select_grid_move_event;

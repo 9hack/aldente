@@ -2,8 +2,6 @@
 
 #include "util/config.h"
 #include "game/game_state.h"
-#include "physics.h"
-#include "scene_manager.h"
 #include "net/network_manager.h"
 #include "timer.h"
 #include <chrono>
@@ -12,16 +10,9 @@
 
 void AldenteServer::start() {
     Util::seed(0); // Seed PRNG.
-    
-    Physics physics;
-    SceneManager scene_manager;
 
     // Game logic. Temporarily start game with build phase.
     GameState::init(&GameState::build_phase);
-
-    MainScene testScene;
-    physics.set_scene(&testScene);
-    scene_manager.set_current_scene(&testScene);
 
     ServerNetworkManager network;
     network.connect();
@@ -44,10 +35,11 @@ void AldenteServer::start() {
     std::cerr << "Starting server..." << std::endl;
 
     while (true) {
+        // std::cerr << "BEFORE: " << Timer::get()->so_far().count() << std::endl;
         network.update();
+        // std::cerr << "NET: " << Timer::get()->so_far().count() << std::endl;
         GameState::update();
-        scene_manager.get_current_scene()->update();
-
+        // std::cerr << "GS: " << Timer::get()->so_far().count() << std::endl;
         Timer::get()->wait();
     }
 

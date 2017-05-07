@@ -37,6 +37,8 @@ void protobuf_ShutdownFile_net_2eproto();
 class ServerMessage;
 class ClientMessage;
 class Construct;
+class JoinResponse;
+class Player;
 class GameState;
 class GameObject;
 class GameObject_Location;
@@ -112,6 +114,7 @@ class ServerMessage : public ::google::protobuf::Message {
   enum MessageTypeCase {
     kMessage = 1,
     kBuildUpdate = 2,
+    kJoinResponse = 3,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -166,11 +169,21 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::proto::Construct* release_build_update();
   inline void set_allocated_build_update(::proto::Construct* build_update);
 
+  // optional .proto.JoinResponse join_response = 3;
+  inline bool has_join_response() const;
+  inline void clear_join_response();
+  static const int kJoinResponseFieldNumber = 3;
+  inline const ::proto::JoinResponse& join_response() const;
+  inline ::proto::JoinResponse* mutable_join_response();
+  inline ::proto::JoinResponse* release_join_response();
+  inline void set_allocated_join_response(::proto::JoinResponse* join_response);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
   inline void set_has_message();
   inline void set_has_build_update();
+  inline void set_has_join_response();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -183,6 +196,7 @@ class ServerMessage : public ::google::protobuf::Message {
   union MessageTypeUnion {
     ::std::string* message_;
     ::proto::Construct* build_update_;
+    ::proto::JoinResponse* join_response_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -221,6 +235,7 @@ class ClientMessage : public ::google::protobuf::Message {
   enum MessageTypeCase {
     kMessage = 1,
     kBuildRequest = 2,
+    kJoinRequest = 3,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -275,11 +290,24 @@ class ClientMessage : public ::google::protobuf::Message {
   inline ::proto::Construct* release_build_request();
   inline void set_allocated_build_request(::proto::Construct* build_request);
 
+  // optional string join_request = 3;
+  inline bool has_join_request() const;
+  inline void clear_join_request();
+  static const int kJoinRequestFieldNumber = 3;
+  inline const ::std::string& join_request() const;
+  inline void set_join_request(const ::std::string& value);
+  inline void set_join_request(const char* value);
+  inline void set_join_request(const char* value, size_t size);
+  inline ::std::string* mutable_join_request();
+  inline ::std::string* release_join_request();
+  inline void set_allocated_join_request(::std::string* join_request);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ClientMessage)
  private:
   inline void set_has_message();
   inline void set_has_build_request();
+  inline void set_has_join_request();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -292,6 +320,7 @@ class ClientMessage : public ::google::protobuf::Message {
   union MessageTypeUnion {
     ::std::string* message_;
     ::proto::Construct* build_request_;
+    ::std::string* join_request_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -420,6 +449,222 @@ class Construct : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Construct* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class JoinResponse : public ::google::protobuf::Message {
+ public:
+  JoinResponse();
+  virtual ~JoinResponse();
+
+  JoinResponse(const JoinResponse& from);
+
+  inline JoinResponse& operator=(const JoinResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const JoinResponse& default_instance();
+
+  void Swap(JoinResponse* other);
+
+  // implements Message ----------------------------------------------
+
+  JoinResponse* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const JoinResponse& from);
+  void MergeFrom(const JoinResponse& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool status = 1;
+  inline bool has_status() const;
+  inline void clear_status();
+  static const int kStatusFieldNumber = 1;
+  inline bool status() const;
+  inline void set_status(bool value);
+
+  // optional int32 num_players = 2;
+  inline bool has_num_players() const;
+  inline void clear_num_players();
+  static const int kNumPlayersFieldNumber = 2;
+  inline ::google::protobuf::int32 num_players() const;
+  inline void set_num_players(::google::protobuf::int32 value);
+
+  // repeated .proto.Player players = 3;
+  inline int players_size() const;
+  inline void clear_players();
+  static const int kPlayersFieldNumber = 3;
+  inline const ::proto::Player& players(int index) const;
+  inline ::proto::Player* mutable_players(int index);
+  inline ::proto::Player* add_players();
+  inline const ::google::protobuf::RepeatedPtrField< ::proto::Player >&
+      players() const;
+  inline ::google::protobuf::RepeatedPtrField< ::proto::Player >*
+      mutable_players();
+
+  // @@protoc_insertion_point(class_scope:proto.JoinResponse)
+ private:
+  inline void set_has_status();
+  inline void clear_has_status();
+  inline void set_has_num_players();
+  inline void clear_has_num_players();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  bool status_;
+  ::google::protobuf::int32 num_players_;
+  ::google::protobuf::RepeatedPtrField< ::proto::Player > players_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static JoinResponse* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Player : public ::google::protobuf::Message {
+ public:
+  Player();
+  virtual ~Player();
+
+  Player(const Player& from);
+
+  inline Player& operator=(const Player& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Player& default_instance();
+
+  void Swap(Player* other);
+
+  // implements Message ----------------------------------------------
+
+  Player* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Player& from);
+  void MergeFrom(const Player& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline ::google::protobuf::int32 id() const;
+  inline void set_id(::google::protobuf::int32 value);
+
+  // optional int32 x = 2;
+  inline bool has_x() const;
+  inline void clear_x();
+  static const int kXFieldNumber = 2;
+  inline ::google::protobuf::int32 x() const;
+  inline void set_x(::google::protobuf::int32 value);
+
+  // optional int32 z = 3;
+  inline bool has_z() const;
+  inline void clear_z();
+  static const int kZFieldNumber = 3;
+  inline ::google::protobuf::int32 z() const;
+  inline void set_z(::google::protobuf::int32 value);
+
+  // optional string name = 4;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 4;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // @@protoc_insertion_point(class_scope:proto.Player)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+  inline void set_has_x();
+  inline void clear_has_x();
+  inline void set_has_z();
+  inline void clear_has_z();
+  inline void set_has_name();
+  inline void clear_has_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::int32 id_;
+  ::google::protobuf::int32 x_;
+  ::std::string* name_;
+  ::google::protobuf::int32 z_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static Player* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1080,6 +1325,49 @@ inline void ServerMessage::set_allocated_build_update(::proto::Construct* build_
   }
 }
 
+// optional .proto.JoinResponse join_response = 3;
+inline bool ServerMessage::has_join_response() const {
+  return message_type_case() == kJoinResponse;
+}
+inline void ServerMessage::set_has_join_response() {
+  _oneof_case_[0] = kJoinResponse;
+}
+inline void ServerMessage::clear_join_response() {
+  if (has_join_response()) {
+    delete message_type_.join_response_;
+    clear_has_message_type();
+  }
+}
+inline const ::proto::JoinResponse& ServerMessage::join_response() const {
+  return has_join_response() ? *message_type_.join_response_
+                      : ::proto::JoinResponse::default_instance();
+}
+inline ::proto::JoinResponse* ServerMessage::mutable_join_response() {
+  if (!has_join_response()) {
+    clear_message_type();
+    set_has_join_response();
+    message_type_.join_response_ = new ::proto::JoinResponse;
+  }
+  return message_type_.join_response_;
+}
+inline ::proto::JoinResponse* ServerMessage::release_join_response() {
+  if (has_join_response()) {
+    clear_has_message_type();
+    ::proto::JoinResponse* temp = message_type_.join_response_;
+    message_type_.join_response_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void ServerMessage::set_allocated_join_response(::proto::JoinResponse* join_response) {
+  clear_message_type();
+  if (join_response) {
+    set_has_join_response();
+    message_type_.join_response_ = join_response;
+  }
+}
+
 inline bool ServerMessage::has_message_type() {
   return message_type_case() != MESSAGE_TYPE_NOT_SET;
 }
@@ -1203,6 +1491,76 @@ inline void ClientMessage::set_allocated_build_request(::proto::Construct* build
   if (build_request) {
     set_has_build_request();
     message_type_.build_request_ = build_request;
+  }
+}
+
+// optional string join_request = 3;
+inline bool ClientMessage::has_join_request() const {
+  return message_type_case() == kJoinRequest;
+}
+inline void ClientMessage::set_has_join_request() {
+  _oneof_case_[0] = kJoinRequest;
+}
+inline void ClientMessage::clear_join_request() {
+  if (has_join_request()) {
+    delete message_type_.join_request_;
+    clear_has_message_type();
+  }
+}
+inline const ::std::string& ClientMessage::join_request() const {
+  if (has_join_request()) {
+    return *message_type_.join_request_;
+  }
+  return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+}
+inline void ClientMessage::set_join_request(const ::std::string& value) {
+  if (!has_join_request()) {
+    clear_message_type();
+    set_has_join_request();
+    message_type_.join_request_ = new ::std::string;
+  }
+  message_type_.join_request_->assign(value);
+}
+inline void ClientMessage::set_join_request(const char* value) {
+  if (!has_join_request()) {
+    clear_message_type();
+    set_has_join_request();
+    message_type_.join_request_ = new ::std::string;
+  }
+  message_type_.join_request_->assign(value);
+}
+inline void ClientMessage::set_join_request(const char* value, size_t size) {
+  if (!has_join_request()) {
+    clear_message_type();
+    set_has_join_request();
+    message_type_.join_request_ = new ::std::string;
+  }
+  message_type_.join_request_->assign(
+      reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ClientMessage::mutable_join_request() {
+  if (!has_join_request()) {
+    clear_message_type();
+    set_has_join_request();
+    message_type_.join_request_ = new ::std::string;
+  }
+  return message_type_.join_request_;
+}
+inline ::std::string* ClientMessage::release_join_request() {
+  if (has_join_request()) {
+    clear_has_message_type();
+    ::std::string* temp = message_type_.join_request_;
+    message_type_.join_request_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void ClientMessage::set_allocated_join_request(::std::string* join_request) {
+  clear_message_type();
+  if (join_request) {
+    set_has_join_request();
+    message_type_.join_request_ = join_request;
   }
 }
 
@@ -1337,6 +1695,240 @@ inline void Construct::set_status(bool value) {
   set_has_status();
   status_ = value;
   // @@protoc_insertion_point(field_set:proto.Construct.status)
+}
+
+// -------------------------------------------------------------------
+
+// JoinResponse
+
+// optional bool status = 1;
+inline bool JoinResponse::has_status() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void JoinResponse::set_has_status() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void JoinResponse::clear_has_status() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void JoinResponse::clear_status() {
+  status_ = false;
+  clear_has_status();
+}
+inline bool JoinResponse::status() const {
+  // @@protoc_insertion_point(field_get:proto.JoinResponse.status)
+  return status_;
+}
+inline void JoinResponse::set_status(bool value) {
+  set_has_status();
+  status_ = value;
+  // @@protoc_insertion_point(field_set:proto.JoinResponse.status)
+}
+
+// optional int32 num_players = 2;
+inline bool JoinResponse::has_num_players() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void JoinResponse::set_has_num_players() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void JoinResponse::clear_has_num_players() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void JoinResponse::clear_num_players() {
+  num_players_ = 0;
+  clear_has_num_players();
+}
+inline ::google::protobuf::int32 JoinResponse::num_players() const {
+  // @@protoc_insertion_point(field_get:proto.JoinResponse.num_players)
+  return num_players_;
+}
+inline void JoinResponse::set_num_players(::google::protobuf::int32 value) {
+  set_has_num_players();
+  num_players_ = value;
+  // @@protoc_insertion_point(field_set:proto.JoinResponse.num_players)
+}
+
+// repeated .proto.Player players = 3;
+inline int JoinResponse::players_size() const {
+  return players_.size();
+}
+inline void JoinResponse::clear_players() {
+  players_.Clear();
+}
+inline const ::proto::Player& JoinResponse::players(int index) const {
+  // @@protoc_insertion_point(field_get:proto.JoinResponse.players)
+  return players_.Get(index);
+}
+inline ::proto::Player* JoinResponse::mutable_players(int index) {
+  // @@protoc_insertion_point(field_mutable:proto.JoinResponse.players)
+  return players_.Mutable(index);
+}
+inline ::proto::Player* JoinResponse::add_players() {
+  // @@protoc_insertion_point(field_add:proto.JoinResponse.players)
+  return players_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::proto::Player >&
+JoinResponse::players() const {
+  // @@protoc_insertion_point(field_list:proto.JoinResponse.players)
+  return players_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::proto::Player >*
+JoinResponse::mutable_players() {
+  // @@protoc_insertion_point(field_mutable_list:proto.JoinResponse.players)
+  return &players_;
+}
+
+// -------------------------------------------------------------------
+
+// Player
+
+// optional int32 id = 1;
+inline bool Player::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Player::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Player::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Player::clear_id() {
+  id_ = 0;
+  clear_has_id();
+}
+inline ::google::protobuf::int32 Player::id() const {
+  // @@protoc_insertion_point(field_get:proto.Player.id)
+  return id_;
+}
+inline void Player::set_id(::google::protobuf::int32 value) {
+  set_has_id();
+  id_ = value;
+  // @@protoc_insertion_point(field_set:proto.Player.id)
+}
+
+// optional int32 x = 2;
+inline bool Player::has_x() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Player::set_has_x() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Player::clear_has_x() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Player::clear_x() {
+  x_ = 0;
+  clear_has_x();
+}
+inline ::google::protobuf::int32 Player::x() const {
+  // @@protoc_insertion_point(field_get:proto.Player.x)
+  return x_;
+}
+inline void Player::set_x(::google::protobuf::int32 value) {
+  set_has_x();
+  x_ = value;
+  // @@protoc_insertion_point(field_set:proto.Player.x)
+}
+
+// optional int32 z = 3;
+inline bool Player::has_z() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Player::set_has_z() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Player::clear_has_z() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Player::clear_z() {
+  z_ = 0;
+  clear_has_z();
+}
+inline ::google::protobuf::int32 Player::z() const {
+  // @@protoc_insertion_point(field_get:proto.Player.z)
+  return z_;
+}
+inline void Player::set_z(::google::protobuf::int32 value) {
+  set_has_z();
+  z_ = value;
+  // @@protoc_insertion_point(field_set:proto.Player.z)
+}
+
+// optional string name = 4;
+inline bool Player::has_name() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Player::set_has_name() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Player::clear_has_name() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Player::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Player::name() const {
+  // @@protoc_insertion_point(field_get:proto.Player.name)
+  return *name_;
+}
+inline void Player::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:proto.Player.name)
+}
+inline void Player::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:proto.Player.name)
+}
+inline void Player::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:proto.Player.name)
+}
+inline ::std::string* Player::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:proto.Player.name)
+  return name_;
+}
+inline ::std::string* Player::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Player::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:proto.Player.name)
 }
 
 // -------------------------------------------------------------------

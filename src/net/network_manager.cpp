@@ -29,6 +29,13 @@ void ServerNetworkManager::connect() {
 }
 
 void ServerNetworkManager::register_listeners() {
+    // Menu phase.
+    events::menu::respond_join_event.connect([&](proto::JoinResponse& resp) {
+        proto::ServerMessage msg;
+        msg.set_allocated_join_response(new proto::JoinResponse(resp));
+        server.send_to_all(msg);
+    });
+
     // Build phase.
     events::build::respond_build_event.connect([&](proto::Construct& c) {
         proto::ServerMessage msg;
@@ -45,6 +52,11 @@ void ServerNetworkManager::update() {
                 proto::Construct construct = msg.build_request();
                 events::build::try_build_event(construct);
                 break;
+            }
+            case proto::ClientMessage::MessageTypeCase::kJoinRequest: {
+                std::string player_name = msg.join_request();
+                events::menu::request_join_event(player_name);
+                std::cerr << "[s] got join request...\n";
             }
             default:
                 break;
@@ -82,6 +94,16 @@ void ClientNetworkManager::update() {
                 // TODO: construct placement failed. client-side notification?
             }
         }
+        case proto::ServerMessage::MessageTypeCase::kJoinResponse: {
+            proto::JoinResponse resp = msg.join_response();
+            if (resp.status()) {
+                std::cerr << "[c] spawning player...\n";
+                proto::Player p;
+                events::menu::spawn_player_event(p);
+
+                // My ID is num_players
+            }
+        }
         default:
             break;
         }
@@ -103,6 +125,11 @@ void ClientNetworkManager::attempt_connection() {
                 std::cerr << "Established connection.\n";
                 register_listeners();
                 service_thread = new boost::thread(&NetworkManager::run_service, this);
+                
+                // Request server to join the game.
+                proto::ClientMessage join_msg;
+                join_msg.set_join_request("Ethan Chan");
+                client.send(join_msg);
             }
         }
     }

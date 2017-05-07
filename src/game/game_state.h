@@ -1,6 +1,10 @@
 #pragma once
 
 #include "phase.h"
+#include "game_objects/player.h"
+#include "physics.h"
+#include "scene_manager.h"
+#include <map>
 
 class GameState {
 public:
@@ -10,6 +14,11 @@ public:
     static MinigamePhase minigame_phase;
 
     static Phase* curr_phase;
+    static SceneManager scene_manager;
+    static Physics physics;
+
+
+    static std::map<int, Player*> players;
 
     // Initializes the game state with the given start phase.
     static void init(Phase* phase);
@@ -21,6 +30,9 @@ public:
     // Force a phase change to the specified phase.
     // NOTE: do not use; this is only used for debugging.
     static void set_phase(Phase* phase);
-private:
 
+    static void add_player();
+private:
+    static MainScene testScene;
+    static int next_player_id;
 };
