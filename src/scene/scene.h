@@ -31,5 +31,5 @@ public:
     virtual void setup_scene() = 0;
 
     // Sets up scene's models (please call after setup_scene). Do not call on server
-    virtual void graphical_setup_scene() = 0;
+    virtual void graphical_setup() = 0;
 };
