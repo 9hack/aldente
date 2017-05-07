@@ -1,5 +1,10 @@
 #include "scene_camera.h"
 #include "scene/scene.h"
+#include "events.h"
+
+// TODO : Change this class to "Camera" instead of "SceneCamera"
+
+const float PAN_SPEED = 0.1f;
 
 SceneCamera::SceneCamera(glm::vec3 default_pos,
                          glm::vec3 default_front,
@@ -7,6 +12,48 @@ SceneCamera::SceneCamera(glm::vec3 default_pos,
     : default_pos(default_pos), default_front(default_front),
       default_up(default_up) {
     reset();
+
+    setup_listeners();
+}
+
+void SceneCamera::setup_listeners() {
+
+    events::build::start_build_event.connect([&]() {
+        follow_player = false;
+        cam_pos = glm::vec3(0, 6.0f, 5.0f);
+        cam_front = glm::normalize(-cam_pos);
+        glm::vec3 left = glm::cross(glm::vec3(0, 1, 0), cam_front);
+        cam_up = glm::cross(cam_front, left);
+        recalculate();
+    });
+
+    events::build::end_build_event.connect([&]() {
+        follow_player = true;
+    });
+
+    events::build::pan_camera_event.connect([&](std::pair<int, int> state) {
+        if (disable_movement)
+            return;
+
+        // TODO: Currently this causes the camera to move discreetly in one
+        // direction, but we want it to move smoothly. This will require an update function though.
+        if (!follow_player) {
+            displace_cam(glm::vec3(state.first, 0, state.second) * PAN_SPEED);
+        }
+    });
+
+    events::dungeon::player_position_updated_event.connect([&](glm::vec3 pos) {
+        if (disable_movement)
+            return;
+
+        if (follow_player) {
+            cam_pos = pos + glm::vec3(0, 6.0f, 6.0f);
+            cam_front = glm::normalize(pos - cam_pos);
+            glm::vec3 left = glm::cross(glm::vec3(0, 1, 0), cam_front);
+            cam_up = glm::cross(cam_front, left);
+            recalculate();
+        }
+    });
 }
 
 void SceneCamera::recalculate() {

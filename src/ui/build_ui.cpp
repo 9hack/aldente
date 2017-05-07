@@ -56,7 +56,7 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
             disable();
         else
             enable();
-    });
+    });    
 
     // Show or hide the grid.
     events::build::select_grid_confirm_event.connect([&]() {
@@ -66,6 +66,16 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
     events::build::select_grid_return_event.connect([&]() {
         shop_panel.enable();
         player_panel.enable();
+    });
+
+    // Enables Build UI on the start of the build phase
+    events::build::start_build_event.connect([&]() {
+        enable();
+    });
+
+    // Disables Build UI at the end of the build phase
+    events::build::end_build_event.connect([&]() {
+        disable();
     });
 }
 

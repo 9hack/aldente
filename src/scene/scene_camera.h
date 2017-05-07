@@ -11,6 +11,8 @@ private:
     glm::vec3 default_pos;
     glm::vec3 default_front;
     glm::vec3 default_up;
+
+    bool follow_player;
 public:
     glm::vec3 cam_pos;
     glm::vec3 cam_front;
@@ -20,12 +22,16 @@ public:
     GLfloat pitch;
     GLfloat yaw = -90.f;
 
+    bool disable_movement;
+
     Plane frustum_planes[6];
     glm::vec3 frustum_corners[8];
 
     SceneCamera(glm::vec3 default_pos = glm::vec3(0.f, 0.f, 20.f),
                 glm::vec3 default_front = glm::vec3(0.f, 0.f, -1.f),
                 glm::vec3 default_up = glm::vec3(0.f, 1.f, 0.f));
+
+    void setup_listeners();
 
     void recalculate();
 

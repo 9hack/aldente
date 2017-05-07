@@ -62,6 +62,9 @@ void Player::update() {
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
         (float)to_set.getZ()));
+
+    // Fires player position whenever player moves
+    events::dungeon::player_position_updated_event(transform.get_position());
 }
 
 void Player::do_movement() {

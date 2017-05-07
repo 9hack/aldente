@@ -14,7 +14,7 @@ Color default_color = Color::WHITE;
 Color select_color = Color::GREEN;
 
 Grid::Grid(const char *map_loc) :
-        hover(nullptr), hoverCol(0), hoverRow(0) {
+        hover(nullptr), hover_col(0), hover_row(0) {
     load_map(map_loc);
 
     hover = grid[0][0];
@@ -53,13 +53,12 @@ void Grid::setup_listeners() {
 }
 
 void Grid::update() {
-    if (grid[hoverRow][hoverCol] != hover) {
+    if (grid[hover_row][hover_col] != hover) {
         hover->set_color(default_color);
-        hover = grid[hoverRow][hoverCol];
+        hover = grid[hover_row][hover_col];
         hover->set_color(select_color);
     }
 }
-
 bool Grid::verify_build(ConstructType type, int col, int row) {
     Tile* candidate = grid[row][col];
     if (type == REMOVE) {
@@ -95,16 +94,16 @@ void Grid::build(ConstructType type, int col, int row) {
 void Grid::move_selection(Direction d) {
     switch (d) {
     case UP:
-        hoverRow = glm::max(0, hoverRow - 1);
+        hover_row = glm::max(0, hover_row - 1);
         break;
     case RIGHT:
-        hoverCol = glm::min(width - 1, hoverCol + 1);
+        hover_col = glm::min(width - 1, hover_col + 1);
         break;
     case DOWN:
-        hoverRow = glm::min(height - 1, hoverRow + 1);
+        hover_row = glm::min(height - 1, hover_row + 1);
         break;
     case LEFT:
-        hoverCol = glm::max(0, hoverCol - 1);
+        hover_col = glm::max(0, hover_col - 1);
         break;
     default:
         break;
