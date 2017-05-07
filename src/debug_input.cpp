@@ -97,39 +97,32 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
         }
 
         glm::vec3 cursor_delta = current_cursor_pos - last_cursor_pos;
-        if (lmb_down && keys[GLFW_KEY_LEFT_CONTROL]) {
-            int dir = cursor_delta.x > 0 ? 1 : -1;
-            float rot_angle = dir * glm::length(cursor_delta) * 0.001f;
-            scene->light_pos = glm::vec3(
-                    glm::rotate(glm::mat4(1.0f), rot_angle, glm::vec3(0.f, 0.f, 1.f)) * glm::vec4(scene->light_pos, 1.0f));
-        } else if (!keys[GLFW_KEY_LEFT_CONTROL]) {
-            // Look around.
-            GLfloat xoffset = cursor_delta.x;
-            GLfloat yoffset = cursor_delta.y;
-            GLfloat sensitivity = 0.5;
-            xoffset *= sensitivity;
-            yoffset *= sensitivity;
+        // Look around.
+        GLfloat xoffset = cursor_delta.x;
+        GLfloat yoffset = cursor_delta.y;
+        GLfloat sensitivity = 0.5;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
 
-            if (current_cursor_pos.x > width - EDGE_PAN_THRESH)
-                xoffset = EDGE_PAN_SPEED;
-            else if (current_cursor_pos.x < EDGE_PAN_THRESH)
-                xoffset = -EDGE_PAN_SPEED;
+        if (current_cursor_pos.x > width - EDGE_PAN_THRESH)
+            xoffset = EDGE_PAN_SPEED;
+        else if (current_cursor_pos.x < EDGE_PAN_THRESH)
+            xoffset = -EDGE_PAN_SPEED;
 
-            camera->yaw += xoffset;
-            camera->pitch += yoffset;
+        camera->yaw += xoffset;
+        camera->pitch += yoffset;
 
-            if (camera->pitch > 89.0f)
-                camera->pitch = 89.0f;
-            if (camera->pitch < -89.0f)
-                camera->pitch = -89.0f;
+        if (camera->pitch > 89.0f)
+            camera->pitch = 89.0f;
+        if (camera->pitch < -89.0f)
+            camera->pitch = -89.0f;
 
-            glm::vec3 front;
-            front.x = cos(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
-            front.y = -sin(glm::radians(camera->pitch));
-            front.z = sin(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
-            camera->cam_front = glm::normalize(front);
-            camera->recalculate();
-        }
+        glm::vec3 front;
+        front.x = cos(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+        front.y = -sin(glm::radians(camera->pitch));
+        front.z = sin(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+        camera->cam_front = glm::normalize(front);
+        camera->recalculate();
 
         physics.raycast_mouse(d.x_pos, d.y_pos, width, height);
 
