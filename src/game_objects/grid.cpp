@@ -14,7 +14,7 @@ Color default_color = Color::WHITE;
 Color select_color = Color::GREEN;
 
 Grid::Grid(const char *map_loc) :
-        hover(nullptr), hoverX(0), hoverZ(0) {
+        hover(nullptr), hoverCol(0), hoverRow(0) {
     load_map(map_loc);
 
     hover = grid[0][0];
@@ -53,15 +53,15 @@ void Grid::setup_listeners() {
 }
 
 void Grid::update() {
-    if (grid[hoverX][hoverZ] != hover) {
+    if (grid[hoverRow][hoverCol] != hover) {
         hover->set_color(default_color);
-        hover = grid[hoverX][hoverZ];
+        hover = grid[hoverRow][hoverCol];
         hover->set_color(select_color);
     }
 }
 
-bool Grid::verify_build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[x][z];
+bool Grid::verify_build(ConstructType type, int col, int row) {
+    Tile* candidate = grid[row][col];
     if (type == REMOVE) {
         return candidate->get_construct() != nullptr;
     }
@@ -69,12 +69,12 @@ bool Grid::verify_build(ConstructType type, int x, int z) {
     return candidate->buildable;
 }
 
-void Grid::build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[x][z];
+void Grid::build(ConstructType type, int col, int row) {
+    Tile* candidate = grid[row][col];
 
     switch (type) {
     case CHEST: {
-        Construct* to_add = new Crate(x, z);
+        Construct* to_add = new Crate(col, row);
         candidate->set_construct(to_add);
         candidate->buildable = false;
         break;
@@ -95,16 +95,16 @@ void Grid::build(ConstructType type, int x, int z) {
 void Grid::move_selection(Direction d) {
     switch (d) {
     case UP:
-        hoverZ = glm::max(0, hoverZ - 1);
+        hoverRow = glm::max(0, hoverRow - 1);
         break;
     case RIGHT:
-        hoverX = glm::min(width - 1, hoverX + 1);
+        hoverCol = glm::min(width - 1, hoverCol + 1);
         break;
     case DOWN:
-        hoverZ = glm::min(height - 1, hoverZ + 1);
+        hoverRow = glm::min(height - 1, hoverRow + 1);
         break;
     case LEFT:
-        hoverX = glm::max(0, hoverX - 1);
+        hoverCol = glm::max(0, hoverCol - 1);
         break;
     default:
         break;

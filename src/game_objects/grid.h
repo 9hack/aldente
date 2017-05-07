@@ -19,7 +19,7 @@ private:
 
     std::vector<std::vector<Tile *>> grid;
     int width, height;
-    int hoverX, hoverZ;
+    int hoverRow, hoverCol;
     Tile *hover;
     ConstructType selected = ConstructType::REMOVE;
 public:
@@ -30,15 +30,15 @@ public:
     std::vector<std::vector<Tile *>> getGrid() { return grid; };
 
     void load_map(const char *map_loc);
-    Tile *make_tile(int tile_id, int x, int z);
+    Tile *make_tile(int tile_id, int col, int row);
 
     void update();
 
     // Returns true if this construct is allowed to be built.
-    bool verify_build(ConstructType type, int x, int z);
+    bool verify_build(ConstructType type, int col, int row);
 
     // Builds a construct at a location.
-    void build(ConstructType type, int x, int z);
+    void build(ConstructType type, int col , int row);
 
     void move_selection(Direction d);
 };
