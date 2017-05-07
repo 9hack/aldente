@@ -72,9 +72,9 @@ void MainScene::graphical_setup() {
     }
 }
 
-Player* MainScene::spawn_player() {
+Player* MainScene::spawn_player(int client_id) {
     Model *player_model = AssetLoader::get_model(std::string("boy_two_scaled"));
-    Player *player = new Player();
+    Player *player = new Player(client_id);
     player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
     player->transform.translate({ 2.f, 0.f, 2.f });
     objs.push_back(player);

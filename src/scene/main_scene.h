@@ -23,5 +23,5 @@ public:
     void update() override;
     void setup_scene() override;
     void graphical_setup() override;
-    Player* spawn_player();
+    Player* spawn_player(int client_id);
 };

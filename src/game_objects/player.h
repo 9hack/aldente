@@ -13,17 +13,17 @@
 
 class Player : public GameObject {
 private:
-    glm::vec3 direction;
 
     // to_move is for saving the joystick input in each frame.
     int to_moveX;
     int to_moveZ;
 
     float move_speed;
+    int client_id;
 
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
 public:
-    Player();
+    Player(int client_id);
     virtual void update() override;
     virtual void on_collision(GameObject *other) override;
     void do_movement();
@@ -37,4 +37,5 @@ public:
 
     // TODO after we make more player models
     void setup_model() {}
+    glm::vec3 direction;
 };

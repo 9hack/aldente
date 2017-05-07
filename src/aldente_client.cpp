@@ -107,7 +107,6 @@ void AldenteClient::start() {
         }
 
         network.update();
-        GameState::update();
 
         render.update();
         ui.draw();

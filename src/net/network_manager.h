@@ -42,4 +42,5 @@ private:
     string server_host;
     int port;
     bool is_connected;
+    int client_id;
 };

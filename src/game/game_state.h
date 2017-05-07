@@ -17,7 +17,6 @@ public:
     static SceneManager scene_manager;
     static Physics physics;
 
-
     static std::map<int, Player*> players;
 
     // Initializes the game state with the given start phase.
@@ -31,8 +30,8 @@ public:
     // NOTE: do not use; this is only used for debugging.
     static void set_phase(Phase* phase);
 
-    static void add_player();
+    static void add_player(int conn_id);
 private:
     static MainScene testScene;
-    static int next_player_id;
+    static int num_players;
 };

@@ -21,10 +21,11 @@ namespace events {
     signal<void(int)> ui_grid_selection_event;
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
+    signal<void(int)> new_connection_event;
 
     namespace menu {
-        signal<void(std::string &)> request_join_event;
-        signal<void(proto::JoinResponse &)> respond_join_event;
+        signal<void(int)> request_join_event;
+        signal<void(int, proto::JoinResponse &)> respond_join_event;
         signal<void(proto::Player &)> spawn_player_event;
     }
 
@@ -45,9 +46,12 @@ namespace events {
     }
 
     namespace dungeon {
-        signal<void(StickData d)> player_move_event;
+        signal<void(int, StickData d)> player_move_event;
         signal<void()> player_interact_event;
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
+        signal<void(int, float, float, float, float)> set_player_pos_event;
+        signal<void(StickData &)> network_player_move_event;
+        signal<void(std::map<int, Player*> &)> network_positions_event;
     }
 }

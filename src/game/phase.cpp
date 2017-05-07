@@ -1,4 +1,5 @@
 #include "phase.h"
+#include "game_state.h"
 
 bool BuildPhase::is_menu = true;
 
@@ -68,7 +69,7 @@ void DungeonPhase::setup() {
     joystick_conn = events::stick_event.connect([&](events::StickData d) {
         // Left stick
         if (d.input == events::STICK_LEFT) {
-            events::dungeon::player_move_event(d);
+            events::dungeon::network_player_move_event(d);
         }
     });
 

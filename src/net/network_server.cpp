@@ -1,4 +1,5 @@
 #include "network_server.h"
+#include "events.h"
 
 NetworkServer::NetworkServer(boost::asio::io_service& ios, unsigned int port) :
     acceptor(ios, tcp::endpoint(tcp::v4(), port)), next_id(0) {
@@ -27,6 +28,20 @@ void NetworkServer::send_to_all(proto::ServerMessage& message) {
         }
     }
 }
+
+void NetworkServer::send_to(int id, proto::ServerMessage& message) {
+    unique_lock<mutex> lock(client_list_mutex);
+    assert(client_list.find(id) != client_list.end());
+    string serialized;
+    message.SerializeToString(&serialized);
+    bool success = client_list[id]->send(serialized);
+    if (!success) {
+        std::cerr << "Write failed!\n";
+        // If write failed, it's likely because of disconnect. Remove from clients.
+        client_list.erase(id);
+    }
+}
+
 
 std::unordered_map<int, std::vector<proto::ClientMessage>> NetworkServer::read_all_messages() {
     std::unordered_map<int, std::vector<proto::ClientMessage>> messages;
@@ -65,6 +80,9 @@ void NetworkServer::start_accept() {
             else {
                 std::cerr << "accept() error: " << error << "," << error.message() << "\n";
             }
+
+            if (!error)
+                events::new_connection_event(next_id);
 
             // Accept the next client.
             start_accept();
