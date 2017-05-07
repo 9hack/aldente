@@ -8,6 +8,9 @@
 #include "game_objects/game_object.h"
 #include "btBulletDynamicsCommon.h"
 
+// Forward declaration to resolve circular dependency.
+class Player;
+
 namespace events {
 
     using boost::signals2::signal;
@@ -115,10 +118,11 @@ namespace events {
     };
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
+    extern signal<void(int)> new_connection_event;
 
     namespace menu {
-        extern signal<void(std::string &)> request_join_event;
-        extern signal<void(proto::JoinResponse &)> respond_join_event;
+        extern signal<void(int)> request_join_event;
+        extern signal<void(int, proto::JoinResponse &)> respond_join_event;
         extern signal<void(proto::Player &)> spawn_player_event;
     }
 
@@ -165,7 +169,7 @@ namespace events {
 
     namespace dungeon {
         // Player movement
-        extern signal<void(StickData d)> player_move_event;
+        extern signal<void(int, StickData d)> player_move_event;
 
         // Player interact (e.g opening a chest)
         extern signal<void()> player_interact_event;
@@ -175,5 +179,11 @@ namespace events {
 
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
+
+        extern signal<void(int, float, float, float, float)> set_player_pos_event;
+
+        extern signal<void(StickData &)> network_player_move_event;
+
+        extern signal<void(std::map<int, Player*> &)> network_positions_event;
     }
 }

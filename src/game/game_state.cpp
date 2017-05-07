@@ -11,7 +11,7 @@ std::map<int, Player*> GameState::players;
 Physics GameState::physics;
 SceneManager GameState::scene_manager;
 MainScene GameState::testScene;
-int GameState::next_player_id = 1;
+int GameState::num_players = 0;
 
 void GameState::init(Phase* phase) {
     curr_phase = phase;
@@ -20,29 +20,18 @@ void GameState::init(Phase* phase) {
     physics.set_scene(&testScene);
     scene_manager.set_current_scene(&testScene);
 
-    events::menu::request_join_event.connect([](std::string& name) {
+    events::menu::request_join_event.connect([](int conn_id) {
         proto::JoinResponse resp;
-        
-        if (next_player_id <= 4) {
-            add_player();
-        }
+        resp.set_status(num_players < 4);
+        resp.set_id(conn_id);
+        events::menu::respond_join_event(conn_id, resp);
 
-        for (auto& pair : players) {
-            proto::Player* player = resp.add_players();
-            player->set_id(pair.first);
-            player->set_x(pair.second->transform.get_position().x);
-            player->set_z(pair.second->transform.get_position().z);
-        }
-
-        resp.set_num_players(next_player_id - 1);
-        resp.set_status(next_player_id <= 4);
-
-        std::cerr << "[s] responding with: " << resp.DebugString();
-        events::menu::respond_join_event(resp);
+        if (num_players < 4)
+            add_player(conn_id);
     });
 
     events::menu::spawn_player_event.connect([](proto::Player & player) {
-        add_player();
+        add_player(player.id());
     });
 }
 
@@ -56,6 +45,8 @@ void GameState::update() {
 
     physics.update();
     scene_manager.get_current_scene()->update();
+
+    events::dungeon::network_positions_event(players);    
 }
 
 void GameState::set_phase(Phase* phase) {
@@ -64,7 +55,8 @@ void GameState::set_phase(Phase* phase) {
     curr_phase->setup();
 }
 
-void GameState::add_player() {
-    Player* player = dynamic_cast<MainScene*>(scene_manager.get_current_scene())->spawn_player();
-    players[next_player_id++] = player;
+void GameState::add_player(int conn_id) {
+    Player* player = dynamic_cast<MainScene*>(scene_manager.get_current_scene())->spawn_player(conn_id);
+    players[conn_id] = player;
+    num_players++;
 }

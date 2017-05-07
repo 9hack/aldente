@@ -1,10 +1,10 @@
 #include "player.h"
 
 #include "asset_loader.h"
-#include "events.h"
 #include "assert.h"
+#include "events.h"
 
-Player::Player() : GameObject() {
+Player::Player(int client_id) : GameObject(), client_id(client_id) {
     to_moveX = 0;
     to_moveZ = 0;
     move_speed = 2.0f;
@@ -31,9 +31,25 @@ Player::Player() : GameObject() {
 }
 
 void Player::setup_listeners() {
-    events::dungeon::player_move_event.connect([&](events::StickData d) {
+    events::dungeon::player_move_event.connect([&](int id, events::StickData d) {
+        if (id != client_id) return;
         to_moveX = d.state.first;
         to_moveZ = d.state.second;
+    });
+
+    events::dungeon::set_player_pos_event.connect([&](int id, float x, float z, float wx, float wz) {
+        if (id != client_id) return;
+        anim_player.update();
+        bool animate = x != transform.get_position().x || z != transform.get_position().z;
+        transform.set_position(x, 0.0f, z);
+        transform.look_at(glm::vec3(wx, 0, wz));
+        if (!animate) {
+            if (!anim_player.check_paused())
+                anim_player.stop();
+        } else {
+            if (anim_player.check_paused())
+                anim_player.play();
+        }
     });
 
     events::dungeon::player_interact_event.connect([&]() {
