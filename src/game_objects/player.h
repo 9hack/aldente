@@ -32,4 +32,7 @@ public:
 
     void start_walk();
     void stop_walk();
+
+    // TODO after we make more player models
+    void setup_model() {}
 };

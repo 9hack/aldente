@@ -21,4 +21,5 @@ public:
     MainScene();
     void update() override;
     void setup_scene() override;
+    void graphical_setup_scene() override;
 };
