@@ -5,6 +5,7 @@
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
+#include "game/phase.h"
 #include "game_objects/game_object.h"
 #include "btBulletDynamicsCommon.h"
 
@@ -100,7 +101,11 @@ namespace events {
         extern signal<void()> toggle_ui_event;
         extern signal<void()> toggle_light_rotation_event;
         extern signal<void()> toggle_debug_input_event;
+        extern signal<void(Phase*)> client_set_phase_event;
     }
+
+    signal<void(Phase*)> phase_changed_event;
+
     // The user has made a selection on the UI grid.
     extern signal<void(int)> ui_grid_selection_event;
 

@@ -16,8 +16,10 @@ namespace events {
         signal<void()> toggle_ui_event;
         signal<void()> toggle_light_rotation_event;
         signal<void()> toggle_debug_input_event;
+        signal<void(Phase*)> client_set_phase_event;
     }
 
+    signal<void(Phase*)> phase_changed_event;
     signal<void(int)> ui_grid_selection_event;
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
