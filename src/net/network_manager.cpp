@@ -50,18 +50,18 @@ void ServerNetworkManager::register_listeners() {
 
     // Dungeon phase.
     events::dungeon::network_positions_event.connect([&](std::map<int, Player*> & players) {
+        proto::ServerMessage msg;
+        proto::GameState* state = new proto::GameState();
         for (auto & pair : players) {
-            // TODO this assumes only one player connected
-            proto::ServerMessage msg;
-            proto::Player* p = new proto::Player();
+            proto::Player* p = state->add_players();;
             p->set_id(pair.first);
             p->set_x(pair.second->transform.get_position().x);
             p->set_z(pair.second->transform.get_position().z);
             p->set_wx(pair.second->direction.x);
             p->set_wz(pair.second->direction.z);
-            msg.set_allocated_move_update(p);
-            server.send_to_all(msg);
         }
+        msg.set_allocated_state_update(state);
+        server.send_to_all(msg);
     });
 }
 
@@ -175,9 +175,16 @@ void ClientNetworkManager::update() {
             }
             break;
         }
-        case proto::ServerMessage::MessageTypeCase::kMoveUpdate: {
-            proto::Player p = msg.move_update();
-            events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz());
+        case proto::ServerMessage::MessageTypeCase::kStateUpdate: {
+            proto::GameState state = msg.state_update();
+            for (auto p : state.players()) {
+                if (GameState::players.find(p.id()) == GameState::players.end()) {
+                    // Player doesn't exist on this client yet; create.
+                    std::cerr << "Creating player " << p.id() << "\n";
+                    events::menu::spawn_player_event(p);
+                }
+                events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz());
+            }
             break;
         }
         case proto::ServerMessage::MessageTypeCase::kPhaseUpdate: {

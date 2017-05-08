@@ -7,7 +7,7 @@ message ServerMessage {
     string message = 1;
     Construct build_update = 2;
     JoinResponse join_response = 3;
-    Player move_update = 4;
+    GameState state_update = 4;
     Phase phase_update = 5;
   }
 }
@@ -34,6 +34,10 @@ message JoinResponse {
   optional bool status = 1;
   optional int32 num_players = 2;
   optional int32 id = 3;
+}
+
+message GameState {
+  repeated Player players = 1;
 }
 
 message Player {
@@ -65,10 +69,6 @@ enum Phase {
 }
 
 // Below is currently unused.
-
-message GameState {
-  repeated GameObject objects = 1;
-}
 
 message GameObject {
   enum Type {

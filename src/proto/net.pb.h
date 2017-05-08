@@ -38,9 +38,9 @@ class ServerMessage;
 class ClientMessage;
 class Construct;
 class JoinResponse;
+class GameState;
 class Player;
 class StickData;
-class GameState;
 class GameObject;
 class GameObject_Location;
 class JoystickData;
@@ -156,7 +156,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kMessage = 1,
     kBuildUpdate = 2,
     kJoinResponse = 3,
-    kMoveUpdate = 4,
+    kStateUpdate = 4,
     kPhaseUpdate = 5,
     MESSAGE_TYPE_NOT_SET = 0,
   };
@@ -221,14 +221,14 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::proto::JoinResponse* release_join_response();
   inline void set_allocated_join_response(::proto::JoinResponse* join_response);
 
-  // optional .proto.Player move_update = 4;
-  inline bool has_move_update() const;
-  inline void clear_move_update();
-  static const int kMoveUpdateFieldNumber = 4;
-  inline const ::proto::Player& move_update() const;
-  inline ::proto::Player* mutable_move_update();
-  inline ::proto::Player* release_move_update();
-  inline void set_allocated_move_update(::proto::Player* move_update);
+  // optional .proto.GameState state_update = 4;
+  inline bool has_state_update() const;
+  inline void clear_state_update();
+  static const int kStateUpdateFieldNumber = 4;
+  inline const ::proto::GameState& state_update() const;
+  inline ::proto::GameState* mutable_state_update();
+  inline ::proto::GameState* release_state_update();
+  inline void set_allocated_state_update(::proto::GameState* state_update);
 
   // optional .proto.Phase phase_update = 5;
   inline bool has_phase_update() const;
@@ -243,7 +243,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_message();
   inline void set_has_build_update();
   inline void set_has_join_response();
-  inline void set_has_move_update();
+  inline void set_has_state_update();
   inline void set_has_phase_update();
 
   inline bool has_message_type();
@@ -258,7 +258,7 @@ class ServerMessage : public ::google::protobuf::Message {
     ::std::string* message_;
     ::proto::Construct* build_update_;
     ::proto::JoinResponse* join_response_;
-    ::proto::Player* move_update_;
+    ::proto::GameState* state_update_;
     int phase_update_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
@@ -636,6 +636,88 @@ class JoinResponse : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class GameState : public ::google::protobuf::Message {
+ public:
+  GameState();
+  virtual ~GameState();
+
+  GameState(const GameState& from);
+
+  inline GameState& operator=(const GameState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GameState& default_instance();
+
+  void Swap(GameState* other);
+
+  // implements Message ----------------------------------------------
+
+  GameState* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const GameState& from);
+  void MergeFrom(const GameState& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .proto.Player players = 1;
+  inline int players_size() const;
+  inline void clear_players();
+  static const int kPlayersFieldNumber = 1;
+  inline const ::proto::Player& players(int index) const;
+  inline ::proto::Player* mutable_players(int index);
+  inline ::proto::Player* add_players();
+  inline const ::google::protobuf::RepeatedPtrField< ::proto::Player >&
+      players() const;
+  inline ::google::protobuf::RepeatedPtrField< ::proto::Player >*
+      mutable_players();
+
+  // @@protoc_insertion_point(class_scope:proto.GameState)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::proto::Player > players_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static GameState* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Player : public ::google::protobuf::Message {
  public:
   Player();
@@ -900,88 +982,6 @@ class StickData : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static StickData* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class GameState : public ::google::protobuf::Message {
- public:
-  GameState();
-  virtual ~GameState();
-
-  GameState(const GameState& from);
-
-  inline GameState& operator=(const GameState& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const GameState& default_instance();
-
-  void Swap(GameState* other);
-
-  // implements Message ----------------------------------------------
-
-  GameState* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const GameState& from);
-  void MergeFrom(const GameState& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // repeated .proto.GameObject objects = 1;
-  inline int objects_size() const;
-  inline void clear_objects();
-  static const int kObjectsFieldNumber = 1;
-  inline const ::proto::GameObject& objects(int index) const;
-  inline ::proto::GameObject* mutable_objects(int index);
-  inline ::proto::GameObject* add_objects();
-  inline const ::google::protobuf::RepeatedPtrField< ::proto::GameObject >&
-      objects() const;
-  inline ::google::protobuf::RepeatedPtrField< ::proto::GameObject >*
-      mutable_objects();
-
-  // @@protoc_insertion_point(class_scope:proto.GameState)
- private:
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::proto::GameObject > objects_;
-  friend void  protobuf_AddDesc_net_2eproto();
-  friend void protobuf_AssignDesc_net_2eproto();
-  friend void protobuf_ShutdownFile_net_2eproto();
-
-  void InitAsDefaultInstance();
-  static GameState* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1603,46 +1603,46 @@ inline void ServerMessage::set_allocated_join_response(::proto::JoinResponse* jo
   }
 }
 
-// optional .proto.Player move_update = 4;
-inline bool ServerMessage::has_move_update() const {
-  return message_type_case() == kMoveUpdate;
+// optional .proto.GameState state_update = 4;
+inline bool ServerMessage::has_state_update() const {
+  return message_type_case() == kStateUpdate;
 }
-inline void ServerMessage::set_has_move_update() {
-  _oneof_case_[0] = kMoveUpdate;
+inline void ServerMessage::set_has_state_update() {
+  _oneof_case_[0] = kStateUpdate;
 }
-inline void ServerMessage::clear_move_update() {
-  if (has_move_update()) {
-    delete message_type_.move_update_;
+inline void ServerMessage::clear_state_update() {
+  if (has_state_update()) {
+    delete message_type_.state_update_;
     clear_has_message_type();
   }
 }
-inline const ::proto::Player& ServerMessage::move_update() const {
-  return has_move_update() ? *message_type_.move_update_
-                      : ::proto::Player::default_instance();
+inline const ::proto::GameState& ServerMessage::state_update() const {
+  return has_state_update() ? *message_type_.state_update_
+                      : ::proto::GameState::default_instance();
 }
-inline ::proto::Player* ServerMessage::mutable_move_update() {
-  if (!has_move_update()) {
+inline ::proto::GameState* ServerMessage::mutable_state_update() {
+  if (!has_state_update()) {
     clear_message_type();
-    set_has_move_update();
-    message_type_.move_update_ = new ::proto::Player;
+    set_has_state_update();
+    message_type_.state_update_ = new ::proto::GameState;
   }
-  return message_type_.move_update_;
+  return message_type_.state_update_;
 }
-inline ::proto::Player* ServerMessage::release_move_update() {
-  if (has_move_update()) {
+inline ::proto::GameState* ServerMessage::release_state_update() {
+  if (has_state_update()) {
     clear_has_message_type();
-    ::proto::Player* temp = message_type_.move_update_;
-    message_type_.move_update_ = NULL;
+    ::proto::GameState* temp = message_type_.state_update_;
+    message_type_.state_update_ = NULL;
     return temp;
   } else {
     return NULL;
   }
 }
-inline void ServerMessage::set_allocated_move_update(::proto::Player* move_update) {
+inline void ServerMessage::set_allocated_state_update(::proto::GameState* state_update) {
   clear_message_type();
-  if (move_update) {
-    set_has_move_update();
-    message_type_.move_update_ = move_update;
+  if (state_update) {
+    set_has_state_update();
+    message_type_.state_update_ = state_update;
   }
 }
 
@@ -2152,6 +2152,40 @@ inline void JoinResponse::set_id(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
+// GameState
+
+// repeated .proto.Player players = 1;
+inline int GameState::players_size() const {
+  return players_.size();
+}
+inline void GameState::clear_players() {
+  players_.Clear();
+}
+inline const ::proto::Player& GameState::players(int index) const {
+  // @@protoc_insertion_point(field_get:proto.GameState.players)
+  return players_.Get(index);
+}
+inline ::proto::Player* GameState::mutable_players(int index) {
+  // @@protoc_insertion_point(field_mutable:proto.GameState.players)
+  return players_.Mutable(index);
+}
+inline ::proto::Player* GameState::add_players() {
+  // @@protoc_insertion_point(field_add:proto.GameState.players)
+  return players_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::proto::Player >&
+GameState::players() const {
+  // @@protoc_insertion_point(field_list:proto.GameState.players)
+  return players_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::proto::Player >*
+GameState::mutable_players() {
+  // @@protoc_insertion_point(field_mutable_list:proto.GameState.players)
+  return &players_;
+}
+
+// -------------------------------------------------------------------
+
 // Player
 
 // optional int32 id = 1;
@@ -2449,40 +2483,6 @@ inline void StickData::set_id(::google::protobuf::int32 value) {
   set_has_id();
   id_ = value;
   // @@protoc_insertion_point(field_set:proto.StickData.id)
-}
-
-// -------------------------------------------------------------------
-
-// GameState
-
-// repeated .proto.GameObject objects = 1;
-inline int GameState::objects_size() const {
-  return objects_.size();
-}
-inline void GameState::clear_objects() {
-  objects_.Clear();
-}
-inline const ::proto::GameObject& GameState::objects(int index) const {
-  // @@protoc_insertion_point(field_get:proto.GameState.objects)
-  return objects_.Get(index);
-}
-inline ::proto::GameObject* GameState::mutable_objects(int index) {
-  // @@protoc_insertion_point(field_mutable:proto.GameState.objects)
-  return objects_.Mutable(index);
-}
-inline ::proto::GameObject* GameState::add_objects() {
-  // @@protoc_insertion_point(field_add:proto.GameState.objects)
-  return objects_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::proto::GameObject >&
-GameState::objects() const {
-  // @@protoc_insertion_point(field_list:proto.GameState.objects)
-  return objects_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::proto::GameObject >*
-GameState::mutable_objects() {
-  // @@protoc_insertion_point(field_mutable_list:proto.GameState.objects)
-  return &objects_;
 }
 
 // -------------------------------------------------------------------

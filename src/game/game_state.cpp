@@ -46,11 +46,12 @@ void GameState::update() {
         curr_phase = next_phase;
         curr_phase->setup();
     }
-
     physics.update();
     scene_manager.get_current_scene()->update();
 
-    events::dungeon::network_positions_event(players);    
+    if (curr_phase == &dungeon_phase) {
+        events::dungeon::network_positions_event(players);
+    }
 }
 
 void GameState::client_update() {
@@ -82,6 +83,7 @@ void GameState::set_phase(proto::Phase phase) {
 
 
 void GameState::add_player(int conn_id, bool graphical) {
+    assert(players.find(conn_id) == players.end());
     Player* player = dynamic_cast<MainScene*>(scene_manager.get_current_scene())->spawn_player(conn_id, graphical);
     players[conn_id] = player;
     num_players++;
