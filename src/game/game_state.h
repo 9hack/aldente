@@ -30,8 +30,8 @@ public:
     static void client_update();
 
     // Force a phase change to the specified phase.
-    // NOTE: do not use; this is only used for debugging.
     static void set_phase(Phase* phase);
+    static void set_phase(proto::Phase phase);
 
     static void add_player(int conn_id, bool graphical);
 private:
