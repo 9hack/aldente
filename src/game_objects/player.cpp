@@ -38,7 +38,7 @@ void Player::setup_listeners() {
         to_moveZ = d.state.second;
     });
 
-    events::dungeon::set_player_pos_event.connect([&](int id, float x, float z, float wx, float wz) {
+    events::dungeon::set_player_pos_event.connect([&](int id, float x, float z, float wx, float wz, bool follow) {
         if (id != client_id) return;
         anim_player.update();
         bool animate = x != transform.get_position().x || z != transform.get_position().z;
@@ -52,8 +52,9 @@ void Player::setup_listeners() {
                 anim_player.play();
         }
 
-        // Fires player position whenever player moves
-        events::dungeon::player_position_updated_event(transform.get_position());
+        // Fires player position whenever player moves (camera)
+        if (follow)
+            events::dungeon::player_position_updated_event(transform.get_position());
     });
 
     events::dungeon::player_interact_event.connect([&]() {
