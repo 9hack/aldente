@@ -183,7 +183,7 @@ void ClientNetworkManager::update() {
                     std::cerr << "Creating player " << p.id() << "\n";
                     events::menu::spawn_player_event(p);
                 }
-                events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz());
+                events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
             }
             break;
         }

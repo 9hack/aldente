@@ -185,7 +185,7 @@ namespace events {
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
 
-        extern signal<void(int, float, float, float, float)> set_player_pos_event;
+        extern signal<void(int, float, float, float, float, bool)> set_player_pos_event;
 
         extern signal<void(StickData &)> network_player_move_event;
 
