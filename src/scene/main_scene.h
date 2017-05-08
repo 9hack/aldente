@@ -21,7 +21,8 @@ private:
 public:
     MainScene();
     void update() override;
+    void client_update() override;
     void setup_scene() override;
     void graphical_setup() override;
-    Player* spawn_player(int client_id);
+    Player* spawn_player(int client_id, bool graphical);
 };

@@ -51,6 +51,9 @@ void Player::setup_listeners() {
             if (anim_player.check_paused())
                 anim_player.play();
         }
+
+        // Fires player position whenever player moves
+        events::dungeon::player_position_updated_event(transform.get_position());
     });
 
     events::dungeon::player_interact_event.connect([&]() {
@@ -78,9 +81,6 @@ void Player::update() {
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
         (float)to_set.getZ()));
-
-    // Fires player position whenever player moves
-    events::dungeon::player_position_updated_event(transform.get_position());
 }
 
 void Player::do_movement() {
@@ -90,17 +90,6 @@ void Player::do_movement() {
     rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
     transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
     direction = glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed);
-    if (to_moveX == 0 && to_moveZ == 0) {
-        if (!anim_player.check_paused()) {
-            anim_player.stop();
-        }
-    }
-    else {
-        if (anim_player.check_paused()) {
-            anim_player.play();
-        }
-    }
-
 }
 
 void Player::interact() {
