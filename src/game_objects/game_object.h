@@ -31,6 +31,7 @@ public:
     virtual void draw(Shader *shader, SceneInfo &scene_info);
     virtual void update();
     virtual void on_collision(GameObject *other) {}
+    virtual void setup_model() = 0;
 
     Model* get_model() { return model; };
     void attach_model(Model *m);

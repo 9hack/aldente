@@ -47,6 +47,8 @@ public:
     Construct* get_construct() { return construct; };
 
     bool isBuildable() { return buildable; };
+
+    virtual void setup_model() = 0;
 };
 
 class FloorTile : public Tile {
@@ -55,6 +57,8 @@ public:
     FloorTile(int x, int z);
 
     void update();
+
+    void setup_model();
 };
 
 class WallTile : public Tile {
@@ -63,4 +67,6 @@ public:
     WallTile(int x, int z);
 
     void update();
+
+    void setup_model();
 };

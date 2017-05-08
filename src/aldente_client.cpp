@@ -95,6 +95,7 @@ void AldenteClient::start() {
     MainScene testScene;
     physics.set_scene(&testScene);
     scene_manager.set_current_scene(&testScene);
+    testScene.graphical_setup();
     DebugInput debug_input(window, scene_manager, physics);
 
     // Have window fire off a resize event to update all interested systems.

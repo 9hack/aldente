@@ -18,6 +18,13 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     this->z = z;
     buildable = true;
 
+    transform.set_position((float)x, 0.0f, (float)z);
+}
+
+void FloorTile::update() {
+}
+
+void FloorTile::setup_model() {
     Mesh* mesh = new Mesh();
 
     // Set's the mesh's location relative to the model
@@ -28,11 +35,6 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     mesh->geometry->attach_texture(AssetLoader::get_texture("cobblestone.png"));
 
     model->add_mesh(mesh);
-
-    transform.set_position((float)x, 0.0f, (float)z);
-}
-
-void FloorTile::update() {
 }
 
 WallTile::WallTile(int x, int z) : Tile::Tile() {
@@ -42,16 +44,6 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     this->z = z;
     buildable = false;
 
-    Mesh* mesh = new Mesh();
-
-    // Set's the mesh's location relative to the model
-    mesh->local_transform = glm::mat4(1.0f);
-    mesh->geometry = GeometryGenerator::generate_cube(1.0f);
-    Material *mat = new Material(Color::WHITE);
-    mesh->material = mat;
-    mesh->geometry->attach_texture(AssetLoader::get_texture("wall.png"));
-
-    model->add_mesh(mesh);
     transform.set_position(x, 0.5f, z);
 
     events::RigidBodyData rigid = {
@@ -65,4 +57,17 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
 }
 
 void WallTile::update() {
+}
+
+void WallTile::setup_model() {
+    Mesh* mesh = new Mesh();
+
+    // Set's the mesh's location relative to the model
+    mesh->local_transform = glm::mat4(1.0f);
+    mesh->geometry = GeometryGenerator::generate_cube(1.0f);
+    Material *mat = new Material(Color::WHITE);
+    mesh->material = mat;
+    mesh->geometry->attach_texture(AssetLoader::get_texture("wall.png"));
+
+    model->add_mesh(mesh);
 }
