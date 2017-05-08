@@ -22,15 +22,18 @@ public:
     // Initializes the game state with the given start phase.
     static void init(Phase* phase);
 
+    static void graphical_setup();
+
     // Update state given input. Called in the game loop.
     // NOTE: not yet implemented; need input to pass in
     static void update();
+    static void client_update();
 
     // Force a phase change to the specified phase.
     // NOTE: do not use; this is only used for debugging.
     static void set_phase(Phase* phase);
 
-    static void add_player(int conn_id);
+    static void add_player(int conn_id, bool graphical);
 private:
     static MainScene testScene;
     static int num_players;

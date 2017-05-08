@@ -8,18 +8,10 @@ MainScene::MainScene() : Scene() {
 }
 
 void MainScene::update() {
-
     Scene::update();
+}
 
-    //hover = physics.hover; hover = nullptr;
-    std::vector<std::vector<Tile *>> toAdd = grid->getGrid();
-    for (int i = 0; i < toAdd.size(); i++) {
-        std::vector<Tile *> currRow = toAdd[i];
-        for (int j = 0; j < currRow.size(); j++) {
-            currRow[j]->update();
-        }
-    }
-
+void MainScene::client_update() {
     grid->update();
 
     // Rotate directional light sources just to test shadows.
@@ -72,16 +64,18 @@ void MainScene::graphical_setup() {
     }
 }
 
-Player* MainScene::spawn_player() {
-    Model *player_model = AssetLoader::get_model(std::string("boy_two"));
-    player_model->set_shader(&ShaderManager::anim_unlit);
-
+Player* MainScene::spawn_player(int client_id, bool graphical) {
     Player *player = new Player(client_id);
     player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
     player->transform.translate({ 2.f, 0.f, 2.f });
     objs.push_back(player);
-    player->attach_model(player_model);
-    player->start_walk();
+    
+    if (graphical) {
+        Model *player_model = AssetLoader::get_model(std::string("boy_two"));
+        player_model->set_shader(&ShaderManager::anim_unlit);
+        player->attach_model(player_model);
+        player->start_walk();
+    }
 
     return player;
 }

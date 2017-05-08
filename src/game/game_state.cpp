@@ -27,12 +27,16 @@ void GameState::init(Phase* phase) {
         events::menu::respond_join_event(conn_id, resp);
 
         if (num_players < 4)
-            add_player(conn_id);
+            add_player(conn_id, false);
     });
 
     events::menu::spawn_player_event.connect([](proto::Player & player) {
-        add_player(player.id());
+        add_player(player.id(), true);
     });
+}
+
+void GameState::graphical_setup() {
+    scene_manager.get_current_scene()->graphical_setup();
 }
 
 void GameState::update() {
@@ -49,14 +53,18 @@ void GameState::update() {
     events::dungeon::network_positions_event(players);    
 }
 
+void GameState::client_update() {
+    scene_manager.get_current_scene()->client_update();
+}
+
 void GameState::set_phase(Phase* phase) {
     curr_phase->teardown();
     curr_phase = phase;
     curr_phase->setup();
 }
 
-void GameState::add_player(int conn_id) {
-    Player* player = dynamic_cast<MainScene*>(scene_manager.get_current_scene())->spawn_player(conn_id);
+void GameState::add_player(int conn_id, bool graphical) {
+    Player* player = dynamic_cast<MainScene*>(scene_manager.get_current_scene())->spawn_player(conn_id, graphical);
     players[conn_id] = player;
     num_players++;
 }
