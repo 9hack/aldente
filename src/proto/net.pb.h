@@ -106,6 +106,27 @@ inline bool Direction_Cardinal_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<Direction_Cardinal>(
     Direction_Cardinal_descriptor(), name, value);
 }
+enum Phase {
+  MENU = 0,
+  BUILD = 1,
+  DUNGEON = 2,
+  MINIGAME = 3
+};
+bool Phase_IsValid(int value);
+const Phase Phase_MIN = MENU;
+const Phase Phase_MAX = MINIGAME;
+const int Phase_ARRAYSIZE = Phase_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Phase_descriptor();
+inline const ::std::string& Phase_Name(Phase value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Phase_descriptor(), value);
+}
+inline bool Phase_Parse(
+    const ::std::string& name, Phase* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Phase>(
+    Phase_descriptor(), name, value);
+}
 // ===================================================================
 
 class ServerMessage : public ::google::protobuf::Message {
@@ -136,6 +157,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kBuildUpdate = 2,
     kJoinResponse = 3,
     kMoveUpdate = 4,
+    kPhaseUpdate = 5,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -208,6 +230,13 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::proto::Player* release_move_update();
   inline void set_allocated_move_update(::proto::Player* move_update);
 
+  // optional .proto.Phase phase_update = 5;
+  inline bool has_phase_update() const;
+  inline void clear_phase_update();
+  static const int kPhaseUpdateFieldNumber = 5;
+  inline ::proto::Phase phase_update() const;
+  inline void set_phase_update(::proto::Phase value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
@@ -215,6 +244,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_build_update();
   inline void set_has_join_response();
   inline void set_has_move_update();
+  inline void set_has_phase_update();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -229,6 +259,7 @@ class ServerMessage : public ::google::protobuf::Message {
     ::proto::Construct* build_update_;
     ::proto::JoinResponse* join_response_;
     ::proto::Player* move_update_;
+    int phase_update_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -269,6 +300,7 @@ class ClientMessage : public ::google::protobuf::Message {
     kBuildRequest = 2,
     kJoinRequest = 3,
     kMoveRequest = 4,
+    kPhaseRequest = 5,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -344,6 +376,13 @@ class ClientMessage : public ::google::protobuf::Message {
   inline ::proto::StickData* release_move_request();
   inline void set_allocated_move_request(::proto::StickData* move_request);
 
+  // optional .proto.Phase phase_request = 5;
+  inline bool has_phase_request() const;
+  inline void clear_phase_request();
+  static const int kPhaseRequestFieldNumber = 5;
+  inline ::proto::Phase phase_request() const;
+  inline void set_phase_request(::proto::Phase value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ClientMessage)
  private:
@@ -351,6 +390,7 @@ class ClientMessage : public ::google::protobuf::Message {
   inline void set_has_build_request();
   inline void set_has_join_request();
   inline void set_has_move_request();
+  inline void set_has_phase_request();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -365,6 +405,7 @@ class ClientMessage : public ::google::protobuf::Message {
     ::proto::Construct* build_request_;
     ::std::string* join_request_;
     ::proto::StickData* move_request_;
+    int phase_request_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1605,6 +1646,34 @@ inline void ServerMessage::set_allocated_move_update(::proto::Player* move_updat
   }
 }
 
+// optional .proto.Phase phase_update = 5;
+inline bool ServerMessage::has_phase_update() const {
+  return message_type_case() == kPhaseUpdate;
+}
+inline void ServerMessage::set_has_phase_update() {
+  _oneof_case_[0] = kPhaseUpdate;
+}
+inline void ServerMessage::clear_phase_update() {
+  if (has_phase_update()) {
+    message_type_.phase_update_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::proto::Phase ServerMessage::phase_update() const {
+  if (has_phase_update()) {
+    return static_cast< ::proto::Phase >(message_type_.phase_update_);
+  }
+  return static_cast< ::proto::Phase >(0);
+}
+inline void ServerMessage::set_phase_update(::proto::Phase value) {
+  assert(::proto::Phase_IsValid(value));
+  if (!has_phase_update()) {
+    clear_message_type();
+    set_has_phase_update();
+  }
+  message_type_.phase_update_ = value;
+}
+
 inline bool ServerMessage::has_message_type() {
   return message_type_case() != MESSAGE_TYPE_NOT_SET;
 }
@@ -1842,6 +1911,34 @@ inline void ClientMessage::set_allocated_move_request(::proto::StickData* move_r
     set_has_move_request();
     message_type_.move_request_ = move_request;
   }
+}
+
+// optional .proto.Phase phase_request = 5;
+inline bool ClientMessage::has_phase_request() const {
+  return message_type_case() == kPhaseRequest;
+}
+inline void ClientMessage::set_has_phase_request() {
+  _oneof_case_[0] = kPhaseRequest;
+}
+inline void ClientMessage::clear_phase_request() {
+  if (has_phase_request()) {
+    message_type_.phase_request_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::proto::Phase ClientMessage::phase_request() const {
+  if (has_phase_request()) {
+    return static_cast< ::proto::Phase >(message_type_.phase_request_);
+  }
+  return static_cast< ::proto::Phase >(0);
+}
+inline void ClientMessage::set_phase_request(::proto::Phase value) {
+  assert(::proto::Phase_IsValid(value));
+  if (!has_phase_request()) {
+    clear_message_type();
+    set_has_phase_request();
+  }
+  message_type_.phase_request_ = value;
 }
 
 inline bool ClientMessage::has_message_type() {
@@ -2734,6 +2831,11 @@ template <> struct is_proto_enum< ::proto::Direction_Cardinal> : ::google::proto
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::proto::Direction_Cardinal>() {
   return ::proto::Direction_Cardinal_descriptor();
+}
+template <> struct is_proto_enum< ::proto::Phase> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::proto::Phase>() {
+  return ::proto::Phase_descriptor();
 }
 
 }  // namespace google

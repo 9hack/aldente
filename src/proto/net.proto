@@ -8,6 +8,7 @@ message ServerMessage {
     Construct build_update = 2;
     JoinResponse join_response = 3;
     Player move_update = 4;
+    Phase phase_update = 5;
   }
 }
 
@@ -17,6 +18,7 @@ message ClientMessage {
     Construct build_request = 2;
     string join_request = 3;
     StickData move_request = 4;
+    Phase phase_request = 5;
   }
 }
 
@@ -53,6 +55,13 @@ message StickData {
   optional int32 x = 2;
   optional int32 y = 3;
   optional int32 id = 4;
+}
+
+enum Phase {
+  MENU = 0;
+  BUILD = 1;
+  DUNGEON = 2;
+  MINIGAME = 3;
 }
 
 // Below is currently unused.

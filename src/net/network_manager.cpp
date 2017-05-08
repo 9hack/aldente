@@ -1,6 +1,7 @@
 #include "network_manager.h"
 #include "util/config.h"
 #include "game_objects/player.h"
+#include "game/game_state.h"
 #include <GLFW/glfw3.h>
 
 void NetworkManager::disconnect() {
@@ -100,6 +101,13 @@ void ClientNetworkManager::connect() {
 }
 
 void ClientNetworkManager::register_listeners() {
+    // Debug.
+    events::debug::client_set_phase_event.connect([&](Phase* phase) {
+        if (phase == &GameState::menu_phase) {
+
+        }
+    });
+
     // Build phase.
     events::build::request_build_event.connect([&](proto::Construct& c) {
         proto::ClientMessage msg;
