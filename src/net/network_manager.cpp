@@ -83,6 +83,17 @@ void ServerNetworkManager::update() {
                 d.state.first = stick.x();
                 d.state.second = stick.y();
                 events::dungeon::player_move_event(stick.id(), d);
+                break;
+            }
+            case proto::ClientMessage::MessageTypeCase::kPhaseRequest: {
+                proto::Phase phase = msg.phase_request();
+                GameState::set_phase(phase);
+
+                // Announce phase change to all clients.
+                proto::ServerMessage phase_announce;
+                phase_announce.set_phase_update(phase);
+                server.send_to_all(phase_announce);
+                break;
             }
             default:
                 break;
@@ -102,9 +113,20 @@ void ClientNetworkManager::connect() {
 void ClientNetworkManager::register_listeners() {
     // Debug.
     events::debug::client_set_phase_event.connect([&](Phase* phase) {
-        if (phase == &GameState::menu_phase) {
-
+        proto::ClientMessage msg;
+        if (phase == &GameState::menu_phase)
+            msg.set_phase_request(proto::Phase::MENU);
+        else if (phase == &GameState::build_phase)
+            msg.set_phase_request(proto::Phase::BUILD);
+        else if (phase == &GameState::dungeon_phase)
+            msg.set_phase_request(proto::Phase::DUNGEON);
+        else if (phase == &GameState::minigame_phase)
+            msg.set_phase_request(proto::Phase::MINIGAME);
+        else {
+            std::cerr << "Unrecognized phase. Use the static phases in GameState.\n";
+            return;
         }
+        client.send(msg);
     });
 
     // Build phase.
@@ -141,6 +163,7 @@ void ClientNetworkManager::update() {
             else {
                 // TODO: construct placement failed. client-side notification?
             }
+            break;
         }
         case proto::ServerMessage::MessageTypeCase::kJoinResponse: {
             proto::JoinResponse resp = msg.join_response();
@@ -150,10 +173,17 @@ void ClientNetworkManager::update() {
                 p.set_id(client_id);
                 events::menu::spawn_player_event(p);
             }
+            break;
         }
         case proto::ServerMessage::MessageTypeCase::kMoveUpdate: {
             proto::Player p = msg.move_update();
             events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz());
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPhaseUpdate: {
+            proto::Phase phase = msg.phase_update();
+            GameState::set_phase(phase);
+            break;
         }
         default:
             break;

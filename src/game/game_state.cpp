@@ -63,6 +63,24 @@ void GameState::set_phase(Phase* phase) {
     curr_phase->setup();
 }
 
+void GameState::set_phase(proto::Phase phase) {
+    switch (phase) {
+    case proto::Phase::MENU:
+        GameState::set_phase(&GameState::menu_phase);
+        break;
+    case proto::Phase::BUILD:
+        GameState::set_phase(&GameState::build_phase);
+        break;
+    case proto::Phase::DUNGEON:
+        GameState::set_phase(&GameState::dungeon_phase);
+        break;
+    case proto::Phase::MINIGAME:
+        GameState::set_phase(&GameState::minigame_phase);
+        break;
+    }
+}
+
+
 void GameState::add_player(int conn_id, bool graphical) {
     Player* player = dynamic_cast<MainScene*>(scene_manager.get_current_scene())->spawn_player(conn_id, graphical);
     players[conn_id] = player;
