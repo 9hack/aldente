@@ -701,6 +701,18 @@ class GameState : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::proto::Player >*
       mutable_players();
 
+  // repeated int32 collisions = 2;
+  inline int collisions_size() const;
+  inline void clear_collisions();
+  static const int kCollisionsFieldNumber = 2;
+  inline ::google::protobuf::int32 collisions(int index) const;
+  inline void set_collisions(int index, ::google::protobuf::int32 value);
+  inline void add_collisions(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      collisions() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_collisions();
+
   // @@protoc_insertion_point(class_scope:proto.GameState)
  private:
 
@@ -709,6 +721,7 @@ class GameState : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::proto::Player > players_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > collisions_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -2182,6 +2195,36 @@ inline ::google::protobuf::RepeatedPtrField< ::proto::Player >*
 GameState::mutable_players() {
   // @@protoc_insertion_point(field_mutable_list:proto.GameState.players)
   return &players_;
+}
+
+// repeated int32 collisions = 2;
+inline int GameState::collisions_size() const {
+  return collisions_.size();
+}
+inline void GameState::clear_collisions() {
+  collisions_.Clear();
+}
+inline ::google::protobuf::int32 GameState::collisions(int index) const {
+  // @@protoc_insertion_point(field_get:proto.GameState.collisions)
+  return collisions_.Get(index);
+}
+inline void GameState::set_collisions(int index, ::google::protobuf::int32 value) {
+  collisions_.Set(index, value);
+  // @@protoc_insertion_point(field_set:proto.GameState.collisions)
+}
+inline void GameState::add_collisions(::google::protobuf::int32 value) {
+  collisions_.Add(value);
+  // @@protoc_insertion_point(field_add:proto.GameState.collisions)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+GameState::collisions() const {
+  // @@protoc_insertion_point(field_list:proto.GameState.collisions)
+  return collisions_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+GameState::mutable_collisions() {
+  // @@protoc_insertion_point(field_mutable_list:proto.GameState.collisions)
+  return &collisions_;
 }
 
 // -------------------------------------------------------------------

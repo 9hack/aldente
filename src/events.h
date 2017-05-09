@@ -1,14 +1,15 @@
 #pragma once
 
 #include <boost/signals2.hpp>
+#include <unordered_set>
 #include "window.h"
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
-#include "game_objects/game_object.h"
 #include "btBulletDynamicsCommon.h"
 
 // Forward declaration to resolve circular dependency.
+class GameObject;
 class Player;
 class Phase;
 
@@ -189,6 +190,10 @@ namespace events {
 
         extern signal<void(StickData &)> network_player_move_event;
 
-        extern signal<void(std::map<int, Player*> &)> network_positions_event;
+        extern signal<void(std::map<int, Player*> &, std::unordered_set<int>)> network_positions_event;
+
+        extern signal<void(int)> collision_event;
+
+        extern signal<void(int)> network_collision_event;
     }
 }

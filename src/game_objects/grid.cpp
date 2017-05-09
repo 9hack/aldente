@@ -44,16 +44,19 @@ void Grid::setup_listeners() {
     events::build::try_build_event.connect([&](proto::Construct& c) {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
-        events::build::respond_build_event(c);
-
         // Build the construct locally on the server, without graphics.
-        if (permitted)
-            build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
+        if (permitted) {
+            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
+            if (built)
+                c.set_id(built->get_id());
+        }
+
+        events::build::respond_build_event(c);
     });
 
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
-        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true);
+        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
     });
 }
 
@@ -73,14 +76,17 @@ bool Grid::verify_build(ConstructType type, int col, int row) {
     return candidate->buildable;
 }
 
-void Grid::build(ConstructType type, int col, int row, bool graphical) {
+Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int id) {
     Tile* candidate = grid[row][col];
+    Construct* to_add = nullptr;
 
     switch (type) {
     case CHEST: {
-        Construct* to_add = new Crate(col, row);
-        if (graphical)
+        to_add = new Crate(col, row);
+        if (graphical) {
             to_add->setup_model();
+            to_add->set_id(id);
+        }
         candidate->set_construct(to_add);
         candidate->buildable = false;
         break;
@@ -97,6 +103,8 @@ void Grid::build(ConstructType type, int col, int row, bool graphical) {
     default:
         break;
     }
+
+    return to_add;
 }
 
 void Grid::move_selection(Direction d) {

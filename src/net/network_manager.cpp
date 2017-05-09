@@ -3,6 +3,7 @@
 #include "game_objects/player.h"
 #include "game/game_state.h"
 #include <GLFW/glfw3.h>
+#include <unordered_set>
 
 void NetworkManager::disconnect() {
     if (!io_service.stopped())
@@ -50,7 +51,7 @@ void ServerNetworkManager::register_listeners() {
     });
 
     // Dungeon phase.
-    events::dungeon::network_positions_event.connect([&](std::map<int, Player*> & players) {
+    events::dungeon::network_positions_event.connect([&](std::map<int, Player*> & players, std::unordered_set<int> collisions) {
         proto::ServerMessage msg;
         proto::GameState* state = new proto::GameState();
         for (auto & pair : players) {
@@ -61,6 +62,10 @@ void ServerNetworkManager::register_listeners() {
             p->set_wx(pair.second->direction.x);
             p->set_wz(pair.second->direction.z);
         }
+
+        for (int obj_id : collisions)
+            state->add_collisions(obj_id);
+
         msg.set_allocated_state_update(state);
         server.send_to_all(msg);
     });
@@ -186,6 +191,10 @@ void ClientNetworkManager::update() {
                 }
                 events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
             }
+
+            for (int obj_id : state.collisions())
+                events::dungeon::collision_event(obj_id);
+
             break;
         }
         case proto::ServerMessage::MessageTypeCase::kPhaseUpdate: {

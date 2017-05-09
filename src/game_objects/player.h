@@ -26,6 +26,7 @@ public:
     Player(int client_id);
     virtual void update() override;
     virtual void on_collision(GameObject *other) override;
+    virtual void on_collision_graphical() override;
     void do_movement();
     void setup_listeners();
 

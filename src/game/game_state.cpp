@@ -7,6 +7,7 @@ DungeonPhase GameState::dungeon_phase;
 MinigamePhase GameState::minigame_phase;
 Phase* GameState::curr_phase;
 std::map<int, Player*> GameState::players;
+std::unordered_set<int> GameState::collisions;
 
 Physics GameState::physics;
 SceneManager GameState::scene_manager;
@@ -33,6 +34,10 @@ void GameState::init(Phase* phase) {
     events::menu::spawn_player_event.connect([](proto::Player & player) {
         add_player(player.id(), true);
     });
+
+    events::dungeon::network_collision_event.connect([&](int obj_id) {
+        collisions.insert(obj_id);
+    });
 }
 
 void GameState::graphical_setup() {
@@ -50,7 +55,8 @@ void GameState::update() {
     scene_manager.get_current_scene()->update();
 
     if (curr_phase == &dungeon_phase) {
-        events::dungeon::network_positions_event(players);
+        events::dungeon::network_positions_event(players, collisions);
+        collisions.clear();
     }
 }
 

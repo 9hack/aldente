@@ -5,6 +5,7 @@
 #include "physics.h"
 #include "scene_manager.h"
 #include <map>
+#include <unordered_set>
 
 class GameState {
 public:
@@ -18,6 +19,7 @@ public:
     static Physics physics;
 
     static std::map<int, Player*> players;
+    static std::unordered_set<int> collisions;
 
     // Initializes the game state with the given start phase.
     static void init(Phase* phase);

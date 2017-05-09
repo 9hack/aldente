@@ -162,8 +162,9 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(JoinResponse));
   GameState_descriptor_ = file->message_type(4);
-  static const int GameState_offsets_[1] = {
+  static const int GameState_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, players_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, collisions_),
   };
   GameState_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -371,25 +372,25 @@ void protobuf_AddDesc_net_2eproto() {
     "\"K\n\tConstruct\022\014\n\004type\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t"
     "\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010\"\?\n"
     "\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013num_pla"
-    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\"+\n\tGameState\022\036\n\007p"
-    "layers\030\001 \003(\0132\r.proto.Player\"P\n\006Player\022\n\n"
-    "\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\n\n\002wx\030\004 "
-    "\001(\002\022\n\n\002wz\030\005 \001(\002\022\014\n\004name\030\006 \001(\t\"~\n\tStickDa"
-    "ta\022%\n\005input\030\001 \001(\0162\026.proto.StickData.Stic"
-    "k\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005S"
-    "tick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001\"\317\001"
-    "\n\nGameObject\022$\n\004type\030\001 \001(\0162\026.proto.GameO"
-    "bject.Type\022,\n\010location\030\002 \001(\0132\032.proto.Gam"
-    "eObject.Location\032F\n\010Location\022\r\n\001x\030\001 \003(\001B"
-    "\002\020\001\022\r\n\001y\030\002 \003(\001B\002\020\001\022\r\n\001z\030\003 \003(\001B\002\020\001\022\r\n\001w\030\004"
-    " \003(\001B\002\020\001\"%\n\004Type\022\n\n\006PLAYER\020\000\022\007\n\003NPC\020\001\022\010\n"
-    "\004TILE\020\002\"K\n\014JoystickData\022\n\n\002id\030\001 \001(\005\022\021\n\ti"
-    "s_button\030\002 \001(\010\022\r\n\005input\030\003 \001(\005\022\r\n\005state\030\004"
-    " \001(\005\"i\n\tDirection\022&\n\003way\030\001 \001(\0162\031.proto.D"
-    "irection.Cardinal\"4\n\010Cardinal\022\t\n\005NORTH\020\000"
-    "\022\010\n\004EAST\020\001\022\t\n\005SOUTH\020\002\022\010\n\004WEST\020\003*7\n\005Phase"
-    "\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MI"
-    "NIGAME\020\003", 1288);
+    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\"\?\n\tGameState\022\036\n\007p"
+    "layers\030\001 \003(\0132\r.proto.Player\022\022\n\ncollision"
+    "s\030\002 \003(\005\"P\n\006Player\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002"
+    "\022\t\n\001z\030\003 \001(\002\022\n\n\002wx\030\004 \001(\002\022\n\n\002wz\030\005 \001(\002\022\014\n\004n"
+    "ame\030\006 \001(\t\"~\n\tStickData\022%\n\005input\030\001 \001(\0162\026."
+    "proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 "
+    "\001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT\020\000"
+    "\022\017\n\013STICK_RIGHT\020\001\"\317\001\n\nGameObject\022$\n\004type"
+    "\030\001 \001(\0162\026.proto.GameObject.Type\022,\n\010locati"
+    "on\030\002 \001(\0132\032.proto.GameObject.Location\032F\n\010"
+    "Location\022\r\n\001x\030\001 \003(\001B\002\020\001\022\r\n\001y\030\002 \003(\001B\002\020\001\022\r"
+    "\n\001z\030\003 \003(\001B\002\020\001\022\r\n\001w\030\004 \003(\001B\002\020\001\"%\n\004Type\022\n\n\006"
+    "PLAYER\020\000\022\007\n\003NPC\020\001\022\010\n\004TILE\020\002\"K\n\014JoystickD"
+    "ata\022\n\n\002id\030\001 \001(\005\022\021\n\tis_button\030\002 \001(\010\022\r\n\005in"
+    "put\030\003 \001(\005\022\r\n\005state\030\004 \001(\005\"i\n\tDirection\022&\n"
+    "\003way\030\001 \001(\0162\031.proto.Direction.Cardinal\"4\n"
+    "\010Cardinal\022\t\n\005NORTH\020\000\022\010\n\004EAST\020\001\022\t\n\005SOUTH\020"
+    "\002\022\010\n\004WEST\020\003*7\n\005Phase\022\010\n\004MENU\020\000\022\t\n\005BUILD\020"
+    "\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1308);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -2034,6 +2035,7 @@ void JoinResponse::Swap(JoinResponse* other) {
 
 #ifndef _MSC_VER
 const int GameState::kPlayersFieldNumber;
+const int GameState::kCollisionsFieldNumber;
 #endif  // !_MSC_VER
 
 GameState::GameState()
@@ -2090,6 +2092,7 @@ GameState* GameState::New() const {
 
 void GameState::Clear() {
   players_.Clear();
+  collisions_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2114,6 +2117,25 @@ bool GameState::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(10)) goto parse_players;
+        if (input->ExpectTag(16)) goto parse_collisions;
+        break;
+      }
+
+      // repeated int32 collisions = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_collisions:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 1, 16, input, this->mutable_collisions())));
+        } else if (tag == 18) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, this->mutable_collisions())));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_collisions;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2149,6 +2171,12 @@ void GameState::SerializeWithCachedSizes(
       1, this->players(i), output);
   }
 
+  // repeated int32 collisions = 2;
+  for (int i = 0; i < this->collisions_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(
+      2, this->collisions(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2164,6 +2192,12 @@ void GameState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->players(i), target);
+  }
+
+  // repeated int32 collisions = 2;
+  for (int i = 0; i < this->collisions_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteInt32ToArray(2, this->collisions(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2183,6 +2217,16 @@ int GameState::ByteSize() const {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         this->players(i));
+  }
+
+  // repeated int32 collisions = 2;
+  {
+    int data_size = 0;
+    for (int i = 0; i < this->collisions_size(); i++) {
+      data_size += ::google::protobuf::internal::WireFormatLite::
+        Int32Size(this->collisions(i));
+    }
+    total_size += 1 * this->collisions_size() + data_size;
   }
 
   if (!unknown_fields().empty()) {
@@ -2211,6 +2255,7 @@ void GameState::MergeFrom(const ::google::protobuf::Message& from) {
 void GameState::MergeFrom(const GameState& from) {
   GOOGLE_CHECK_NE(&from, this);
   players_.MergeFrom(from.players_);
+  collisions_.MergeFrom(from.collisions_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -2234,6 +2279,7 @@ bool GameState::IsInitialized() const {
 void GameState::Swap(GameState* other) {
   if (other != this) {
     players_.Swap(&other->players_);
+    collisions_.Swap(&other->collisions_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

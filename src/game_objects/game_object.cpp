@@ -6,6 +6,11 @@ GameObject::GameObject() {
     model = new Model();
     rigidbody = nullptr;
     id = id_counter++;
+
+    events::dungeon::collision_event.connect([&](int i) {
+        if (id != i) return;
+        on_collision_graphical();
+    });
 }
 
 // Attaches a model to the game object

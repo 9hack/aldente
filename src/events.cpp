@@ -54,6 +54,8 @@ namespace events {
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void(int, float, float, float, float, bool)> set_player_pos_event;
         signal<void(StickData &)> network_player_move_event;
-        signal<void(std::map<int, Player*> &)> network_positions_event;
+        signal<void(std::map<int, Player*> &, std::unordered_set<int>)> network_positions_event;
+        signal<void(int)> collision_event;
+        signal<void(int)> network_collision_event;
     }
 }

@@ -38,6 +38,7 @@ message JoinResponse {
 
 message GameState {
   repeated Player players = 1;
+  repeated int32 collisions = 2;
 }
 
 message Player {

@@ -119,5 +119,12 @@ void Player::start_walk() {
 }
 
 void Player::on_collision(GameObject *other) {
+    // TODO: actual game logic here...
+
+    // Then notify clients that this collision happened.
+    events::dungeon::network_collision_event(id);
+}
+
+void Player::on_collision_graphical() {
     transform.set_scale(transform.get_scale() * 0.99f);
 }
