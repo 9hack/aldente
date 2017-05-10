@@ -22,6 +22,8 @@ private:
     int hover_row, hover_col;
     Tile *hover;
     ConstructType selected = ConstructType::REMOVE;
+    Goal *goal;
+    int goal_z, goal_x;
 public:
     Grid(const char *map_loc);
 
@@ -44,4 +46,10 @@ public:
 
     // Loads tile models, only call this on client
     void graphical_setup();
+
+    // Places goal with minimum distance from the start. 
+    // Distance calculated using manhattan distance(x diff + z diff)
+    void place_goal(glm::vec3 start, int min_dist);
+
+    void remove_goal();
 };

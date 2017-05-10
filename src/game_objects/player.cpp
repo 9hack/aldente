@@ -112,5 +112,5 @@ void Player::start_walk() {
 }
 
 void Player::on_collision(GameObject *other) {
-    transform.set_scale(transform.get_scale() * 0.99f);
+    //transform.set_scale(transform.get_scale() * 0.99f);
 }

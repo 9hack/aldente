@@ -19,9 +19,16 @@ public:
     virtual void setup_model() = 0;
 };
 
-class Crate : public Construct {
+class Chest : public Construct {
 public:
-    Crate(int x, int z);
+    Chest(int x, int z);
+    void interact_trigger();
+    void setup_model();
+};
+
+class Goal : public Construct {
+public:
+    Goal(int x, int z);
     void interact_trigger();
     void setup_model();
 };

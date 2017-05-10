@@ -189,3 +189,33 @@ void Grid::graphical_setup() {
         }
     }
 }
+
+void Grid::place_goal(glm::vec3 start, int min_dist) {
+    int half_dist = min_dist / 2;
+
+    // Goal will be in range of (min_dist, edge of map)
+    int new_goal_x = rand() % width + half_dist;
+    int new_goal_z = rand() % height + half_dist;
+
+    // If not acceptable, find another
+    while (!grid[new_goal_z][new_goal_x]->isBuildable()) {
+        new_goal_x = rand() % width + half_dist;
+        new_goal_z = rand() % height + half_dist;
+    }
+
+    Goal *new_goal = new Goal(new_goal_x, new_goal_z);
+
+    // This line should only be on client
+    new_goal->setup_model();
+
+    grid[new_goal_z][new_goal_x]->set_construct(new_goal);
+    goal = new_goal;
+    goal_x = new_goal_x;
+    goal_z = new_goal_z;
+}
+
+void Grid::remove_goal() {
+    //TODO destructor for goal
+    grid[goal_z][goal_x]->set_construct(nullptr);
+    events::remove_rigidbody_event(goal);
+}
