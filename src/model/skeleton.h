@@ -6,7 +6,11 @@
     compatible model.
 */
 
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include "GL/glut.h"
+#endif
 #include <map>
 #include <vector>
 #include "animation/animation.h"
