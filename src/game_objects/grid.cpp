@@ -55,6 +55,14 @@ void Grid::setup_listeners() {
         // Build on the client, with graphics.
         build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true);
     });
+
+    events::dungeon::place_goal_event.connect([&]() {
+        place_goal(glm::vec3(0.0f),20);
+    });
+
+    events::dungeon::remove_goal_event.connect([&]() {
+        remove_goal();
+    });
 }
 
 void Grid::update() {
@@ -191,16 +199,15 @@ void Grid::graphical_setup() {
 }
 
 void Grid::place_goal(glm::vec3 start, int min_dist) {
-    int half_dist = min_dist / 2;
-
     // Goal will be in range of (min_dist, edge of map)
-    int new_goal_x = rand() % width + half_dist;
-    int new_goal_z = rand() % height + half_dist;
+    int new_goal_x = rand() % width;
+    int new_goal_z = rand() % height;
 
-    // If not acceptable, find another
-    while (!grid[new_goal_z][new_goal_x]->isBuildable()) {
-        new_goal_x = rand() % width + half_dist;
-        new_goal_z = rand() % height + half_dist;
+    // If not buildable or too close, find another
+    while (!grid[new_goal_z][new_goal_x]->isBuildable() || 
+        (abs(new_goal_x-start.x) + abs(new_goal_z-start.z) < min_dist)) {
+        new_goal_x = rand() % width;
+        new_goal_z = rand() % height;
     }
 
     Goal *new_goal = new Goal(new_goal_x, new_goal_z);

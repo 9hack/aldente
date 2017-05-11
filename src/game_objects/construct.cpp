@@ -1,5 +1,6 @@
 #include "construct.h"
 #include "asset_loader.h"
+#include "player.h"
 
 Construct::Construct(int x, int z) : GameObject() {
     transform.set_position(x, 0.0f, z);
@@ -30,8 +31,12 @@ void Chest::setup_model() {
     transform.set_scale({ 0.005f, 0.005f, 0.005f });
 }
 
+void Chest::update() {
+    anim_player.update();
+}
+
 Goal::Goal(int x, int z) : Construct(x, z) {
-    transform.set_scale(0.6f, 0.6f, 0.6f);
+    transform.set_scale(0.006f, 0.006f, 0.006f);
 
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position
@@ -42,10 +47,8 @@ Goal::Goal(int x, int z) : Construct(x, z) {
         true, // is a ghost object
     };
     events::add_rigidbody_event(rigid);
-}
 
-void Goal::interact_trigger() {
-    anim_player.play();
+    notify_on_collision = true;
 }
 
 void Goal::setup_model() {
@@ -54,4 +57,15 @@ void Goal::setup_model() {
     anim_player.set_speed(1.0f);
     anim_player.set_anim(&skel, "spin");
     anim_player.set_loop(false);
+}
+
+void Goal::on_collision(GameObject *other) {
+    if (anim_player.check_paused() && 
+        dynamic_cast<Player*>(other)) {
+        anim_player.play();
+    }
+}
+
+void Goal::update() {
+    anim_player.update();
 }

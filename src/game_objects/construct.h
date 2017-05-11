@@ -14,9 +14,7 @@ public:
     Construct(int x, int z);
 
     // Callback for when a player presses A on this construct
-    virtual void interact_trigger() = 0;
-
-    virtual void setup_model() = 0;
+    virtual void interact_trigger() {}
 };
 
 class Chest : public Construct {
@@ -24,11 +22,13 @@ public:
     Chest(int x, int z);
     void interact_trigger();
     void setup_model();
+    void update();
 };
 
 class Goal : public Construct {
 public:
     Goal(int x, int z);
-    void interact_trigger();
     void setup_model();
+    void on_collision(GameObject *other);
+    void update();
 };

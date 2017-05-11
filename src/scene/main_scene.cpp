@@ -18,6 +18,9 @@ void MainScene::update() {
         std::vector<Tile *> currRow = toAdd[i];
         for (int j = 0; j < currRow.size(); j++) {
             currRow[j]->update();
+            if (currRow[j]->get_construct()) {
+                currRow[j]->get_construct()->update();
+            }
         }
     }
 
