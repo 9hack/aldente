@@ -53,6 +53,7 @@ Spikes::Spikes(int x, int z, int id) : Construct(x, z, id) {
         rigid.is_ghost = true;
         rigid.position = { x, 0.0f, z };
         events::add_rigidbody_event(rigid);
+	notify_on_collision = true;
     }
 }
 
@@ -65,6 +66,7 @@ void Spikes::s_on_collision(GameObject *other) {
 
 void Spikes::c_on_collision() {
     anim_player.set_anim("trigger");
+    anim_player.set_speed(2.0f);
     anim_player.play();
 }
 
