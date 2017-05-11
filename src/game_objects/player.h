@@ -25,7 +25,7 @@ private:
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
 public:
     Player(int client_id);
-    virtual void update() override;
+    virtual void update_this() override;
     virtual void on_collision(GameObject *other) override;
     void prepare_movement(int inX, int inZ);
     void update_state(float x, float z, float wx, float wz, bool camera);

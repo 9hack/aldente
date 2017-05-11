@@ -19,10 +19,14 @@ Crate::Crate(int x, int z) : Construct(x, z) {
     events::add_rigidbody_event(rigid);
 }
 
+void Crate::update_this() {
+    anim_player.update();
+}
+
 // Activated when a player presses A on it
 void Crate::interact_trigger() {
-    // Will change after server/client split
-    attach_model(AssetLoader::get_model("veggie"));
+    anim_player.set_anim(&skel, "open");
+    anim_player.play();
 }
 
 void Crate::setup_model() {
