@@ -24,14 +24,24 @@ protected:
     btRigidBody *rigidbody;
     int id;
 public:
+    std::vector<GameObject *> children;
+
     Transform transform; // World matrix now controlled using the Transform Component
     std::string tag; // Identify this GameObject by a human-readable tag.
     bool notify_on_collision = false; // Physics engine will only call on_collision if this flag is set.
 
     GameObject();
-    
-    virtual void draw(Shader *shader, SceneInfo &scene_info);
-    virtual void update();
+    ~GameObject();
+
+    // Parenting Stuff
+    void add_child(GameObject *obj);
+    void remove_child(GameObject *obj);
+    void remove_all();
+
+    void draw(Shader *shader, SceneInfo &scene_info);
+    void update(); // Updates this object and all children
+
+    virtual void update_this() {}; // Update function for this particular object. Use this instead of update()
     virtual void on_collision(GameObject *other) {}
     virtual void setup_model() {};
 
@@ -47,4 +57,6 @@ public:
     void set_rigid(btRigidBody *to_add) { rigidbody = to_add; };
     int get_id() { return id; };
     void set_id(int to_set) { id = to_set; };
+
+    void set_position(glm::vec3 pos);
 };

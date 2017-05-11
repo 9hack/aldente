@@ -12,7 +12,7 @@ Player::Player(int client_id) : GameObject(), client_id(client_id) {
     direction = glm::vec3(0.0f);
 
     events::RigidBodyData rigid = {
-        glm::vec3(2.0f, 0.0f, 2.0f), //position
+        glm::vec3(0.0f, 0.0f, 0.0f), //position
         1, //mass
         hit_capsule, //btshape
         glm::vec3(0,0,0), //inertia
@@ -27,8 +27,7 @@ Player::Player(int client_id) : GameObject(), client_id(client_id) {
 
     setup_listeners();
 
-    transform.set_position(2.0f, 0.0f, 2.0f);
-
+    set_position({ 2.0f, 0.0f, 2.0f });
 }
 
 void Player::setup_listeners() {
@@ -39,7 +38,7 @@ void Player::setup_listeners() {
 
 // Just calls do_movement for now, can have more
 // functionality later.
-void Player::update() {
+void Player::update_this() {
     // Test code for playing animation for the boy
     anim_player.update();
 
