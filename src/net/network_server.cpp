@@ -31,13 +31,16 @@ void NetworkServer::send_to_all(proto::ServerMessage& message) {
 
 void NetworkServer::send_to(int id, proto::ServerMessage& message) {
     unique_lock<mutex> lock(client_list_mutex);
-    assert(client_list.find(id) != client_list.end());
+    if (client_list.find(id) == client_list.end()) {
+        std::cerr << "Write failed! Couldn't write to client " << id << std::endl;
+        return;
+    }
     string serialized;
     message.SerializeToString(&serialized);
     bool success = client_list[id]->send(serialized);
     if (!success) {
-        std::cerr << "Write failed!\n";
         // If write failed, it's likely because of disconnect. Remove from clients.
+        std::cerr << "Write failed! Client likely disconnected." << std::endl;
         client_list.erase(id);
     }
 }

@@ -35,11 +35,8 @@ void AldenteServer::start() {
     std::cerr << "Starting server..." << std::endl;
 
     while (true) {
-        // std::cerr << "BEFORE: " << Timer::get()->so_far().count() << std::endl;
         network.update();
-        // std::cerr << "NET: " << Timer::get()->so_far().count() << std::endl;
         GameState::update();
-        // std::cerr << "GS: " << Timer::get()->so_far().count() << std::endl;
         Timer::get()->wait();
     }
 

@@ -104,8 +104,6 @@ namespace events {
         extern signal<void(Phase*)> client_set_phase_event;
     }
 
-    extern signal<void(Phase*)> phase_changed_event;
-
     // The user has made a selection on the UI grid.
     extern signal<void(int)> ui_grid_selection_event;
 
@@ -173,9 +171,6 @@ namespace events {
     }
 
     namespace dungeon {
-        // Player movement
-        extern signal<void(int, StickData d)> player_move_event;
-
         // Player interact (e.g opening a chest)
         extern signal<void()> player_interact_event;
 
@@ -184,8 +179,6 @@ namespace events {
 
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
-
-        extern signal<void(int, float, float, float, float, bool)> set_player_pos_event;
 
         extern signal<void(StickData &)> network_player_move_event;
 

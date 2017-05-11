@@ -2,7 +2,8 @@
 
 #include "asset_loader.h"
 #include "assert.h"
-#include "events.h"
+
+#define MOVE_DELTA 0.001f
 
 Player::Player(int client_id) : GameObject(), client_id(client_id) {
     to_moveX = 0;
@@ -31,31 +32,6 @@ Player::Player(int client_id) : GameObject(), client_id(client_id) {
 }
 
 void Player::setup_listeners() {
-    events::dungeon::player_move_event.connect([&](int id, events::StickData d) {
-        if (id != client_id) return;
-        to_moveX = d.state.first;
-        to_moveZ = d.state.second;
-    });
-
-    events::dungeon::set_player_pos_event.connect([&](int id, float x, float z, float wx, float wz, bool follow) {
-        if (id != client_id) return;
-        anim_player.update();
-        bool animate = x != transform.get_position().x || z != transform.get_position().z;
-        transform.set_position(x, 0.0f, z);
-        transform.look_at(glm::vec3(wx, 0, wz));
-        if (!animate) {
-            if (!anim_player.check_paused())
-                anim_player.stop();
-        } else {
-            if (anim_player.check_paused())
-                anim_player.play();
-        }
-
-        // Fires player position whenever player moves (camera)
-        if (follow)
-            events::dungeon::player_position_updated_event(transform.get_position());
-    });
-
     events::dungeon::player_interact_event.connect([&]() {
         interact();
     });
@@ -81,6 +57,34 @@ void Player::update() {
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
         (float)to_set.getZ()));
+}
+
+void Player::prepare_movement(int inX, int inZ) {
+    to_moveX = inX;
+    to_moveZ = inZ;
+}
+
+void Player::update_state(float x, float z, float wx, float wz, bool camera) {
+    anim_player.update();
+    float dx = std::fabs(x - transform.get_position().x);
+    float dz = std::fabs(z - transform.get_position().z);
+    bool animate = dx > MOVE_DELTA || dz > MOVE_DELTA;
+
+    if (!animate) {
+        if (!anim_player.check_paused())
+            anim_player.stop();
+    }
+    else {
+        if (anim_player.check_paused())
+            anim_player.play();
+    }
+
+    transform.set_position(x, 0.0f, z);
+    transform.look_at(glm::vec3(wx, 0, wz));
+
+    // Fires the player's position whenever player moves so camera can follow.
+    if (camera)
+        events::dungeon::player_position_updated_event(transform.get_position());
 }
 
 void Player::do_movement() {

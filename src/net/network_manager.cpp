@@ -53,12 +53,15 @@ void ServerNetworkManager::register_listeners() {
         proto::ServerMessage msg;
         proto::GameState* state = new proto::GameState();
         for (auto & pair : players) {
-            proto::Player* p = state->add_players();;
-            p->set_id(pair.first);
-            p->set_x(pair.second->transform.get_position().x);
-            p->set_z(pair.second->transform.get_position().z);
-            p->set_wx(pair.second->direction.x);
-            p->set_wz(pair.second->direction.z);
+            proto::Player* p = state->add_players();
+            int player_id;
+            Player* player_obj;
+            std::tie(player_id, player_obj) = pair;
+            p->set_id(player_id);
+            p->set_x(player_obj->transform.get_position().x);
+            p->set_z(player_obj->transform.get_position().z);
+            p->set_wx(player_obj->direction.x);
+            p->set_wz(player_obj->direction.z);
         }
         msg.set_allocated_state_update(state);
         server.send_to_all(msg);
@@ -76,13 +79,8 @@ void ServerNetworkManager::update() {
             }
             case proto::ClientMessage::MessageTypeCase::kMoveRequest: {
                 proto::StickData stick = msg.move_request();
-                events::StickData d;
-                d.input = stick.input() == proto::StickData_Stick::StickData_Stick_STICK_LEFT ?
-                    events::Stick::STICK_LEFT :
-                    events::Stick::STICK_RIGHT;
-                d.state.first = stick.x();
-                d.state.second = stick.y();
-                events::dungeon::player_move_event(stick.id(), d);
+                if (stick.input() == proto::StickData_Stick::StickData_Stick_STICK_LEFT)
+                    GameState::players[stick.id()]->prepare_movement(stick.x(), stick.y());
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kPhaseRequest: {
@@ -182,8 +180,9 @@ void ClientNetworkManager::update() {
                     // Player doesn't exist on this client yet; create.
                     std::cerr << "Creating player " << p.id() << "\n";
                     events::menu::spawn_player_event(p);
+                } else {
+                    GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
                 }
-                events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
             }
             break;
         }

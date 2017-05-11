@@ -10,6 +10,7 @@
 #include "game/direction.h"
 #include "btBulletDynamicsCommon.h"
 #include "construct.h"
+#include "events.h"
 
 class Player : public GameObject {
 private:
@@ -26,6 +27,8 @@ public:
     Player(int client_id);
     virtual void update() override;
     virtual void on_collision(GameObject *other) override;
+    void prepare_movement(int inX, int inZ);
+    void update_state(float x, float z, float wx, float wz, bool camera);
     void do_movement();
     void setup_listeners();
 
