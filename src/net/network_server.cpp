@@ -85,7 +85,7 @@ void NetworkServer::start_accept() {
             }
 
             if (!error)
-                events::new_connection_event(next_id);
+                events::menu::request_join_event(next_id);
 
             // Accept the next client.
             start_accept();

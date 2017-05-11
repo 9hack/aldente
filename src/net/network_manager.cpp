@@ -31,10 +31,6 @@ void ServerNetworkManager::connect() {
 
 void ServerNetworkManager::register_listeners() {
     // Menu phase.
-    events::new_connection_event.connect([&](int conn_id) {
-        events::menu::request_join_event(conn_id);
-    });
-
     events::menu::respond_join_event.connect([&](int conn_id, proto::JoinResponse& resp) {
         proto::ServerMessage msg;
         msg.set_allocated_join_response(new proto::JoinResponse(resp));

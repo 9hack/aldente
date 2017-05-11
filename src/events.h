@@ -121,7 +121,6 @@ namespace events {
     };
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
-    extern signal<void(int)> new_connection_event;
 
     namespace menu {
         extern signal<void(int)> request_join_event;
