@@ -44,6 +44,6 @@ namespace events {
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void()> place_goal_event;
-        signal<void()> remove_goal_event; 
+        signal<void()> remove_goal_event;
     }
 }

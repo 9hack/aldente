@@ -86,7 +86,7 @@ void Grid::build(ConstructType type, int col, int row, bool graphical) {
 
     switch (type) {
     case CHEST: {
-        Construct* to_add = new Crate(col, row);
+        Construct* to_add = new Chest(col, row);
         if (graphical)
             to_add->setup_model();
         candidate->set_construct(to_add);
@@ -204,7 +204,7 @@ void Grid::place_goal(glm::vec3 start, int min_dist) {
     int new_goal_z = rand() % height;
 
     // If not buildable or too close, find another
-    while (!grid[new_goal_z][new_goal_x]->isBuildable() || 
+    while (!grid[new_goal_z][new_goal_x]->isBuildable() ||
         (abs(new_goal_x-start.x) + abs(new_goal_z-start.z) < min_dist)) {
         new_goal_x = rand() % width;
         new_goal_z = rand() % height;

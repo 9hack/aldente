@@ -39,7 +39,6 @@ public:
 private:
     boost::signals2::connection joystick_conn;
     boost::signals2::connection button_conn;
-    std::map<Player*, bool> finished_players;
 };
 
 class MinigamePhase : public Phase {
