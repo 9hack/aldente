@@ -12,7 +12,6 @@ GameObject::GameObject(int id) : id(id) {
     model = new Model();
     rigidbody = nullptr;
     game_objects[id] = this;
-    std::cerr << "Added game obj=" << id << "\n";
 }
 
 GameObject::~GameObject(){
