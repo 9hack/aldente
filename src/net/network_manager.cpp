@@ -18,8 +18,7 @@ void NetworkManager::run_service() {
     while (service_thread && !io_service.stopped()) {
         try {
             io_service.poll();
-        }
-        catch (std::exception & ex) {
+        } catch (std::exception & ex) {
             // Silently ignore errors rather than crash. Shouldn't happen.
             std::cerr << "run_service error: " << ex.what() << "\n";
         }
@@ -33,10 +32,6 @@ void ServerNetworkManager::connect() {
 
 void ServerNetworkManager::register_listeners() {
     // Menu phase.
-    events::new_connection_event.connect([&](int conn_id) {
-        events::menu::request_join_event(conn_id);
-    });
-
     events::menu::respond_join_event.connect([&](int conn_id, proto::JoinResponse& resp) {
         proto::ServerMessage msg;
         msg.set_allocated_join_response(new proto::JoinResponse(resp));
@@ -55,12 +50,15 @@ void ServerNetworkManager::register_listeners() {
         proto::ServerMessage msg;
         proto::GameState* state = new proto::GameState();
         for (auto & pair : players) {
-            proto::Player* p = state->add_players();;
-            p->set_id(pair.first);
-            p->set_x(pair.second->transform.get_position().x);
-            p->set_z(pair.second->transform.get_position().z);
-            p->set_wx(pair.second->direction.x);
-            p->set_wz(pair.second->direction.z);
+            proto::Player* p = state->add_players();
+            int player_id;
+            Player* player_obj;
+            std::tie(player_id, player_obj) = pair;
+            p->set_id(player_id);
+            p->set_x(player_obj->transform.get_position().x);
+            p->set_z(player_obj->transform.get_position().z);
+            p->set_wx(player_obj->direction.x);
+            p->set_wz(player_obj->direction.z);
         }
 
         for (int obj_id : collisions)
@@ -82,13 +80,8 @@ void ServerNetworkManager::update() {
             }
             case proto::ClientMessage::MessageTypeCase::kMoveRequest: {
                 proto::StickData stick = msg.move_request();
-                events::StickData d;
-                d.input = stick.input() == proto::StickData_Stick::StickData_Stick_STICK_LEFT ?
-                    events::Stick::STICK_LEFT :
-                    events::Stick::STICK_RIGHT;
-                d.state.first = stick.x();
-                d.state.second = stick.y();
-                events::dungeon::player_move_event(stick.id(), d);
+                if (stick.input() == proto::StickData::STICK_LEFT)
+                    GameState::players[stick.id()]->prepare_movement(stick.x(), stick.y());
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kPhaseRequest: {
@@ -148,8 +141,8 @@ void ClientNetworkManager::register_listeners() {
         proto::StickData* pd = new proto::StickData();
         pd->set_input(
             d.input == events::Stick::STICK_LEFT ? 
-            proto::StickData_Stick::StickData_Stick_STICK_LEFT :
-            proto::StickData_Stick::StickData_Stick_STICK_RIGHT);
+            proto::StickData::STICK_LEFT :
+            proto::StickData::STICK_RIGHT);
         pd->set_x(d.state.first);
         pd->set_y(d.state.second);
         pd->set_id(client_id);
@@ -188,13 +181,12 @@ void ClientNetworkManager::update() {
                     // Player doesn't exist on this client yet; create.
                     std::cerr << "Creating player " << p.id() << "\n";
                     events::menu::spawn_player_event(p);
+                } else {
+                    GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
+                    for (int obj_id : state.collisions())
+                        events::dungeon::collision_event(obj_id);
                 }
-                events::dungeon::set_player_pos_event(p.id(), p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
             }
-
-            for (int obj_id : state.collisions())
-                events::dungeon::collision_event(obj_id);
-
             break;
         }
         case proto::ServerMessage::MessageTypeCase::kPhaseUpdate: {

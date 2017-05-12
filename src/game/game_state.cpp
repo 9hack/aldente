@@ -31,8 +31,8 @@ void GameState::init(Phase* phase) {
             add_player(conn_id, false);
     });
 
-    events::menu::spawn_player_event.connect([](proto::Player & player) {
-        add_player(player.id(), true);
+    events::menu::spawn_player_event.connect([](proto::Player & p) {
+        add_player(p.id(), true);
     });
 
     events::dungeon::network_collision_event.connect([&](int obj_id) {
@@ -90,7 +90,10 @@ void GameState::set_phase(proto::Phase phase) {
 
 void GameState::add_player(int conn_id, bool graphical) {
     assert(players.find(conn_id) == players.end());
-    Player* player = dynamic_cast<MainScene*>(scene_manager.get_current_scene())->spawn_player(conn_id, graphical);
+    
+    // For now, only create players on the main scene.
+    assert(scene_manager.get_current_scene() == &testScene);
+    Player* player = testScene.spawn_player(conn_id, graphical);
     players[conn_id] = player;
     num_players++;
 }

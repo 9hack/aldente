@@ -2,8 +2,9 @@
 struct Material {
     vec3 diffuse;
     vec3 specular;
-    vec3 ambient;
     float shininess;
+    bool shadows_enabled;
+    float alpha;
 };
 
 struct DirLight {
@@ -55,7 +56,6 @@ uniform int num_spot_lights;
 uniform bool texture_enabled;
 uniform sampler2D texture_map;
 
-uniform bool shadows_enabled;
 uniform sampler2D shadow_map;
 
 vec3 calc_dir_light(DirLight light, Material mat, vec3 normal, vec3 view_dir, bool is_shadow_light);
@@ -75,7 +75,6 @@ void main()
     if (texture_enabled){
         vec3 tex_color = vec3(texture(texture_map, frag_tex_coord));
         mat.diffuse = tex_color * mat.diffuse;
-        mat.ambient = tex_color * mat.ambient;
     }
 
     // Do lighting
@@ -94,7 +93,7 @@ void main()
         result += calc_spot_light(spot_lights[i], mat, normal, view_dir, false);
     }
 
-    color = vec4(result, 1.0f);
+    color = vec4(result, material.alpha);
 }
 
 vec3 calc_dir_light(DirLight light, Material mat,
@@ -163,12 +162,12 @@ vec3 calc_color(Material mat,
         mat.specular *
         pow(max(dot(normal, normalize(light_dir + view_dir)), 0.0), mat.shininess);
 
-    // Ambient: c_a (ambient color) * k_a (coeff)
-    vec3 ambient = mat.ambient * ambient_coeff;
+    // Ambient: c_a (diffuse color) * k_a (coeff)
+    vec3 ambient = mat.diffuse * ambient_coeff;
 
     // Shadows
     float shadow = 0;
-    if (shadows_enabled && is_shadow_light)
+    if (material.shadows_enabled && is_shadow_light)
         shadow = calc_shadows(frag_pos_light, light_dir);
     return (1.0 - shadow) * (diffuse + specular) + ambient;
 }

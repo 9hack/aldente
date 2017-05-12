@@ -24,6 +24,7 @@ public:
     // Initializes the game state with the given start phase.
     static void init(Phase* phase);
 
+    // Performs graphical setup on the current scene. Only for the client.
     static void graphical_setup();
 
     // Update state given input. Called in the game loop.
@@ -35,6 +36,8 @@ public:
     static void set_phase(Phase* phase);
     static void set_phase(proto::Phase phase);
 
+    // Adds a player to the main scene with given id.
+    // Specify if we should set up graphics for the player model (client-side).
     static void add_player(int conn_id, bool graphical);
 private:
     static MainScene testScene;
