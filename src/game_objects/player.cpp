@@ -132,5 +132,5 @@ void Player::on_collision(GameObject *other) {
 }
 
 void Player::on_collision_graphical() {
-    set_alpha(0.5f);
+    transform.rotate(0, 0.1f, 0);
 }
