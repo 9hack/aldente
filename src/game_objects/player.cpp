@@ -1,23 +1,27 @@
 #include "player.h"
 
 #include "asset_loader.h"
-#include "events.h"
 #include "assert.h"
 
-Player::Player() : GameObject() {
+#define MOVE_DELTA 0.001f
+
+Player::Player(int client_id) : GameObject(), client_id(client_id) {
     to_moveX = 0;
     to_moveZ = 0;
     move_speed = 2.0f;
     direction = glm::vec3(0.0f);
 
     events::RigidBodyData rigid = {
-        glm::vec3(2.0f, 0.0f, 2.0f), //position
+        glm::vec3(0.0f, 0.0f, 0.0f), //position
         1, //mass
         hit_capsule, //btshape
         glm::vec3(0,0,0), //inertia
         this, //the gameobject
     };
     events::add_rigidbody_event(rigid);
+
+    // Notify on collision.
+    notify_on_collision = true;
 
     // Lock y-axis
     rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
@@ -26,16 +30,10 @@ Player::Player() : GameObject() {
 
     setup_listeners();
 
-    transform.set_position(2.0f, 0.0f, 2.0f);
-
+    set_position({ 2.0f, 0.0f, 2.0f });
 }
 
 void Player::setup_listeners() {
-    events::dungeon::player_move_event.connect([&](events::StickData d) {
-        to_moveX = d.state.first;
-        to_moveZ = d.state.second;
-    });
-
     events::dungeon::player_interact_event.connect([&]() {
         interact();
     });
@@ -43,7 +41,7 @@ void Player::setup_listeners() {
 
 // Just calls do_movement for now, can have more
 // functionality later.
-void Player::update() {
+void Player::update_this() {
     // Test code for playing animation for the boy
     anim_player.update();
 
@@ -61,9 +59,34 @@ void Player::update() {
 
     transform.set_position(glm::vec3((float)to_set.getX(), (float)to_set.getY(),
         (float)to_set.getZ()));
+}
 
-    // Fires player position whenever player moves
-    events::dungeon::player_position_updated_event(transform.get_position());
+void Player::prepare_movement(int inX, int inZ) {
+    to_moveX = inX;
+    to_moveZ = inZ;
+}
+
+void Player::update_state(float x, float z, float wx, float wz, bool camera) {
+    anim_player.update();
+    float dx = std::fabs(x - transform.get_position().x);
+    float dz = std::fabs(z - transform.get_position().z);
+    bool animate = dx > MOVE_DELTA || dz > MOVE_DELTA;
+
+    if (!animate) {
+        if (!anim_player.check_paused())
+            anim_player.stop();
+    }
+    else {
+        if (anim_player.check_paused())
+            anim_player.play();
+    }
+
+    transform.set_position(x, 0.0f, z);
+    transform.look_at(glm::vec3(wx, 0, wz));
+
+    // Fires the player's position whenever player moves so camera can follow.
+    if (camera)
+        events::dungeon::player_position_updated_event(transform.get_position());
 }
 
 void Player::do_movement() {
@@ -73,17 +96,6 @@ void Player::do_movement() {
     rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
     transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
     direction = glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed);
-    if (to_moveX == 0 && to_moveZ == 0) {
-        if (!anim_player.check_paused()) {
-            anim_player.stop();
-        }
-    }
-    else {
-        if (anim_player.check_paused()) {
-            anim_player.play();
-        }
-    }
-
 }
 
 void Player::interact() {
@@ -112,5 +124,5 @@ void Player::start_walk() {
 }
 
 void Player::on_collision(GameObject *other) {
-    //transform.set_scale(transform.get_scale() * 0.99f);
+    set_alpha(0.5f);
 }

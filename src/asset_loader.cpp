@@ -89,6 +89,7 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
             //std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
             Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);
             model->initial_skeleton.animations[anim_name] = animation;
+            model->set_shader(&ShaderManager::anim_basic);
         }
     } else {
         // File is only a model
@@ -182,13 +183,10 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     aiMaterial *assimpMat = scene->mMaterials[mesh->mMaterialIndex];
     aiColor3D diffuse(0, 0, 0);
     assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-    aiColor3D ambient(0, 0, 0);
-    assimpMat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
     aiColor3D specular(0, 0, 0);
     assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
     float shiny = 0.0f;
     assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-    load_mat->ambient = Color(ambient.r, ambient.g, ambient.b);
     load_mat->diffuse = Color(diffuse.r, diffuse.g, diffuse.b);
     load_mat->specular = Color(specular.r, specular.g, specular.b);
     load_mat->shininess = shiny;

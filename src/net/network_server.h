@@ -23,6 +23,8 @@ public:
     // Sends a message to all clients.
     void send_to_all(proto::ServerMessage& message);
 
+    void send_to(int id, proto::ServerMessage& message);
+
     // Read all messages from all clients.
     // Returns a mapping of client id to list of messages.
     std::unordered_map<int, std::vector<proto::ClientMessage>> read_all_messages();

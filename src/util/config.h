@@ -21,7 +21,6 @@ public:
     static std::string str_game_name;
     static std::string str_fov;
     static std::string str_far_plane;
-    static std::string str_is_server;
     static std::string str_server_ip;
     static std::string str_port;
     static std::string str_controller;

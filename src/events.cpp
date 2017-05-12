@@ -16,11 +16,18 @@ namespace events {
         signal<void()> toggle_ui_event;
         signal<void()> toggle_light_rotation_event;
         signal<void()> toggle_debug_input_event;
+        signal<void(Phase*)> client_set_phase_event;
     }
 
     signal<void(int)> ui_grid_selection_event;
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
+
+    namespace menu {
+        signal<void(int)> request_join_event;
+        signal<void(int, proto::JoinResponse &)> respond_join_event;
+        signal<void(proto::Player &)> spawn_player_event;
+    }
 
     namespace build {
         signal<void(Direction)> select_grid_move_event;
@@ -39,11 +46,12 @@ namespace events {
     }
 
     namespace dungeon {
-        signal<void(StickData d)> player_move_event;
         signal<void()> player_interact_event;
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void()> place_goal_event;
         signal<void()> remove_goal_event;
+        signal<void(StickData &)> network_player_move_event;
+        signal<void(std::map<int, Player*> &)> network_positions_event;
     }
 }

@@ -15,24 +15,24 @@ Chest::Chest(int x, int z) : Construct(x, z) {
         hit_box, //btshape
         glm::vec3(0,0,0), //inertia
         this, //the gameobject
-        true, // is a ghost object
+        false, // is a ghost object
     };
     events::add_rigidbody_event(rigid);
 }
 
+void Chest::update_this() {
+    anim_player.update();
+}
+
 // Activated when a player presses A on it
 void Chest::interact_trigger() {
-    // Will change after server/client split
-    attach_model(AssetLoader::get_model("veggie"));
+    anim_player.set_anim(&skel, "open");
+    anim_player.play();
 }
 
 void Chest::setup_model() {
     attach_model(AssetLoader::get_model("chest_good"));
     transform.set_scale({ 0.005f, 0.005f, 0.005f });
-}
-
-void Chest::update() {
-    anim_player.update();
 }
 
 Goal::Goal(int x, int z) : Construct(x, z) {
@@ -66,6 +66,6 @@ void Goal::on_collision(GameObject *other) {
     }
 }
 
-void Goal::update() {
+void Goal::update_this() {
     anim_player.update();
 }

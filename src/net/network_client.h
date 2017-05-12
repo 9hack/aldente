@@ -33,4 +33,5 @@ private:
     Connection connection;
     tcp::resolver resolver;
     bool connected;
+    int client_id = 0;
 };

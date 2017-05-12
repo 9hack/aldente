@@ -49,16 +49,16 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     events::debug::toggle_debug_input_event();
                     break;
                 case GLFW_KEY_0:
-                    GameState::set_phase(&GameState::menu_phase);
+                    events::debug::client_set_phase_event(&GameState::menu_phase);
                     break;
                 case GLFW_KEY_1:
-                    GameState::set_phase(&GameState::build_phase);
+                    events::debug::client_set_phase_event(&GameState::build_phase);
                     break;
                 case GLFW_KEY_2:
-                    GameState::set_phase(&GameState::dungeon_phase);
+                    events::debug::client_set_phase_event(&GameState::dungeon_phase);
                     break;
                 case GLFW_KEY_3:
-                    GameState::set_phase(&GameState::minigame_phase);
+                    events::debug::client_set_phase_event(&GameState::minigame_phase);
                     break;
                 default:
                     break;
@@ -112,7 +112,7 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
 // TODO: change this to a "FrameEdge" event callback
 void DebugInput::debug_movement_keys() {
 
-    SceneCamera *camera = scene_manager.get_camera();
+    Camera *camera = scene_manager.get_camera();
 
     GLfloat cam_step = keys[GLFW_KEY_LEFT_SHIFT] ? 3 * BASE_CAM_SPEED : BASE_CAM_SPEED;
 
@@ -137,7 +137,7 @@ void DebugInput::debug_movement_mouse(events::WindowCursorData d) {
     int width, height;
     std::tie(width, height) = d.window->get_size();
 
-    SceneCamera *camera = scene_manager.get_camera();
+    Camera *camera = scene_manager.get_camera();
     glm::vec3 current_cursor_pos(d.x_pos, d.y_pos, 0);
 
     glm::vec3 cursor_delta = current_cursor_pos - last_cursor_pos;

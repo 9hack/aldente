@@ -15,14 +15,17 @@ public:
 
     // Callback for when a player presses A on this construct
     virtual void interact_trigger() {}
+
+    virtual void setup_model() = 0;
+    virtual void update_this() override = 0;
 };
 
 class Chest : public Construct {
 public:
     Chest(int x, int z);
     void interact_trigger();
-    void setup_model();
-    void update();
+    void setup_model() override;
+    void update_this() override;
 };
 
 class Goal : public Construct {
@@ -30,5 +33,5 @@ public:
     Goal(int x, int z);
     void setup_model();
     void on_collision(GameObject *other);
-    void update();
+    void update_this();
 };

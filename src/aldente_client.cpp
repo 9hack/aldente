@@ -7,8 +7,6 @@
 #include "input/raw_maps/matricom.h"
 #include "input/raw_maps/debug.h"
 #include "asset_loader.h"
-#include "physics.h"
-#include "scene_manager.h"
 #include "debug_input.h"
 #include "poll/poller.h"
 #include "poll/glfw_poller.h"
@@ -77,9 +75,11 @@ void AldenteClient::start() {
         std::make_shared<InputPoller>(),
     };
 
-    Physics physics;
-    SceneManager scene_manager;
-    Render render(window, scene_manager);
+    // Game logic. Temporarily start game with build phase.
+    GameState::init(&GameState::build_phase);
+    GameState::graphical_setup();
+
+    Render render(window, GameState::scene_manager);
 
     // TODO : BuildUI initialiaziation should be done in BuildPhase setup()
     std::vector<ConstructData> constructs;
@@ -91,18 +91,10 @@ void AldenteClient::start() {
     }
     BuildUI ui = BuildUI(3, 4, (float) width / (float) height, constructs);
 
-    // Init the test scene.
-    MainScene testScene;
-    physics.set_scene(&testScene);
-    scene_manager.set_current_scene(&testScene);
-    testScene.graphical_setup();
-    DebugInput debug_input(window, scene_manager, physics);
+    DebugInput debug_input(window, GameState::scene_manager, GameState::physics);
 
     // Have window fire off a resize event to update all interested systems.
     window.broadcast_size();
-
-    // Game logic. Temporarily start game with build phase.
-    GameState::init(&GameState::build_phase);
 
     ClientNetworkManager network;
     network.connect();
@@ -116,10 +108,7 @@ void AldenteClient::start() {
         }
 
         network.update();
-        GameState::update();
-        physics.update();
-
-        scene_manager.get_current_scene()->update();
+        GameState::client_update();
 
         render.update();
         ui.draw();

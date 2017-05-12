@@ -6,12 +6,6 @@ Tile::Tile() :
     GameObject(),
     construct(nullptr) {}
 
-// TODO: GET RID OF THIS. DO NOT OVERRIDE GAMEOBJECT::DRAW.
-void Tile::draw(Shader *shader, SceneInfo &scene_info) {
-    GameObject::draw(shader, scene_info);
-    if (construct) construct->draw(shader, scene_info);
-}
-
 FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     width = 1;
     height = 1;
@@ -19,10 +13,7 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     this->z = z;
     buildable = true;
 
-    transform.set_position((float)x, 0.0f, (float)z);
-}
-
-void FloorTile::update() {
+    set_position({ x, 0.0f, z });
 }
 
 void FloorTile::setup_model() {
@@ -55,9 +46,6 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
         this //the gameobject
     };
     events::add_rigidbody_event(rigid);
-}
-
-void WallTile::update() {
 }
 
 void WallTile::setup_model() {
