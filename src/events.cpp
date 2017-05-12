@@ -26,7 +26,7 @@ namespace events {
     namespace menu {
         signal<void(int)> request_join_event;
         signal<void(int, proto::JoinResponse &)> respond_join_event;
-        signal<void(proto::Player &)> spawn_new_player_event;
+        signal<void(proto::Player &)> spawn_existing_player_event;
     }
 
     namespace build {
