@@ -179,8 +179,8 @@ void ClientNetworkManager::update() {
         }
         case proto::ServerMessage::MessageTypeCase::kStateUpdate: {
             proto::GameState state = msg.state_update();
+            bool all_exist = true;
             for (auto p : state.players()) {
-                bool all_exist = true;
                 if (GameState::players.find(p.id()) == GameState::players.end()) {
                     // Player doesn't exist on this client yet; create.
                     std::cerr << "Creating player " << p.id() << " with obj id " << p.obj_id() << "\n";
@@ -189,12 +189,11 @@ void ClientNetworkManager::update() {
                 } else {
                     GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
                 }
-
-                if (all_exist) {
-                    for (int obj_id : state.collisions()) {
-                        std::cerr << "collide: " << obj_id << "\n";
-                        GameObject::game_objects[obj_id]->on_collision_graphical();
-                    }
+            }
+            if (all_exist) {
+                for (int obj_id : state.collisions()) {
+                    std::cerr << "collide: " << obj_id << "\n";
+                    GameObject::game_objects[obj_id]->on_collision_graphical();
                 }
             }
             break;
