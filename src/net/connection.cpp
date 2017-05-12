@@ -13,8 +13,7 @@ void Connection::start_async_read_header() {
             uint32_t length = decode_header(&rcvbuf);
             start_async_read_body(length);
         } else if (error == boost::asio::error::eof) {
-            std::cerr << "ERROR: header eof. Rereading header...\n";
-            start_async_read_header();
+            std::cerr << "ERROR: header eof.\n";
         } else {
             std::cerr << "ERROR: could not read header: " << error << "\n";
         }

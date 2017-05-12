@@ -75,7 +75,7 @@ void ServerNetworkManager::update() {
             }
             case proto::ClientMessage::MessageTypeCase::kMoveRequest: {
                 proto::StickData stick = msg.move_request();
-                if (stick.input() == proto::StickData_Stick::StickData_Stick_STICK_LEFT)
+                if (stick.input() == proto::StickData::STICK_LEFT)
                     GameState::players[stick.id()]->prepare_movement(stick.x(), stick.y());
                 break;
             }
@@ -136,8 +136,8 @@ void ClientNetworkManager::register_listeners() {
         proto::StickData* pd = new proto::StickData();
         pd->set_input(
             d.input == events::Stick::STICK_LEFT ? 
-            proto::StickData_Stick::StickData_Stick_STICK_LEFT :
-            proto::StickData_Stick::StickData_Stick_STICK_RIGHT);
+            proto::StickData::STICK_LEFT :
+            proto::StickData::STICK_RIGHT);
         pd->set_x(d.state.first);
         pd->set_y(d.state.second);
         pd->set_id(client_id);
