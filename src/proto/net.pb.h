@@ -611,6 +611,13 @@ class JoinResponse : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 id() const;
   inline void set_id(::google::protobuf::int32 value);
 
+  // optional int32 obj_id = 4;
+  inline bool has_obj_id() const;
+  inline void clear_obj_id();
+  static const int kObjIdFieldNumber = 4;
+  inline ::google::protobuf::int32 obj_id() const;
+  inline void set_obj_id(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:proto.JoinResponse)
  private:
   inline void set_has_status();
@@ -619,6 +626,8 @@ class JoinResponse : public ::google::protobuf::Message {
   inline void clear_has_num_players();
   inline void set_has_id();
   inline void clear_has_id();
+  inline void set_has_obj_id();
+  inline void clear_has_obj_id();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -627,6 +636,7 @@ class JoinResponse : public ::google::protobuf::Message {
   bool status_;
   ::google::protobuf::int32 num_players_;
   ::google::protobuf::int32 id_;
+  ::google::protobuf::int32 obj_id_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -2161,6 +2171,30 @@ inline void JoinResponse::set_id(::google::protobuf::int32 value) {
   set_has_id();
   id_ = value;
   // @@protoc_insertion_point(field_set:proto.JoinResponse.id)
+}
+
+// optional int32 obj_id = 4;
+inline bool JoinResponse::has_obj_id() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void JoinResponse::set_has_obj_id() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void JoinResponse::clear_has_obj_id() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void JoinResponse::clear_obj_id() {
+  obj_id_ = 0;
+  clear_has_obj_id();
+}
+inline ::google::protobuf::int32 JoinResponse::obj_id() const {
+  // @@protoc_insertion_point(field_get:proto.JoinResponse.obj_id)
+  return obj_id_;
+}
+inline void JoinResponse::set_obj_id(::google::protobuf::int32 value) {
+  set_has_obj_id();
+  obj_id_ = value;
+  // @@protoc_insertion_point(field_set:proto.JoinResponse.obj_id)
 }
 
 // -------------------------------------------------------------------

@@ -38,7 +38,7 @@ public:
 
     // Adds a player to the main scene with given id.
     // Specify if we should set up graphics for the player model (client-side).
-    static void add_player(int conn_id, bool graphical);
+    static Player* add_player(int conn_id, int obj_id, bool graphical);
 private:
     static MainScene testScene;
     static int num_players;

@@ -25,6 +25,7 @@ private:
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
 public:
     Player(int client_id);
+    Player(int client_id, int obj_id);
 
     virtual void update_this() override;
     virtual void on_collision(GameObject *other) override;

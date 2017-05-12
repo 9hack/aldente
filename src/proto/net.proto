@@ -34,6 +34,7 @@ message JoinResponse {
   optional bool status = 1;
   optional int32 num_players = 2;
   optional int32 id = 3;
+  optional int32 obj_id = 4;
 }
 
 message GameState {

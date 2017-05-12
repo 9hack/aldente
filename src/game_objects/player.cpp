@@ -34,6 +34,10 @@ Player::Player(int client_id) : GameObject(), client_id(client_id) {
     set_position({ 2.0f, 0.0f, 2.0f });
 }
 
+Player::Player(int client_id, int obj_id) : GameObject(obj_id), client_id(client_id) {
+
+}
+
 void Player::setup_listeners() {
     events::dungeon::player_interact_event.connect([&]() {
         interact();

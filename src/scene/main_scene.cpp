@@ -61,8 +61,8 @@ void MainScene::graphical_setup() {
     }
 }
 
-Player* MainScene::spawn_player(int client_id, bool graphical) {
-    Player *player = new Player(client_id);
+Player* MainScene::spawn_player(int client_id, int obj_id, bool graphical) {
+    Player *player = graphical ? new Player(client_id, obj_id) : new Player(client_id);
     player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
     player->transform.translate({ 2.f, 0.f, 2.f });
     objs.push_back(player);

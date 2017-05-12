@@ -25,14 +25,19 @@ void GameState::init(Phase* phase) {
         proto::JoinResponse resp;
         resp.set_status(num_players < 4);
         resp.set_id(conn_id);
-        events::menu::respond_join_event(conn_id, resp);
 
-        if (num_players < 4)
-            add_player(conn_id, false);
+        if (num_players < 4) {
+            resp.set_obj_id(add_player(conn_id, -1, false)->get_id());
+        }
+        events::menu::respond_join_event(conn_id, resp);
     });
 
-    events::menu::spawn_player_event.connect([](proto::Player & p) {
-        add_player(p.id(), true);
+    events::menu::spawn_new_player_event.connect([](proto::Player & p) {
+        add_player(p.id(), -1, false);
+    });
+
+    events::menu::spawn_existing_player_event.connect([](proto::Player & p, int obj_id) {
+        add_player(p.id(), obj_id, true);
     });
 
     events::dungeon::network_collision_event.connect([&](int obj_id) {
@@ -88,12 +93,13 @@ void GameState::set_phase(proto::Phase phase) {
 }
 
 
-void GameState::add_player(int conn_id, bool graphical) {
+Player* GameState::add_player(int conn_id, int obj_id, bool graphical) {
     assert(players.find(conn_id) == players.end());
     
     // For now, only create players on the main scene.
     assert(scene_manager.get_current_scene() == &testScene);
-    Player* player = testScene.spawn_player(conn_id, graphical);
+    Player* player = testScene.spawn_player(conn_id, obj_id, graphical);
     players[conn_id] = player;
     num_players++;
+    return player;
 }

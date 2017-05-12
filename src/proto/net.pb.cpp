@@ -145,10 +145,11 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Construct));
   JoinResponse_descriptor_ = file->message_type(3);
-  static const int JoinResponse_offsets_[3] = {
+  static const int JoinResponse_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, num_players_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, obj_id_),
   };
   JoinResponse_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -370,27 +371,28 @@ void protobuf_AddDesc_net_2eproto() {
     "\004 \001(\0132\020.proto.StickDataH\000\022%\n\rphase_reque"
     "st\030\005 \001(\0162\014.proto.PhaseH\000B\016\n\014message_type"
     "\"K\n\tConstruct\022\014\n\004type\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t"
-    "\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010\"\?\n"
+    "\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010\"O\n"
     "\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013num_pla"
-    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\"\?\n\tGameState\022\036\n\007p"
-    "layers\030\001 \003(\0132\r.proto.Player\022\022\n\ncollision"
-    "s\030\002 \003(\005\"P\n\006Player\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002"
-    "\022\t\n\001z\030\003 \001(\002\022\n\n\002wx\030\004 \001(\002\022\n\n\002wz\030\005 \001(\002\022\014\n\004n"
-    "ame\030\006 \001(\t\"~\n\tStickData\022%\n\005input\030\001 \001(\0162\026."
-    "proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 "
-    "\001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT\020\000"
-    "\022\017\n\013STICK_RIGHT\020\001\"\317\001\n\nGameObject\022$\n\004type"
-    "\030\001 \001(\0162\026.proto.GameObject.Type\022,\n\010locati"
-    "on\030\002 \001(\0132\032.proto.GameObject.Location\032F\n\010"
-    "Location\022\r\n\001x\030\001 \003(\001B\002\020\001\022\r\n\001y\030\002 \003(\001B\002\020\001\022\r"
-    "\n\001z\030\003 \003(\001B\002\020\001\022\r\n\001w\030\004 \003(\001B\002\020\001\"%\n\004Type\022\n\n\006"
-    "PLAYER\020\000\022\007\n\003NPC\020\001\022\010\n\004TILE\020\002\"K\n\014JoystickD"
-    "ata\022\n\n\002id\030\001 \001(\005\022\021\n\tis_button\030\002 \001(\010\022\r\n\005in"
-    "put\030\003 \001(\005\022\r\n\005state\030\004 \001(\005\"i\n\tDirection\022&\n"
-    "\003way\030\001 \001(\0162\031.proto.Direction.Cardinal\"4\n"
-    "\010Cardinal\022\t\n\005NORTH\020\000\022\010\n\004EAST\020\001\022\t\n\005SOUTH\020"
-    "\002\022\010\n\004WEST\020\003*7\n\005Phase\022\010\n\004MENU\020\000\022\t\n\005BUILD\020"
-    "\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1308);
+    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\"\?"
+    "\n\tGameState\022\036\n\007players\030\001 \003(\0132\r.proto.Pla"
+    "yer\022\022\n\ncollisions\030\002 \003(\005\"P\n\006Player\022\n\n\002id\030"
+    "\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\n\n\002wx\030\004 \001(\002\022"
+    "\n\n\002wz\030\005 \001(\002\022\014\n\004name\030\006 \001(\t\"~\n\tStickData\022%"
+    "\n\005input\030\001 \001(\0162\026.proto.StickData.Stick\022\t\n"
+    "\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick"
+    "\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001\"\317\001\n\nGa"
+    "meObject\022$\n\004type\030\001 \001(\0162\026.proto.GameObjec"
+    "t.Type\022,\n\010location\030\002 \001(\0132\032.proto.GameObj"
+    "ect.Location\032F\n\010Location\022\r\n\001x\030\001 \003(\001B\002\020\001\022"
+    "\r\n\001y\030\002 \003(\001B\002\020\001\022\r\n\001z\030\003 \003(\001B\002\020\001\022\r\n\001w\030\004 \003(\001"
+    "B\002\020\001\"%\n\004Type\022\n\n\006PLAYER\020\000\022\007\n\003NPC\020\001\022\010\n\004TIL"
+    "E\020\002\"K\n\014JoystickData\022\n\n\002id\030\001 \001(\005\022\021\n\tis_bu"
+    "tton\030\002 \001(\010\022\r\n\005input\030\003 \001(\005\022\r\n\005state\030\004 \001(\005"
+    "\"i\n\tDirection\022&\n\003way\030\001 \001(\0162\031.proto.Direc"
+    "tion.Cardinal\"4\n\010Cardinal\022\t\n\005NORTH\020\000\022\010\n\004"
+    "EAST\020\001\022\t\n\005SOUTH\020\002\022\010\n\004WEST\020\003*7\n\005Phase\022\010\n\004"
+    "MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGA"
+    "ME\020\003", 1324);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -1727,6 +1729,7 @@ void Construct::Swap(Construct* other) {
 const int JoinResponse::kStatusFieldNumber;
 const int JoinResponse::kNumPlayersFieldNumber;
 const int JoinResponse::kIdFieldNumber;
+const int JoinResponse::kObjIdFieldNumber;
 #endif  // !_MSC_VER
 
 JoinResponse::JoinResponse()
@@ -1750,6 +1753,7 @@ void JoinResponse::SharedCtor() {
   status_ = false;
   num_players_ = 0;
   id_ = 0;
+  obj_id_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1795,7 +1799,7 @@ void JoinResponse::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  ZR_(status_, id_);
+  ZR_(status_, obj_id_);
 
 #undef OFFSET_OF_FIELD_
 #undef ZR_
@@ -1854,6 +1858,21 @@ bool JoinResponse::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(32)) goto parse_obj_id;
+        break;
+      }
+
+      // optional int32 obj_id = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_obj_id:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &obj_id_)));
+          set_has_obj_id();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1898,6 +1917,11 @@ void JoinResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->id(), output);
   }
 
+  // optional int32 obj_id = 4;
+  if (has_obj_id()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->obj_id(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1921,6 +1945,11 @@ void JoinResponse::SerializeWithCachedSizes(
   // optional int32 id = 3;
   if (has_id()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->id(), target);
+  }
+
+  // optional int32 obj_id = 4;
+  if (has_obj_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->obj_id(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1952,6 +1981,13 @@ int JoinResponse::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->id());
+    }
+
+    // optional int32 obj_id = 4;
+    if (has_obj_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->obj_id());
     }
 
   }
@@ -1990,6 +2026,9 @@ void JoinResponse::MergeFrom(const JoinResponse& from) {
     if (from.has_id()) {
       set_id(from.id());
     }
+    if (from.has_obj_id()) {
+      set_obj_id(from.obj_id());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2016,6 +2055,7 @@ void JoinResponse::Swap(JoinResponse* other) {
     std::swap(status_, other->status_);
     std::swap(num_players_, other->num_players_);
     std::swap(id_, other->id_);
+    std::swap(obj_id_, other->obj_id_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
