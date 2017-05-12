@@ -59,6 +59,7 @@ void ServerNetworkManager::register_listeners() {
             p->set_z(player_obj->transform.get_position().z);
             p->set_wx(player_obj->direction.x);
             p->set_wz(player_obj->direction.z);
+            p->set_obj_id(player_obj->get_id());
         }
 
         for (int obj_id : collisions)
