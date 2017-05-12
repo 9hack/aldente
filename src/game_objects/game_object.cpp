@@ -1,5 +1,6 @@
 #include "game_object.h"
 #include "util/util_bt.h"
+#include "events.h"
 
 int GameObject::id_counter = 0;
 

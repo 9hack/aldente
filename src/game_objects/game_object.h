@@ -6,7 +6,6 @@
 #include "animation/animation_player.h"
 #include "btBulletDynamicsCommon.h"
 #include "util/color.h"
-#include "events.h"
 
 #include <string>
 

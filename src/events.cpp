@@ -19,11 +19,9 @@ namespace events {
         signal<void(Phase*)> client_set_phase_event;
     }
 
-    signal<void(Phase*)> phase_changed_event;
     signal<void(int)> ui_grid_selection_event;
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
-    signal<void(int)> new_connection_event;
 
     namespace menu {
         signal<void(int)> request_join_event;

@@ -1,5 +1,4 @@
 #include "phase.h"
-#include "game_state.h"
 
 bool BuildPhase::is_menu = true;
 
