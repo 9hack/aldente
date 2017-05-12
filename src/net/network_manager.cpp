@@ -59,6 +59,7 @@ void ServerNetworkManager::register_listeners() {
             p->set_z(player_obj->transform.get_position().z);
             p->set_wx(player_obj->direction.x);
             p->set_wz(player_obj->direction.z);
+            std::cerr << "[s] sending p" << player_id << " obj=" << player_obj->get_id() << "\n";
             p->set_obj_id(player_obj->get_id());
         }
 
@@ -179,14 +180,21 @@ void ClientNetworkManager::update() {
         case proto::ServerMessage::MessageTypeCase::kStateUpdate: {
             proto::GameState state = msg.state_update();
             for (auto p : state.players()) {
+                bool all_exist = true;
                 if (GameState::players.find(p.id()) == GameState::players.end()) {
                     // Player doesn't exist on this client yet; create.
                     std::cerr << "Creating player " << p.id() << " with obj id " << p.obj_id() << "\n";
                     events::menu::spawn_existing_player_event(p);
+                    all_exist = false;
                 } else {
                     GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
-                    for (int obj_id : state.collisions())
+                }
+
+                if (all_exist) {
+                    for (int obj_id : state.collisions()) {
+                        std::cerr << "collide: " << obj_id << "\n";
                         GameObject::game_objects[obj_id]->on_collision_graphical();
+                    }
                 }
             }
             break;
