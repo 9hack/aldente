@@ -20,6 +20,9 @@ Player::Player(int client_id) : GameObject(), client_id(client_id) {
     };
     events::add_rigidbody_event(rigid);
 
+    // Notify on collision.
+    notify_on_collision = true;
+
     // Lock y-axis
     rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
     //Lock angular rotation
@@ -121,5 +124,5 @@ void Player::start_walk() {
 }
 
 void Player::on_collision(GameObject *other) {
-    transform.set_scale(transform.get_scale() * 0.99f);
+    set_alpha(0.5f);
 }

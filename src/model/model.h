@@ -27,6 +27,12 @@ public:
 
     void add_mesh(Mesh *m);
 
+    void set_color(Color color);
+
+    void set_alpha(float alpha);
+
+    void set_shadows(bool enable);
+
     void set_bones(Skeleton *skel) { bones = skel->bones_final; };
 
     void set_shader(Shader *shader) { model_shader = shader; }
