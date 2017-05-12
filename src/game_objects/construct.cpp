@@ -5,21 +5,27 @@ Construct::Construct(int x, int z) : GameObject() {
     transform.set_position(x, 0.0f, z);
 }
 
-Crate::Crate(int x, int z, bool graphical) : Construct(x, z) {
-    transform.set_scale(0.6f, 0.6f, 0.6f);
-
-    if (!graphical) {
-        events::RigidBodyData rigid = {
-            glm::vec3(x,0.5f,z), //position
-            0, //mass
-            hit_box, //btshape
-            glm::vec3(0,0,0), //inertia
-            this, //the gameobject
-            false, // is a ghost object
-        };
-        events::add_rigidbody_event(rigid);
-    }
+Construct::Construct(int x, int z, int id) : GameObject(id) {
+    transform.set_position(x, 0.0f, z);
 }
+
+Crate::Crate(int x, int z) : Construct(x, z) {
+    transform.set_scale(0.6f, 0.6f, 0.6f);
+    events::RigidBodyData rigid = {
+        glm::vec3(x,0.5f,z), //position
+        0, //mass
+        hit_box, //btshape
+        glm::vec3(0,0,0), //inertia
+        this, //the gameobject
+        false, // is a ghost object
+    };
+    events::add_rigidbody_event(rigid);
+}
+
+Crate::Crate(int x, int z, int id) : Construct(x, z, id) {
+    transform.set_scale(0.6f, 0.6f, 0.6f);
+}
+
 
 void Crate::update_this() {
     anim_player.update();

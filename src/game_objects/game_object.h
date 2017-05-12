@@ -7,6 +7,7 @@
 #include "btBulletDynamicsCommon.h"
 #include "util/color.h"
 
+#include <unordered_map>
 #include <string>
 
 /*
@@ -24,6 +25,7 @@ protected:
     btRigidBody *rigidbody;
     int id;
 public:
+    static std::unordered_map<int, GameObject*> game_objects;
     std::vector<GameObject *> children;
 
     Transform transform; // World matrix now controlled using the Transform Component
@@ -31,6 +33,7 @@ public:
     bool notify_on_collision = false; // Physics engine will only call on_collision if this flag is set.
 
     GameObject();
+    GameObject(int id);
     ~GameObject();
 
     // Parenting Stuff
@@ -59,7 +62,6 @@ public:
     btRigidBody *get_rigid() { return rigidbody; };
     void set_rigid(btRigidBody *to_add) { rigidbody = to_add; };
     int get_id() { return id; };
-    void set_id(int to_set) { id = to_set; };
 
     void set_position(glm::vec3 pos);
 };

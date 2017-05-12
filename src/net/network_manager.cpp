@@ -184,7 +184,7 @@ void ClientNetworkManager::update() {
                 } else {
                     GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
                     for (int obj_id : state.collisions())
-                        events::dungeon::collision_event(obj_id);
+                        GameObject::game_objects[obj_id]->on_collision_graphical();
                 }
             }
             break;

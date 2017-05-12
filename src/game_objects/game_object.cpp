@@ -1,18 +1,17 @@
 #include "game_object.h"
 #include "util/util_bt.h"
-#include "events.h"
+#include <iostream>
 
+std::unordered_map<int, GameObject*> GameObject::game_objects;
 int GameObject::id_counter = 0;
 
-GameObject::GameObject() {
+GameObject::GameObject() : GameObject(id_counter++) {
+}
+
+GameObject::GameObject(int id) : id(id) {
     model = new Model();
     rigidbody = nullptr;
-    id = id_counter++;
-
-    events::dungeon::collision_event.connect([&](int i) {
-        if (id != i) return;
-        on_collision_graphical();
-    });
+    game_objects[id] = this;
 }
 
 GameObject::~GameObject(){

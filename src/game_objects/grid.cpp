@@ -56,8 +56,9 @@ void Grid::setup_listeners() {
         // Build the construct locally on the server, without graphics.
         if (permitted) {
             Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
-            if (built)
+            if (built) {
                 c.set_id(built->get_id());
+            }
         }
 
         events::build::respond_build_event(c);
@@ -84,10 +85,9 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
 
     switch (type) {
     case CHEST: {
-        Construct* to_add = new Crate(col, row, graphical);
+        to_add = graphical ? new Crate(col, row, id) : new Crate(col, row);
         if (graphical) {
             to_add->setup_model();
-            to_add->set_id(id);
         }
         children.push_back(to_add);
         candidate->buildable = false;
