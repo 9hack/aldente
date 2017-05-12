@@ -32,12 +32,8 @@ void GameState::init(Phase* phase) {
         events::menu::respond_join_event(conn_id, resp);
     });
 
-    events::menu::spawn_new_player_event.connect([](proto::Player & p) {
-        add_player(p.id(), -1, false);
-    });
-
-    events::menu::spawn_existing_player_event.connect([](proto::Player & p, int obj_id) {
-        add_player(p.id(), obj_id, true);
+    events::menu::spawn_existing_player_event.connect([](proto::Player & p) {
+        add_player(p.id(), p.obj_id(), true);
     });
 
     events::dungeon::network_collision_event.connect([&](int obj_id) {

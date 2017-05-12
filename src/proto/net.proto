@@ -49,6 +49,7 @@ message Player {
   optional float wx = 4;
   optional float wz = 5;
   optional string name = 6;
+  optional int32 obj_id = 7;
 }
 
 message StickData {

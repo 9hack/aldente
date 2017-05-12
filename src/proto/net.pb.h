@@ -841,6 +841,13 @@ class Player : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
+  // optional int32 obj_id = 7;
+  inline bool has_obj_id() const;
+  inline void clear_obj_id();
+  static const int kObjIdFieldNumber = 7;
+  inline ::google::protobuf::int32 obj_id() const;
+  inline void set_obj_id(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:proto.Player)
  private:
   inline void set_has_id();
@@ -855,6 +862,8 @@ class Player : public ::google::protobuf::Message {
   inline void clear_has_wz();
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_obj_id();
+  inline void clear_has_obj_id();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -866,6 +875,7 @@ class Player : public ::google::protobuf::Message {
   float wx_;
   ::std::string* name_;
   float wz_;
+  ::google::protobuf::int32 obj_id_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -2459,6 +2469,30 @@ inline void Player::set_allocated_name(::std::string* name) {
     name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:proto.Player.name)
+}
+
+// optional int32 obj_id = 7;
+inline bool Player::has_obj_id() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Player::set_has_obj_id() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Player::clear_has_obj_id() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Player::clear_obj_id() {
+  obj_id_ = 0;
+  clear_has_obj_id();
+}
+inline ::google::protobuf::int32 Player::obj_id() const {
+  // @@protoc_insertion_point(field_get:proto.Player.obj_id)
+  return obj_id_;
+}
+inline void Player::set_obj_id(::google::protobuf::int32 value) {
+  set_has_obj_id();
+  obj_id_ = value;
+  // @@protoc_insertion_point(field_set:proto.Player.obj_id)
 }
 
 // -------------------------------------------------------------------

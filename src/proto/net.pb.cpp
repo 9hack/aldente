@@ -179,13 +179,14 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameState));
   Player_descriptor_ = file->message_type(5);
-  static const int Player_offsets_[6] = {
+  static const int Player_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Player, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Player, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Player, z_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Player, wx_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Player, wz_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Player, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Player, obj_id_),
   };
   Player_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -375,24 +376,24 @@ void protobuf_AddDesc_net_2eproto() {
     "\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013num_pla"
     "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\"\?"
     "\n\tGameState\022\036\n\007players\030\001 \003(\0132\r.proto.Pla"
-    "yer\022\022\n\ncollisions\030\002 \003(\005\"P\n\006Player\022\n\n\002id\030"
+    "yer\022\022\n\ncollisions\030\002 \003(\005\"`\n\006Player\022\n\n\002id\030"
     "\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\n\n\002wx\030\004 \001(\002\022"
-    "\n\n\002wz\030\005 \001(\002\022\014\n\004name\030\006 \001(\t\"~\n\tStickData\022%"
-    "\n\005input\030\001 \001(\0162\026.proto.StickData.Stick\022\t\n"
-    "\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick"
-    "\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001\"\317\001\n\nGa"
-    "meObject\022$\n\004type\030\001 \001(\0162\026.proto.GameObjec"
-    "t.Type\022,\n\010location\030\002 \001(\0132\032.proto.GameObj"
-    "ect.Location\032F\n\010Location\022\r\n\001x\030\001 \003(\001B\002\020\001\022"
-    "\r\n\001y\030\002 \003(\001B\002\020\001\022\r\n\001z\030\003 \003(\001B\002\020\001\022\r\n\001w\030\004 \003(\001"
-    "B\002\020\001\"%\n\004Type\022\n\n\006PLAYER\020\000\022\007\n\003NPC\020\001\022\010\n\004TIL"
-    "E\020\002\"K\n\014JoystickData\022\n\n\002id\030\001 \001(\005\022\021\n\tis_bu"
-    "tton\030\002 \001(\010\022\r\n\005input\030\003 \001(\005\022\r\n\005state\030\004 \001(\005"
-    "\"i\n\tDirection\022&\n\003way\030\001 \001(\0162\031.proto.Direc"
-    "tion.Cardinal\"4\n\010Cardinal\022\t\n\005NORTH\020\000\022\010\n\004"
-    "EAST\020\001\022\t\n\005SOUTH\020\002\022\010\n\004WEST\020\003*7\n\005Phase\022\010\n\004"
-    "MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGA"
-    "ME\020\003", 1324);
+    "\n\n\002wz\030\005 \001(\002\022\014\n\004name\030\006 \001(\t\022\016\n\006obj_id\030\007 \001("
+    "\005\"~\n\tStickData\022%\n\005input\030\001 \001(\0162\026.proto.St"
+    "ickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002i"
+    "d\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STIC"
+    "K_RIGHT\020\001\"\317\001\n\nGameObject\022$\n\004type\030\001 \001(\0162\026"
+    ".proto.GameObject.Type\022,\n\010location\030\002 \001(\013"
+    "2\032.proto.GameObject.Location\032F\n\010Location"
+    "\022\r\n\001x\030\001 \003(\001B\002\020\001\022\r\n\001y\030\002 \003(\001B\002\020\001\022\r\n\001z\030\003 \003("
+    "\001B\002\020\001\022\r\n\001w\030\004 \003(\001B\002\020\001\"%\n\004Type\022\n\n\006PLAYER\020\000"
+    "\022\007\n\003NPC\020\001\022\010\n\004TILE\020\002\"K\n\014JoystickData\022\n\n\002i"
+    "d\030\001 \001(\005\022\021\n\tis_button\030\002 \001(\010\022\r\n\005input\030\003 \001("
+    "\005\022\r\n\005state\030\004 \001(\005\"i\n\tDirection\022&\n\003way\030\001 \001"
+    "(\0162\031.proto.Direction.Cardinal\"4\n\010Cardina"
+    "l\022\t\n\005NORTH\020\000\022\010\n\004EAST\020\001\022\t\n\005SOUTH\020\002\022\010\n\004WES"
+    "T\020\003*7\n\005Phase\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUN"
+    "GEON\020\002\022\014\n\010MINIGAME\020\003", 1340);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -2344,6 +2345,7 @@ const int Player::kZFieldNumber;
 const int Player::kWxFieldNumber;
 const int Player::kWzFieldNumber;
 const int Player::kNameFieldNumber;
+const int Player::kObjIdFieldNumber;
 #endif  // !_MSC_VER
 
 Player::Player()
@@ -2371,6 +2373,7 @@ void Player::SharedCtor() {
   wx_ = 0;
   wz_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  obj_id_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2419,9 +2422,9 @@ void Player::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 63) {
+  if (_has_bits_[0 / 32] & 127) {
     ZR_(id_, wx_);
-    wz_ = 0;
+    ZR_(wz_, obj_id_);
     if (has_name()) {
       if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
@@ -2533,6 +2536,21 @@ bool Player::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(56)) goto parse_obj_id;
+        break;
+      }
+
+      // optional int32 obj_id = 7;
+      case 7: {
+        if (tag == 56) {
+         parse_obj_id:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &obj_id_)));
+          set_has_obj_id();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2597,6 +2615,11 @@ void Player::SerializeWithCachedSizes(
       6, this->name(), output);
   }
 
+  // optional int32 obj_id = 7;
+  if (has_obj_id()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->obj_id(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2641,6 +2664,11 @@ void Player::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         6, this->name(), target);
+  }
+
+  // optional int32 obj_id = 7;
+  if (has_obj_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->obj_id(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2689,6 +2717,13 @@ int Player::ByteSize() const {
           this->name());
     }
 
+    // optional int32 obj_id = 7;
+    if (has_obj_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->obj_id());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -2734,6 +2769,9 @@ void Player::MergeFrom(const Player& from) {
     if (from.has_name()) {
       set_name(from.name());
     }
+    if (from.has_obj_id()) {
+      set_obj_id(from.obj_id());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2763,6 +2801,7 @@ void Player::Swap(Player* other) {
     std::swap(wx_, other->wx_);
     std::swap(wz_, other->wz_);
     std::swap(name_, other->name_);
+    std::swap(obj_id_, other->obj_id_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

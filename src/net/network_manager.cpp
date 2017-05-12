@@ -170,7 +170,8 @@ void ClientNetworkManager::update() {
                 proto::Player p;
                 client_id = resp.id();
                 p.set_id(client_id);
-                events::menu::spawn_existing_player_event(p, resp.obj_id());
+                p.set_obj_id(resp.obj_id());
+                events::menu::spawn_existing_player_event(p);
             }
             break;
         }
@@ -179,8 +180,8 @@ void ClientNetworkManager::update() {
             for (auto p : state.players()) {
                 if (GameState::players.find(p.id()) == GameState::players.end()) {
                     // Player doesn't exist on this client yet; create.
-                    std::cerr << "Creating player " << p.id() << "\n";
-                    events::menu::spawn_new_player_event(p);
+                    std::cerr << "Creating player " << p.id() << " with obj id " << p.obj_id() << "\n";
+                    events::menu::spawn_existing_player_event(p);
                 } else {
                     GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
                     for (int obj_id : state.collisions())
