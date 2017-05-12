@@ -11,8 +11,11 @@ MainScene::MainScene() : Scene() {
 }
 
 void MainScene::update() {
-
     Scene::update();
+}
+
+void MainScene::client_update() {
+    grid->update();
 
     // Rotate directional light sources just to test shadows.
     if (lights_debug_on) {
@@ -53,25 +56,23 @@ void MainScene::setup_scene() {
 
 void MainScene::graphical_setup() {
 
-    // Player instantiation will be here for now until we start working on
-    // scene management.
-    Model *player_model = AssetLoader::get_model(std::string("boy_two"));
-    player_model->set_shader(&ShaderManager::anim_unlit);
-
-    Player *player = new Player();
-    player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
-    player->transform.translate({ 2.f, 0.f, 2.f });
-    objs.push_back(player);
-    player->attach_model(player_model);
-    player->start_walk();
-
-    GameObject *player1 = new GameObject();
-    player1->transform.set_scale({ 0.4f, 0.4f, 0.4f });
-    player1->transform.translate({ 6.f, 0.f, 6.f });
-    objs.push_back(player1);
-    player1->attach_model(player_model);
-
     for (GameObject *obj : objs) {
         obj->setup_model();
     }
+}
+
+Player* MainScene::spawn_player(int client_id, bool graphical) {
+    Player *player = new Player(client_id);
+    player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
+    player->transform.translate({ 2.f, 0.f, 2.f });
+    objs.push_back(player);
+    
+    if (graphical) {
+        Model *player_model = AssetLoader::get_model(std::string("boy_two"));
+        player_model->set_shader(&ShaderManager::anim_unlit);
+        player->attach_model(player_model);
+        player->start_walk();
+    }
+
+    return player;
 }

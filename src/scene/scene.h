@@ -35,6 +35,7 @@ public:
     void add_light(SpotLight *l);
 
     virtual void update();
+    virtual void client_update() = 0;
 
     // Sets up scene but not its models
     virtual void setup_scene() = 0;

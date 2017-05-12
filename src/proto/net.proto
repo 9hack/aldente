@@ -6,6 +6,9 @@ message ServerMessage {
   oneof message_type {
     string message = 1;
     Construct build_update = 2;
+    JoinResponse join_response = 3;
+    GameState state_update = 4;
+    Phase phase_update = 5;
   }
 }
 
@@ -13,6 +16,9 @@ message ClientMessage {
   oneof message_type {
     string message = 1;
     Construct build_request = 2;
+    string join_request = 3;
+    StickData move_request = 4;
+    Phase phase_request = 5;
   }
 }
 
@@ -24,11 +30,45 @@ message Construct {
   optional bool status = 5;
 }
 
-// Below is currently unused.
+message JoinResponse {
+  optional bool status = 1;
+  optional int32 num_players = 2;
+  optional int32 id = 3;
+}
 
 message GameState {
-  repeated GameObject objects = 1;
+  repeated Player players = 1;
 }
+
+message Player {
+  optional int32 id = 1;
+  optional float x = 2;
+  optional float z = 3;
+  optional float wx = 4;
+  optional float wz = 5;
+  optional string name = 6;
+}
+
+message StickData {
+  enum Stick {
+    STICK_LEFT = 0;
+    STICK_RIGHT = 1;
+  }
+
+  optional Stick input = 1;
+  optional int32 x = 2;
+  optional int32 y = 3;
+  optional int32 id = 4;
+}
+
+enum Phase {
+  MENU = 0;
+  BUILD = 1;
+  DUNGEON = 2;
+  MINIGAME = 3;
+}
+
+// Below is currently unused.
 
 message GameObject {
   enum Type {

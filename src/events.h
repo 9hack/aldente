@@ -8,6 +8,10 @@
 #include "game_objects/game_object.h"
 #include "btBulletDynamicsCommon.h"
 
+// Forward declaration to resolve circular dependency.
+class Player;
+class Phase;
+
 namespace events {
 
     using boost::signals2::signal;
@@ -97,7 +101,9 @@ namespace events {
         extern signal<void()> toggle_ui_event;
         extern signal<void()> toggle_light_rotation_event;
         extern signal<void()> toggle_debug_input_event;
+        extern signal<void(Phase*)> client_set_phase_event;
     }
+
     // The user has made a selection on the UI grid.
     extern signal<void(int)> ui_grid_selection_event;
 
@@ -115,6 +121,12 @@ namespace events {
     };
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
+
+    namespace menu {
+        extern signal<void(int)> request_join_event;
+        extern signal<void(int, proto::JoinResponse &)> respond_join_event;
+        extern signal<void(proto::Player &)> spawn_player_event;
+    }
 
     namespace build {
         // Move the selection in the 2D selection grid.
@@ -158,9 +170,6 @@ namespace events {
     }
 
     namespace dungeon {
-        // Player movement
-        extern signal<void(StickData d)> player_move_event;
-
         // Player interact (e.g opening a chest)
         extern signal<void()> player_interact_event;
 
@@ -169,5 +178,9 @@ namespace events {
 
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
+
+        extern signal<void(StickData &)> network_player_move_event;
+
+        extern signal<void(std::map<int, Player*> &)> network_positions_event;
     }
 }

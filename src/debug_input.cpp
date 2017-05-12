@@ -49,16 +49,16 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     events::debug::toggle_debug_input_event();
                     break;
                 case GLFW_KEY_0:
-                    GameState::set_phase(&GameState::menu_phase);
+                    events::debug::client_set_phase_event(&GameState::menu_phase);
                     break;
                 case GLFW_KEY_1:
-                    GameState::set_phase(&GameState::build_phase);
+                    events::debug::client_set_phase_event(&GameState::build_phase);
                     break;
                 case GLFW_KEY_2:
-                    GameState::set_phase(&GameState::dungeon_phase);
+                    events::debug::client_set_phase_event(&GameState::dungeon_phase);
                     break;
                 case GLFW_KEY_3:
-                    GameState::set_phase(&GameState::minigame_phase);
+                    events::debug::client_set_phase_event(&GameState::minigame_phase);
                     break;
                 default:
                     break;
