@@ -69,6 +69,14 @@ void Grid::setup_listeners() {
         // Build on the client, with graphics.
         build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
     });
+
+    events::dungeon::place_goal_event.connect([&]() {
+        place_goal(glm::vec3(0.0f),20);
+    });
+
+    events::dungeon::remove_goal_event.connect([&]() {
+        remove_goal();
+    });
 }
 
 bool Grid::verify_build(ConstructType type, int col, int row) {
@@ -86,7 +94,7 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
 
     switch (type) {
     case CHEST: {
-        to_add = graphical ? new Crate(col, row, id) : new Crate(col, row);
+        to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
         if (graphical) {
             to_add->setup_model();
         }
@@ -211,4 +219,33 @@ Tile *Grid::make_tile(int tile_id, int x, int z) {
 void Grid::setup_model() {
     for (GameObject *obj : children)
         obj->setup_model();
+}
+
+void Grid::place_goal(glm::vec3 start, int min_dist) {
+    // Goal will be in range of (min_dist, edge of map)
+    int new_goal_x = rand() % width;
+    int new_goal_z = rand() % height;
+
+    // If not buildable or too close, find another
+    while (!grid[new_goal_z][new_goal_x]->isBuildable() ||
+        (abs(new_goal_x-start.x) + abs(new_goal_z-start.z) < min_dist)) {
+        new_goal_x = rand() % width;
+        new_goal_z = rand() % height;
+    }
+
+    Goal *new_goal = new Goal(new_goal_x, new_goal_z);
+
+    // This line should only be on client
+    new_goal->setup_model();
+
+    grid[new_goal_z][new_goal_x]->set_construct(new_goal);
+    goal = new_goal;
+    goal_x = new_goal_x;
+    goal_z = new_goal_z;
+}
+
+void Grid::remove_goal() {
+    //TODO destructor for goal
+    grid[goal_z][goal_x]->set_construct(nullptr);
+    events::remove_rigidbody_event(goal);
 }

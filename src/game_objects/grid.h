@@ -21,6 +21,8 @@ private:
     int hover_row, hover_col;
     Tile *hover; // Currently selected tile
     ConstructType selected = ConstructType::REMOVE;
+    Goal *goal;
+    int goal_z, goal_x;
 
     void setup_listeners();
 
@@ -44,5 +46,16 @@ public:
 
     // For moving cursor on tile during build phase
     void move_selection(Direction d);
+
+    // Loads tile models, only call this on client
+    void graphical_setup();
+
+    // Places goal with minimum distance from the start. 
+    // Distance calculated using manhattan distance(x diff + z diff)
+    // Note: try not to use a high min dist
+    void place_goal(glm::vec3 start, int min_dist);
+
+    void remove_goal();
+
     void update_selection();
 };

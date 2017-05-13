@@ -49,6 +49,8 @@ namespace events {
         signal<void()> player_interact_event;
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
+        signal<void()> place_goal_event;
+        signal<void()> remove_goal_event;
         signal<void(StickData &)> network_player_move_event;
         signal<void(std::unordered_set<GameObject*>, std::unordered_set<int>)> network_positions_event;
         signal<void(int)> collision_event;

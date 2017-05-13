@@ -3,6 +3,7 @@
 #include "events.h"
 #include "construct_types.h"
 #include <iostream>
+#include "game_objects\player.h"
 
 class Phase {
 public:
