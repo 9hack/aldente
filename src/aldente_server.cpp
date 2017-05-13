@@ -12,7 +12,8 @@ void AldenteServer::start() {
     Util::seed(0); // Seed PRNG.
 
     // Game logic. Temporarily start game with build phase.
-    GameState::init(&GameState::build_phase);
+    GameState::init();
+    GameState::set_phase(&GameState::build_phase);
 
     ServerNetworkManager network;
     network.connect();

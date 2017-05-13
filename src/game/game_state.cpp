@@ -1,24 +1,21 @@
 #include "game_state.h"
 #include "events.h"
 
-MenuPhase GameState::menu_phase;
-BuildPhase GameState::build_phase;
-DungeonPhase GameState::dungeon_phase;
-MinigamePhase GameState::minigame_phase;
+Context GameState::context;
+MenuPhase GameState::menu_phase(context);
+BuildPhase GameState::build_phase(context);
+DungeonPhase GameState::dungeon_phase(context);
+MinigamePhase GameState::minigame_phase(context);
 Phase* GameState::curr_phase;
 std::map<int, Player*> GameState::players;
-std::unordered_set<GameObject*> GameState::updated_objects;
-std::unordered_set<int> GameState::collisions;
 
 Physics GameState::physics;
 SceneManager GameState::scene_manager;
 MainScene GameState::testScene;
 int GameState::num_players = 0;
+bool GameState::is_server = true;
 
-void GameState::init(Phase* phase) {
-    curr_phase = phase;
-    curr_phase->setup();
-
+void GameState::init() {
     physics.set_scene(&testScene);
     scene_manager.set_current_scene(&testScene);
 
@@ -39,17 +36,15 @@ void GameState::init(Phase* phase) {
     events::menu::spawn_existing_player_event.connect([](int id) {
         add_existing_player(id);
     });
-
-    events::dungeon::network_collision_event.connect([&](int obj_id) {
-        collisions.insert(obj_id);
-    });
 }
 
 void GameState::graphical_setup() {
+    is_server = false;
     scene_manager.get_current_scene()->graphical_setup();
 }
 
 void GameState::update() {
+    assert(curr_phase);
     Phase* next_phase = curr_phase->update();
     if (next_phase) {
         curr_phase->teardown();
@@ -58,16 +53,6 @@ void GameState::update() {
     }
     physics.update();
     scene_manager.get_current_scene()->update();
-
-    if (curr_phase == &dungeon_phase) {
-        for (auto o : GameObject::game_objects) {
-            if (o.second->tag == Tag::PLAYER)
-                updated_objects.insert(o.second);
-        }
-        events::dungeon::network_positions_event(updated_objects, collisions);
-        updated_objects.clear();
-        collisions.clear();
-    }
 }
 
 void GameState::client_update() {
@@ -75,9 +60,18 @@ void GameState::client_update() {
 }
 
 void GameState::set_phase(Phase* phase) {
-    curr_phase->teardown();
-    curr_phase = phase;
-    curr_phase->setup();
+    if (is_server) {
+        if (curr_phase)
+            curr_phase->teardown();
+        curr_phase = phase;
+        curr_phase->setup();
+    }
+    else {
+        if (curr_phase)
+            curr_phase->client_teardown();
+        curr_phase = phase;
+        curr_phase->client_setup();
+    }
 }
 
 void GameState::set_phase(proto::Phase phase) {

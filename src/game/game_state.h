@@ -4,11 +4,13 @@
 #include "game_objects/player.h"
 #include "physics.h"
 #include "scene_manager.h"
+#include "context.h"
 #include <map>
 #include <unordered_set>
 
 class GameState {
 public:
+    static Context context;
     static MenuPhase menu_phase;
     static BuildPhase build_phase;
     static DungeonPhase dungeon_phase;
@@ -19,11 +21,9 @@ public:
     static Physics physics;
 
     static std::map<int, Player*> players;
-    static std::unordered_set<GameObject*> updated_objects;
-    static std::unordered_set<int> collisions;
 
-    // Initializes the game state with the given start phase.
-    static void init(Phase* phase);
+    // Initializes the game state.
+    static void init();
 
     // Performs graphical setup on the current scene. Only for the client.
     static void graphical_setup();
@@ -44,4 +44,5 @@ public:
 private:
     static MainScene testScene;
     static int num_players;
+    static bool is_server;
 };

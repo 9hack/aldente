@@ -3,7 +3,9 @@
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::setup() {
+}
 
+void BuildPhase::client_setup() {
     events::build::start_build_event();
 
     joystick_conn = events::stick_event.connect([&](events::StickData d) {
@@ -58,6 +60,9 @@ Phase* BuildPhase::update() {
 }
 
 void BuildPhase::teardown() {
+}
+
+void BuildPhase::client_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
 
@@ -65,6 +70,12 @@ void BuildPhase::teardown() {
 }
 
 void DungeonPhase::setup() {
+    collision_conn = events::dungeon::network_collision_event.connect([&](int obj_id) {
+        context.collisions.insert(obj_id);
+    });
+}
+
+void DungeonPhase::client_setup() {
     joystick_conn = events::stick_event.connect([&](events::StickData d) {
         // Left stick
         if (d.input == events::STICK_LEFT) {
@@ -80,7 +91,23 @@ void DungeonPhase::setup() {
     });
 }
 
+Phase* DungeonPhase::update() {
+    for (auto o : GameObject::game_objects) {
+        if (o.second->tag == Tag::PLAYER)
+            context.updated_objects.insert(o.second);
+    }
+    events::dungeon::network_positions_event(context.updated_objects, context.collisions);
+    context.updated_objects.clear();
+    context.collisions.clear();
+
+    return nullptr;
+}
+
 void DungeonPhase::teardown() {
+    collision_conn.disconnect();
+}
+
+void DungeonPhase::client_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
 }
