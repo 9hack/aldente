@@ -19,7 +19,7 @@ Grid::Grid(const char *map_loc) :
         hover(nullptr), hover_col(0), hover_row(0), 
         width(0), height(0) {
 
-    tag = Tag::GRID;
+    tag = "GRID";
     model = nullptr;
     rigidbody = nullptr;
 

@@ -2,12 +2,12 @@
 #include "asset_loader.h"
 
 Construct::Construct(int x, int z) : GameObject() {
-    tag = Tag::CONSTRUCT;
+    tag = "CONSTRUCT";
     transform.set_position(x, 0.0f, z);
 }
 
 Construct::Construct(int x, int z, int id) : GameObject(id) {
-    tag = Tag::CONSTRUCT;
+    tag = "CONSTRUCT";
     transform.set_position(x, 0.0f, z);
 }
 

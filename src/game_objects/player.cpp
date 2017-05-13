@@ -7,7 +7,7 @@
 #define ANIMATE_DELTA 0.001f
 
 Player::Player() : GameObject() {
-    tag = Tag::PLAYER;
+    tag = "PLAYER";
     to_moveX = 0;
     to_moveZ = 0;
     move_speed = 2.0f;
@@ -35,7 +35,7 @@ Player::Player() : GameObject() {
 }
 
 Player::Player(int obj_id) : GameObject(obj_id) {
-    tag = Tag::PLAYER;
+    tag = "PLAYER";
 }
 
 void Player::setup_listeners() {

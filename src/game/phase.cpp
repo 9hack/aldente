@@ -1,4 +1,5 @@
 #include "phase.h"
+#include "game_objects/player.h"
 
 bool BuildPhase::is_menu = true;
 
@@ -93,7 +94,7 @@ void DungeonPhase::client_setup() {
 
 Phase* DungeonPhase::update() {
     for (auto o : GameObject::game_objects) {
-        if (o.second->tag == Tag::PLAYER)
+        if (dynamic_cast<Player*>(o.second))
             context.updated_objects.insert(o.second);
     }
     events::dungeon::network_positions_event(context.updated_objects, context.collisions);

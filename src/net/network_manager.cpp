@@ -52,7 +52,7 @@ void ServerNetworkManager::register_listeners() {
         for (auto & obj : updated) {
             proto::GameObject* go = state->add_objects();
             go->set_id(obj->get_id());
-            if (obj->tag == Tag::PLAYER)
+            if (dynamic_cast<Player*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
             go->set_x(obj->transform.get_position().x);
             go->set_z(obj->transform.get_position().z);

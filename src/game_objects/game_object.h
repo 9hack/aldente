@@ -15,10 +15,6 @@
     Contains all the essential components required to
     render the model in the scene.
 */
-enum Tag {
-    PLAYER, CONSTRUCT, TILE, GRID
-};
-
 class GameObject {
 private:
     static int id_counter;
@@ -34,7 +30,7 @@ public:
 
     Transform transform; // World matrix now controlled using the Transform Component
     glm::vec3 direction;
-    Tag tag; // Identify this GameObject by a tag.
+    std::string tag; // Identify this GameObject by a human-readable tag.
     bool notify_on_collision = false; // Physics engine will only call on_collision if this flag is set.
 
     GameObject();

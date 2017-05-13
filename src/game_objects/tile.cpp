@@ -5,7 +5,7 @@
 Tile::Tile() :
     GameObject(),
     construct(nullptr) {
-    tag = Tag::TILE;
+    tag = "TILE";
 }
 
 FloorTile::FloorTile(int x, int z) : Tile::Tile() {
