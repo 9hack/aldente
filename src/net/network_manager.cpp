@@ -54,14 +54,17 @@ void ServerNetworkManager::register_listeners() {
             go->set_id(obj->get_id());
             if (obj->tag == Tag::PLAYER)
                 go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
+            else if (obj->tag == Tag::GOAL)
+                go->set_type(proto::GameObject::Type::GameObject_Type_GOAL);
             go->set_x(obj->transform.get_position().x);
             go->set_z(obj->transform.get_position().z);
             go->set_wx(obj->direction.x);
             go->set_wz(obj->direction.z);
         }
 
-        for (int obj_id : collisions)
+        for (int obj_id : collisions) {
             state->add_collisions(obj_id);
+        }
 
         msg.set_allocated_state_update(state);
         server.send_to_all(msg);
@@ -181,6 +184,9 @@ void ClientNetworkManager::update() {
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
                         events::menu::spawn_existing_player_event(obj.id());
                     }
+                    else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
+                        events::dungeon::spawn_existing_goal_event(obj.x(), obj.z(), obj.id());
+                    }
                     else {
                         std::cerr << "Unrecognized obj type\n";
                     }
@@ -191,8 +197,9 @@ void ClientNetworkManager::update() {
                         Player* player = dynamic_cast<Player*>(GameObject::game_objects[obj.id()]);
                         player->update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), player_id == obj.id());
                     }
-                    else
+                    else {
                         GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
+                    }
                 }
             }
             if (all_exist) {
@@ -204,7 +211,7 @@ void ClientNetworkManager::update() {
         }
         case proto::ServerMessage::MessageTypeCase::kPhaseUpdate: {
             proto::Phase phase = msg.phase_update();
-            GameState::set_phase(phase);
+            GameState::set_client_phase(phase);
             break;
         }
         default:

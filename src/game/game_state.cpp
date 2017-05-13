@@ -61,7 +61,8 @@ void GameState::update() {
 
     if (curr_phase == &dungeon_phase) {
         for (auto o : GameObject::game_objects) {
-            if (o.second->tag == Tag::PLAYER)
+            if (o.second->tag == Tag::PLAYER ||
+                o.second->tag == Tag::GOAL)
                 updated_objects.insert(o.second);
         }
         events::dungeon::network_positions_event(updated_objects, collisions);
@@ -80,7 +81,30 @@ void GameState::set_phase(Phase* phase) {
     curr_phase->setup();
 }
 
+// Temporary server-side phase switching while Ethan refactors Phase.
 void GameState::set_phase(proto::Phase phase) {
+    switch (phase) {
+    case proto::Phase::MENU:
+        GameState::set_phase(&GameState::menu_phase);
+        break;
+    case proto::Phase::BUILD:
+        if (curr_phase == &GameState::build_phase) return;
+        curr_phase = &GameState::build_phase;
+        events::dungeon::remove_goal_event(false);
+        break;
+    case proto::Phase::DUNGEON:
+        if (curr_phase == &GameState::dungeon_phase) return;
+        curr_phase = &GameState::dungeon_phase;
+        events::dungeon::place_goal_event();
+        break;
+    case proto::Phase::MINIGAME:
+        GameState::set_phase(&GameState::minigame_phase);
+        break;
+    }
+}
+
+// Temporary client-side phase switching while Ethan refactors Phase.
+void GameState::set_client_phase(proto::Phase phase) {
     switch (phase) {
     case proto::Phase::MENU:
         GameState::set_phase(&GameState::menu_phase);

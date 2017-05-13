@@ -46,6 +46,7 @@ void Chest::setup_model() {
 
 Goal::Goal(int x, int z) : Construct(x, z) {
     transform.set_scale(0.006f, 0.006f, 0.006f);
+    tag = Tag::GOAL;
 
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position
@@ -60,6 +61,11 @@ Goal::Goal(int x, int z) : Construct(x, z) {
     notify_on_collision = true;
 }
 
+Goal::Goal(int x, int z, int id) : Construct(x, z, id) {
+    transform.set_scale(0.006f, 0.006f, 0.006f);
+    tag = Tag::GOAL;
+}
+
 void Goal::setup_model() {
     attach_model(AssetLoader::get_model("warp"));
     model->set_shader(&ShaderManager::anim_unlit);
@@ -69,8 +75,12 @@ void Goal::setup_model() {
 }
 
 void Goal::on_collision(GameObject *other) {
-    if (anim_player.check_paused() && 
-        dynamic_cast<Player*>(other)) {
+    if (dynamic_cast<Player*>(other))
+        events::dungeon::network_collision_event(id);
+}
+
+void Goal::on_collision_graphical() {
+    if (anim_player.check_paused()) {
         anim_player.play();
     }
 }

@@ -16,7 +16,7 @@
     render the model in the scene.
 */
 enum Tag {
-    PLAYER, CONSTRUCT, TILE, GRID
+    PLAYER, CONSTRUCT, TILE, GRID, GOAL
 };
 
 class GameObject {

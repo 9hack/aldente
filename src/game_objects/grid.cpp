@@ -74,8 +74,23 @@ void Grid::setup_listeners() {
         place_goal(glm::vec3(0.0f),20);
     });
 
-    events::dungeon::remove_goal_event.connect([&]() {
-        remove_goal();
+    events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
+        std::unique_lock<std::mutex> lock(goal_mutex);
+        place_existing_goal(x, z, id);
+    });
+
+    events::dungeon::remove_goal_event.connect([&](bool graphical) {
+        std::unique_lock<std::mutex> lock(goal_mutex);
+        if (graphical) {
+            auto position = std::find(children.begin(), children.end(), goal);
+            if (position != children.end())
+                children.erase(position);
+            delete goal;
+            goal = nullptr;
+        }
+        else {
+            remove_goal();
+        }
     });
 }
 
@@ -235,13 +250,17 @@ void Grid::place_goal(glm::vec3 start, int min_dist) {
 
     Goal *new_goal = new Goal(new_goal_x, new_goal_z);
 
-    // This line should only be on client
-    new_goal->setup_model();
-
     grid[new_goal_z][new_goal_x]->set_construct(new_goal);
     goal = new_goal;
     goal_x = new_goal_x;
     goal_z = new_goal_z;
+}
+
+void Grid::place_existing_goal(int x, int z, int id) {
+    goal = new Goal(x, z, id);
+
+    goal->setup_model();
+    children.push_back(goal);
 }
 
 void Grid::remove_goal() {

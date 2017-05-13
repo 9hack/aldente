@@ -10,6 +10,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 #include "tile.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
@@ -22,6 +23,7 @@ private:
     Tile *hover; // Currently selected tile
     ConstructType selected = ConstructType::REMOVE;
     Goal *goal;
+    std::mutex goal_mutex; // In case a new goal is created before old one is removed.
     int goal_z, goal_x;
 
     void setup_listeners();
@@ -54,6 +56,8 @@ public:
     // Distance calculated using manhattan distance(x diff + z diff)
     // Note: try not to use a high min dist
     void place_goal(glm::vec3 start, int min_dist);
+
+    void place_existing_goal(int x, int z, int id);
 
     void remove_goal();
 

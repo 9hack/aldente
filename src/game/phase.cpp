@@ -78,11 +78,10 @@ void DungeonPhase::setup() {
             events::dungeon::player_interact_event();
         }
     });
-    events::dungeon::place_goal_event();
 }
 
 void DungeonPhase::teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
-    events::dungeon::remove_goal_event();
+    events::dungeon::remove_goal_event(true);
 }

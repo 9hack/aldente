@@ -184,7 +184,7 @@ namespace events {
         extern signal<void()> place_goal_event;
 
         // Signals goal removal
-        extern signal<void()> remove_goal_event;
+        extern signal<void(bool)> remove_goal_event;
 
         extern signal<void(StickData &)> network_player_move_event;
 
@@ -193,5 +193,7 @@ namespace events {
         extern signal<void(int)> collision_event;
 
         extern signal<void(int)> network_collision_event;
+
+        extern signal<void(int, int, int)> spawn_existing_goal_event;
     }
 }

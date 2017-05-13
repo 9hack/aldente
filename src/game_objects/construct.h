@@ -24,8 +24,6 @@ public:
 class Chest : public Construct {
 public:
     Chest(int x, int z);
-    void setup_model();
-    Chest(int x, int z);
     Chest(int x, int z, int id);
     void interact_trigger();
     void setup_model() override;
@@ -35,7 +33,9 @@ public:
 class Goal : public Construct {
 public:
     Goal(int x, int z);
+    Goal(int x, int z, int id);
     void setup_model();
     void on_collision(GameObject *other);
+    void on_collision_graphical();
     void update_this();
 };
