@@ -38,18 +38,25 @@ message JoinResponse {
 }
 
 message GameState {
-  repeated Player players = 1;
+  repeated GameObject objects = 1;
   repeated int32 collisions = 2;
 }
 
-message Player {
+message GameObject {
+  enum Type {
+    PLAYER = 0;
+    GOAL = 1;
+    CHEST = 2;
+    SPIKE = 3;
+  }
+
   optional int32 id = 1;
-  optional float x = 2;
-  optional float z = 3;
-  optional float wx = 4;
-  optional float wz = 5;
-  optional string name = 6;
-  optional int32 obj_id = 7;
+  optional Type type = 2;
+  optional float x = 3;
+  optional float z = 4;
+  optional float wx = 5;
+  optional float wz = 6;
+  optional int32 client_id = 7;
 }
 
 message StickData {
@@ -69,41 +76,4 @@ enum Phase {
   BUILD = 1;
   DUNGEON = 2;
   MINIGAME = 3;
-}
-
-// Below is currently unused.
-
-message GameObject {
-  enum Type {
-    PLAYER = 0;
-    NPC = 1;
-    TILE = 2;
-  }
-
-  message Location {
-    repeated double x = 1 [packed = true];
-    repeated double y = 2 [packed = true];
-    repeated double z = 3 [packed = true];
-    repeated double w = 4 [packed = true];
-  }
-
-  optional Type type = 1;
-  optional Location location = 2;
-}
-
-message JoystickData {
-  optional int32 id = 1;
-  optional bool is_button = 2;
-  optional int32 input = 3;
-  optional int32 state = 4;
-}
-
-message Direction {
-  enum Cardinal {
-    NORTH = 0;
-    EAST = 1;
-    SOUTH = 2;
-    WEST = 3;
-  }
-  optional Cardinal way = 1;
 }

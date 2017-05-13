@@ -26,7 +26,7 @@ namespace events {
     namespace menu {
         signal<void(int)> request_join_event;
         signal<void(int, proto::JoinResponse &)> respond_join_event;
-        signal<void(proto::Player &)> spawn_existing_player_event;
+        signal<void(int)> spawn_existing_player_event;
     }
 
     namespace build {
@@ -50,7 +50,7 @@ namespace events {
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void(StickData &)> network_player_move_event;
-        signal<void(std::map<int, Player*> &, std::unordered_set<int>)> network_positions_event;
+        signal<void(std::unordered_set<GameObject*>, std::unordered_set<int>)> network_positions_event;
         signal<void(int)> collision_event;
         signal<void(int)> network_collision_event;
     }

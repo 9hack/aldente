@@ -19,6 +19,7 @@ public:
     static Physics physics;
 
     static std::map<int, Player*> players;
+    static std::unordered_set<GameObject*> updated_objects;
     static std::unordered_set<int> collisions;
 
     // Initializes the game state with the given start phase.
@@ -38,7 +39,8 @@ public:
 
     // Adds a player to the main scene with given id.
     // Specify if we should set up graphics for the player model (client-side).
-    static Player* add_player(int conn_id, int obj_id, bool graphical);
+    static Player* add_new_player();
+    static Player* add_existing_player(int obj_id);
 private:
     static MainScene testScene;
     static int num_players;

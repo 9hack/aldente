@@ -20,12 +20,11 @@ private:
     int to_moveZ;
 
     float move_speed;
-    int client_id;
 
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
 public:
-    Player(int client_id);
-    Player(int client_id, int obj_id);
+    Player();
+    Player(int obj_id);
 
     virtual void update_this() override;
     virtual void on_collision(GameObject *other) override;
@@ -44,5 +43,4 @@ public:
 
     // TODO after we make more player models
     void setup_model() {}
-    glm::vec3 direction;
 };

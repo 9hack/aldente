@@ -46,4 +46,5 @@ private:
     int port;
     bool is_connected;
     int client_id;
+    int player_id;
 };

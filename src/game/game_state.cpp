@@ -7,6 +7,7 @@ DungeonPhase GameState::dungeon_phase;
 MinigamePhase GameState::minigame_phase;
 Phase* GameState::curr_phase;
 std::map<int, Player*> GameState::players;
+std::unordered_set<GameObject*> GameState::updated_objects;
 std::unordered_set<int> GameState::collisions;
 
 Physics GameState::physics;
@@ -27,13 +28,16 @@ void GameState::init(Phase* phase) {
         resp.set_id(conn_id);
 
         if (num_players < 4) {
-            resp.set_obj_id(add_player(conn_id, -1, false)->get_id());
+            Player* player = add_new_player();
+            resp.set_obj_id(player->get_id());
+            players[conn_id] = player;
+            num_players++;
         }
         events::menu::respond_join_event(conn_id, resp);
     });
 
-    events::menu::spawn_existing_player_event.connect([](proto::Player & p) {
-        add_player(p.id(), p.obj_id(), true);
+    events::menu::spawn_existing_player_event.connect([](int id) {
+        add_existing_player(id);
     });
 
     events::dungeon::network_collision_event.connect([&](int obj_id) {
@@ -56,7 +60,12 @@ void GameState::update() {
     scene_manager.get_current_scene()->update();
 
     if (curr_phase == &dungeon_phase) {
-        events::dungeon::network_positions_event(players, collisions);
+        for (auto o : GameObject::game_objects) {
+            if (o.second->tag == Tag::PLAYER)
+                updated_objects.insert(o.second);
+        }
+        events::dungeon::network_positions_event(updated_objects, collisions);
+        updated_objects.clear();
         collisions.clear();
     }
 }
@@ -88,14 +97,14 @@ void GameState::set_phase(proto::Phase phase) {
     }
 }
 
-
-Player* GameState::add_player(int conn_id, int obj_id, bool graphical) {
-    assert(players.find(conn_id) == players.end());
-    
+Player* GameState::add_new_player() {
     // For now, only create players on the main scene.
     assert(scene_manager.get_current_scene() == &testScene);
-    Player* player = testScene.spawn_player(conn_id, obj_id, graphical);
-    players[conn_id] = player;
-    num_players++;
-    return player;
+    return testScene.spawn_new_player();
+}
+
+Player* GameState::add_existing_player(int obj_id) {    
+    // For now, only create players on the main scene.
+    assert(scene_manager.get_current_scene() == &testScene);
+    return testScene.spawn_existing_player(obj_id);
 }

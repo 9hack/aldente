@@ -46,20 +46,18 @@ void ServerNetworkManager::register_listeners() {
     });
 
     // Dungeon phase.
-    events::dungeon::network_positions_event.connect([&](std::map<int, Player*> & players, std::unordered_set<int> collisions) {
+    events::dungeon::network_positions_event.connect([&](std::unordered_set<GameObject*> updated, std::unordered_set<int> collisions) {
         proto::ServerMessage msg;
         proto::GameState* state = new proto::GameState();
-        for (auto & pair : players) {
-            proto::Player* p = state->add_players();
-            int player_id;
-            Player* player_obj;
-            std::tie(player_id, player_obj) = pair;
-            p->set_id(player_id);
-            p->set_x(player_obj->transform.get_position().x);
-            p->set_z(player_obj->transform.get_position().z);
-            p->set_wx(player_obj->direction.x);
-            p->set_wz(player_obj->direction.z);
-            p->set_obj_id(player_obj->get_id());
+        for (auto & obj : updated) {
+            proto::GameObject* go = state->add_objects();
+            go->set_id(obj->get_id());
+            if (obj->tag == Tag::PLAYER)
+                go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
+            go->set_x(obj->transform.get_position().x);
+            go->set_z(obj->transform.get_position().z);
+            go->set_wx(obj->direction.x);
+            go->set_wz(obj->direction.z);
         }
 
         for (int obj_id : collisions)
@@ -168,25 +166,33 @@ void ClientNetworkManager::update() {
         case proto::ServerMessage::MessageTypeCase::kJoinResponse: {
             proto::JoinResponse resp = msg.join_response();
             if (resp.status()) {
-                proto::Player p;
                 client_id = resp.id();
-                p.set_id(client_id);
-                p.set_obj_id(resp.obj_id());
-                events::menu::spawn_existing_player_event(p);
+                player_id = GameState::add_existing_player(resp.obj_id())->get_id();
             }
             break;
         }
         case proto::ServerMessage::MessageTypeCase::kStateUpdate: {
             proto::GameState state = msg.state_update();
             bool all_exist = true;
-            for (auto p : state.players()) {
-                if (GameState::players.find(p.id()) == GameState::players.end()) {
-                    // Player doesn't exist on this client yet; create.
-                    std::cerr << "Creating player " << p.id() << " with obj id " << p.obj_id() << "\n";
-                    events::menu::spawn_existing_player_event(p);
+            for (auto obj : state.objects()) {
+                if (GameObject::game_objects.find(obj.id()) == GameObject::game_objects.end()) {
+                    // Game object doesn't exist on this client yet; create.
+                    std::cerr << "Creating obj with id " << obj.id() << "\n";
+                    if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
+                        events::menu::spawn_existing_player_event(obj.id());
+                    }
+                    else {
+                        std::cerr << "Unrecognized obj type\n";
+                    }
                     all_exist = false;
-                } else {
-                    GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
+                }
+                else {
+                    if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
+                        Player* player = dynamic_cast<Player*>(GameObject::game_objects[obj.id()]);
+                        player->update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), player_id == obj.id());
+                    }
+                    else
+                        GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
                 }
             }
             if (all_exist) {

@@ -126,7 +126,7 @@ namespace events {
     namespace menu {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
-        extern signal<void(proto::Player &)> spawn_existing_player_event;
+        extern signal<void(int)> spawn_existing_player_event;
     }
 
     namespace build {
@@ -182,7 +182,7 @@ namespace events {
 
         extern signal<void(StickData &)> network_player_move_event;
 
-        extern signal<void(std::map<int, Player*> &, std::unordered_set<int>)> network_positions_event;
+        extern signal<void(std::unordered_set<GameObject*>, std::unordered_set<int>)> network_positions_event;
 
         extern signal<void(int)> collision_event;
 

@@ -4,13 +4,13 @@
 #include "assert.h"
 #include "events.h"
 
-#define MOVE_DELTA 0.001f
+#define ANIMATE_DELTA 0.001f
 
-Player::Player(int client_id) : GameObject(), client_id(client_id) {
+Player::Player() : GameObject() {
+    tag = Tag::PLAYER;
     to_moveX = 0;
     to_moveZ = 0;
     move_speed = 2.0f;
-    direction = glm::vec3(0.0f);
 
     events::RigidBodyData rigid = {
         glm::vec3(0.0f, 0.0f, 0.0f), //position
@@ -34,8 +34,8 @@ Player::Player(int client_id) : GameObject(), client_id(client_id) {
     set_position({ 2.0f, 0.0f, 2.0f });
 }
 
-Player::Player(int client_id, int obj_id) : GameObject(obj_id), client_id(client_id) {
-
+Player::Player(int obj_id) : GameObject(obj_id) {
+    tag = Tag::PLAYER;
 }
 
 void Player::setup_listeners() {
@@ -47,8 +47,6 @@ void Player::setup_listeners() {
 // Just calls do_movement for now, can have more
 // functionality later.
 void Player::update_this() {
-    // Test code for playing animation for the boy
-    anim_player.update();
 
     do_movement();
 
@@ -75,7 +73,7 @@ void Player::update_state(float x, float z, float wx, float wz, bool camera) {
     anim_player.update();
     float dx = std::fabs(x - transform.get_position().x);
     float dz = std::fabs(z - transform.get_position().z);
-    bool animate = dx > MOVE_DELTA || dz > MOVE_DELTA;
+    bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
     if (!animate) {
         if (!anim_player.check_paused())
@@ -86,8 +84,7 @@ void Player::update_state(float x, float z, float wx, float wz, bool camera) {
             anim_player.play();
     }
 
-    transform.set_position(x, 0.0f, z);
-    transform.look_at(glm::vec3(wx, 0, wz));
+    GameObject::update_state(x, z, wx, wz);
 
     // Fires the player's position whenever player moves so camera can follow.
     if (camera)
