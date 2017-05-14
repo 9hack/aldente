@@ -74,6 +74,10 @@ void DungeonPhase::setup() {
     collision_conn = events::dungeon::network_collision_event.connect([&](int obj_id) {
         context.collisions.insert(obj_id);
     });
+
+    interact_conn = events::dungeon::network_interact_event.connect([&](int obj_id) {
+        context.interacts.insert(obj_id);
+    });
 }
 
 void DungeonPhase::client_setup() {
@@ -97,15 +101,18 @@ Phase* DungeonPhase::update() {
         if (dynamic_cast<Player*>(o.second))
             context.updated_objects.insert(o.second);
     }
-    events::dungeon::network_positions_event(context.updated_objects, context.collisions);
+
+    events::dungeon::update_state_event(context.updated_objects, context.collisions, context.interacts);
     context.updated_objects.clear();
     context.collisions.clear();
+    context.interacts.clear();
 
     return nullptr;
 }
 
 void DungeonPhase::teardown() {
     collision_conn.disconnect();
+    interact_conn.disconnect();
 }
 
 void DungeonPhase::client_teardown() {

@@ -49,6 +49,8 @@ public:
     void update_state(float x, float z, float wx, float wz);
     virtual void on_collision(GameObject *other) {}
     virtual void on_collision_graphical() {}
+    // Callback for when a player presses A on this construct
+    virtual void interact_trigger() {};
     virtual void setup_model() {};
 
     void connect_skel_to_model();

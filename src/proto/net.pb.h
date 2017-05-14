@@ -277,6 +277,7 @@ class ClientMessage : public ::google::protobuf::Message {
     kJoinRequest = 3,
     kMoveRequest = 4,
     kPhaseRequest = 5,
+    kInteractRequest = 6,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -359,6 +360,13 @@ class ClientMessage : public ::google::protobuf::Message {
   inline ::proto::Phase phase_request() const;
   inline void set_phase_request(::proto::Phase value);
 
+  // optional int32 interact_request = 6;
+  inline bool has_interact_request() const;
+  inline void clear_interact_request();
+  static const int kInteractRequestFieldNumber = 6;
+  inline ::google::protobuf::int32 interact_request() const;
+  inline void set_interact_request(::google::protobuf::int32 value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ClientMessage)
  private:
@@ -367,6 +375,7 @@ class ClientMessage : public ::google::protobuf::Message {
   inline void set_has_join_request();
   inline void set_has_move_request();
   inline void set_has_phase_request();
+  inline void set_has_interact_request();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -382,6 +391,7 @@ class ClientMessage : public ::google::protobuf::Message {
     ::std::string* join_request_;
     ::proto::StickData* move_request_;
     int phase_request_;
+    ::google::protobuf::int32 interact_request_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -699,6 +709,18 @@ class GameState : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_collisions();
 
+  // repeated int32 interacts = 3;
+  inline int interacts_size() const;
+  inline void clear_interacts();
+  static const int kInteractsFieldNumber = 3;
+  inline ::google::protobuf::int32 interacts(int index) const;
+  inline void set_interacts(int index, ::google::protobuf::int32 value);
+  inline void add_interacts(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      interacts() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_interacts();
+
   // @@protoc_insertion_point(class_scope:proto.GameState)
  private:
 
@@ -708,6 +730,7 @@ class GameState : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::proto::GameObject > objects_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > collisions_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > interacts_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -1514,6 +1537,33 @@ inline void ClientMessage::set_phase_request(::proto::Phase value) {
   message_type_.phase_request_ = value;
 }
 
+// optional int32 interact_request = 6;
+inline bool ClientMessage::has_interact_request() const {
+  return message_type_case() == kInteractRequest;
+}
+inline void ClientMessage::set_has_interact_request() {
+  _oneof_case_[0] = kInteractRequest;
+}
+inline void ClientMessage::clear_interact_request() {
+  if (has_interact_request()) {
+    message_type_.interact_request_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::google::protobuf::int32 ClientMessage::interact_request() const {
+  if (has_interact_request()) {
+    return message_type_.interact_request_;
+  }
+  return 0;
+}
+inline void ClientMessage::set_interact_request(::google::protobuf::int32 value) {
+  if (!has_interact_request()) {
+    clear_message_type();
+    set_has_interact_request();
+  }
+  message_type_.interact_request_ = value;
+}
+
 inline bool ClientMessage::has_message_type() {
   return message_type_case() != MESSAGE_TYPE_NOT_SET;
 }
@@ -1809,6 +1859,36 @@ inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
 GameState::mutable_collisions() {
   // @@protoc_insertion_point(field_mutable_list:proto.GameState.collisions)
   return &collisions_;
+}
+
+// repeated int32 interacts = 3;
+inline int GameState::interacts_size() const {
+  return interacts_.size();
+}
+inline void GameState::clear_interacts() {
+  interacts_.Clear();
+}
+inline ::google::protobuf::int32 GameState::interacts(int index) const {
+  // @@protoc_insertion_point(field_get:proto.GameState.interacts)
+  return interacts_.Get(index);
+}
+inline void GameState::set_interacts(int index, ::google::protobuf::int32 value) {
+  interacts_.Set(index, value);
+  // @@protoc_insertion_point(field_set:proto.GameState.interacts)
+}
+inline void GameState::add_interacts(::google::protobuf::int32 value) {
+  interacts_.Add(value);
+  // @@protoc_insertion_point(field_add:proto.GameState.interacts)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+GameState::interacts() const {
+  // @@protoc_insertion_point(field_list:proto.GameState.interacts)
+  return interacts_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+GameState::mutable_interacts() {
+  // @@protoc_insertion_point(field_mutable_list:proto.GameState.interacts)
+  return &interacts_;
 }
 
 // -------------------------------------------------------------------

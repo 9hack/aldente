@@ -7,4 +7,5 @@ class Context {
 public:
     std::unordered_set<GameObject*> updated_objects;
     std::unordered_set<int> collisions;
+    std::unordered_set<int> interacts;
 };

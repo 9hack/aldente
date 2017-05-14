@@ -46,7 +46,10 @@ void ServerNetworkManager::register_listeners() {
     });
 
     // Dungeon phase.
-    events::dungeon::network_positions_event.connect([&](std::unordered_set<GameObject*> updated, std::unordered_set<int> collisions) {
+    events::dungeon::update_state_event.connect([&](
+        std::unordered_set<GameObject*> updated, 
+        std::unordered_set<int> collisions,
+        std::unordered_set<int> interacts) {
         proto::ServerMessage msg;
         proto::GameState* state = new proto::GameState();
         for (auto & obj : updated) {
@@ -62,6 +65,9 @@ void ServerNetworkManager::register_listeners() {
 
         for (int obj_id : collisions)
             state->add_collisions(obj_id);
+
+        for (int obj_id : interacts)
+            state->add_interacts(obj_id);
 
         msg.set_allocated_state_update(state);
         server.send_to_all(msg);
@@ -91,6 +97,12 @@ void ServerNetworkManager::update() {
                 proto::ServerMessage phase_announce;
                 phase_announce.set_phase_update(phase);
                 server.send_to_all(phase_announce);
+                break;
+            }
+            case proto::ClientMessage::MessageTypeCase::kInteractRequest: {
+                int id = GameState::players[msg.interact_request()]->get_id();
+                Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
+                player->interact();
                 break;
             }
             default:
@@ -148,6 +160,12 @@ void ClientNetworkManager::register_listeners() {
         msg.set_allocated_move_request(pd);
         client.send(msg);
     });
+
+    events::dungeon::player_interact_event.connect([&]() {
+        proto::ClientMessage msg;
+        msg.set_interact_request(client_id);
+        client.send(msg);
+    });
 }
 
 void ClientNetworkManager::update() {
@@ -198,6 +216,9 @@ void ClientNetworkManager::update() {
             if (all_exist) {
                 for (int obj_id : state.collisions()) {
                     GameObject::game_objects[obj_id]->on_collision_graphical();
+                }
+                for (int obj_id : state.interacts()) {
+                    GameObject::game_objects[obj_id]->interact_trigger();
                 }
             }
             break;

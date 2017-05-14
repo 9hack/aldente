@@ -19,6 +19,7 @@ message ClientMessage {
     string join_request = 3;
     StickData move_request = 4;
     Phase phase_request = 5;
+    int32 interact_request = 6;
   }
 }
 
@@ -40,6 +41,7 @@ message JoinResponse {
 message GameState {
   repeated GameObject objects = 1;
   repeated int32 collisions = 2;
+  repeated int32 interacts = 3;
 }
 
 message GameObject {
