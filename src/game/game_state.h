@@ -23,10 +23,7 @@ public:
     static std::map<int, Player*> players;
 
     // Initializes the game state.
-    static void init();
-
-    // Performs graphical setup on the current scene. Only for the client.
-    static void graphical_setup();
+    static void setup(bool is_server);
 
     // Update state given input. Called in the game loop.
     static void update();

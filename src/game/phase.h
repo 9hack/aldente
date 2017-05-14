@@ -7,24 +7,24 @@
 
 class Phase {
 public:
-    Phase(Context context) : context(context) {};
+    Phase(Context& context) : context(context) {};
     virtual void setup() {};
     virtual Phase* update() { return nullptr; };
     virtual void teardown() {};
     virtual void client_setup() {};
     virtual void client_teardown() {};
 protected:
-    Context context;
+    Context& context;
 };
 
 class MenuPhase : public Phase {
 public:
-    MenuPhase(Context context) : Phase(context) {};
+    MenuPhase(Context& context) : Phase(context) {};
 };
 
 class BuildPhase : public Phase {
 public:
-    BuildPhase(Context context) : Phase(context) {};
+    BuildPhase(Context& context) : Phase(context) {};
     void setup();
     Phase* update();
     void teardown();
@@ -38,7 +38,7 @@ private:
 
 class DungeonPhase : public Phase {
 public:
-    DungeonPhase(Context context) : Phase(context) {};
+    DungeonPhase(Context& context) : Phase(context) {};
     void setup();
     Phase* update();
     void teardown();
@@ -52,5 +52,5 @@ private:
 
 class MinigamePhase : public Phase {
 public:
-    MinigamePhase(Context context) : Phase(context) {};
+    MinigamePhase(Context& context) : Phase(context) {};
 };

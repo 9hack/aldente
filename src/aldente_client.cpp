@@ -76,8 +76,7 @@ void AldenteClient::start() {
     };
 
     // Game logic. Temporarily start game with build phase.
-    GameState::init();
-    GameState::graphical_setup();
+    GameState::setup(false);
     GameState::set_phase(&GameState::build_phase);
 
     Render render(window, GameState::scene_manager);
