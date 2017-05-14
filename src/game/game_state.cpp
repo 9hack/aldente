@@ -19,11 +19,13 @@ void GameState::init() {
     physics.set_scene(&testScene);
     scene_manager.set_current_scene(&testScene);
 
+    // Client of given connection id wishes to join the game.
     events::menu::request_join_event.connect([](int conn_id) {
         proto::JoinResponse resp;
         resp.set_status(num_players < 4);
         resp.set_id(conn_id);
 
+        // If the game isn't full (< 4 players), create a Player object for the client.
         if (num_players < 4) {
             Player* player = add_new_player();
             resp.set_obj_id(player->get_id());
@@ -47,9 +49,7 @@ void GameState::update() {
     assert(curr_phase);
     Phase* next_phase = curr_phase->update();
     if (next_phase) {
-        curr_phase->teardown();
-        curr_phase = next_phase;
-        curr_phase->setup();
+        set_phase(next_phase);
     }
     physics.update();
     scene_manager.get_current_scene()->update();

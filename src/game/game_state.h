@@ -29,7 +29,6 @@ public:
     static void graphical_setup();
 
     // Update state given input. Called in the game loop.
-    // NOTE: not yet implemented; need input to pass in
     static void update();
     static void client_update();
 
@@ -37,8 +36,8 @@ public:
     static void set_phase(Phase* phase);
     static void set_phase(proto::Phase phase);
 
-    // Adds a player to the main scene with given id.
-    // Specify if we should set up graphics for the player model (client-side).
+    // Adds a player to the main scene. If server, add new player to auto-gen the id.
+    // If client, add existing player with given id that the server sent.
     static Player* add_new_player();
     static Player* add_existing_player(int obj_id);
 private:

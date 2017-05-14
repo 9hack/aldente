@@ -8,11 +8,11 @@
 class Phase {
 public:
     Phase(Context context) : context(context) {};
-    virtual void setup() = 0;
-    virtual Phase* update() = 0;
-    virtual void teardown() = 0;
-    virtual void client_setup() = 0;
-    virtual void client_teardown() = 0;
+    virtual void setup() {};
+    virtual Phase* update() { return nullptr; };
+    virtual void teardown() {};
+    virtual void client_setup() {};
+    virtual void client_teardown() {};
 protected:
     Context context;
 };
@@ -20,12 +20,6 @@ protected:
 class MenuPhase : public Phase {
 public:
     MenuPhase(Context context) : Phase(context) {};
-    void setup() {}
-    Phase* update() { return nullptr; }
-    void teardown() {}
-    void client_setup() {}
-    void client_teardown() {}
-private:
 };
 
 class BuildPhase : public Phase {
@@ -36,8 +30,8 @@ public:
     void teardown();
     void client_setup();
     void client_teardown();
-    static bool is_menu;
 private:
+    static bool is_menu;
     boost::signals2::connection joystick_conn;
     boost::signals2::connection button_conn;
 };
@@ -59,10 +53,4 @@ private:
 class MinigamePhase : public Phase {
 public:
     MinigamePhase(Context context) : Phase(context) {};
-    void setup() {}
-    Phase* update() { return nullptr; }
-    void teardown() {}
-    void client_setup() {}
-    void client_teardown() {}
-private:
 };

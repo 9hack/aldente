@@ -93,13 +93,13 @@ void DungeonPhase::client_setup() {
 }
 
 Phase* DungeonPhase::update() {
+    // Send the position and orientation of the specified game objects.
+    // Currently sending all Player objects.
     for (auto o : GameObject::game_objects) {
         if (dynamic_cast<Player*>(o.second))
             context.updated_objects.insert(o.second);
     }
-    events::dungeon::network_positions_event(context.updated_objects, context.collisions);
-    context.updated_objects.clear();
-    context.collisions.clear();
+    events::dungeon::network_positions_event(&context);
 
     return nullptr;
 }

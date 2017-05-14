@@ -55,6 +55,7 @@ void Grid::setup_listeners() {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
         // Build the construct locally on the server, without graphics.
+        // A build is permitted if the desired tile is buildable, e.g. not a wall and has no existing construct.
         if (permitted) {
             Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
             if (built) {
