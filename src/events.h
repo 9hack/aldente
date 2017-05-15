@@ -56,27 +56,11 @@ namespace events {
     extern signal<void(StickData &)> stick_event;
 
 	// Audio
-	struct Audio {
-		sf::Music * background_music;
-/*
-		void load_music() {
-			if (!background_music->openFromFile("audio/mikoto.wav")) {
-				return;
-			}
-		}
-
-		void play_music() {
-			background_music->play();
-		}
-*/
-		void operator()() const {
-			if (!background_music->openFromFile("mikoto.wav")) {
-				return;
-			}
-			background_music->play();
-		}
+	struct AudioData {
+		std::string filename;
 	};
-	extern signal<void()> audio_event;
+	extern signal<void(AudioData &)> music_event;
+	extern signal<void(AudioData &)> sound_effects_event;
 
     struct WindowSizeData {
         Window *window;

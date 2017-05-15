@@ -21,6 +21,7 @@
 #include "game/construct_types.h"
 #include "net/network_manager.h"
 #include "shaders/shader_manager.h"
+#include "audio/audio_manager.h"
 
 AldenteClient::~AldenteClient() {
     GeometryGenerator::destroy();
@@ -99,21 +100,15 @@ void AldenteClient::start() {
     // Have window fire off a resize event to update all interested systems.
     window.broadcast_size();
 
+	// Audio
+	AudioManager audio_manager;
+
     // Game logic. Temporarily start game with build phase.
     GameState::init(&GameState::build_phase);
 
     bool is_server;
     Config::config->get_value(Config::str_is_server, is_server);
     NetworkManager::connect(is_server);
-	
-	sf::Music test_audio;
-	events::Audio a = { &test_audio };
-	/*/
-	events::audio_event.connect(&(events::Audio::load_music));
-	events::audio_event.connect(&(events::Audio::play_music));
-	*/
-	events::audio_event.connect(a);
-	events::audio_event();
 
     while (!window.should_close()) {
         // Do polling

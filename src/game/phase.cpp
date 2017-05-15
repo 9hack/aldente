@@ -48,6 +48,10 @@ void BuildPhase::setup() {
                 events::build::build_grid_move_event(dir);
         }
     });
+
+	// Play music
+	events::AudioData d = { AudioManager::BUILD_MUSIC };
+	events::music_event(d);
 }
 
 Phase* BuildPhase::update() {
@@ -72,6 +76,10 @@ void DungeonPhase::setup() {
             events::dungeon::player_interact_event();
         }
     });
+
+	// Play music
+	events::AudioData d = { AudioManager::DUNGEON_MUSIC };
+	events::music_event(d);
 }
 
 void DungeonPhase::teardown() {

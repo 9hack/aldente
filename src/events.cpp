@@ -5,7 +5,8 @@ namespace events {
     signal<void(JoystickData &)> joystick_event;
     signal<void(ButtonData &)> button_event;
     signal<void(StickData &)> stick_event;
-	signal<void()> audio_event;
+	signal<void(AudioData &)> music_event;
+	signal<void(AudioData &)> sound_effects_event;
     signal<void(WindowSizeData &)> window_buffer_resize_event;
     signal<void(WindowKeyData &)> window_key_event;
     signal<void(WindowCursorData &)> window_cursor_event;

@@ -2,6 +2,7 @@
 
 #include "events.h"
 #include "construct_types.h"
+#include "audio/audio_manager.h"
 #include <iostream>
 
 class Phase {
