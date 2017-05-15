@@ -45,6 +45,9 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                 case GLFW_KEY_V:
                     events::debug::toggle_debug_input_event();
                     break;
+                case GLFW_KEY_B:
+                    events::debug::toggle_bt_debug_drawer_event();
+                    break;
                 case GLFW_KEY_0:
                     // FIXME(metakirby5)
                     break;
@@ -78,6 +81,11 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
             debug_movement_mouse(d);
 
         last_cursor_pos = current_cursor_pos;
+    });
+
+    events::debug::toggle_debug_input_event.connect([&]() {
+        debug_input_on = !debug_input_on;
+        scene_manager.get_camera()->disable_movement = debug_input_on;
     });
 }
 

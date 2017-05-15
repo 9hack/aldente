@@ -20,6 +20,7 @@
 #include "game/construct_types.h"
 #include "net/network_manager.h"
 #include "shaders/shader_manager.h"
+#include "bt_debug.h"
 
 AldenteClient::~AldenteClient() {
     GeometryGenerator::destroy();
@@ -82,6 +83,9 @@ void AldenteClient::start() {
 
     Render render(window, GameState::scene_manager);
 
+    // Debug Drawer for Bullet
+    btDebug bt_debug(&GameState::physics);
+
     // TODO : BuildUI initialiaziation should be done in BuildPhase setup()
     std::vector<ConstructData> constructs;
     for (int i = 0; i < 12; i++) {
@@ -117,6 +121,7 @@ void AldenteClient::start() {
         GameState::client_update();
 
         render.update();
+        bt_debug.draw(GameState::scene_manager.get_current_scene()->info);
         ui.draw();
         window.swap_buffers();
     }
