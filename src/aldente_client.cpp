@@ -105,6 +105,15 @@ void AldenteClient::start() {
     bool is_server;
     Config::config->get_value(Config::str_is_server, is_server);
     NetworkManager::connect(is_server);
+	
+	sf::Music test_audio;
+	events::Audio a = { &test_audio };
+	/*/
+	events::audio_event.connect(&(events::Audio::load_music));
+	events::audio_event.connect(&(events::Audio::play_music));
+	*/
+	events::audio_event.connect(a);
+	events::audio_event();
 
     while (!window.should_close()) {
         // Do polling

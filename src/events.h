@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/signals2.hpp>
+#include <SFML/Audio.hpp>
 #include "window.h"
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
@@ -53,6 +54,29 @@ namespace events {
         std::pair<int, int> state;
     };
     extern signal<void(StickData &)> stick_event;
+
+	// Audio
+	struct Audio {
+		sf::Music * background_music;
+/*
+		void load_music() {
+			if (!background_music->openFromFile("audio/mikoto.wav")) {
+				return;
+			}
+		}
+
+		void play_music() {
+			background_music->play();
+		}
+*/
+		void operator()() const {
+			if (!background_music->openFromFile("mikoto.wav")) {
+				return;
+			}
+			background_music->play();
+		}
+	};
+	extern signal<void()> audio_event;
 
     struct WindowSizeData {
         Window *window;
