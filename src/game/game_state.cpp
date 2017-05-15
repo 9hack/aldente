@@ -1,11 +1,9 @@
 #include "game_state.h"
-#include "events.h"
 
 Context GameState::context;
-MenuPhase GameState::menu_phase(context);
 BuildPhase GameState::build_phase(context);
 DungeonPhase GameState::dungeon_phase(context);
-MinigamePhase GameState::minigame_phase(context);
+
 Phase* GameState::curr_phase;
 std::map<int, Player*> GameState::players;
 
@@ -80,7 +78,7 @@ void GameState::set_phase(Phase* phase) {
 void GameState::set_phase(proto::Phase phase) {
     switch (phase) {
     case proto::Phase::MENU:
-        GameState::set_phase(&GameState::menu_phase);
+        // FIXME(metakirby5)
         break;
     case proto::Phase::BUILD:
         GameState::set_phase(&GameState::build_phase);
@@ -89,7 +87,7 @@ void GameState::set_phase(proto::Phase phase) {
         GameState::set_phase(&GameState::dungeon_phase);
         break;
     case proto::Phase::MINIGAME:
-        GameState::set_phase(&GameState::minigame_phase);
+        // FIXME(metakirby5)
         break;
     }
 }
