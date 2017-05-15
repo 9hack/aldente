@@ -41,7 +41,7 @@ void GameState::setup(bool is_server) {
         scene_manager.get_current_scene()->graphical_setup();
 
         events::menu::spawn_existing_player_event.connect([](int id) {
-            add_existing_player(id);
+            add_existing_player(id, false);
         });
     }
 }
@@ -58,6 +58,7 @@ void GameState::update() {
 
 void GameState::client_update() {
     scene_manager.get_current_scene()->client_update();
+    curr_phase->client_update();
 }
 
 void GameState::set_phase(Phase* phase) {
@@ -98,8 +99,11 @@ Player* GameState::add_new_player() {
     return testScene.spawn_new_player();
 }
 
-Player* GameState::add_existing_player(int obj_id) {    
+Player* GameState::add_existing_player(int obj_id, bool is_client) {    
     // For now, only create players on the main scene.
     assert(scene_manager.get_current_scene() == &testScene);
+
+    if (is_client)
+        context.player_id = obj_id;
     return testScene.spawn_existing_player(obj_id);
 }

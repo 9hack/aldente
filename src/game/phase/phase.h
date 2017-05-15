@@ -10,6 +10,7 @@ public:
     virtual Phase* update() { return next; };
     virtual void teardown() = 0;
     virtual void client_setup() = 0;
+    virtual void client_update() {};
     virtual void client_teardown() = 0;
 protected:
     Context& context;

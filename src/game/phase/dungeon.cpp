@@ -35,6 +35,11 @@ Phase* DungeonPhase::update() {
     return nullptr;
 }
 
+void DungeonPhase::client_update() {
+    GameObject* player_obj = GameObject::game_objects[context.player_id];
+    events::dungeon::player_position_updated_event(player_obj->transform.get_position());
+}
+
 void DungeonPhase::teardown() {
     collision_conn.disconnect();
 }

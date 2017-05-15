@@ -46,5 +46,4 @@ private:
     int port;
     bool is_connected;
     int client_id; // Connection id that the server uses to identify this client.
-    int player_id; // Player object id that this client corresponds to.
 };

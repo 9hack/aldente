@@ -11,6 +11,7 @@ public:
     Phase* update();
     void teardown();
     void client_setup();
+    void client_update();
     void client_teardown();
 private:
     boost::signals2::connection joystick_conn;

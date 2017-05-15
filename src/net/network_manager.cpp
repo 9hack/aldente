@@ -174,7 +174,7 @@ void ClientNetworkManager::update() {
             // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                player_id = GameState::add_existing_player(resp.obj_id())->get_id();
+                GameState::add_existing_player(resp.obj_id(), true)->get_id();
             }
             break;
         }
@@ -192,13 +192,7 @@ void ClientNetworkManager::update() {
                     }
                     all_exist = false;
                 } else {
-                    // This game object already exists on this client locally; update its state.
-                    if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
-                        Player* player = dynamic_cast<Player*>(GameObject::game_objects[obj.id()]);
-                        player->update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), player_id == obj.id());
-                    }
-                    else
-                        GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
+                    GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
                 }
             }
 

@@ -5,6 +5,10 @@
 
 class Context {
 public:
+    // Server
     std::unordered_set<GameObject*> updated_objects;
     std::unordered_set<int> collisions;
+
+    // Client
+    int player_id;
 };
