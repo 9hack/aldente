@@ -2,12 +2,17 @@
 #include "asset_loader.h"
 
 Construct::Construct(int x, int z) : GameObject() {
+    tag = "CONSTRUCT";
+    transform.set_position(x, 0.0f, z);
+}
+
+Construct::Construct(int x, int z, int id) : GameObject(id) {
+    tag = "CONSTRUCT";
     transform.set_position(x, 0.0f, z);
 }
 
 Crate::Crate(int x, int z) : Construct(x, z) {
     transform.set_scale(0.6f, 0.6f, 0.6f);
-
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position
         0, //mass
@@ -18,6 +23,11 @@ Crate::Crate(int x, int z) : Construct(x, z) {
     };
     events::add_rigidbody_event(rigid);
 }
+
+Crate::Crate(int x, int z, int id) : Construct(x, z, id) {
+    transform.set_scale(0.6f, 0.6f, 0.6f);
+}
+
 
 void Crate::update_this() {
     anim_player.update();

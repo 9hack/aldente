@@ -1,14 +1,16 @@
 #pragma once
 
 #include <boost/signals2.hpp>
+#include <unordered_set>
 #include "window.h"
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
-#include "game_objects/game_object.h"
+#include "game/context.h"
 #include "btBulletDynamicsCommon.h"
 
 // Forward declaration to resolve circular dependency.
+class GameObject;
 class Player;
 class Phase;
 
@@ -126,7 +128,7 @@ namespace events {
     namespace menu {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
-        extern signal<void(proto::Player &)> spawn_player_event;
+        extern signal<void(int)> spawn_existing_player_event;
     }
 
     namespace build {
@@ -180,8 +182,13 @@ namespace events {
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
 
+        // Client requests the server to move player, passing its input stick data.
         extern signal<void(StickData &)> network_player_move_event;
 
-        extern signal<void(std::map<int, Player*> &)> network_positions_event;
+        // Server sends context containing position and collisions of game objects to all clients.
+        extern signal<void(Context*)> network_positions_event;
+
+        // Server notifying clients that a collision occurred with game object of given id.
+        extern signal<void(int)> network_collision_event;
     }
 }

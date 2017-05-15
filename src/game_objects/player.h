@@ -20,15 +20,18 @@ private:
     int to_moveZ;
 
     float move_speed;
-    int client_id;
 
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
 public:
-    Player(int client_id);
+    Player();
+    Player(int obj_id);
+
     virtual void update_this() override;
     virtual void on_collision(GameObject *other) override;
+    virtual void on_collision_graphical() override;
+
     void prepare_movement(int inX, int inZ);
-    void update_state(float x, float z, float wx, float wz, bool camera);
+    void update_state(float x, float z, float wx, float wz);
     void do_movement();
     void setup_listeners();
 
@@ -40,5 +43,4 @@ public:
 
     // TODO after we make more player models
     void setup_model() {}
-    glm::vec3 direction;
 };

@@ -25,10 +25,13 @@ Camera &Scene::get_cam() {
 }
 
 void Scene::update() {
-    info.update();
     for (GameObject *gameObj : objs) {
         gameObj->update();
     }
+}
+
+void Scene::client_update() {
+    info.update();
 }
 
 void Scene::add_light(DirectionalLight *l) {

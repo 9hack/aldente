@@ -15,6 +15,7 @@ void MainScene::update() {
 }
 
 void MainScene::client_update() {
+    Scene::client_update();
     grid->update();
 
     // Rotate directional light sources just to test shadows.
@@ -61,18 +62,25 @@ void MainScene::graphical_setup() {
     }
 }
 
-Player* MainScene::spawn_player(int client_id, bool graphical) {
-    Player *player = new Player(client_id);
+Player* MainScene::spawn_new_player() {
+    Player *player = new Player();
+    player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
+    player->transform.translate({ 2.f, 0.f, 2.f });
+    objs.push_back(player);
+
+    return player;
+}
+
+Player* MainScene::spawn_existing_player(int obj_id) {
+    Player *player = new Player(obj_id);
     player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
     player->transform.translate({ 2.f, 0.f, 2.f });
     objs.push_back(player);
     
-    if (graphical) {
-        Model *player_model = AssetLoader::get_model(std::string("boy_two"));
-        player_model->set_shader(&ShaderManager::anim_unlit);
-        player->attach_model(player_model);
-        player->start_walk();
-    }
-
+    Model *player_model = AssetLoader::get_model(std::string("boy_two"));
+    player_model->set_shader(&ShaderManager::anim_unlit);
+    player->attach_model(player_model);
+    player->start_walk();
+    
     return player;
 }

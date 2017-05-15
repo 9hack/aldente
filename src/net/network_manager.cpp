@@ -3,6 +3,7 @@
 #include "game_objects/player.h"
 #include "game/game_state.h"
 #include <GLFW/glfw3.h>
+#include <unordered_set>
 
 void NetworkManager::disconnect() {
     if (!io_service.stopped())
@@ -45,20 +46,29 @@ void ServerNetworkManager::register_listeners() {
     });
 
     // Dungeon phase.
-    events::dungeon::network_positions_event.connect([&](std::map<int, Player*> & players) {
+    events::dungeon::network_positions_event.connect([&](Context* context) {
         proto::ServerMessage msg;
         proto::GameState* state = new proto::GameState();
-        for (auto & pair : players) {
-            proto::Player* p = state->add_players();
-            int player_id;
-            Player* player_obj;
-            std::tie(player_id, player_obj) = pair;
-            p->set_id(player_id);
-            p->set_x(player_obj->transform.get_position().x);
-            p->set_z(player_obj->transform.get_position().z);
-            p->set_wx(player_obj->direction.x);
-            p->set_wz(player_obj->direction.z);
+
+        // Updating the client positions & orientations based on sent server positions.
+        for (auto & obj : context->updated_objects) {
+            proto::GameObject* go = state->add_objects();
+            go->set_id(obj->get_id());
+            if (dynamic_cast<Player*>(obj))
+                go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
+            go->set_x(obj->transform.get_position().x);
+            go->set_z(obj->transform.get_position().z);
+            go->set_wx(obj->direction.x);
+            go->set_wz(obj->direction.z);
         }
+
+        // If there were any game obj collisions, send those objects' ids.
+        for (int obj_id : context->collisions)
+            state->add_collisions(obj_id);
+
+        context->updated_objects.clear();
+        context->collisions.clear();
+
         msg.set_allocated_state_update(state);
         server.send_to_all(msg);
     });
@@ -161,23 +171,36 @@ void ClientNetworkManager::update() {
         }
         case proto::ServerMessage::MessageTypeCase::kJoinResponse: {
             proto::JoinResponse resp = msg.join_response();
+            // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
-                proto::Player p;
                 client_id = resp.id();
-                p.set_id(client_id);
-                events::menu::spawn_player_event(p);
+                GameState::add_existing_player(resp.obj_id(), true)->get_id();
             }
             break;
         }
         case proto::ServerMessage::MessageTypeCase::kStateUpdate: {
             proto::GameState state = msg.state_update();
-            for (auto p : state.players()) {
-                if (GameState::players.find(p.id()) == GameState::players.end()) {
-                    // Player doesn't exist on this client yet; create.
-                    std::cerr << "Creating player " << p.id() << "\n";
-                    events::menu::spawn_player_event(p);
+            bool all_exist = true;
+
+            for (auto obj : state.objects()) {
+                if (GameObject::game_objects.find(obj.id()) == GameObject::game_objects.end()) {
+                    // Game object with that ID doesn't exist on this client yet; create it.
+                    if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
+                        events::menu::spawn_existing_player_event(obj.id());
+                    } else {
+                        std::cerr << "Unrecognized game obj type; could not create client copy.\n";
+                    }
+                    all_exist = false;
                 } else {
-                    GameState::players[p.id()]->update_state(p.x(), p.z(), p.wx(), p.wz(), p.id() == client_id);
+                    GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
+                }
+            }
+
+            // Call all collision handlers of game objects that collided. Only executed if all game object IDs sent
+            // already exist, which avoids a potential race condition of a collision of a not-yet-created game obj.
+            if (all_exist) {
+                for (int obj_id : state.collisions()) {
+                    GameObject::game_objects[obj_id]->on_collision_graphical();
                 }
             }
             break;

@@ -12,6 +12,7 @@ protected:
     btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
 public:
     Construct(int x, int z);
+    Construct(int x, int z, int id);
 
     // Callback for when a player presses A on this construct
     virtual void interact_trigger() = 0;
@@ -23,6 +24,7 @@ public:
 class Crate : public Construct {
 public:
     Crate(int x, int z);
+    Crate(int x, int z, int id);
     void setup_model();
     void update_this() override;
     void interact_trigger() override;

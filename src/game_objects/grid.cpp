@@ -19,6 +19,7 @@ Grid::Grid(const char *map_loc) :
         hover(nullptr), hover_col(0), hover_row(0), 
         width(0), height(0) {
 
+    tag = "GRID";
     model = nullptr;
     rigidbody = nullptr;
 
@@ -53,16 +54,21 @@ void Grid::setup_listeners() {
     events::build::try_build_event.connect([&](proto::Construct& c) {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
-        events::build::respond_build_event(c);
-
         // Build the construct locally on the server, without graphics.
-        if (permitted)
-            build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
+        // A build is permitted if the desired tile is buildable, e.g. not a wall and has no existing construct.
+        if (permitted) {
+            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
+            if (built) {
+                c.set_id(built->get_id());
+            }
+        }
+
+        events::build::respond_build_event(c);
     });
 
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
-        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true);
+        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
     });
 }
 
@@ -75,33 +81,38 @@ bool Grid::verify_build(ConstructType type, int col, int row) {
     return candidate->buildable;
 }
 
-void Grid::build(ConstructType type, int col, int row, bool graphical) {
+Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int id) {
     Tile* candidate = grid[row][col];
+    Construct* to_add = nullptr;
 
     switch (type) {
     case CHEST: {
-        Construct* to_add = new Crate(col, row);
-        if (graphical)
+        to_add = graphical ? new Crate(col, row, id) : new Crate(col, row);
+        if (graphical) {
             to_add->setup_model();
-
+        }
         children.push_back(to_add);
-        candidate->set_construct(to_add);
         candidate->buildable = false;
+        candidate->set_construct(to_add);
         break;
     }
     case REMOVE: {
         // TODO: Move destructor to construct's destructor.
         if (candidate->get_construct() != nullptr) {
-            events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
+            if (!graphical) {
+                events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
+            }
             remove_child(candidate->get_construct());
-            candidate->set_construct(nullptr);
             candidate->buildable = true;
+            candidate->set_construct(nullptr);
         }
         break;
     }
     default:
         break;
     }
+
+    return to_add;
 }
 
 void Grid::move_selection(Direction d) {

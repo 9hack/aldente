@@ -4,7 +4,9 @@
 
 Tile::Tile() :
     GameObject(),
-    construct(nullptr) {}
+    construct(nullptr) {
+    tag = "TILE";
+}
 
 FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     width = 1;

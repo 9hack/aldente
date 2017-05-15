@@ -1,12 +1,18 @@
 #include "game_object.h"
 #include "util/util_bt.h"
+#include <iostream>
 
+std::unordered_map<int, GameObject*> GameObject::game_objects;
 int GameObject::id_counter = 0;
 
-GameObject::GameObject() {
+GameObject::GameObject() : GameObject(id_counter++) {
+}
+
+GameObject::GameObject(int id) : id(id) {
     model = new Model();
     rigidbody = nullptr;
-    id = id_counter++;
+    game_objects[id] = this;
+    direction = glm::vec3(0.0f);
 }
 
 GameObject::~GameObject(){
@@ -53,6 +59,12 @@ void GameObject::update() {
 
     for (GameObject *obj : children)
         obj->update();
+}
+
+void GameObject::update_state(float x, float z, float wx, float wz) {
+    transform.set_position(x, 0.0f, z);
+    direction = glm::vec3(wx, 0, wz);
+    transform.look_at(direction);
 }
 
 // Attaches bones from skeleton to model

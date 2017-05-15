@@ -15,7 +15,8 @@ void AldenteServer::start() {
     Timer::provide(&timer);
 
     // Game logic. Temporarily start game with build phase.
-    GameState::init(&GameState::build_phase);
+    GameState::setup(true);
+    GameState::set_phase(&GameState::build_phase);
 
     ServerNetworkManager network;
     network.connect();

@@ -3,7 +3,9 @@
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::setup() {
+}
 
+void BuildPhase::client_setup() {
     events::build::start_build_event();
 
     joystick_conn = events::stick_event.connect([&](events::StickData d) {
@@ -54,6 +56,9 @@ void BuildPhase::setup() {
 }
 
 void BuildPhase::teardown() {
+}
+
+void BuildPhase::client_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
 

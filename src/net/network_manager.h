@@ -12,7 +12,7 @@ class NetworkManager {
 public:
     void disconnect();
     void run_service();
-    
+
 protected:
     boost::thread* service_thread;
     boost::asio::io_service io_service;
@@ -45,5 +45,5 @@ private:
     string server_host;
     int port;
     bool is_connected;
-    int client_id;
+    int client_id; // Connection id that the server uses to identify this client.
 };
