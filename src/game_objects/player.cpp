@@ -96,6 +96,9 @@ void Player::interact() {
             transform.get_position(), direction,
             [&](GameObject *bt_hit) {
                 Construct *construct = dynamic_cast<Construct*>(bt_hit);
+
+                // Register interacts only on constructs for now. Send the game object ID 
+                // of the interacted construct to the server to process.
                 if (construct) {
                     events::dungeon::network_interact_event(construct->get_id());
                 }

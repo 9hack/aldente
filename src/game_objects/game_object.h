@@ -49,7 +49,7 @@ public:
     virtual void update_state(float x, float z, float wx, float wz); // Updates this object's position and orientation.
     virtual void on_collision(GameObject *other) {} // Server: physics has detected a collision with this and other.
     virtual void on_collision_graphical() {} // Client: this obj has collided, perform graphical update.
-    virtual void interact_trigger() {}; // Callback for when a player presses A on this construct
+    virtual void interact_trigger() {}; // Callback for when a player presses A on this object. Graphical update.
     virtual void setup_model() {};
 
     void connect_skel_to_model();

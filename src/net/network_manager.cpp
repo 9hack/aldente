@@ -105,6 +105,8 @@ void ServerNetworkManager::update() {
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kInteractRequest: {
+                // Server received the client ID of the player that wants to interact.
+                // Perform raycasting and check if any game object actually got interacted.
                 int id = GameState::players[msg.interact_request()]->get_id();
                 Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
                 player->interact();
