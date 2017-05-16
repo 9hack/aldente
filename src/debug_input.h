@@ -16,13 +16,17 @@ private:
     bool keys[1024];
     bool lmb_down;
     bool rmb_down;
-    bool mouse_moved;
     glm::vec3 last_cursor_pos;
     SceneManager &scene_manager;
     Physics &physics;
 
+    bool debug_input_on = false;
+
+    // Moving camera using keyboard and mouse
+    void debug_movement_keys();
+    void debug_movement_mouse(events::WindowCursorData d);
+
 public:
     DebugInput(Window &window, SceneManager &scene_manager, Physics &p);
-    void handle_movement();
 };
 

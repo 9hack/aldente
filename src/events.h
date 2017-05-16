@@ -1,13 +1,17 @@
 #pragma once
 
 #include <boost/signals2.hpp>
-#include <SFML/Audio.hpp>
 #include "window.h"
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
-#include "game_objects/game_object.h"
+#include "game/context.h"
 #include "btBulletDynamicsCommon.h"
+
+// Forward declaration to resolve circular dependency.
+class GameObject;
+class Player;
+class Phase;
 
 namespace events {
 
@@ -104,7 +108,11 @@ namespace events {
         extern signal<void()> toggle_debug_shadows_event;
         extern signal<void()> toggle_ui_event;
         extern signal<void()> toggle_light_rotation_event;
+        extern signal<void()> toggle_debug_input_event;
+        extern signal<void(Phase*)> client_set_phase_event;
+        extern signal<void()> toggle_bt_debug_drawer_event;
     }
+
     // The user has made a selection on the UI grid.
     extern signal<void(int)> ui_grid_selection_event;
 
@@ -117,9 +125,17 @@ namespace events {
 
         //Object that has the rigidBody
         GameObject *object;
+        // whether this rigidbody is a ghost/trigger
+        bool is_ghost;
     };
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
+
+    namespace menu {
+        extern signal<void(int)> request_join_event;
+        extern signal<void(int, proto::JoinResponse &)> respond_join_event;
+        extern signal<void(int)> spawn_existing_player_event;
+    }
 
     namespace build {
         // Move the selection in the 2D selection grid.
@@ -151,17 +167,34 @@ namespace events {
 
         // Client updates local grid with newly built construct.
         extern signal<void(proto::Construct &)> update_build_event;
+
+        // Pans camera during build phase
+        extern signal<void(std::pair<int, int>)> pan_camera_event;
+
+        // Signals that the build phase has started
+        extern signal<void()> start_build_event;
+
+        // Signals that the build phase has ended
+        extern signal<void()> end_build_event;
     }
 
     namespace dungeon {
-        // Player movement
-        extern signal<void(StickData d)> player_move_event;
-
         // Player interact (e.g opening a chest)
         extern signal<void()> player_interact_event;
 
         // Player class asks physics for a raycast check
         extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
 
+        // Sends out signal for player's position. Used for camera to follow player
+        extern signal<void(glm::vec3)> player_position_updated_event;
+
+        // Client requests the server to move player, passing its input stick data.
+        extern signal<void(StickData &)> network_player_move_event;
+
+        // Server sends context containing position and collisions of game objects to all clients.
+        extern signal<void(Context*)> network_positions_event;
+
+        // Server notifying clients that a collision occurred with game object of given id.
+        extern signal<void(int)> network_collision_event;
     }
 }

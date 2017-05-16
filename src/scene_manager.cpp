@@ -12,7 +12,7 @@ SceneManager::SceneManager() {
 
         if (d.height > 0) {
             for (Scene *s : get_scenes())
-                s->camera.P = glm::perspective(fov,
+                s->get_cam().P = glm::perspective(fov,
                         (float) d.width / (float) d.height,
                         0.1f, far_plane);
         }
@@ -27,7 +27,7 @@ Scene *SceneManager::get_current_scene() {
     return current_scene;
 }
 
-SceneCamera *SceneManager::get_camera() {
+Camera *SceneManager::get_camera() {
     return camera;
 }
 
@@ -43,6 +43,6 @@ void SceneManager::set_current_scene(Scene* scene) {
         add_scene(scene);
     }
     current_scene = scene;
-    camera = &scene->camera;
+    camera = &scene->get_cam();
     scene->setup_scene();
 }

@@ -6,6 +6,9 @@ message ServerMessage {
   oneof message_type {
     string message = 1;
     Construct build_update = 2;
+    JoinResponse join_response = 3;
+    GameState state_update = 4;
+    Phase phase_update = 5;
   }
 }
 
@@ -13,6 +16,9 @@ message ClientMessage {
   oneof message_type {
     string message = 1;
     Construct build_request = 2;
+    string join_request = 3;
+    StickData move_request = 4;
+    Phase phase_request = 5;
   }
 }
 
@@ -24,43 +30,50 @@ message Construct {
   optional bool status = 5;
 }
 
-// Below is currently unused.
+message JoinResponse {
+  optional bool status = 1;
+  optional int32 num_players = 2;
+  optional int32 id = 3;
+  optional int32 obj_id = 4;
+}
 
 message GameState {
   repeated GameObject objects = 1;
+  repeated int32 collisions = 2;
 }
 
 message GameObject {
   enum Type {
     PLAYER = 0;
-    NPC = 1;
-    TILE = 2;
+    GOAL = 1;
+    CHEST = 2;
+    SPIKE = 3;
   }
 
-  message Location {
-    repeated double x = 1 [packed = true];
-    repeated double y = 2 [packed = true];
-    repeated double z = 3 [packed = true];
-    repeated double w = 4 [packed = true];
-  }
-
-  optional Type type = 1;
-  optional Location location = 2;
-}
-
-message JoystickData {
   optional int32 id = 1;
-  optional bool is_button = 2;
-  optional int32 input = 3;
-  optional int32 state = 4;
+  optional Type type = 2;
+  optional float x = 3;
+  optional float z = 4;
+  optional float wx = 5;
+  optional float wz = 6;
+  optional int32 client_id = 7;
 }
 
-message Direction {
-  enum Cardinal {
-    NORTH = 0;
-    EAST = 1;
-    SOUTH = 2;
-    WEST = 3;
+message StickData {
+  enum Stick {
+    STICK_LEFT = 0;
+    STICK_RIGHT = 1;
   }
-  optional Cardinal way = 1;
+
+  optional Stick input = 1;
+  optional int32 x = 2;
+  optional int32 y = 3;
+  optional int32 id = 4;
+}
+
+enum Phase {
+  MENU = 0;
+  BUILD = 1;
+  DUNGEON = 2;
+  MINIGAME = 3;
 }

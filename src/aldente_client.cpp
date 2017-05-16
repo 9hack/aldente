@@ -7,14 +7,13 @@
 #include "input/raw_maps/matricom.h"
 #include "input/raw_maps/debug.h"
 #include "asset_loader.h"
-#include "physics.h"
-#include "scene_manager.h"
 #include "debug_input.h"
 #include "poll/poller.h"
 #include "poll/glfw_poller.h"
 #include "poll/input_poller.h"
 #include "util/config.h"
 #include "events.h"
+#include "timer.h"
 #include "ui/build_ui.h"
 #include "render.h"
 #include "game/game_state.h"
@@ -22,6 +21,7 @@
 #include "net/network_manager.h"
 #include "shaders/shader_manager.h"
 #include "audio/audio_manager.h"
+#include "bt_debug.h"
 
 AldenteClient::~AldenteClient() {
     GeometryGenerator::destroy();
@@ -72,16 +72,25 @@ void AldenteClient::start() {
     ShaderManager::init();
     AssetLoader::setup();
 
+	// Audio
+	AudioManager audio_manager;
+
     // Set up list of polling objects.
     std::vector<std::shared_ptr<Poller>> pollers {
         std::make_shared<GlfwPoller>(),
         std::make_shared<InputPoller>(),
     };
 
-    Physics physics;
-    SceneManager scene_manager;
-    Render render(window, scene_manager);
+    // Game logic. Temporarily start game with build phase.
+    GameState::setup(false);
+    GameState::set_phase(&GameState::build_phase);
 
+    Render render(window, GameState::scene_manager);
+
+    // Debug Drawer for Bullet
+    btDebug bt_debug(&GameState::physics);
+
+    // TODO : BuildUI initialiaziation should be done in BuildPhase setup()
     std::vector<ConstructData> constructs;
     for (int i = 0; i < 12; i++) {
         if (i % 2 == 0)
@@ -91,24 +100,19 @@ void AldenteClient::start() {
     }
     BuildUI ui = BuildUI(3, 4, (float) width / (float) height, constructs);
 
-    // Init the test scene.
-    MainScene testScene;
-    physics.set_scene(&testScene);
-    scene_manager.set_current_scene(&testScene);
-    DebugInput debug_input(window, scene_manager, physics);
+    DebugInput debug_input(window, GameState::scene_manager, GameState::physics);
 
     // Have window fire off a resize event to update all interested systems.
     window.broadcast_size();
 
-	// Audio
-	AudioManager audio_manager;
+    ClientNetworkManager network;
+    network.connect();
 
-    // Game logic. Temporarily start game with build phase.
-    GameState::init(&GameState::build_phase);
+    std::cerr << "Starting client..." << std::endl;
 
-    bool is_server;
-    Config::config->get_value(Config::str_is_server, is_server);
-    NetworkManager::connect(is_server);
+    // Used for callbacks
+    Timer timer(GAME_TICK);
+    Timer::provide(&timer);
 
     while (!window.should_close()) {
         // Do polling
@@ -116,18 +120,15 @@ void AldenteClient::start() {
             poller->poll();
         }
 
-        NetworkManager::update();
-        GameState::update();
-
-        debug_input.handle_movement();
-        physics.update();
-
-        scene_manager.get_current_scene()->update();
+        network.update();
+        Timer::get()->catch_up();
+        GameState::client_update();
 
         render.update();
+        bt_debug.draw(GameState::scene_manager.get_current_scene()->info);
         ui.draw();
         window.swap_buffers();
     }
 
-    NetworkManager::disconnect();
+    network.disconnect();
 }

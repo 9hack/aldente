@@ -6,7 +6,6 @@
 #include "aldente_client.h"
 #include "aldente_server.h"
 
-
 int main(int argc, const char *argv[]) {
     Aldente *aldente;
 

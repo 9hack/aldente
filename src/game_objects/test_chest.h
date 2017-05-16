@@ -6,5 +6,6 @@ class TestChest : public GameObject {
 public:
     void open_chest();
 private:
-    virtual void update() override;
+    virtual void update_this() override;
+    virtual void setup_model() override {};
 };

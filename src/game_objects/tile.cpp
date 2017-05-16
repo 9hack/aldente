@@ -3,12 +3,9 @@
 #include "asset_loader.h"
 
 Tile::Tile() :
-    construct(nullptr) {}
-
-// TODO: GET RID OF THIS. DO NOT OVERRIDE GAMEOBJECT::DRAW.
-void Tile::draw(Shader *shader, SceneInfo &scene_info) {
-    GameObject::draw(shader, scene_info);
-    if (construct) construct->draw(shader, scene_info);
+    GameObject(),
+    construct(nullptr) {
+    tag = "TILE";
 }
 
 FloorTile::FloorTile(int x, int z) : Tile::Tile() {
@@ -18,6 +15,10 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     this->z = z;
     buildable = true;
 
+    set_position({ x, 0.0f, z });
+}
+
+void FloorTile::setup_model() {
     Mesh* mesh = new Mesh();
 
     // Set's the mesh's location relative to the model
@@ -28,11 +29,6 @@ FloorTile::FloorTile(int x, int z) : Tile::Tile() {
     mesh->geometry->attach_texture(AssetLoader::get_texture("cobblestone.png"));
 
     model->add_mesh(mesh);
-
-    transform.set_position((float)x, 0.0f, (float)z);
-}
-
-void FloorTile::update() {
 }
 
 WallTile::WallTile(int x, int z) : Tile::Tile() {
@@ -42,6 +38,19 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     this->z = z;
     buildable = false;
 
+    transform.set_position(x, 0.5f, z);
+
+    events::RigidBodyData rigid = {
+        glm::vec3(x,0.5f,z), //position
+        0, //mass
+        hit_box, //btshape
+        glm::vec3(0,0,0), //inertia
+        this //the gameobject
+    };
+    events::add_rigidbody_event(rigid);
+}
+
+void WallTile::setup_model() {
     Mesh* mesh = new Mesh();
 
     // Set's the mesh's location relative to the model
@@ -52,17 +61,4 @@ WallTile::WallTile(int x, int z) : Tile::Tile() {
     mesh->geometry->attach_texture(AssetLoader::get_texture("wall.png"));
 
     model->add_mesh(mesh);
-    transform.set_position(x, 0.5f, z);
-
-    events::RigidBodyData rigid = {
-        glm::vec3(x,0.5f,z), //position
-        0, //mass
-        hit_box, //btshape
-        glm::vec3(0,0,0), //inertia
-        this, //the gameobject
-    };
-    events::add_rigidbody_event(rigid);
-}
-
-void WallTile::update() {
 }

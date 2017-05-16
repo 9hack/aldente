@@ -1,6 +1,6 @@
 #include "grid.h"
 #include "events.h"
-#include "game/phase.h"
+#include "game/phase/phase.h"
 #include "util/color.h"
 
 #include <fstream>
@@ -12,21 +12,31 @@
 Color default_color = Color::WHITE;
 // When selected, will tint the tile green, but keeps texture
 Color select_color = Color::GREEN;
+// When selected but not on a valid location for building
+Color invalid_color = Color::RED;
 
 Grid::Grid(const char *map_loc) :
-        hover(nullptr), hoverX(0), hoverZ(0) {
+        hover(nullptr), hover_col(0), hover_row(0), 
+        width(0), height(0) {
+
+    tag = "GRID";
+    model = nullptr;
+    rigidbody = nullptr;
+
     load_map(map_loc);
 
+    // Default starting location
     hover = grid[0][0];
 
     setup_listeners();
 }
 
-Grid::~Grid() {}
-
 void Grid::setup_listeners() {
+    
+    // When moving selection during build phase
     events::build::build_grid_move_event.connect([&](Direction dir) {
         move_selection(dir);
+        update_selection();
     });
 
     events::build::build_grid_place_event.connect([&]() {
@@ -44,24 +54,26 @@ void Grid::setup_listeners() {
     events::build::try_build_event.connect([&](proto::Construct& c) {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
+        // Build the construct locally on the server, without graphics.
+        // A build is permitted if the desired tile is buildable, e.g. not a wall and has no existing construct.
+        if (permitted) {
+            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
+            if (built) {
+                c.set_id(built->get_id());
+            }
+        }
+
         events::build::respond_build_event(c);
     });
 
     events::build::update_build_event.connect([&](proto::Construct& c) {
-        build(static_cast<ConstructType>(c.type()), c.x(), c.z());
+        // Build on the client, with graphics.
+        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
     });
 }
 
-void Grid::update() {
-    if (grid[hoverX][hoverZ] != hover) {
-        hover->set_color(default_color);
-        hover = grid[hoverX][hoverZ];
-        hover->set_color(select_color);
-    }
-}
-
-bool Grid::verify_build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[x][z];
+bool Grid::verify_build(ConstructType type, int col, int row) {
+    Tile* candidate = grid[row][col];
     if (type == REMOVE) {
         return candidate->get_construct() != nullptr;
     }
@@ -69,45 +81,65 @@ bool Grid::verify_build(ConstructType type, int x, int z) {
     return candidate->buildable;
 }
 
-void Grid::build(ConstructType type, int x, int z) {
-    Tile* candidate = grid[x][z];
+Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int id) {
+    Tile* candidate = grid[row][col];
+    Construct* to_add = nullptr;
 
     switch (type) {
     case CHEST: {
-        Construct* to_add = new Crate(x, z);
-        candidate->set_construct(to_add);
+        to_add = graphical ? new Crate(col, row, id) : new Crate(col, row);
+        if (graphical) {
+            to_add->setup_model();
+        }
+        children.push_back(to_add);
         candidate->buildable = false;
+        candidate->set_construct(to_add);
         break;
     }
     case REMOVE: {
         // TODO: Move destructor to construct's destructor.
         if (candidate->get_construct() != nullptr) {
-            events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
-            candidate->set_construct(nullptr);
+            if (!graphical) {
+                events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
+            }
+            remove_child(candidate->get_construct());
             candidate->buildable = true;
+            candidate->set_construct(nullptr);
         }
+        break;
     }
     default:
         break;
     }
+
+    return to_add;
 }
 
 void Grid::move_selection(Direction d) {
     switch (d) {
     case UP:
-        hoverZ = glm::max(0, hoverZ - 1);
+        hover_row = glm::max(0, hover_row - 1);
         break;
     case RIGHT:
-        hoverX = glm::min(width - 1, hoverX + 1);
+        hover_col = glm::min(width - 1, hover_col + 1);
         break;
     case DOWN:
-        hoverZ = glm::min(height - 1, hoverZ + 1);
+        hover_row = glm::min(height - 1, hover_row + 1);
         break;
     case LEFT:
-        hoverX = glm::max(0, hoverX - 1);
+        hover_col = glm::max(0, hover_col - 1);
         break;
     default:
         break;
+    }
+}
+
+// Updates Selected Tile Color
+void Grid::update_selection() {
+    if (grid[hover_row][hover_col] != hover) {
+        hover->set_color(default_color);
+        hover = grid[hover_row][hover_col];
+        hover->set_color(select_color);
     }
 }
 
@@ -146,9 +178,10 @@ void Grid::load_map(const char *map_loc) {
 
                 for (int c = 0; c < width; c++) {
                     fin >> int_buf;
-                    new_row.push_back(make_tile(int_buf, c, r));
+                    Tile *new_tile = make_tile(int_buf, c, r);
+                    new_row.push_back(new_tile);
+                    children.push_back(new_tile);
                 }
-
                 grid.push_back(new_row);
             }
         }
@@ -173,4 +206,10 @@ Tile *Grid::make_tile(int tile_id, int x, int z) {
     }
 
     return new_tile;
+}
+
+// Setup model for all of Grid's children
+void Grid::setup_model() {
+    for (GameObject *obj : children)
+        obj->setup_model();
 }

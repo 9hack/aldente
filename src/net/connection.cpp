@@ -8,14 +8,15 @@ void Connection::start_async_read_header() {
     rcvbuf.resize(HEADER_SIZE);
     socket.async_read_some(boost::asio::buffer(rcvbuf),
         [&](const boost::system::error_code& error, size_t n_bytes) {
-        if (error && error != boost::asio::error::eof) {
+        if (!error) {
+            // Read the message body.
+            uint32_t length = decode_header(&rcvbuf);
+            start_async_read_body(length);
+        } else if (error == boost::asio::error::eof) {
+            std::cerr << "ERROR: header eof.\n";
+        } else {
             std::cerr << "ERROR: could not read header: " << error << "\n";
-            return;
         }
-
-        // Read the message body.
-        uint32_t length = decode_header(&rcvbuf);
-        start_async_read_body(length);
     });
 }
 

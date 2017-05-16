@@ -3,6 +3,7 @@
 #include "scene/scene.h"
 #include "asset_loader.h"
 #include "game_objects/grid.h"
+#include "game_objects/player.h"
 
 /*
 Main Scene for having stuff in our game, especially for testing.
@@ -20,5 +21,9 @@ private:
 public:
     MainScene();
     void update() override;
+    void client_update() override;
     void setup_scene() override;
+    void graphical_setup() override;
+    Player* spawn_new_player(); // Server: spawn new Player, auto-assign id.
+    Player* spawn_existing_player(int obj_id); // Client: spawn existing Player with id from server.
 };

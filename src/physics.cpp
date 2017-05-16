@@ -30,6 +30,13 @@ Physics::Physics() {
     events::remove_rigidbody_event.connect([&](GameObject *obj) {
         remove_rigid(obj);
     });
+
+    events::window_cursor_event.connect([&](events::WindowCursorData d) {
+        int width, height;
+        std::tie(width, height) = d.window->get_size();
+
+        raycast_mouse(d.x_pos, d.y_pos, width, height);
+    });
 }
 
 Physics::~Physics() {}
@@ -65,7 +72,7 @@ void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
             1.0f
     );
 
-    glm::mat4 M = glm::inverse(scene->camera.P * scene->camera.V);
+    glm::mat4 M = glm::inverse(scene->get_cam().P * scene->get_cam().V);
     glm::vec4 lRayStart_world = M * lRayStart_NDC;
     lRayStart_world /= lRayStart_world.w;
     glm::vec4 lRayEnd_world = M * lRayEnd_NDC;
@@ -183,6 +190,10 @@ void Physics::add_rigid(events::RigidBodyData d) {
     // Will be used to know which object is picked.
     rigidbody->setUserPointer(d.object);
     d.object->set_rigid(rigidbody);
+
+    // Set this rigidbody as a trigger.
+    if (d.is_ghost)
+        rigidbody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
 
     dynamicsWorld->addRigidBody(rigidbody);
 }

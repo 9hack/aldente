@@ -88,7 +88,8 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
         if (scene->mNumAnimations > 0) {
             //std::cerr << "Adding Animation : " << scene->mAnimations[0]->mName.data << std::endl;
             Animation *animation = new Animation(import.GetOrphanedScene(), scene->mAnimations[0]);
-            model->animations[anim_name] = animation;
+            model->initial_skeleton.animations[anim_name] = animation;
+            model->set_shader(&ShaderManager::anim_basic);
         }
     } else {
         // File is only a model
@@ -98,19 +99,20 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
         //std::cerr << "Model Name : " << model_name << std::endl;
 
         Model *model = new Model();
+        Skeleton *skel = &model->initial_skeleton;
 
         // Sets global inverse transform, used for bone transformations if available
-        model->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
+        skel->global_inv_trans = glm::inverse(convert_ai_matrix(scene->mRootNode->mTransformation));
 
         // Goes through assimp node structure to load meshes for models
-        process_node(model, scene, scene->mRootNode, glm::mat4(1.0f));
+        process_node(model, skel, scene, scene->mRootNode, glm::mat4(1.0f));
 
         // Stores model
         models[model_name] = model;
     }
 }
 
-void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node, glm::mat4 model_mat) {
+void AssetLoader::process_node(Model *model, Skeleton *skel, const aiScene *scene, aiNode *node, glm::mat4 model_mat) {
     //std::cerr << "Processing Node : " << node->mName.data << std::endl;
     //std::cerr << "Number of Animations : " << scene->mNumAnimations << std::endl;
 
@@ -127,14 +129,14 @@ void AssetLoader::process_node(Model *model, const aiScene *scene, aiNode *node,
         model->add_mesh(mesh);
 
         // Process bones
-        process_bones(model, mesh, aimesh);
+        process_bones(skel, mesh, aimesh);
 
         // Update vertex buffers for mesh
         mesh->geometry->populate_buffers();
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        process_node(model, scene, node->mChildren[i], model_mat);
+        process_node(model, skel, scene, node->mChildren[i], model_mat);
     }
 }
 
@@ -181,13 +183,10 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     aiMaterial *assimpMat = scene->mMaterials[mesh->mMaterialIndex];
     aiColor3D diffuse(0, 0, 0);
     assimpMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-    aiColor3D ambient(0, 0, 0);
-    assimpMat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
     aiColor3D specular(0, 0, 0);
     assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
     float shiny = 0.0f;
     assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-    load_mat->ambient = Color(ambient.r, ambient.g, ambient.b);
     load_mat->diffuse = Color(diffuse.r, diffuse.g, diffuse.b);
     load_mat->specular = Color(specular.r, specular.g, specular.b);
     load_mat->shininess = shiny;
@@ -212,14 +211,16 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     return final_mesh;
 }
 
-// Loading in BONES for Rigging
-void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
+// Loading in BONES for Rigging using assimp structure
+void AssetLoader::process_bones (Skeleton *skel, Mesh *mesh, aiMesh *aimesh) {
     //std::cerr << "Number of Bones : " << aimesh->mNumBones << std::endl;
 
+    // Need to add bone paramters to vertex buffers
     Geometry *geo = mesh->geometry;
     geo->bone_ids.resize(geo->vertices.size());
     geo->weights.resize(geo->vertices.size());
 
+    // Loops through all bones attached to mesh
     for (unsigned int i = 0; i < aimesh->mNumBones; i++) {
 
         // std::cerr << "Bone : " << aimesh->mBones[i]->mName.data << std::endl;
@@ -227,20 +228,24 @@ void AssetLoader::process_bones (Model *model, Mesh *mesh, aiMesh *aimesh) {
         unsigned int bone_index = 0;
         std::string bone_name(aimesh->mBones[i]->mName.data);
 
-        if (model->bone_mapping.find(bone_name) == model->bone_mapping.end()) {
-            bone_index = (unsigned int) model->bone_offsets.size();
-            model->bone_offsets.push_back(glm::mat4(1.0f));
-            model->bones_final.push_back(glm::mat4(1.0f));
+        // Check if bone already registered on model
+        if (skel->bone_mapping.find(bone_name) == skel->bone_mapping.end()) {
+            bone_index = (unsigned int)skel->bone_offsets.size();
+            skel->bone_offsets.push_back(glm::mat4(1.0f));
+            skel->bones_default.push_back(glm::mat4(1.0f));
+            skel->bones_final.push_back(glm::mat4(1.0f));
 
-            model->bone_mapping[bone_name] = bone_index;
+            skel->bone_mapping[bone_name] = bone_index;
         }
         else {
-            bone_index = model->bone_mapping[bone_name];
+            bone_index = skel->bone_mapping[bone_name];
         }
 
-        model->bone_offsets[bone_index] = convert_ai_matrix(aimesh->mBones[i]->mOffsetMatrix);
-        model->bones_final[bone_index] = mesh->local_transform; // Fixes bug with model_mesh in shader. May cause problems in future.
+        // Set necessary bone matrices
+        skel->bone_offsets[bone_index] = convert_ai_matrix(aimesh->mBones[i]->mOffsetMatrix);
+        skel->bones_default[bone_index] = mesh->local_transform;
 
+        // Attaches bones to vertex buffer on geometry
         for (unsigned int j = 0; j < aimesh->mBones[i]->mNumWeights; j++) {
             unsigned int vertex_id = aimesh->mBones[i]->mWeights[j].mVertexId;
             float weight = aimesh->mBones[i]->mWeights[j].mWeight;

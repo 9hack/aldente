@@ -7,39 +7,43 @@
 
 #define CONN_RETRY_SEC 5.0f
 
+
 class NetworkManager {
 public:
-    // Spawns a thread to periodically try connecting to server.
-    static void connect(bool is_server);
+    void disconnect();
+    void run_service();
 
-    // Disconnects by stopping the io_service.
-    static void disconnect();
+protected:
+    boost::thread* service_thread;
+    boost::asio::io_service io_service;
+};
 
-    // Process input from server and client. Called in update loop.
-    static void update();
-
-    static NetworkServer* server;
-    static NetworkClient* client;
+class ServerNetworkManager : public NetworkManager {
+public:
+    ServerNetworkManager() : server(io_service, 9000) {}
+    void connect();
+    void update();
 
 private:
-    // Periodically attempt connection every few seconds.
-    static void attempt_connection();
+    void register_listeners();
 
-    // Register event listeners.
-    static void register_listeners();
-    static void register_server_listeners();
-    static void register_client_listeners();
+    NetworkServer server;
+};
 
-    // Update server and client per game loop iteration.
-    static void update_server();
-    static void update_client();
 
-    // Runs the io_service.
-    static void run_service();
+class ClientNetworkManager : public NetworkManager {
+public:
+    ClientNetworkManager() : client(io_service) {}
+    void connect();
+    void update();
 
-    static string server_host;
-    static int port;
-    static boost::thread* service_thread;
-    static bool is_connected;
-    static boost::asio::io_service io_service;
+private:
+    void register_listeners();
+    void attempt_connection();
+
+    NetworkClient client;
+    string server_host;
+    int port;
+    bool is_connected;
+    int client_id; // Connection id that the server uses to identify this client.
 };

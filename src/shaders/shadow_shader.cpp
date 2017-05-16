@@ -43,12 +43,13 @@ void ShadowShader::pre_draw(SceneInfo &scene_info) {
     glm::mat4 light_proj = // HARD-CODED!
             glm::ortho(-20.f, 60.f, -20.f, 20.f, -30.f, 30.f); //scene_info.camera->frustum_ortho(scene_info.light_pos);
     // Recalculate light matrix based on current light position and light projection matrix
-    glm::mat4 light_view = glm::lookAt(scene_info.light_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    // Use the first directional light. TODO: multiple light shadows.
+    if (scene_info.dir_lights.size() == 0) return;
+    glm::mat4 light_view = glm::lookAt(-scene_info.dir_lights[0]->get_direction(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     light_matrix = light_proj * light_view;
 
     // Send updated light matrix as uniform.
     set_uni("view_projection", light_matrix);
-
 }
 
 void ShadowShader::post_draw() {
