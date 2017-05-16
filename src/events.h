@@ -59,12 +59,12 @@ namespace events {
     };
     extern signal<void(StickData &)> stick_event;
 
-	// Audio
-	struct AudioData {
-		std::string filename;
-	};
-	extern signal<void(AudioData &)> music_event;
-	extern signal<void(AudioData &)> sound_effects_event;
+    // Audio
+    struct AudioData {
+        std::string filename;
+    };
+    extern signal<void(AudioData &)> music_event;
+    extern signal<void(AudioData &)> sound_effects_event;
 
     struct WindowSizeData {
         Window *window;

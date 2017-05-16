@@ -72,8 +72,8 @@ void AldenteClient::start() {
     ShaderManager::init();
     AssetLoader::setup();
 
-	// Audio
-	AudioManager audio_manager;
+    // Audio
+    AudioManager audio_manager;
 
     // Set up list of polling objects.
     std::vector<std::shared_ptr<Poller>> pollers {

@@ -6,10 +6,10 @@
 
 class AudioManager {
 public:
-	static const std::string BUILD_MUSIC;
-	static const std::string DUNGEON_MUSIC;
+    static const std::string BUILD_MUSIC;
+    static const std::string DUNGEON_MUSIC;
 
-	AudioManager();
+    AudioManager();
 private:
-	sf::Music music;
+    sf::Music music;
 };
