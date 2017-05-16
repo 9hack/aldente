@@ -173,9 +173,6 @@ namespace events {
     }
 
     namespace dungeon {
-        // Player interact (e.g opening a chest)
-        extern signal<void()> player_interact_event;
-
         // Player class asks physics for a raycast check
         extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
 
@@ -191,12 +188,19 @@ namespace events {
         // Client requests the server to move player, passing its input stick data.
         extern signal<void(StickData &)> network_player_move_event;
 
-        // Server sends context containing position and collisions of game objects to all clients.
-        extern signal<void(Context*)> network_positions_event;
+        // Server sends context containing position, collisions, and interactions of game objects to all clients.
+        extern signal<void(Context*)> update_state_event;
 
         // Server notifying clients that a collision occurred with game object of given id.
         extern signal<void(int)> network_collision_event;
 
+        // Player interact (e.g opening a chest)
+        extern signal<void()> player_interact_event;
+
+        // Send an interaction over the network.
+        extern signal<void(int)> network_interact_event;
+        
+        // Spawn an existing goal object on the client, at the given position.
         extern signal<void(int, int, int)> spawn_existing_goal_event;
     }
 }
