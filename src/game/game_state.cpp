@@ -20,6 +20,8 @@ void GameState::setup(bool is_server) {
     physics.set_scene(&testScene);
     scene_manager.set_current_scene(&testScene);
 
+    GameState::dungeon_phase.set_next_phase(&GameState::build_phase);
+
     if (is_server) {
         // Client of given connection id wishes to join the game.
         events::menu::request_join_event.connect([](int conn_id) {
@@ -31,6 +33,7 @@ void GameState::setup(bool is_server) {
             if (num_players < 4) {
                 Player* player = add_new_player();
                 resp.set_obj_id(player->get_id());
+                context.player_ids.push_back(player->get_id());
                 players[conn_id] = player;
                 num_players++;
             }
@@ -50,6 +53,14 @@ void GameState::update() {
     assert(curr_phase);
     Phase* next_phase = curr_phase->update();
     if (next_phase) {
+        // Announce the phase TEMP
+        proto::ServerMessage phase_announce;
+        if(next_phase == &build_phase)
+            phase_announce.set_phase_update(proto::BUILD);
+        else if(next_phase == &dungeon_phase)
+            phase_announce.set_phase_update(proto::DUNGEON);
+        events::server::announce(phase_announce);
+        
         set_phase(next_phase);
     }
     physics.update();
@@ -77,6 +88,13 @@ void GameState::set_phase(Phase* phase) {
 }
 
 void GameState::set_phase(proto::Phase phase) {
+    if (is_server) {
+        // Announce the phase 
+        proto::ServerMessage phase_announce;
+        phase_announce.set_phase_update(phase);
+        events::server::announce(phase_announce);
+    }
+
     switch (phase) {
     case proto::Phase::MENU:
         // FIXME(metakirby5)

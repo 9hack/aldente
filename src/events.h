@@ -125,6 +125,10 @@ namespace events {
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
 
+    namespace server {
+        extern signal<void(proto::ServerMessage &)> announce;
+    }
+
     namespace menu {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
@@ -198,5 +202,8 @@ namespace events {
         extern signal<void(int)> network_collision_event;
 
         extern signal<void(int, int, int)> spawn_existing_goal_event;
+
+        // Player reached the goal
+        extern signal<void(int)> player_finished_event;
     }
 }
