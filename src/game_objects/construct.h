@@ -18,11 +18,21 @@ public:
     virtual void update_this() override = 0;
 };
 
-class Crate : public Construct {
+class Chest : public Construct {
 public:
-    Crate(int x, int z);
-    Crate(int x, int z, int id);
-    void setup_model();
+    Chest(int x, int z);
+    Chest(int x, int z, int id);
+    void interact_trigger();
+    void setup_model() override;
     void update_this() override;
-    void interact_trigger() override;
+};
+
+class Goal : public Construct {
+public:
+    Goal(int x, int z);
+    Goal(int x, int z, int id);
+    void setup_model();
+    void on_collision(GameObject *other);
+    void on_collision_graphical();
+    void update_this();
 };

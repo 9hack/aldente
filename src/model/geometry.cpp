@@ -1,7 +1,8 @@
 #include "geometry.h"
 #include "SOIL.h"
 
-Geometry::Geometry(GLenum draw, GLint wrap, GLint filter) :
+Geometry::Geometry(int num_instances, GLenum draw, GLint wrap, GLint filter) :
+        num_instances(num_instances),
         draw_type(draw),
         wrap_type(wrap),
         filter_type(filter){
@@ -13,6 +14,7 @@ Geometry::Geometry(GLenum draw, GLint wrap, GLint filter) :
     glGenBuffers(1, &EBO);
     glGenBuffers(1, &BBO);
     glGenBuffers(1, &WBO);
+    if (num_instances > 1) glGenBuffers(1, &IVBO); // only generate buffer if more than one instance
 }
 
 Geometry::~Geometry() {}
@@ -61,6 +63,36 @@ void Geometry::populate_buffers() {
         glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);
     }
 
+    // Bind instanced VBO if more than one instance
+    if (num_instances > 1) {
+        glBindBuffer(GL_ARRAY_BUFFER, IVBO);
+        glBufferData(GL_ARRAY_BUFFER, num_instances * sizeof(glm::mat4),
+                     NULL, // no instance data as of yet, to be binded at render time
+                     GL_DYNAMIC_DRAW); // instances can change their positions on the fly
+
+        // Setup 4 vertex attributes for a mat4
+        glEnableVertexAttribArray(5);
+        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (GLvoid*)0);
+        glEnableVertexAttribArray(6);
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (GLvoid*)(sizeof(glm::vec4)));
+        glEnableVertexAttribArray(7);
+        glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (GLvoid*)(2 * sizeof(glm::vec4)));
+        glEnableVertexAttribArray(8);
+        glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (GLvoid*)(3 * sizeof(glm::vec4)));
+
+        // Setup defaults to be identity matrix.
+        glVertexAttrib4f(5, 1.f, 0.f, 0.f, 0.f);
+        glVertexAttrib4f(6, 0.f, 1.f, 0.f, 0.f);
+        glVertexAttrib4f(7, 0.f, 0.f, 1.f, 0.f);
+        glVertexAttrib4f(8, 0.f, 0.f, 0.f, 1.f);
+
+        // Step forward by 1 for every instance
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
+        glVertexAttribDivisor(7, 1);
+        glVertexAttribDivisor(8, 1);
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
@@ -75,9 +107,25 @@ GLuint Geometry::get_texture() {
 }
 
 void Geometry::draw() {
-    glDrawElements(draw_type, (GLsizei) indices.size(), GL_UNSIGNED_INT, 0);
+    if (num_instances == 1) {
+        glDrawElements(draw_type, (GLsizei) indices.size(), GL_UNSIGNED_INT, 0);
+    } else {
+        glDrawElementsInstanced(draw_type, (GLsizei) indices.size(), GL_UNSIGNED_INT, 0,
+                                num_instances); // same as above except pass in number of instances to OpenGL
+    }
 }
 
 void Geometry::bind() {
     glBindVertexArray(VAO);
+}
+
+// Fill the IVBO buffer with positions of each instance via instance_matrix.
+void Geometry::bind_instance_matrix(std::vector<glm::mat4> &instance_matrix) {
+    if (instance_matrix.size() == 0) return; // do not bind if there is not instance_matrix to bind
+
+    glBindBuffer(GL_ARRAY_BUFFER, IVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,
+                    sizeof(glm::mat4) * instance_matrix.size(),
+                    &instance_matrix[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

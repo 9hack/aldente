@@ -179,6 +179,12 @@ namespace events {
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
 
+        // Signals goal placement
+        extern signal<void()> place_goal_event;
+
+        // Signals goal removal
+        extern signal<void(bool)> remove_goal_event;
+
         // Client requests the server to move player, passing its input stick data.
         extern signal<void(StickData &)> network_player_move_event;
 
@@ -193,5 +199,8 @@ namespace events {
 
         // Send an interaction over the network.
         extern signal<void(int)> network_interact_event;
+        
+        // Spawn an existing goal object on the client, at the given position.
+        extern signal<void(int, int, int)> spawn_existing_goal_event;
     }
 }
