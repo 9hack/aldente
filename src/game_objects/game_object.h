@@ -15,10 +15,6 @@
     Contains all the essential components required to
     render the model in the scene.
 */
-enum Tag {
-    PLAYER, CONSTRUCT, TILE, GRID, GOAL
-};
-
 class GameObject {
 private:
     static int id_counter;
@@ -34,7 +30,7 @@ public:
 
     Transform transform; // World matrix now controlled using the Transform Component
     glm::vec3 direction;
-    Tag tag; // Identify this GameObject by a tag.
+    std::string tag; // Identify this GameObject by a human-readable tag.
     bool notify_on_collision = false; // Physics engine will only call on_collision if this flag is set.
 
     GameObject();
@@ -50,9 +46,9 @@ public:
     void update(); // Updates this object and all children
 
     virtual void update_this() {}; // Update function for this particular object. Use this instead of update()
-    void update_state(float x, float z, float wx, float wz);
-    virtual void on_collision(GameObject *other) {}
-    virtual void on_collision_graphical() {}
+    virtual void update_state(float x, float z, float wx, float wz); // Updates this object's position and orientation.
+    virtual void on_collision(GameObject *other) {} // Server: physics has detected a collision with this and other.
+    virtual void on_collision_graphical() {} // Client: this obj has collided, perform graphical update.
     virtual void setup_model() {};
 
     void connect_skel_to_model();

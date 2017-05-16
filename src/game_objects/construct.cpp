@@ -3,12 +3,12 @@
 #include "player.h"
 
 Construct::Construct(int x, int z) : GameObject() {
-    tag = Tag::CONSTRUCT;
+    tag = "CONSTRUCT";
     transform.set_position(x, 0.0f, z);
 }
 
 Construct::Construct(int x, int z, int id) : GameObject(id) {
-    tag = Tag::CONSTRUCT;
+    tag = "CONSTRUCT";
     transform.set_position(x, 0.0f, z);
 }
 
@@ -46,7 +46,7 @@ void Chest::setup_model() {
 
 Goal::Goal(int x, int z) : Construct(x, z) {
     transform.set_scale(0.006f, 0.006f, 0.006f);
-    tag = Tag::GOAL;
+    tag = "GOAL";
 
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position
@@ -63,7 +63,7 @@ Goal::Goal(int x, int z) : Construct(x, z) {
 
 Goal::Goal(int x, int z, int id) : Construct(x, z, id) {
     transform.set_scale(0.006f, 0.006f, 0.006f);
-    tag = Tag::GOAL;
+    tag = "GOAL";
 }
 
 void Goal::setup_model() {

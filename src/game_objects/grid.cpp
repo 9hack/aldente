@@ -1,6 +1,6 @@
 #include "grid.h"
 #include "events.h"
-#include "game/phase.h"
+#include "game/phase/phase.h"
 #include "util/color.h"
 
 #include <fstream>
@@ -19,7 +19,7 @@ Grid::Grid(const char *map_loc) :
         hover(nullptr), hover_col(0), hover_row(0), 
         width(0), height(0) {
 
-    tag = Tag::GRID;
+    tag = "GRID";
     model = nullptr;
     rigidbody = nullptr;
 
@@ -55,6 +55,7 @@ void Grid::setup_listeners() {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
         // Build the construct locally on the server, without graphics.
+        // A build is permitted if the desired tile is buildable, e.g. not a wall and has no existing construct.
         if (permitted) {
             Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
             if (built) {
@@ -265,6 +266,8 @@ void Grid::place_existing_goal(int x, int z, int id) {
 
 void Grid::remove_goal() {
     //TODO destructor for goal
-    grid[goal_z][goal_x]->set_construct(nullptr);
-    events::remove_rigidbody_event(goal);
+    if (goal) {
+        grid[goal_z][goal_x]->set_construct(nullptr);
+        events::remove_rigidbody_event(goal);
+    }
 }

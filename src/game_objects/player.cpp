@@ -7,7 +7,7 @@
 #define ANIMATE_DELTA 0.001f
 
 Player::Player() : GameObject() {
-    tag = Tag::PLAYER;
+    tag = "PLAYER";
     to_moveX = 0;
     to_moveZ = 0;
     move_speed = 2.0f;
@@ -35,7 +35,7 @@ Player::Player() : GameObject() {
 }
 
 Player::Player(int obj_id) : GameObject(obj_id) {
-    tag = Tag::PLAYER;
+    tag = "PLAYER";
 }
 
 void Player::setup_listeners() {
@@ -69,7 +69,7 @@ void Player::prepare_movement(int inX, int inZ) {
     to_moveZ = inZ;
 }
 
-void Player::update_state(float x, float z, float wx, float wz, bool camera) {
+void Player::update_state(float x, float z, float wx, float wz) {
     anim_player.update();
     float dx = std::fabs(x - transform.get_position().x);
     float dz = std::fabs(z - transform.get_position().z);
@@ -85,10 +85,6 @@ void Player::update_state(float x, float z, float wx, float wz, bool camera) {
     }
 
     GameObject::update_state(x, z, wx, wz);
-
-    // Fires the player's position whenever player moves so camera can follow.
-    if (camera)
-        events::dungeon::player_position_updated_event(transform.get_position());
 }
 
 void Player::do_movement() {

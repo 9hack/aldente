@@ -1,9 +1,12 @@
-#include "phase.h"
+#include "build.h"
 
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::setup() {
+    events::dungeon::remove_goal_event(false);
+}
 
+void BuildPhase::client_setup() {
     events::build::start_build_event();
 
     joystick_conn = events::stick_event.connect([&](events::StickData d) {
@@ -53,35 +56,12 @@ void BuildPhase::setup() {
     });
 }
 
-Phase* BuildPhase::update() {
-    return nullptr;
+void BuildPhase::teardown() {
 }
 
-void BuildPhase::teardown() {
+void BuildPhase::client_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
 
     events::build::end_build_event();
-}
-
-void DungeonPhase::setup() {
-    joystick_conn = events::stick_event.connect([&](events::StickData d) {
-        // Left stick
-        if (d.input == events::STICK_LEFT) {
-            events::dungeon::network_player_move_event(d);
-        }
-    });
-
-    button_conn = events::button_event.connect([&](events::ButtonData d) {
-        // A button pressed.
-        if (d.input == events::BTN_A && d.state == 1) {
-            events::dungeon::player_interact_event();
-        }
-    });
-}
-
-void DungeonPhase::teardown() {
-    joystick_conn.disconnect();
-    button_conn.disconnect();
-    events::dungeon::remove_goal_event(true);
 }
