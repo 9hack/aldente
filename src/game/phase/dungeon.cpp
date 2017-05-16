@@ -5,6 +5,8 @@ void DungeonPhase::setup() {
     collision_conn = events::dungeon::network_collision_event.connect([&](int obj_id) {
         context.collisions.insert(obj_id);
     });
+
+    events::dungeon::place_goal_event();
 }
 
 void DungeonPhase::client_setup() {
@@ -25,9 +27,9 @@ void DungeonPhase::client_setup() {
 
 Phase* DungeonPhase::update() {
     // Send the position and orientation of the specified game objects.
-    // Currently sending all Player objects.
+    // Currently sending all Player objects and Goal.
     for (auto const & o : GameObject::game_objects) {
-        if (dynamic_cast<Player*>(o.second))
+        if (dynamic_cast<Player*>(o.second) || dynamic_cast<Goal*>(o.second))
             context.updated_objects.insert(o.second);
     }
     events::dungeon::network_positions_event(&context);
@@ -47,4 +49,5 @@ void DungeonPhase::teardown() {
 void DungeonPhase::client_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
+    events::dungeon::remove_goal_event(true);
 }

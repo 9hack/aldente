@@ -56,6 +56,8 @@ void ServerNetworkManager::register_listeners() {
             go->set_id(obj->get_id());
             if (dynamic_cast<Player*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
+            else if (dynamic_cast<Goal*>(obj))
+                go->set_type(proto::GameObject::Type::GameObject_Type_GOAL);
             go->set_x(obj->transform.get_position().x);
             go->set_z(obj->transform.get_position().z);
             go->set_wx(obj->direction.x);
@@ -187,6 +189,8 @@ void ClientNetworkManager::update() {
                     // Game object with that ID doesn't exist on this client yet; create it.
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
                         events::menu::spawn_existing_player_event(obj.id());
+                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
+                        events::dungeon::spawn_existing_goal_event(obj.x(), obj.z(), obj.id());
                     } else {
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }

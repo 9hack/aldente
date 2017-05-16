@@ -32,6 +32,7 @@ public:
     // Force a phase change to the specified phase.
     static void set_phase(Phase* phase);
     static void set_phase(proto::Phase phase);
+    static void set_client_phase(proto::Phase phase);
 
     // Adds a player to the main scene. If server, add new player to auto-gen the id.
     // If client, add existing player with given id that the server sent.
