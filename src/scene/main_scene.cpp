@@ -15,6 +15,7 @@ void MainScene::update() {
 }
 
 void MainScene::client_update() {
+    Scene::client_update();
     grid->update();
 
     // Rotate directional light sources just to test shadows.

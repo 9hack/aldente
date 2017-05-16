@@ -45,6 +45,5 @@ private:
     string server_host;
     int port;
     bool is_connected;
-    int client_id;
-    int player_id;
+    int client_id; // Connection id that the server uses to identify this client.
 };

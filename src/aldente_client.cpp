@@ -13,12 +13,14 @@
 #include "poll/input_poller.h"
 #include "util/config.h"
 #include "events.h"
+#include "timer.h"
 #include "ui/build_ui.h"
 #include "render.h"
 #include "game/game_state.h"
 #include "game/construct_types.h"
 #include "net/network_manager.h"
 #include "shaders/shader_manager.h"
+#include "bt_debug.h"
 
 AldenteClient::~AldenteClient() {
     GeometryGenerator::destroy();
@@ -76,11 +78,13 @@ void AldenteClient::start() {
     };
 
     // Game logic. Temporarily start game with build phase.
-    GameState::init();
-    GameState::graphical_setup();
+    GameState::setup(false);
     GameState::set_phase(&GameState::build_phase);
 
     Render render(window, GameState::scene_manager);
+
+    // Debug Drawer for Bullet
+    btDebug bt_debug(&GameState::physics);
 
     // TODO : BuildUI initialiaziation should be done in BuildPhase setup()
     std::vector<ConstructData> constructs;
@@ -102,6 +106,10 @@ void AldenteClient::start() {
 
     std::cerr << "Starting client..." << std::endl;
 
+    // Used for callbacks
+    Timer timer(GAME_TICK);
+    Timer::provide(&timer);
+
     while (!window.should_close()) {
         // Do polling
         for (auto &poller : pollers) {
@@ -109,9 +117,11 @@ void AldenteClient::start() {
         }
 
         network.update();
+        Timer::get()->catch_up();
         GameState::client_update();
 
         render.update();
+        bt_debug.draw(GameState::scene_manager.get_current_scene()->info);
         ui.draw();
         window.swap_buffers();
     }

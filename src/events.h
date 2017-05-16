@@ -6,6 +6,7 @@
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
 #include "game/direction.h"
+#include "game/context.h"
 #include "btBulletDynamicsCommon.h"
 
 // Forward declaration to resolve circular dependency.
@@ -103,6 +104,7 @@ namespace events {
         extern signal<void()> toggle_light_rotation_event;
         extern signal<void()> toggle_debug_input_event;
         extern signal<void(Phase*)> client_set_phase_event;
+        extern signal<void()> toggle_bt_debug_drawer_event;
     }
 
     // The user has made a selection on the UI grid.
@@ -177,16 +179,13 @@ namespace events {
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
 
-        // Notify clients that player moved.
+        // Client requests the server to move player, passing its input stick data.
         extern signal<void(StickData &)> network_player_move_event;
 
-        // Sends out server updates of current game state, with game objects, collisions, and interactions.
-        extern signal<void(std::unordered_set<GameObject*>, std::unordered_set<int>, std::unordered_set<int>)> update_state_event;
+        // Server sends context containing position, collisions, and interactions of game objects to all clients.
+        extern signal<void(Context*)> update_state_event;
 
-        // Client player collided.
-        extern signal<void(int)> collision_event;
-
-        // Notify clients that collision happened.
+        // Server notifying clients that a collision occurred with game object of given id.
         extern signal<void(int)> network_collision_event;
 
         // Player interact (e.g opening a chest)

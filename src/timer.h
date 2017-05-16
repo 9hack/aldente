@@ -5,14 +5,14 @@
 #include <chrono>
 #include <functional>
 
-#define GAME_TICK std::chrono::milliseconds(30)
+const auto GAME_TICK = std::chrono::milliseconds(30);
 
 // A single-threaded event loop style timer.
 class Timer {
-typedef std::chrono::time_point<std::chrono::system_clock> Time;
-typedef std::chrono::duration<double> Duration;
-
 public:
+    typedef std::chrono::time_point<std::chrono::system_clock> Time;
+    typedef std::chrono::duration<double> Duration;
+
     Timer(Duration tick);
 
     // Setter/getter for static instance
@@ -22,33 +22,34 @@ public:
     // Returns the amount of time that has passed since the last tick. Good for profiling.
     Duration so_far();
 
-    // Runs all timed out callbacks and causes the timer to block the thread until the next tick interval
-    void wait();
+    // Use the catch-up game loop model to perform
+    // quantized timed operations and the provided update function every tick.
+    void catch_up(const std::function<void()> &update = [] {});
 
     // Run callback once after the specified duration in seconds.
     // The callback receives as a parameter the number of seconds after the requested callback time that the
     // callback was actually executed.
     // Returns a function that can be called to cancel the operation.
-    std::function<void()> do_after(const Duration time, const std::function<void(Duration)> callback);
+    std::function<void()> do_after(const Duration time, const std::function<void()> &callback);
 
     // Run callback every specified duration in seconds.
     // Duration will be adjusted to be as close to schedule as possible.
     // The callback receives as a parameter the number of seconds after the requested callback time that the
     // callback was actually executed.
     // Returns a function that can be called to cancel the operation.
-    std::function<void()> do_every(const Duration time, const std::function<void(Duration)> callback);
+    std::function<void()> do_every(const Duration time, const std::function<void()> &callback);
 
 private:
     static Timer *instance;
 
     Duration tick;
     Time last_tick;
+    Duration lag;
 
     struct Operation {
         const Duration when; // When to fire
-        Time last_check; // Last time this Operation was checked
         Duration remaining; // Mutable time remaining until operation execution
-        const std::function<void(Duration)> callback;
+        const std::function<void()> callback;
     };
 
     // Callback maps from ID -> function
@@ -60,8 +61,9 @@ private:
 
     // Helper to register operations
     std::function<void()> add_op(std::map<int, Operation> &to, const Duration time,
-                                 const std::function<void(Duration)> callback);
+                                 const std::function<void()> &callback);
 
-    // Helper to handle operations
-    void operate(std::map<int, Operation> &ops, bool remove_when_executed);
+    // Helpers to handle operations
+    void handle_operations(const Duration &elapsed);
+    void operate(const Duration &elapsed, std::map<int, Operation> &ops, bool remove_when_executed);
 };

@@ -17,6 +17,7 @@ namespace events {
         signal<void()> toggle_light_rotation_event;
         signal<void()> toggle_debug_input_event;
         signal<void(Phase*)> client_set_phase_event;
+        signal<void()> toggle_bt_debug_drawer_event;
     }
 
     signal<void(int)> ui_grid_selection_event;
@@ -49,8 +50,7 @@ namespace events {
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void(StickData &)> network_player_move_event;
-        signal<void(std::unordered_set<GameObject*>, std::unordered_set<int>, std::unordered_set<int>)> update_state_event;
-        signal<void(int)> collision_event;
+        signal<void(Context*)> update_state_event;
         signal<void(int)> network_collision_event;
         signal<void()> player_interact_event;
         signal<void(int)> network_interact_event;

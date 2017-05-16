@@ -46,13 +46,12 @@ void ServerNetworkManager::register_listeners() {
     });
 
     // Dungeon phase.
-    events::dungeon::update_state_event.connect([&](
-        std::unordered_set<GameObject*> updated, 
-        std::unordered_set<int> collisions,
-        std::unordered_set<int> interacts) {
+    events::dungeon::update_state_event.connect([&](Context* context) {
         proto::ServerMessage msg;
         proto::GameState* state = new proto::GameState();
-        for (auto & obj : updated) {
+
+        // Updating the client positions & orientations based on sent server positions.
+        for (auto & obj : context->updated_objects) {
             proto::GameObject* go = state->add_objects();
             go->set_id(obj->get_id());
             if (dynamic_cast<Player*>(obj))
@@ -63,11 +62,17 @@ void ServerNetworkManager::register_listeners() {
             go->set_wz(obj->direction.z);
         }
 
-        for (int obj_id : collisions)
+        // If there were any game obj collisions, send those objects' ids.
+        for (int obj_id : context->collisions)
             state->add_collisions(obj_id);
 
-        for (int obj_id : interacts)
+        // If there were any game obj interacts, send those objects' ids.
+        for (int obj_id : context->interacts)
             state->add_interacts(obj_id);
+
+        context->updated_objects.clear();
+        context->collisions.clear();
+        context->interacts.clear();
 
         msg.set_allocated_state_update(state);
         server.send_to_all(msg);
@@ -124,14 +129,14 @@ void ClientNetworkManager::register_listeners() {
     // Debug.
     events::debug::client_set_phase_event.connect([&](Phase* phase) {
         proto::ClientMessage msg;
-        if (phase == &GameState::menu_phase)
+        /* if (phase == &GameState::menu_phase)               // FIXME(metakirby5)
             msg.set_phase_request(proto::Phase::MENU);
-        else if (phase == &GameState::build_phase)
+        else */ if (phase == &GameState::build_phase)
             msg.set_phase_request(proto::Phase::BUILD);
         else if (phase == &GameState::dungeon_phase)
             msg.set_phase_request(proto::Phase::DUNGEON);
-        else if (phase == &GameState::minigame_phase)
-            msg.set_phase_request(proto::Phase::MINIGAME);
+//        else if (phase == &GameState::minigame_phase)
+//            msg.set_phase_request(proto::Phase::MINIGAME);  // FIXME(metakirby5)
         else {
             std::cerr << "Unrecognized phase. Use the static phases in GameState.\n";
             return;
@@ -183,36 +188,33 @@ void ClientNetworkManager::update() {
         }
         case proto::ServerMessage::MessageTypeCase::kJoinResponse: {
             proto::JoinResponse resp = msg.join_response();
+            // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                player_id = GameState::add_existing_player(resp.obj_id())->get_id();
+                GameState::add_existing_player(resp.obj_id(), true)->get_id();
             }
             break;
         }
         case proto::ServerMessage::MessageTypeCase::kStateUpdate: {
             proto::GameState state = msg.state_update();
             bool all_exist = true;
+
             for (auto obj : state.objects()) {
                 if (GameObject::game_objects.find(obj.id()) == GameObject::game_objects.end()) {
-                    // Game object doesn't exist on this client yet; create.
-                    std::cerr << "Creating obj with id " << obj.id() << "\n";
+                    // Game object with that ID doesn't exist on this client yet; create it.
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
                         events::menu::spawn_existing_player_event(obj.id());
-                    }
-                    else {
-                        std::cerr << "Unrecognized obj type\n";
+                    } else {
+                        std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }
                     all_exist = false;
-                }
-                else {
-                    if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
-                        Player* player = dynamic_cast<Player*>(GameObject::game_objects[obj.id()]);
-                        player->update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), player_id == obj.id());
-                    }
-                    else
-                        GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
+                } else {
+                    GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
                 }
             }
+
+            // Call all collision handlers of game objects that collided. Only executed if all game object IDs sent
+            // already exist, which avoids a potential race condition of a collision of a not-yet-created game obj.
             if (all_exist) {
                 for (int obj_id : state.collisions()) {
                     GameObject::game_objects[obj_id]->on_collision_graphical();
