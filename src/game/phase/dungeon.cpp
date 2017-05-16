@@ -27,7 +27,7 @@ void DungeonPhase::client_setup() {
 
 Phase* DungeonPhase::update() {
     // Send the position and orientation of the specified game objects.
-    // Currently sending all Player objects.
+    // Currently sending all Player objects and Goal.
     for (auto const & o : GameObject::game_objects) {
         if (dynamic_cast<Player*>(o.second) || dynamic_cast<Goal*>(o.second))
             context.updated_objects.insert(o.second);
