@@ -85,8 +85,7 @@ void Grid::setup_listeners() {
     });
 
     events::dungeon::place_goal_event.connect([&]() {
-        if (goal)
-            remove_goal();
+        remove_goal();
         place_goal(glm::vec3(0.0f),20);
     });
 
@@ -287,6 +286,7 @@ void Grid::place_existing_goal(int x, int z, int id) {
 void Grid::remove_goal() {
     //TODO destructor for goal
     if (goal) {
+        GameObject::game_objects.erase(goal->get_id());
         grid[goal_z][goal_x]->set_construct(nullptr);
         events::remove_rigidbody_event(goal);
     }
