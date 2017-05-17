@@ -19,6 +19,7 @@ private:
     boost::signals2::connection joystick_conn;
     boost::signals2::connection button_conn;
     boost::signals2::connection collision_conn;
+    boost::signals2::connection interact_conn;
     boost::signals2::connection flag_conn;
 
     // <Player id, if goal reached>

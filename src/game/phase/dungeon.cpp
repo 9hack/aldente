@@ -6,6 +6,10 @@ void DungeonPhase::setup() {
         context.collisions.insert(obj_id);
     });
 
+    interact_conn = events::dungeon::network_interact_event.connect([&](int obj_id) {
+        context.interacts.insert(obj_id);
+    });
+
     events::dungeon::place_goal_event();
 
     flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
@@ -40,7 +44,7 @@ Phase* DungeonPhase::update() {
         if (dynamic_cast<Player*>(o.second) || dynamic_cast<Goal*>(o.second))
             context.updated_objects.insert(o.second);
     }
-    events::dungeon::network_positions_event(&context);
+    events::dungeon::update_state_event(&context);
 
     bool all_players_done = true;
 
@@ -64,6 +68,7 @@ void DungeonPhase::client_update() {
 
 void DungeonPhase::teardown() {
     collision_conn.disconnect();
+    interact_conn.disconnect();
     flag_conn.disconnect();
 }
 

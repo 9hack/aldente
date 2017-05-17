@@ -15,9 +15,6 @@ public:
     Construct(int x, int z);
     Construct(int x, int z, int id);
 
-    // Callback for when a player presses A on this construct
-    virtual void interact_trigger() {}
-
     virtual void setup_model() = 0;
     virtual void update_this() override = 0;
 };

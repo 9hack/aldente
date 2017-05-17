@@ -29,19 +29,11 @@ Player::Player() : GameObject() {
     //Lock angular rotation
     rigidbody->setAngularFactor(0);
 
-    setup_listeners();
-
     set_position({ 2.0f, 0.0f, 2.0f });
 }
 
 Player::Player(int obj_id) : GameObject(obj_id) {
     tag = "PLAYER";
-}
-
-void Player::setup_listeners() {
-    events::dungeon::player_interact_event.connect([&]() {
-        interact();
-    });
 }
 
 // Just calls do_movement for now, can have more
@@ -104,8 +96,11 @@ void Player::interact() {
             transform.get_position(), direction,
             [&](GameObject *bt_hit) {
                 Construct *construct = dynamic_cast<Construct*>(bt_hit);
+
+                // Register interacts only on constructs for now. Send the game object ID 
+                // of the interacted construct to the server to process.
                 if (construct) {
-                    construct->interact_trigger();
+                    events::dungeon::network_interact_event(construct->get_id());
                 }
             });
 }
