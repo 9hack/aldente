@@ -120,10 +120,12 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
         to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
         if (graphical) {
             to_add->setup_model();
+            children.push_back(to_add);
+            candidate->set_construct(to_add);
+        } else {
+            candidate->buildable = false;
+            candidate->set_construct(to_add);
         }
-        children.push_back(to_add);
-        candidate->buildable = false;
-        candidate->set_construct(to_add);
         break;
     }
     case REMOVE: {
@@ -131,10 +133,13 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
         if (candidate->get_construct() != nullptr) {
             if (!graphical) {
                 events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
+                candidate->buildable = true;
+                candidate->set_construct(nullptr);
             }
-            remove_child(candidate->get_construct());
-            candidate->buildable = true;
-            candidate->set_construct(nullptr);
+            else {
+                remove_child(candidate->get_construct());
+                candidate->set_construct(nullptr);
+            }
         }
         break;
     }
