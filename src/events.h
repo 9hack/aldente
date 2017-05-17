@@ -189,9 +189,6 @@ namespace events {
         // Signals goal placement
         extern signal<void()> place_goal_event;
 
-        // Signals goal removal
-        extern signal<void(bool)> remove_goal_event;
-
         // Client requests the server to move player, passing its input stick data.
         extern signal<void(StickData &)> network_player_move_event;
 

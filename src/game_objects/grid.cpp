@@ -85,26 +85,21 @@ void Grid::setup_listeners() {
     });
 
     events::dungeon::place_goal_event.connect([&]() {
+        if (goal)
+            remove_goal();
         place_goal(glm::vec3(0.0f),20);
     });
 
     events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
         std::unique_lock<std::mutex> lock(goal_mutex);
-        place_existing_goal(x, z, id);
-    });
-
-    events::dungeon::remove_goal_event.connect([&](bool graphical) {
-        std::unique_lock<std::mutex> lock(goal_mutex);
-        if (graphical) {
+        if (goal) {
             auto position = std::find(children.begin(), children.end(), goal);
             if (position != children.end())
                 children.erase(position);
             delete goal;
             goal = nullptr;
         }
-        else {
-            remove_goal();
-        }
+        place_existing_goal(x, z, id);
     });
 }
 

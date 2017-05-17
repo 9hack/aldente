@@ -70,5 +70,4 @@ void DungeonPhase::teardown() {
 void DungeonPhase::client_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
-    events::dungeon::remove_goal_event(true);
 }
