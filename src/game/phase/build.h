@@ -15,5 +15,4 @@ private:
     static bool is_menu;
     boost::signals2::connection joystick_conn;
     boost::signals2::connection button_conn;
-    boost::signals2::connection flag_conn;
 };

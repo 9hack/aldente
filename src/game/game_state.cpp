@@ -53,15 +53,10 @@ void GameState::update() {
     assert(curr_phase);
     Phase* next_phase = curr_phase->update();
     if (next_phase) {
-        // Announce the phase TEMP
-        proto::ServerMessage phase_announce;
-        if(next_phase == &build_phase)
-            phase_announce.set_phase_update(proto::BUILD);
-        else if(next_phase == &dungeon_phase)
-            phase_announce.set_phase_update(proto::DUNGEON);
-        events::server::announce(phase_announce);
-        
-        set_phase(next_phase);
+        if (next_phase == &build_phase)
+            set_phase(proto::Phase::BUILD);
+        else if (next_phase == &dungeon_phase)
+            set_phase(proto::Phase::DUNGEON);
     }
     physics.update();
     scene_manager.get_current_scene()->update();

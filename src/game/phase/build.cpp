@@ -56,7 +56,6 @@ void BuildPhase::client_setup() {
 }
 
 void BuildPhase::teardown() {
-    flag_conn.disconnect();
 }
 
 void BuildPhase::client_teardown() {
