@@ -195,14 +195,12 @@ void ClientNetworkManager::update() {
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
                         events::menu::spawn_existing_player_event(obj.id());
                     } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
-                        std::cerr << "[c] creating goal(" << obj.x() << "," << obj.z() << ",id=" << obj.id() << ")\n";
                         events::dungeon::spawn_existing_goal_event(obj.x(), obj.z(), obj.id());
                     } else {
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }
                     all_exist = false;
                 } else {
-                    std::cerr << "[c] updating obj(" << obj.x() << "," << obj.z() << ",id=" << obj.id() << ")\n";
                     GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
                 }
             }
