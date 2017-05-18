@@ -124,11 +124,12 @@ void Player::s_on_collision(GameObject *other) {
     // TODO: actual game logic here...
 
     // Then notify clients that this collision happened.
-    events::dungeon::network_collision_event(id);
+    //events::dungeon::network_collision_event(id);
 }
 
 // Graphical collision
 void Player::c_on_collision() {
+    c_take_damage();
 }
 
 void Player::set_start_position(glm::vec3 pos) {
@@ -158,7 +159,7 @@ void Player::setup_player_model(std::string &model_name) {
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
 }
 
-void Player::on_damage() {
+void Player::s_take_damage() {
     if (invulnerable)
         return;
 
@@ -169,6 +170,26 @@ void Player::on_damage() {
     stunned = true;
 
     std::cerr << "Player is hit: " << id << std::endl;
+
+    // Player should drop gold and lose gold somewhere here
+
+    // End Stunned
+    Timer::get()->do_after(std::chrono::milliseconds(500),
+        [&]() {
+        stunned = false;
+    });
+
+    // End Invulernability
+    Timer::get()->do_after(std::chrono::seconds(3),
+        [&]() {
+        invulnerable = false;
+    });
+
+    // Send signal to client that this player was hit
+    events::dungeon::network_collision_event(id);
+}
+
+void Player::c_take_damage() {
 
     // Tint Red
     set_filter_color({ 0.99f, 0.01f, 0.01f });
@@ -183,26 +204,13 @@ void Player::on_damage() {
         else
             set_filter_alpha(0.3f);
 
-        if (!this->invulnerable)
-            set_filter_alpha(1.0f);
-
         count++;
-    });
-
-    // End Stunned
-    Timer::get()->do_after(std::chrono::milliseconds(500),
-        [&]() {
-        stunned = false;
     });
 
     // End
     Timer::get()->do_after(std::chrono::seconds(3),
         [&]() {
         cancel_flicker();
-        count = 0;
-        invulnerable = false;
         disable_filter();
-
-        std::cerr << "Damage Finish" << std::endl;
     });
 }

@@ -56,5 +56,7 @@ public:
     // Sets the player's position to its set start position.
     void reset_position();
 
-    void on_damage();
+    // Damage functions
+    void s_take_damage(); // Set period of invulnerability, drops coins, loses gold. 
+    void c_take_damage(); // Graphical : Flickers player to show they've been hit
 };
