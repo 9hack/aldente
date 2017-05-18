@@ -93,6 +93,15 @@ void Color::multiply(const Color other) {
     b *= other.b;
 }
 
+void Color::divide(const Color other) {
+    if (other.r == 0 || other.g == 0 || other.b == 0)
+        return;
+
+    r = r / other.r;
+    g = g / other.g;
+    b = b / other.b;
+}
+
 glm::vec3 Color::to_vec() {
     return { r, g, b };
 }

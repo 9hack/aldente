@@ -14,6 +14,9 @@
 
 class Player : public GameObject {
 private:
+
+    bool stunned;
+
     // to_move is for saving the joystick input in each frame.
     int to_moveX;
     int to_moveZ;
@@ -22,7 +25,7 @@ private:
 
     glm::vec3 start_pos;
 
-    btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
+    btCapsuleShape *hit_capsule = new btCapsuleShape(0.3f, 1.0f);
 public:
     Player(int id = 0);
 
@@ -44,12 +47,11 @@ public:
     void start_walk();
     void stop_walk();
 
-    // TODO after we make more player models
-    void setup_model() {}
-
     // Set this player's spawn position.
     void set_start_position(glm::vec3 pos);
 
     // Sets the player's position to its set start position.
     void reset_position();
+
+    void on_damage();
 };

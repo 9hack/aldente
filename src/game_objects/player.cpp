@@ -3,6 +3,7 @@
 #include "asset_loader.h"
 #include "assert.h"
 #include "events.h"
+#include "timer.h"
 
 #define ANIMATE_DELTA 0.001f
 
@@ -75,6 +76,12 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
 }
 
 void Player::do_movement() {
+
+    if (stunned) {
+        to_moveX = 0;
+        to_moveZ = 0;
+    }
+
     // Should account for deltatime so movement is
     // framerate independent? Unsure how Bullet handles framerate.
     rigidbody->setActivationState(true);
@@ -121,7 +128,6 @@ void Player::s_on_collision(GameObject *other) {
 
 // Graphical collision
 void Player::c_on_collision() {
-    transform.rotate(0, 0.1f, 0);
 }
 
 void Player::set_start_position(glm::vec3 pos) {
@@ -149,4 +155,51 @@ void Player::setup_player_model(std::string &model_name) {
         transform.set_scale({ 0.4f, 0.4f, 0.4f });
     else if (model_name == "cat")
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
+}
+
+std::function<void()> cancel;
+int count = 0;
+bool hit = false;;
+void Player::on_damage() {
+    if (hit)
+        return;
+
+    hit = true;
+    stunned = true;
+    count = 0;
+
+    // Tint Red
+    set_filter_color({ 0.99f, 0.01f, 0.01f });
+
+    // Flicker
+    cancel = Timer::get()->do_every(
+        std::chrono::milliseconds(40),
+        [&]() {
+        if (count % 2)
+            set_filter_alpha(1.0f);
+        else
+            set_filter_alpha(0.3f);
+
+        if (!hit)
+            set_filter_alpha(1.0f);
+
+        count++;
+    });
+
+    // End Stunned
+    Timer::get()->do_after(std::chrono::milliseconds(500),
+        [&]() {
+        stunned = false;
+    });
+
+    // End
+    Timer::get()->do_after(std::chrono::seconds(3),
+        [&]() {
+        cancel();
+        count = 0;
+        hit = false;
+        disable_filter();
+
+        std::cerr << "Finish" << std::endl;
+    });
 }
