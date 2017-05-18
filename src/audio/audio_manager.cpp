@@ -14,7 +14,7 @@ AudioManager::AudioManager() {
         
         std::string filename = d.filename;
         if (!music.openFromFile(filename)) {
-            std::cerr << "AudioManager: Cannot open" << filename << std::endl;;
+            std::cerr << "AudioManager: Cannot open " << filename << std::endl;;
         }
         music.setLoop(true);
         music.play();
