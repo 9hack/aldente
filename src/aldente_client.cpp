@@ -97,11 +97,22 @@ void AldenteClient::start() {
     // TODO : BuildUI initialiaziation should be done in BuildPhase setup()
     std::vector<ConstructData> constructs;
     for (int i = 0; i < 12; i++) {
-        if (i % 2 == 0)
+        int type = i % 3;
+        switch (type) {
+        case ConstructType::CHEST:
             constructs.push_back(Constructs::CHEST);
-        else
+            break;
+        case ConstructType::SPIKES:
+            constructs.push_back(Constructs::SPIKES);
+            break;
+        case ConstructType::REMOVE:
             constructs.push_back(Constructs::REMOVE);
+            break;
+        default:
+            break;
+        }
     }
+
     BuildUI ui = BuildUI(3, 4, (float) width / (float) height, constructs);
 
     DebugInput debug_input(window, GameState::scene_manager, GameState::physics);
