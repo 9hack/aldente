@@ -93,18 +93,19 @@ void Player::do_movement() {
 void Player::interact() {
     // Asks physics for a raycast to check if the player
     // is facing a construct.
-    if (direction.x != 0 || direction.z != 0)
+    if (direction.x != 0 || direction.z != 0) {
         events::dungeon::player_request_raycast_event(
             transform.get_position(), direction,
             [&](GameObject *bt_hit) {
-                Construct *construct = dynamic_cast<Construct*>(bt_hit);
+            Construct *construct = dynamic_cast<Construct*>(bt_hit);
 
-                // Interacts with construct, construct itself will handle any client
-                // side effects needed.
-                if (construct) {
-                    construct->s_interact_trigger(this);
-                }
-            });
+            // Interacts with construct, construct itself will handle any client
+            // side effects needed.
+            if (construct) {
+                construct->s_interact_trigger(this);
+            }
+        });
+    }
 }
 
 void Player::stop_walk() {
@@ -157,30 +158,32 @@ void Player::setup_player_model(std::string &model_name) {
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
 }
 
-std::function<void()> cancel;
-int count = 0;
-bool hit = false;;
 void Player::on_damage() {
-    if (hit)
+    if (invulnerable)
         return;
 
-    hit = true;
+    // Period of invulerability
+    invulnerable = true;
+
+    // Period of stunned
     stunned = true;
-    count = 0;
+
+    std::cerr << "Player is hit: " << id << std::endl;
 
     // Tint Red
     set_filter_color({ 0.99f, 0.01f, 0.01f });
 
+    int count = 0;
     // Flicker
-    cancel = Timer::get()->do_every(
+    cancel_flicker = Timer::get()->do_every(
         std::chrono::milliseconds(40),
-        [&]() {
+        [=]() mutable {
         if (count % 2)
             set_filter_alpha(1.0f);
         else
             set_filter_alpha(0.3f);
 
-        if (!hit)
+        if (!this->invulnerable)
             set_filter_alpha(1.0f);
 
         count++;
@@ -195,11 +198,11 @@ void Player::on_damage() {
     // End
     Timer::get()->do_after(std::chrono::seconds(3),
         [&]() {
-        cancel();
+        cancel_flicker();
         count = 0;
-        hit = false;
+        invulnerable = false;
         disable_filter();
 
-        std::cerr << "Finish" << std::endl;
+        std::cerr << "Damage Finish" << std::endl;
     });
 }

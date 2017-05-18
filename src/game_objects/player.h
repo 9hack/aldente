@@ -15,6 +15,9 @@
 class Player : public GameObject {
 private:
 
+    std::function<void()> cancel_flicker;
+
+    bool invulnerable;
     bool stunned;
 
     // to_move is for saving the joystick input in each frame.
