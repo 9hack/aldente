@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 #include "audio_manager.h"
 
 const std::string AudioManager::BUILD_MUSIC = "mikoto.wav";
@@ -12,9 +13,8 @@ AudioManager::AudioManager() {
         }
         
         std::string filename = d.filename;
-        if (!music.openFromFile(filename))
-        {
-            fprintf(stderr, "AudioManager: Cannot open %s\n", filename);
+        if (!music.openFromFile(filename)) {
+            std::cerr << "AudioManager: Cannot open" << filename << std::endl;;
         }
         music.setLoop(true);
         music.play();
