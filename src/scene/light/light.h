@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "util/color.h"
-#include "transform.h"
+#include "components/transform.h"
 
 class Light {
 public:

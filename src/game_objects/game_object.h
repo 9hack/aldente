@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene/scene_info.h"
-#include "transform.h"
+#include "components/transform.h"
 #include "shaders/shader.h"
 #include "animation/animation_player.h"
 #include "btBulletDynamicsCommon.h"
