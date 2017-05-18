@@ -125,6 +125,10 @@ namespace events {
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
 
+    namespace server {
+        extern signal<void(proto::ServerMessage &)> announce;
+    }
+
     namespace menu {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
@@ -182,9 +186,6 @@ namespace events {
         // Signals goal placement
         extern signal<void()> place_goal_event;
 
-        // Signals goal removal
-        extern signal<void(bool)> remove_goal_event;
-
         // Client requests the server to move player, passing its input stick data.
         extern signal<void(StickData &)> network_player_move_event;
 
@@ -202,5 +203,8 @@ namespace events {
         
         // Spawn an existing goal object on the client, at the given position.
         extern signal<void(int, int, int)> spawn_existing_goal_event;
+
+        // Player reached the goal
+        extern signal<void(int)> player_finished_event;
     }
 }

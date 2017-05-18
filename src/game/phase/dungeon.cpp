@@ -11,6 +11,14 @@ void DungeonPhase::setup() {
     });
 
     events::dungeon::place_goal_event();
+
+    flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
+        goal_reached_flags[player_id] = true;
+    });
+
+    for (int id : context.player_ids) {
+        goal_reached_flags[id] = false;
+    }
 }
 
 void DungeonPhase::client_setup() {
@@ -38,7 +46,19 @@ Phase* DungeonPhase::update() {
     }
     events::dungeon::update_state_event(&context);
 
-    return nullptr;
+    bool all_players_done = true;
+
+    for (auto const &kv : goal_reached_flags) {
+        if (!kv.second) {
+            all_players_done = false;
+            break;
+        }
+    }
+
+    if (all_players_done)
+        return next;
+    else
+        return nullptr;
 }
 
 void DungeonPhase::client_update() {
@@ -49,10 +69,10 @@ void DungeonPhase::client_update() {
 void DungeonPhase::teardown() {
     collision_conn.disconnect();
     interact_conn.disconnect();
+    flag_conn.disconnect();
 }
 
 void DungeonPhase::client_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
-    events::dungeon::remove_goal_event(true);
 }

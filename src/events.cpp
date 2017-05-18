@@ -24,6 +24,10 @@ namespace events {
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
 
+    namespace server {
+        signal<void(proto::ServerMessage &)> announce;
+    }
+
     namespace menu {
         signal<void(int)> request_join_event;
         signal<void(int, proto::JoinResponse &)> respond_join_event;
@@ -50,12 +54,12 @@ namespace events {
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void()> place_goal_event;
-        signal<void(bool)> remove_goal_event;
         signal<void(StickData &)> network_player_move_event;
         signal<void(Context*)> update_state_event;
         signal<void(int)> network_collision_event;
         signal<void()> player_interact_event;
         signal<void(int)> network_interact_event;
         signal<void(int, int, int)> spawn_existing_goal_event;
+        signal<void(int)> player_finished_event;
     }
 }

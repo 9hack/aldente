@@ -85,25 +85,19 @@ void Grid::setup_listeners() {
     });
 
     events::dungeon::place_goal_event.connect([&]() {
+        remove_goal();
         place_goal(glm::vec3(0.0f),20);
     });
 
     events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
         std::unique_lock<std::mutex> lock(goal_mutex);
-        place_existing_goal(x, z, id);
-    });
-
-    events::dungeon::remove_goal_event.connect([&](bool graphical) {
-        std::unique_lock<std::mutex> lock(goal_mutex);
-        if (graphical) {
+        if (goal) {
             auto position = std::find(children.begin(), children.end(), goal);
             if (position != children.end())
                 children.erase(position);
             goal = nullptr;
         }
-        else {
-            remove_goal();
-        }
+        place_existing_goal(x, z, id);
     });
 }
 
@@ -125,10 +119,12 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
         to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
         if (graphical) {
             to_add->setup_model();
+            children.push_back(to_add);
+            candidate->set_construct(to_add);
+        } else {
+            candidate->buildable = false;
+            candidate->set_construct(to_add);
         }
-        children.push_back(to_add);
-        candidate->buildable = false;
-        candidate->set_construct(to_add);
         break;
     }
     case REMOVE: {
@@ -136,10 +132,13 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
         if (candidate->get_construct() != nullptr) {
             if (!graphical) {
                 events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
+                candidate->buildable = true;
+                candidate->set_construct(nullptr);
             }
-            remove_child(candidate->get_construct());
-            candidate->buildable = true;
-            candidate->set_construct(nullptr);
+            else {
+                remove_child(candidate->get_construct());
+                candidate->set_construct(nullptr);
+            }
         }
         break;
     }
@@ -287,6 +286,7 @@ void Grid::place_existing_goal(int x, int z, int id) {
 void Grid::remove_goal() {
     //TODO destructor for goal
     if (goal) {
+        GameObject::game_objects.erase(goal->get_id());
         grid[goal_z][goal_x]->set_construct(nullptr);
         events::remove_rigidbody_event(goal);
     }

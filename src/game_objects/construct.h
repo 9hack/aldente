@@ -8,8 +8,6 @@
 // Note: Opengl has the x and z axis as its ground plane
 
 class Construct : public GameObject {
-protected:
-    btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
 public:
     Construct(int x, int z);
     Construct(int x, int z, int id);
@@ -25,6 +23,8 @@ public:
     void interact_trigger();
     void setup_model() override;
     void update_this() override;
+private:
+    btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
 };
 
 class Goal : public Construct {
@@ -35,4 +35,6 @@ public:
     void on_collision(GameObject *other);
     void on_collision_graphical();
     void update_this();
+private:
+    btCylinderShape *goal_hit_box = new btCylinderShape(btVector3(0.005f, 0.5f, 0.005f));
 };

@@ -3,7 +3,6 @@
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::setup() {
-    events::dungeon::remove_goal_event(false);
 }
 
 void BuildPhase::client_setup() {

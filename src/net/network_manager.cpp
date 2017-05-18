@@ -31,6 +31,11 @@ void ServerNetworkManager::connect() {
 }
 
 void ServerNetworkManager::register_listeners() {
+    // Generic message to all.  
+    events::server::announce.connect([&](proto::ServerMessage &message) {
+        server.send_to_all(message);
+    });
+
     // Menu phase.
     events::menu::respond_join_event.connect([&](int conn_id, proto::JoinResponse& resp) {
         proto::ServerMessage msg;

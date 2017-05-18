@@ -12,6 +12,7 @@ public:
     virtual void client_setup() = 0;
     virtual void client_update() {};
     virtual void client_teardown() = 0;
+    virtual std::map<int, bool> get_flags() { return std::map<int, bool>(); };
 protected:
     Context& context;
     Phase *next;
@@ -20,6 +21,8 @@ protected:
 class TimedPhase : public Phase {
 public:
 	TimedPhase(Context& context) : Phase(context) {};
+
+    void set_next_phase(Phase *to_set) { next = to_set; };
 protected:
     std::function<void()> cancel_clock_every;
 

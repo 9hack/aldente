@@ -9,6 +9,7 @@ public:
     std::unordered_set<GameObject*> updated_objects;
     std::unordered_set<int> collisions;
     std::unordered_set<int> interacts;
+    std::vector<int> player_ids;
 
     // Client
     int player_id;

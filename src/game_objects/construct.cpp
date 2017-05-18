@@ -51,7 +51,7 @@ Goal::Goal(int x, int z) : Construct(x, z) {
     events::RigidBodyData rigid = {
         glm::vec3(x,0.5f,z), //position
         0, //mass
-        hit_box, //btshape
+        goal_hit_box, //btshape
         glm::vec3(0,0,0), //inertia
         this, //the gameobject
         true, // is a ghost object
@@ -75,8 +75,11 @@ void Goal::setup_model() {
 }
 
 void Goal::on_collision(GameObject *other) {
-    if (dynamic_cast<Player*>(other))
+    Player *player = dynamic_cast<Player*>(other);
+    if (player) {
         events::dungeon::network_collision_event(id);
+        events::dungeon::player_finished_event(player->get_id());
+    }
 }
 
 void Goal::on_collision_graphical() {
