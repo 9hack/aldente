@@ -32,6 +32,9 @@ Player::Player(int id) : GameObject(id) {
 
         //Lock angular rotation
         rigidbody->setAngularFactor(0);
+
+        // Set inital currency
+        currency.(1000);
     }
 }
 

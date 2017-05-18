@@ -35,6 +35,8 @@ private:
 
     PlayerStats stats;
 public:
+    Currency currency;
+
     Player(int id = 0);
 
     void s_update_this() override;
