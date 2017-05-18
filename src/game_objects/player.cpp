@@ -191,18 +191,20 @@ void Player::s_take_damage() {
 
 void Player::c_take_damage() {
 
-    // Tint Red
-    set_filter_color({ 0.99f, 0.01f, 0.01f });
-
     int count = 0;
+    end_flicker = false;
+
     // Flicker
     cancel_flicker = Timer::get()->do_every(
         std::chrono::milliseconds(40),
-        [=]() mutable {
+        [&, count]() mutable {
         if (count % 2)
             set_filter_alpha(1.0f);
         else
             set_filter_alpha(0.3f);
+
+        if (end_flicker)
+            disable_filter();
 
         count++;
     });
@@ -210,7 +212,8 @@ void Player::c_take_damage() {
     // End
     Timer::get()->do_after(std::chrono::seconds(3),
         [&]() {
-        cancel_flicker();
         disable_filter();
+        end_flicker = true;
+        cancel_flicker();
     });
 }

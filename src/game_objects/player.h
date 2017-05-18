@@ -16,7 +16,7 @@ class Player : public GameObject {
 private:
 
     std::function<void()> cancel_flicker;
-
+    bool end_flicker;
     bool invulnerable;
     bool stunned;
 
