@@ -26,17 +26,16 @@ void GameState::setup(bool is_server) {
         // Client of given connection id wishes to join the game.
         events::menu::request_join_event.connect([](int conn_id) {
             proto::JoinResponse resp;
-            resp.set_status(num_players < 4);
+            resp.set_status(true);
             resp.set_id(conn_id);
 
-            // If the game isn't full (< 4 players), create a Player object for the client.
-            if (num_players < 4) {
-                Player* player = add_new_player();
-                resp.set_obj_id(player->get_id());
-                context.player_ids.push_back(player->get_id());
-                players[conn_id] = player;
-                num_players++;
-            }
+            // For now, allow more than 4 players to join the game.
+            Player* player = add_new_player();
+            resp.set_obj_id(player->get_id());
+            context.player_ids.push_back(player->get_id());
+            players[conn_id] = player;
+            num_players++;
+
             events::menu::respond_join_event(conn_id, resp);
         });
     }
