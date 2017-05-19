@@ -128,7 +128,8 @@ void Player::s_on_collision(GameObject *other) {
 }
 
 // Graphical collision
-void Player::c_on_collision() {
+void Player::c_on_collision(int type) {
+    // TODO: react accordingly to collision type
     c_take_damage();
 }
 

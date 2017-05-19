@@ -16,7 +16,7 @@ public:
     virtual void s_interact_trigger(GameObject *other) override {};
     virtual void c_interact_trigger() override {};
     virtual void s_on_collision(GameObject *other) override {};
-    virtual void c_on_collision() override {};
+    virtual void c_on_collision(int type) override {};
 };
 
 class Chest : public Construct {
@@ -39,6 +39,7 @@ public:
     void setup_model() override;
 
     void s_on_collision(GameObject *other) override;
+    void c_on_collision(int type) override;
 
 private:
     btCylinderShape *goal_hit_box = new btCylinderShape(btVector3(0.005f, 0.5f, 0.005f));
@@ -50,7 +51,7 @@ public:
 
     void setup_model() override;
     void s_on_collision(GameObject *other) override;
-    void c_on_collision() override;
+    void c_on_collision(int type) override;
 
 private:
     btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));

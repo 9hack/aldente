@@ -66,7 +66,8 @@ void Spikes::s_on_collision(GameObject *other) {
     }
 }
 
-void Spikes::c_on_collision() {
+void Spikes::c_on_collision(int type) {
+    // TODO: react accordingly to collision type
     anim_player.set_anim("trigger");
     anim_player.set_speed(2.0f);
     anim_player.play();
