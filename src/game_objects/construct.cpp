@@ -60,7 +60,8 @@ Spikes::Spikes(int x, int z, int id) : Construct(x, z, id) {
 void Spikes::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player) {
-        events::dungeon::network_collision_event(id);
+        int collision_type = 1; // TODO replace this with actual collision enum.
+        events::dungeon::network_collision_event(id, collision_type);
         player->s_take_damage();
     }
 }
@@ -105,7 +106,8 @@ void Goal::setup_model() {
 void Goal::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player && player->is_enabled()) {
-        events::dungeon::network_collision_event(id);
+        int collision_type = 1; // TODO replace this with actual collision enum.
+        events::dungeon::network_collision_event(id, collision_type);
         events::dungeon::player_finished_event(player->get_id());
     }
 }

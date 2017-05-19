@@ -186,7 +186,8 @@ void Player::s_take_damage() {
     });
 
     // Send signal to client that this player was hit
-    events::dungeon::network_collision_event(id);
+    int collision_type = 1; // TODO replace this with actual collision enum.
+    events::dungeon::network_collision_event(id, collision_type);
 }
 
 void Player::c_take_damage() {

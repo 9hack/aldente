@@ -75,8 +75,10 @@ void ServerNetworkManager::register_listeners() {
         }
 
         // If there were any game obj collisions, send those objects' ids.
-        for (int obj_id : context->collisions)
-            state->add_collisions(obj_id);
+        for (auto coll : context->collisions) {
+            proto::Collision* collision = state->add_collisions();
+            collision->set_id(coll.first);
+        }
 
         // If there were any game obj interacts, send those objects' ids.
         for (int obj_id : context->interacts)
@@ -232,8 +234,10 @@ void ClientNetworkManager::update() {
             // Call all collision handlers of game objects that collided. Only executed if all game object IDs sent
             // already exist, which avoids a potential race condition of a collision of a not-yet-created game obj.
             if (all_exist) {
-                for (int obj_id : state.collisions()) {
-                    GameObject::game_objects[obj_id]->c_on_collision();
+                for (auto & collision : state.collisions()) {
+                    // Can get the int type of collision with: collision.type()
+                    std::cerr << "[c] got collision: " << collision.DebugString();
+                    GameObject::game_objects[collision.id()]->c_on_collision();
                 }
                 for (int obj_id : state.interacts()) {
                     GameObject::game_objects[obj_id]->c_interact_trigger();

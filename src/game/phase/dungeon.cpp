@@ -6,8 +6,8 @@
 void DungeonPhase::s_setup() {
 //    transition_after(10, proto::Phase::BUILD);
 
-    collision_conn = events::dungeon::network_collision_event.connect([&](int obj_id) {
-        context.collisions.insert(obj_id);
+    collision_conn = events::dungeon::network_collision_event.connect([&](int obj_id, int coll_type) {
+        context.collisions.insert(std::make_pair(obj_id, coll_type));
     });
 
     interact_conn = events::dungeon::network_interact_event.connect([&](int obj_id) {

@@ -40,7 +40,7 @@ message JoinResponse {
 
 message GameState {
   repeated GameObject objects = 1;
-  repeated int32 collisions = 2;
+  repeated Collision collisions = 2;
   repeated int32 interacts = 3;
 }
 
@@ -60,6 +60,11 @@ message GameObject {
   optional float wz = 6;
   optional int32 client_id = 7;
   optional bool enabled = 8;
+}
+
+message Collision {
+  optional int32 id = 1;
+  optional int32 type = 2;
 }
 
 message StickData {

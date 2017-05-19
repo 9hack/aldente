@@ -40,6 +40,7 @@ class Construct;
 class JoinResponse;
 class GameState;
 class GameObject;
+class Collision;
 class StickData;
 
 enum GameObject_Type {
@@ -698,16 +699,16 @@ class GameState : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::proto::GameObject >*
       mutable_objects();
 
-  // repeated int32 collisions = 2;
+  // repeated .proto.Collision collisions = 2;
   inline int collisions_size() const;
   inline void clear_collisions();
   static const int kCollisionsFieldNumber = 2;
-  inline ::google::protobuf::int32 collisions(int index) const;
-  inline void set_collisions(int index, ::google::protobuf::int32 value);
-  inline void add_collisions(::google::protobuf::int32 value);
-  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+  inline const ::proto::Collision& collisions(int index) const;
+  inline ::proto::Collision* mutable_collisions(int index);
+  inline ::proto::Collision* add_collisions();
+  inline const ::google::protobuf::RepeatedPtrField< ::proto::Collision >&
       collisions() const;
-  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+  inline ::google::protobuf::RepeatedPtrField< ::proto::Collision >*
       mutable_collisions();
 
   // repeated int32 interacts = 3;
@@ -730,7 +731,7 @@ class GameState : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::proto::GameObject > objects_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > collisions_;
+  ::google::protobuf::RepeatedPtrField< ::proto::Collision > collisions_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > interacts_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
@@ -913,6 +914,95 @@ class GameObject : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static GameObject* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Collision : public ::google::protobuf::Message {
+ public:
+  Collision();
+  virtual ~Collision();
+
+  Collision(const Collision& from);
+
+  inline Collision& operator=(const Collision& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Collision& default_instance();
+
+  void Swap(Collision* other);
+
+  // implements Message ----------------------------------------------
+
+  Collision* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Collision& from);
+  void MergeFrom(const Collision& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline ::google::protobuf::int32 id() const;
+  inline void set_id(::google::protobuf::int32 value);
+
+  // optional int32 type = 2;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 2;
+  inline ::google::protobuf::int32 type() const;
+  inline void set_type(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:proto.Collision)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+  inline void set_has_type();
+  inline void clear_has_type();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::int32 id_;
+  ::google::protobuf::int32 type_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static Collision* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1842,31 +1932,31 @@ GameState::mutable_objects() {
   return &objects_;
 }
 
-// repeated int32 collisions = 2;
+// repeated .proto.Collision collisions = 2;
 inline int GameState::collisions_size() const {
   return collisions_.size();
 }
 inline void GameState::clear_collisions() {
   collisions_.Clear();
 }
-inline ::google::protobuf::int32 GameState::collisions(int index) const {
+inline const ::proto::Collision& GameState::collisions(int index) const {
   // @@protoc_insertion_point(field_get:proto.GameState.collisions)
   return collisions_.Get(index);
 }
-inline void GameState::set_collisions(int index, ::google::protobuf::int32 value) {
-  collisions_.Set(index, value);
-  // @@protoc_insertion_point(field_set:proto.GameState.collisions)
+inline ::proto::Collision* GameState::mutable_collisions(int index) {
+  // @@protoc_insertion_point(field_mutable:proto.GameState.collisions)
+  return collisions_.Mutable(index);
 }
-inline void GameState::add_collisions(::google::protobuf::int32 value) {
-  collisions_.Add(value);
+inline ::proto::Collision* GameState::add_collisions() {
   // @@protoc_insertion_point(field_add:proto.GameState.collisions)
+  return collisions_.Add();
 }
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+inline const ::google::protobuf::RepeatedPtrField< ::proto::Collision >&
 GameState::collisions() const {
   // @@protoc_insertion_point(field_list:proto.GameState.collisions)
   return collisions_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+inline ::google::protobuf::RepeatedPtrField< ::proto::Collision >*
 GameState::mutable_collisions() {
   // @@protoc_insertion_point(field_mutable_list:proto.GameState.collisions)
   return &collisions_;
@@ -2097,6 +2187,58 @@ inline void GameObject::set_enabled(bool value) {
   set_has_enabled();
   enabled_ = value;
   // @@protoc_insertion_point(field_set:proto.GameObject.enabled)
+}
+
+// -------------------------------------------------------------------
+
+// Collision
+
+// optional int32 id = 1;
+inline bool Collision::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Collision::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Collision::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Collision::clear_id() {
+  id_ = 0;
+  clear_has_id();
+}
+inline ::google::protobuf::int32 Collision::id() const {
+  // @@protoc_insertion_point(field_get:proto.Collision.id)
+  return id_;
+}
+inline void Collision::set_id(::google::protobuf::int32 value) {
+  set_has_id();
+  id_ = value;
+  // @@protoc_insertion_point(field_set:proto.Collision.id)
+}
+
+// optional int32 type = 2;
+inline bool Collision::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Collision::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Collision::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Collision::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::google::protobuf::int32 Collision::type() const {
+  // @@protoc_insertion_point(field_get:proto.Collision.type)
+  return type_;
+}
+inline void Collision::set_type(::google::protobuf::int32 value) {
+  set_has_type();
+  type_ = value;
+  // @@protoc_insertion_point(field_set:proto.Collision.type)
 }
 
 // -------------------------------------------------------------------

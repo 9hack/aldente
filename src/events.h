@@ -204,7 +204,7 @@ namespace events {
         extern signal<void(Context*)> update_state_event;
 
         // Server notifying clients that a collision occurred with game object of given id.
-        extern signal<void(int)> network_collision_event;
+        extern signal<void(int, int)> network_collision_event;
 
         // Player interact (e.g opening a chest)
         extern signal<void()> player_interact_event;
