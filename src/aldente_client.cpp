@@ -20,6 +20,7 @@
 #include "game/construct_types.h"
 #include "net/network_manager.h"
 #include "shaders/shader_manager.h"
+#include "audio/audio_manager.h"
 #include "bt_debug.h"
 
 AldenteClient::~AldenteClient() {
@@ -70,6 +71,9 @@ void AldenteClient::start() {
     glSetup();
     ShaderManager::init();
     AssetLoader::setup();
+
+    // Audio
+    AudioManager audio_manager;
 
     // Set up list of polling objects.
     std::vector<std::shared_ptr<Poller>> pollers {

@@ -19,6 +19,7 @@ LIBS            := -lGLEW -lglfw -lassimp -lSOIL -lfreetype
 LIBS            += -lboost_system -lboost_filesystem -lboost_thread
 LIBS            += -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 LIBS            += -lprotobuf
+LIBS            += -lsfml-system -lsfml-audio
 INCS            += $(shell pkg-config bullet --cflags)
 
 ifeq ($(shell uname),Darwin)

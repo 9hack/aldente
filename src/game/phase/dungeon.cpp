@@ -1,6 +1,7 @@
 #include <game/game_state.h>
 #include "dungeon.h"
 #include "game_objects/player.h"
+#include "audio/audio_manager.h"
 
 void DungeonPhase::setup() {
 //    transition_after(10, proto::Phase::BUILD);
@@ -38,6 +39,10 @@ void DungeonPhase::client_setup() {
             events::dungeon::player_interact_event();
         }
     });
+
+    // Play music
+    events::AudioData d = { AudioManager::DUNGEON_MUSIC };
+    events::music_event(d);
 }
 
 proto::Phase DungeonPhase::update() {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <boost/signals2.hpp>
-#include <unordered_set>
 #include "window.h"
 #include "proto/net.pb.h"
 #include "game/construct_types.h"
@@ -59,6 +58,13 @@ namespace events {
         std::pair<int, int> state;
     };
     extern signal<void(StickData &)> stick_event;
+
+    // Audio
+    struct AudioData {
+        std::string filename;
+    };
+    extern signal<void(AudioData &)> music_event;
+    extern signal<void(AudioData &)> sound_effects_event;
 
     struct WindowSizeData {
         Window *window;

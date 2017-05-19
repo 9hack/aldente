@@ -1,5 +1,6 @@
 #include <game/game_state.h>
 #include "build.h"
+#include "audio/audio_manager.h"
 
 bool BuildPhase::is_menu = true;
 
@@ -55,6 +56,10 @@ void BuildPhase::client_setup() {
             is_menu = true;
         }
     });
+
+    // Play music
+    events::AudioData d = { AudioManager::BUILD_MUSIC };
+    events::music_event(d);
 }
 
 void BuildPhase::teardown() {
