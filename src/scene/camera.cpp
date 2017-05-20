@@ -53,7 +53,7 @@ void Camera::setup_listeners() {
             cam_front = glm::normalize(pos - cam_pos);
             glm::vec3 left = glm::cross(glm::vec3(0, 1, 0), cam_front);
             cam_up = glm::cross(cam_front, left);
-            recalcuate();
+            recalculate();
         }
     });
 
