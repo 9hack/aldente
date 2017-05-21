@@ -29,6 +29,7 @@ struct ServerMessageOneofInstance {
   const ::proto::JoinResponse* join_response_;
   const ::proto::GameState* state_update_;
   int phase_update_;
+  ::google::protobuf::int32 player_finished_;
 }* ServerMessage_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* ClientMessage_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -70,12 +71,13 @@ void protobuf_AssignDesc_net_2eproto() {
       "net.proto");
   GOOGLE_CHECK(file != NULL);
   ServerMessage_descriptor_ = file->message_type(0);
-  static const int ServerMessage_offsets_[6] = {
+  static const int ServerMessage_offsets_[7] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, message_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, build_update_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, join_response_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, state_update_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, phase_update_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, player_finished_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerMessage, message_type_),
   };
   ServerMessage_reflection_ =
@@ -267,34 +269,35 @@ void protobuf_AddDesc_net_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\tnet.proto\022\005proto\"\332\001\n\rServerMessage\022\021\n\007"
+    "\n\tnet.proto\022\005proto\"\365\001\n\rServerMessage\022\021\n\007"
     "message\030\001 \001(\tH\000\022(\n\014build_update\030\002 \001(\0132\020."
     "proto.ConstructH\000\022,\n\rjoin_response\030\003 \001(\013"
     "2\023.proto.JoinResponseH\000\022(\n\014state_update\030"
     "\004 \001(\0132\020.proto.GameStateH\000\022$\n\014phase_updat"
-    "e\030\005 \001(\0162\014.proto.PhaseH\000B\016\n\014message_type\""
-    "\342\001\n\rClientMessage\022\021\n\007message\030\001 \001(\tH\000\022)\n\r"
-    "build_request\030\002 \001(\0132\020.proto.ConstructH\000\022"
-    "\026\n\014join_request\030\003 \001(\tH\000\022(\n\014move_request\030"
-    "\004 \001(\0132\020.proto.StickDataH\000\022%\n\rphase_reque"
-    "st\030\005 \001(\0162\014.proto.PhaseH\000\022\032\n\020interact_req"
-    "uest\030\006 \001(\005H\000B\016\n\014message_type\"K\n\tConstruc"
-    "t\022\014\n\004type\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n"
-    "\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010\"O\n\014JoinRespons"
-    "e\022\016\n\006status\030\001 \001(\010\022\023\n\013num_players\030\002 \001(\005\022\n"
-    "\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\"V\n\tGameState\022"
-    "\"\n\007objects\030\001 \003(\0132\021.proto.GameObject\022\022\n\nc"
-    "ollisions\030\002 \003(\005\022\021\n\tinteracts\030\003 \003(\005\"\304\001\n\nG"
-    "ameObject\022\n\n\002id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.pr"
-    "oto.GameObject.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001("
-    "\002\022\n\n\002wx\030\005 \001(\002\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007"
-    " \001(\005\022\017\n\007enabled\030\010 \001(\010\"2\n\004Type\022\n\n\006PLAYER\020"
-    "\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\"~\n\tSti"
-    "ckData\022%\n\005input\030\001 \001(\0162\026.proto.StickData."
-    "Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\""
-    "(\n\005Stick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020"
-    "\001*A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020"
-    "\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1108);
+    "e\030\005 \001(\0162\014.proto.PhaseH\000\022\031\n\017player_finish"
+    "ed\030\006 \001(\005H\000B\016\n\014message_type\"\342\001\n\rClientMes"
+    "sage\022\021\n\007message\030\001 \001(\tH\000\022)\n\rbuild_request"
+    "\030\002 \001(\0132\020.proto.ConstructH\000\022\026\n\014join_reque"
+    "st\030\003 \001(\tH\000\022(\n\014move_request\030\004 \001(\0132\020.proto"
+    ".StickDataH\000\022%\n\rphase_request\030\005 \001(\0162\014.pr"
+    "oto.PhaseH\000\022\032\n\020interact_request\030\006 \001(\005H\000B"
+    "\016\n\014message_type\"K\n\tConstruct\022\014\n\004type\030\001 \001"
+    "(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\022\016\n\006"
+    "status\030\005 \001(\010\"O\n\014JoinResponse\022\016\n\006status\030\001"
+    " \001(\010\022\023\n\013num_players\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n"
+    "\006obj_id\030\004 \001(\005\"V\n\tGameState\022\"\n\007objects\030\001 "
+    "\003(\0132\021.proto.GameObject\022\022\n\ncollisions\030\002 \003"
+    "(\005\022\021\n\tinteracts\030\003 \003(\005\"\304\001\n\nGameObject\022\n\n\002"
+    "id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.GameObjec"
+    "t.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002"
+    "\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n\007enabl"
+    "ed\030\010 \001(\010\"2\n\004Type\022\n\n\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t"
+    "\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\"~\n\tStickData\022%\n\005inp"
+    "ut\030\001 \001(\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 "
+    "\001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nS"
+    "TICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001*A\n\005Phase\022\010\n"
+    "\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020"
+    "\002\022\014\n\010MINIGAME\020\003", 1135);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -348,6 +351,7 @@ const int ServerMessage::kBuildUpdateFieldNumber;
 const int ServerMessage::kJoinResponseFieldNumber;
 const int ServerMessage::kStateUpdateFieldNumber;
 const int ServerMessage::kPhaseUpdateFieldNumber;
+const int ServerMessage::kPlayerFinishedFieldNumber;
 #endif  // !_MSC_VER
 
 ServerMessage::ServerMessage()
@@ -362,6 +366,7 @@ void ServerMessage::InitAsDefaultInstance() {
   ServerMessage_default_oneof_instance_->join_response_ = const_cast< ::proto::JoinResponse*>(&::proto::JoinResponse::default_instance());
   ServerMessage_default_oneof_instance_->state_update_ = const_cast< ::proto::GameState*>(&::proto::GameState::default_instance());
   ServerMessage_default_oneof_instance_->phase_update_ = 4;
+  ServerMessage_default_oneof_instance_->player_finished_ = 0;
 }
 
 ServerMessage::ServerMessage(const ServerMessage& from)
@@ -431,6 +436,10 @@ void ServerMessage::clear_message_type() {
       break;
     }
     case kPhaseUpdate: {
+      // No need to clear
+      break;
+    }
+    case kPlayerFinished: {
       // No need to clear
       break;
     }
@@ -529,6 +538,22 @@ bool ServerMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(48)) goto parse_player_finished;
+        break;
+      }
+
+      // optional int32 player_finished = 6;
+      case 6: {
+        if (tag == 48) {
+         parse_player_finished:
+          clear_message_type();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &message_type_.player_finished_)));
+          set_has_player_finished();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -592,6 +617,11 @@ void ServerMessage::SerializeWithCachedSizes(
       5, this->phase_update(), output);
   }
 
+  // optional int32 player_finished = 6;
+  if (has_player_finished()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->player_finished(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -640,6 +670,11 @@ void ServerMessage::SerializeWithCachedSizes(
       5, this->phase_update(), target);
   }
 
+  // optional int32 player_finished = 6;
+  if (has_player_finished()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->player_finished(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -684,6 +719,13 @@ int ServerMessage::ByteSize() const {
     case kPhaseUpdate: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->phase_update());
+      break;
+    }
+    // optional int32 player_finished = 6;
+    case kPlayerFinished: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->player_finished());
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {
@@ -734,6 +776,10 @@ void ServerMessage::MergeFrom(const ServerMessage& from) {
     }
     case kPhaseUpdate: {
       set_phase_update(from.phase_update());
+      break;
+    }
+    case kPlayerFinished: {
+      set_player_finished(from.player_finished());
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {

@@ -242,6 +242,10 @@ void ClientNetworkManager::update() {
             GameState::set_phase(phase);
             break;
         }
+        case proto::ServerMessage::MessageTypeCase::kPlayerFinished: {
+            events::player_finished_event(msg.player_finished());
+            break;
+        }
         default:
             break;
         }

@@ -9,6 +9,7 @@ message ServerMessage {
     JoinResponse join_response = 3;
     GameState state_update = 4;
     Phase phase_update = 5;
+    int32 player_finished = 6;
   }
 }
 
