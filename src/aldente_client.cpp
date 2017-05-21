@@ -97,7 +97,7 @@ void AldenteClient::start() {
     // TODO : BuildUI initialiaziation should be done in BuildPhase setup()
     std::vector<ConstructData> constructs;
     for (int i = 0; i < 12; i++) {
-        int type = i % 3;
+        int type = (i % 3) + 1;
         switch (type) {
         case ConstructType::CHEST:
             constructs.push_back(Constructs::CHEST);

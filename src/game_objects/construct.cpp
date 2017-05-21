@@ -31,8 +31,10 @@ void Chest::s_interact_trigger(GameObject *other) {
 
 // Activated when a player presses A on it, graphical
 void Chest::c_interact_trigger() {
-    anim_player.set_anim("open");
-    anim_player.play();
+    if (anim_player.check_paused()) {
+        anim_player.set_anim("open");
+        anim_player.play();
+    }
 }
 
 void Chest::setup_model() {
@@ -60,17 +62,17 @@ Spikes::Spikes(int x, int z, int id) : Construct(x, z, id) {
 void Spikes::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player) {
-        int collision_type = 1; // TODO replace this with actual collision enum.
-        events::dungeon::network_collision_event(id, collision_type);
+        events::dungeon::network_collision_event(id, 0);
         player->s_take_damage();
     }
 }
 
 void Spikes::c_on_collision(int type) {
-    // TODO: react accordingly to collision type
-    anim_player.set_anim("trigger");
-    anim_player.set_speed(2.0f);
-    anim_player.play();
+    if (anim_player.check_paused()) {
+        anim_player.set_anim("trigger");
+        anim_player.set_speed(1.0f);
+        anim_player.play();
+    }
 }
 
 void Spikes::setup_model() {
@@ -106,9 +108,9 @@ void Goal::setup_model() {
 
 void Goal::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
+
     if (player && player->is_enabled()) {
-        int collision_type = 1; // TODO replace this with actual collision enum.
-        events::dungeon::network_collision_event(id, collision_type);
+        events::dungeon::network_collision_event(id, 0);
         events::dungeon::player_finished_event(player->get_id());
     }
 }

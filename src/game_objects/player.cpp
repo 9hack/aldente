@@ -6,6 +6,8 @@
 #include "timer.h"
 
 #define ANIMATE_DELTA 0.001f
+#define STUN_LENGTH 500 // milliseconds
+#define INVULNERABLE_LENGTH 3000 // ms
 
 Player::Player(int id) : GameObject(id) {
     tag = "PLAYER";
@@ -78,8 +80,8 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
 void Player::do_movement() {
 
     if (stunned) {
-        to_moveX = 0;
-        to_moveZ = 0;
+        rigidbody->setActivationState(false);
+        return;
     }
 
     // Should account for deltatime so movement is
@@ -121,16 +123,16 @@ void Player::start_walk() {
 
 // Server collision
 void Player::s_on_collision(GameObject *other) {
-    // TODO: actual game logic here...
-
-    // Then notify clients that this collision happened.
-    //events::dungeon::network_collision_event(id);
+    // By default, does not need to notify the client of any collisions.
+    // If it triggers a trap, the trap will notify the client that the
+    // player is hit. 
 }
 
 // Graphical collision
 void Player::c_on_collision(int type) {
-    // TODO: react accordingly to collision type
-    c_take_damage();
+    // React accordingly to collision type
+    if (type == ReactionType::DAMAGE)
+        c_take_damage();
 }
 
 void Player::set_start_position(glm::vec3 pos) {
@@ -175,20 +177,19 @@ void Player::s_take_damage() {
     // Player should drop gold and lose gold somewhere here
 
     // End Stunned
-    Timer::get()->do_after(std::chrono::milliseconds(500),
+    Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
         [&]() {
         stunned = false;
     });
 
     // End Invulernability
-    Timer::get()->do_after(std::chrono::seconds(3),
+    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
         [&]() {
         invulnerable = false;
     });
 
     // Send signal to client that this player was hit
-    int collision_type = 1; // TODO replace this with actual collision enum.
-    events::dungeon::network_collision_event(id, collision_type);
+    events::dungeon::network_collision_event(id, ReactionType::DAMAGE);
 }
 
 void Player::c_take_damage() {
@@ -203,7 +204,7 @@ void Player::c_take_damage() {
         if (count % 2)
             set_filter_alpha(1.0f);
         else
-            set_filter_alpha(0.3f);
+            set_filter_alpha(0.2f);
 
         if (end_flicker)
             disable_filter();
@@ -212,7 +213,7 @@ void Player::c_take_damage() {
     });
 
     // End
-    Timer::get()->do_after(std::chrono::seconds(3),
+    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
         [&]() {
         disable_filter();
         end_flicker = true;

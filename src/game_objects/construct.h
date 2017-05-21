@@ -54,5 +54,5 @@ public:
     void c_on_collision(int type) override;
 
 private:
-    btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
+    btBoxShape *hit_box = new btBoxShape(btVector3(0.25f, 0.25f, 0.25f));
 };

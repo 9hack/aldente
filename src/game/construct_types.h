@@ -2,7 +2,7 @@
 
 // Type of construct built on tile.
 enum ConstructType {
-    CHEST, SPIKES, REMOVE, NONE
+    NONE, CHEST, SPIKES, REMOVE
 };
 
 struct ConstructData {

@@ -28,7 +28,7 @@ private:
 
     glm::vec3 start_pos;
 
-    btCapsuleShape *hit_capsule = new btCapsuleShape(0.3f, 1.0f);
+    btCapsuleShape *hit_capsule = new btCapsuleShape(0.2f, 1.0f);
 public:
     Player(int id = 0);
 
