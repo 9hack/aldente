@@ -219,5 +219,8 @@ namespace events {
 
         // Player reached the goal
         extern signal<void(int)> player_finished_event;
+
+        // Sets camera to post-dungeon camera
+        extern signal<void()> post_dungeon_camera_event;
     }
 }

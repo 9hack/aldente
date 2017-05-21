@@ -19,6 +19,7 @@ void DungeonPhase::setup() {
     flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
         goal_reached_flags[player_id] = true;
         GameObject::game_objects[player_id]->disable();
+        events::dungeon::post_dungeon_camera_event();
     });
 
     for (int id : context.player_ids) {
@@ -78,7 +79,10 @@ proto::Phase DungeonPhase::update() {
 
 void DungeonPhase::client_update() {
     GameObject* player_obj = GameObject::game_objects[context.player_id];
-    events::dungeon::player_position_updated_event(player_obj->transform.get_position());
+    
+    // Only apply camera update if player is still exploring
+    if (!goal_reached_flags[context.player_id])
+        events::dungeon::player_position_updated_event(player_obj->transform.get_position());
 }
 
 void DungeonPhase::teardown() {

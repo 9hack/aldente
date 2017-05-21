@@ -68,5 +68,6 @@ namespace events {
         signal<void(int)> network_interact_event;
         signal<void(int, int, int)> spawn_existing_goal_event;
         signal<void(int)> player_finished_event;
+        signal<void()> post_dungeon_camera_event;
     }
 }
