@@ -5,6 +5,7 @@
 #include "light/pulse_point_light.h"
 
 #include "game_objects/essence.h" // TESTING ONLY
+#include "util/util.h"
 
 MainScene::MainScene() : Scene() {
 
@@ -25,19 +26,31 @@ void MainScene::c_update() {
     }
 }
 
-void MainScene::setup_scene() {
+void MainScene::s_setup() {
     //Setting up map
     grid = new Grid("assets/maps/dungeon_wtf.txt");
     //grid = new Grid("assets/maps/dungeon_test.txt");
     objs.push_back(grid);
     
     // TESTING ONLY
-    Essence *ess = new Essence();
-    ess->set_position({ 4.f, 0.f, 4.f });
-    objs.push_back(ess);
+    for (int i = 0; i < 40; i++) {
+        Essence *ess = new Essence(1000 + i);
+        ess->set_position({ 4.f + Util::random(-1.f, 1.f), 0.f, 4.f + Util::random(-1.f, 1.f) });
+        objs.push_back(ess);
+    }
 }
 
-void MainScene::graphical_setup() {
+void MainScene::c_setup() {
+    //Setting up map
+    grid = new Grid("assets/maps/dungeon_test.txt");
+    objs.push_back(grid);
+
+    for (int i = 0; i < 40; i++) {
+        Essence *ess = new Essence(1000 + i);
+        ess->set_position({ 4.f + Util::random(-1.f, 1.f), 0.f, 4.f + Util::random(-1.f, 1.f) });
+        objs.push_back(ess);
+    }
+
     // Setup lights.
     DirectionalLight *sun = new DirectionalLight(glm::vec3(0.f, -1.f, -1.f),
                                                  Color::WHITE, 0.5f);

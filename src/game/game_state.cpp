@@ -21,6 +21,8 @@ void GameState::setup(bool is_server) {
     scene_manager.set_current_scene(&testScene);
 
     if (is_server) {
+        scene_manager.get_current_scene()->s_setup();
+
         // Client of given connection id wishes to join the game.
         // For now, allow more than 4 players to join the game.
         events::menu::request_join_event.connect([](int conn_id) {
@@ -46,7 +48,7 @@ void GameState::setup(bool is_server) {
         });
     }
     else {
-        scene_manager.get_current_scene()->graphical_setup();
+        scene_manager.get_current_scene()->c_setup();
 
         events::menu::spawn_existing_player_event.connect([](int id) {
             c_add_player(id, false);

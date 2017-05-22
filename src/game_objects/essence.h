@@ -14,8 +14,6 @@ public:
 
     void set_value(int val) { value = val; };
 
-    void c_update_state(float x, float z, float wx, float wz, bool enab) override;
-
     void s_on_collision(GameObject *other) override;
     void c_on_collision(int type) override;
 
@@ -29,4 +27,5 @@ private:
     int value; // Amount this essence can provide
 
     std::function<void()> cancel_fade;
+    std::function<void()> cancel_rainbow; // Cancels the constant rainbow color changing
 };

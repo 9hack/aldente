@@ -44,5 +44,4 @@ void SceneManager::set_current_scene(Scene* scene) {
     }
     current_scene = scene;
     camera = &scene->get_cam();
-    scene->setup_scene();
 }

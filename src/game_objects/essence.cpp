@@ -4,6 +4,7 @@
 #include "player.h"
 #include "util/util_bt.h"
 #include "timer.h"
+#include "util/util.h"
 
 #include <iostream>
 
@@ -20,6 +21,31 @@ Essence::Essence(int id) : GameObject(id){
         rigid.shape = hit_sphere;
         events::add_rigidbody_event(rigid);
         notify_on_collision = true;
+    }
+    else {
+        // Make the essence change colors continuously
+        int num_steps = 200;
+        int count = (int) Util::random(0, num_steps * 2);
+        cancel_rainbow = Timer::get()->do_every(
+            std::chrono::milliseconds(10),
+            [&, num_steps, count]() mutable{
+            const float frequency = (2 * glm::pi<float>()) / num_steps;
+            float r, g, b;
+
+            // For smooth looping
+            int i = count;
+            if (count > num_steps)
+                i = num_steps * 2 - count;
+
+            // Adjust rgb values based on frequencies, the last number dictates the 'balance' (0 - 255)
+            r = sinf(frequency * i + 0) * 127 + 200;
+            g = sinf(frequency * i + 2) * 127 + 200;
+            b = sinf(frequency * i + 4) * 127 + 200;
+
+            set_filter_color({ r, g, b });
+
+            count = (count < num_steps * 2) ? count + 1 : 0;
+        });
     }
 
     // Makes rigid body moveable
@@ -42,10 +68,11 @@ void Essence::c_on_collision(int type) {
 
 void Essence::setup_model() {
     attach_model(AssetLoader::get_model("essence"));
-    transform.set_scale({ 0.01f, 0.01f, 0.01f });
+    transform.set_scale({ 0.005f, 0.005f, 0.005f });
 
     // Coin always spins
     anim_player.set_anim("spin");
+    anim_player.set_speed(Util::random(0.4f, 2.0f));
     anim_player.set_loop(true);
     anim_player.play();
 }
