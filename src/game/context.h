@@ -10,6 +10,7 @@ public:
     std::unordered_set<int> collisions;
     std::unordered_set<int> interacts;
     std::vector<int> player_ids;
+    std::unordered_map<int, bool> ready_flags; // <Player id, if ready>
 
     // Client
     int player_id;

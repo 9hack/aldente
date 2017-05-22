@@ -9,6 +9,7 @@ public:
     BuildPhase(Context& context) : TimedPhase(context) {};
     void setup();
     void teardown();
+    proto::Phase update();
     void client_setup();
     void client_teardown();
 private:
@@ -16,7 +17,4 @@ private:
     boost::signals2::connection joystick_conn;
     boost::signals2::connection button_conn;
     boost::signals2::connection ready_conn;
-
-    // <Player id, if ready>
-    std::unordered_map<int, bool> ready_flags;
 };

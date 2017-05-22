@@ -7,8 +7,12 @@ bool BuildPhase::is_menu = true;
 void BuildPhase::setup() {
 //    transition_after(10, proto::Phase::DUNGEON);
     ready_conn = events::build::player_ready_event.connect([&](int player_id) {
-        ready_flags[player_id] = true;
+        context.ready_flags[player_id] = true;
     });
+
+    for (int id : context.player_ids) {
+        context.ready_flags[id] = false;
+    }
 }
 
 void BuildPhase::client_setup() {
@@ -73,6 +77,21 @@ void BuildPhase::client_setup() {
     // Play music
     events::AudioData d = { AudioManager::BUILD_MUSIC };
     events::music_event(d);
+}
+
+proto::Phase BuildPhase::update() {
+    bool all_ready = true;
+    for (auto const &kv : context.ready_flags) {
+        if (!kv.second) {
+            all_ready = false;
+            break;
+        }
+    }
+
+    if (all_ready)
+        return proto::Phase::DUNGEON;
+    else
+        return proto::Phase::NOOP;
 }
 
 void BuildPhase::teardown() {

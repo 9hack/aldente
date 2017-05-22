@@ -120,9 +120,7 @@ void ServerNetworkManager::update() {
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kReadyRequest: {
-                Player* player = dynamic_cast<Player*>(GameObject::game_objects[msg.ready_request()]);
-                assert(player);
-                // TODO
+                events::build::player_ready_event(msg.ready_request());
                 break;
             }
             default:
