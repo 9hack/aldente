@@ -49,11 +49,12 @@ enum GameObject_Type {
   GameObject_Type_PLAYER = 0,
   GameObject_Type_GOAL = 1,
   GameObject_Type_CHEST = 2,
-  GameObject_Type_SPIKE = 3
+  GameObject_Type_SPIKE = 3,
+  GameObject_Type_ESSENCE = 4
 };
 bool GameObject_Type_IsValid(int value);
 const GameObject_Type GameObject_Type_Type_MIN = GameObject_Type_PLAYER;
-const GameObject_Type GameObject_Type_Type_MAX = GameObject_Type_SPIKE;
+const GameObject_Type GameObject_Type_Type_MAX = GameObject_Type_ESSENCE;
 const int GameObject_Type_Type_ARRAYSIZE = GameObject_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* GameObject_Type_descriptor();
@@ -931,6 +932,7 @@ class GameObject : public ::google::protobuf::Message {
   static const Type GOAL = GameObject_Type_GOAL;
   static const Type CHEST = GameObject_Type_CHEST;
   static const Type SPIKE = GameObject_Type_SPIKE;
+  static const Type ESSENCE = GameObject_Type_ESSENCE;
   static inline bool Type_IsValid(int value) {
     return GameObject_Type_IsValid(value);
   }

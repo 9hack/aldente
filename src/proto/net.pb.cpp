@@ -366,19 +366,20 @@ void protobuf_AddDesc_net_2eproto() {
     "State\022\"\n\007objects\030\001 \003(\0132\021.proto.GameObjec"
     "t\022!\n\ncollisions\030\002 \003(\0132\r.proto.IdPair\022 \n\t"
     "interacts\030\003 \003(\0132\r.proto.IdPair\"*\n\006IdPair"
-    "\022\021\n\tinitiator\030\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\304\001\n\nG"
+    "\022\021\n\tinitiator\030\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\321\001\n\nG"
     "ameObject\022\n\n\002id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.pr"
     "oto.GameObject.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001("
     "\002\022\n\n\002wx\030\005 \001(\002\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007"
-    " \001(\005\022\017\n\007enabled\030\010 \001(\010\"2\n\004Type\022\n\n\006PLAYER\020"
-    "\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\"%\n\tCol"
-    "lision\022\n\n\002id\030\001 \001(\005\022\014\n\004type\030\002 \001(\005\"~\n\tStic"
-    "kData\022%\n\005input\030\001 \001(\0162\026.proto.StickData.S"
-    "tick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"("
-    "\n\005Stick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001"
-    "\"(\n\013PlayerStats\022\n\n\002id\030\001 \001(\005\022\r\n\005coins\030\002 \001"
-    "(\005*A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD"
-    "\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1389);
+    " \001(\005\022\017\n\007enabled\030\010 \001(\010\"\?\n\004Type\022\n\n\006PLAYER\020"
+    "\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\022\013\n\007ESS"
+    "ENCE\020\004\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022\014\n\004type\030"
+    "\002 \001(\005\"~\n\tStickData\022%\n\005input\030\001 \001(\0162\026.prot"
+    "o.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022"
+    "\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013"
+    "STICK_RIGHT\020\001\"(\n\013PlayerStats\022\n\n\002id\030\001 \001(\005"
+    "\022\r\n\005coins\030\002 \001(\005*A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004ME"
+    "NU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME"
+    "\020\003", 1402);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -2854,6 +2855,7 @@ bool GameObject_Type_IsValid(int value) {
     case 1:
     case 2:
     case 3:
+    case 4:
       return true;
     default:
       return false;
@@ -2865,6 +2867,7 @@ const GameObject_Type GameObject::PLAYER;
 const GameObject_Type GameObject::GOAL;
 const GameObject_Type GameObject::CHEST;
 const GameObject_Type GameObject::SPIKE;
+const GameObject_Type GameObject::ESSENCE;
 const GameObject_Type GameObject::Type_MIN;
 const GameObject_Type GameObject::Type_MAX;
 const int GameObject::Type_ARRAYSIZE;
