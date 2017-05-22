@@ -101,8 +101,8 @@ void Goal::setup_model() {
 
 void Goal::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
-    if (player && player->is_enabled()) {
-        events::dungeon::network_interact_event(other->get_id(), id);
-        events::dungeon::player_finished_event(player->get_id());
+    if (player && !player->get_exiting_status()) {
+        events::dungeon::network_collision_event(id);
+        player->begin_warp(transform.get_position().x,transform.get_position().z);
     }
 }

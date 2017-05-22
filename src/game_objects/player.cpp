@@ -3,6 +3,7 @@
 #include "asset_loader.h"
 #include "assert.h"
 #include "events.h"
+#include "timer.h"
 
 #define ANIMATE_DELTA 0.001f
 
@@ -34,8 +35,8 @@ Player::Player(int id) : GameObject(id) {
 // Just calls do_movement for now, can have more
 // functionality later.
 void Player::s_update_this() {
-
-    do_movement();
+    if(!exiting)
+        do_movement();
 
     btTransform t;
 
@@ -62,7 +63,7 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     float dz = std::fabs(z - transform.get_position().z);
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
-    if (!animate) {
+    if (!animate && !exiting) {
         if (!anim_player.check_paused())
             anim_player.stop();
     }
@@ -149,4 +150,26 @@ void Player::setup_player_model(std::string &model_name) {
         transform.set_scale({ 0.4f, 0.4f, 0.4f });
     else if (model_name == "cat")
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
+}
+
+void Player::begin_warp(float x, float z) {
+    // Set up warp animation
+    anim_player.set_speed(1.0f);
+    anim_player.set_anim("exit");
+    anim_player.set_loop(true);
+    anim_player.play();
+    set_position({ x, 0, z });
+    rigidbody->setLinearVelocity(btVector3(0, 0, 0));
+    exiting = true;
+
+    // After animation is complete, signal the phase
+    // and reset the anim back to walk
+    Timer::get()->do_after(std::chrono::seconds(1), [&]() {
+        events::dungeon::player_finished_event(id);
+
+        anim_player.set_speed(3.0f);
+        anim_player.set_anim("walk");
+        anim_player.set_loop(true);
+        exiting = false;
+    });
 }

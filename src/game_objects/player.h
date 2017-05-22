@@ -24,6 +24,8 @@ private:
     glm::vec3 start_pos;
 
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
+
+    bool exiting;
 public:
     Player(int id = 0);
 
@@ -33,6 +35,9 @@ public:
     void c_on_collision(GameObject *other) override;
 
     void setup_player_model(std::string &model_name); // Loads player model
+
+    bool get_exiting_status() { return exiting; };
+    void set_exiting_status(bool to_set) { exiting = to_set; };
 
     // Player movement
     void prepare_movement(int inX, int inZ);
@@ -55,4 +60,7 @@ public:
     void reset_position();
 
     PlayerStats stats;
+
+    // Sets up the warping animation and signals phase
+    void begin_warp(float x, float z);
 };
