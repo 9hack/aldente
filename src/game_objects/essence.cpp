@@ -22,10 +22,10 @@ Essence::Essence(int id) : GameObject(id){
         events::add_rigidbody_event(rigid);
         notify_on_collision = true;
 
-        // Setup Initial Push in random direction
-        glm::vec2 vel = glm::vec2(Util::random(-1.f, 1.f), Util::random(-1.f, 1.f));
-        vel = vel * Util::random(1.f, 3.f);
-        set_velocity(vel.x, vel.y);
+        // Lock y-axis
+        rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
+
+        random_push();
     }
     else {
         // Make the essence change colors continuously
@@ -52,9 +52,6 @@ Essence::Essence(int id) : GameObject(id){
             count = (count < num_steps * 2) ? count + 1 : 0;
         });
     }
-
-    // Makes rigid body moveable
-    //get_rigid()->setActivationState(true);
 }
 
 void Essence::s_on_collision(GameObject *other) {
@@ -102,6 +99,11 @@ void Essence::disappear() {
     });
 }
 
-void Essence::set_velocity(int vel_x, int vel_z) {
+void Essence::random_push() {
+    // Setup Initial Push in Random direction
+    glm::vec2 vel = glm::vec2(Util::random(-1.f, 1.f), Util::random(-1.f, 1.f));
+    vel = vel * Util::random(1.f, 3.f); // Random Force
 
+    rigidbody->setActivationState(true);
+    rigidbody->setLinearVelocity(btVector3(vel.x, 0, vel.y));
 }
