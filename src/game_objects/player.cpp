@@ -215,3 +215,20 @@ void Player::c_take_damage() {
         cancel_flicker();
     });
 }
+
+void Player::s_modify_stats(std::function<void(PlayerStats &)> modifier) {
+    modifier(stats);
+
+    // Dispatch an update to the clients
+    proto::ServerMessage msg;
+    auto *psu = msg.mutable_player_stats_update();
+    psu->set_id(id);
+    psu->set_coins(stats.get_coins());
+    events::server::announce(msg);
+}
+
+void Player::c_update_stats(const proto::PlayerStats &update) {
+    stats.set_coins(update.coins());
+
+    std::cerr << "ID " << id << " COINS NOW @ " << stats.get_coins() << std::endl;
+}

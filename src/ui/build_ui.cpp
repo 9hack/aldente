@@ -4,6 +4,8 @@
 #include "events.h"
 #include "asset_loader.h"
 
+#include "timer.h"
+
 BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<ConstructData>& constructs)
     : UI(), // explicit call base class dflt constructor
       constructs(constructs),
@@ -18,12 +20,12 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
       description_label("", 2, 6, 0.6f, 0.6f, Color::WHITE),
       cost_label("0", 40, 12, 1.f, 1.f, Color::WHITE),
       balance_label("100g", 20, 4, 1.f, 1.f, Color::WHITE) {
-    
+
     for (int i = 0; i < num_rows; ++i) {
         for (int j = 0; j < num_cols; ++j) {
             ui_grid.attach_at(i, j, rect);
 
-            UIImageNode* item_image = new UIImageNode(1, 1, 10, 10, 
+            UIImageNode* item_image = new UIImageNode(1, 1, 10, 10,
                 AssetLoader::get_texture(constructs[i * num_cols + j].image));
             ui_grid.attach_at(i, j, *item_image);
             images.push_back(item_image);
@@ -54,13 +56,6 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
         events::build::construct_selected_event(constructs[content_index].type);
     });
 
-    events::debug::toggle_ui_event.connect([&](void) {
-        if (enabled)
-            disable();
-        else
-            enable();
-    });    
-
     // Show or hide the grid.
     events::build::select_grid_confirm_event.connect([&]() {
         shop_panel.disable();
@@ -69,16 +64,6 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
     events::build::select_grid_return_event.connect([&]() {
         shop_panel.enable();
         player_panel.enable();
-    });
-
-    // Enables Build UI on the start of the build phase
-    events::build::start_build_event.connect([&]() {
-        enable();
-    });
-
-    // Disables Build UI at the end of the build phase
-    events::build::end_build_event.connect([&]() {
-        disable();
     });
 }
 

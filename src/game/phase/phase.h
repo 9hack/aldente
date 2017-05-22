@@ -12,7 +12,6 @@ public:
     virtual void c_setup() = 0;
     virtual void c_update() {};
     virtual void c_teardown() = 0;
-    virtual std::map<int, bool> get_flags() { return std::map<int, bool>(); };
 protected:
     Context& context;
 
