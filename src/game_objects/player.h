@@ -80,4 +80,7 @@ public:
     // Allows client to be updated with a server player status message.
     // FOR CLIENT USE ONLY.
     void c_update_stats(const proto::PlayerStats &update);
+
+    // Purchasing constructs
+    bool c_can_afford(int cost);
 };

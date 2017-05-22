@@ -261,3 +261,7 @@ void Player::c_update_stats(const proto::PlayerStats &update) {
 
     std::cerr << "ID " << id << " COINS NOW @ " << stats.get_coins() << std::endl;
 }
+
+bool Player::c_can_afford(int cost) {
+    return stats.get_coins() >= cost;
+}

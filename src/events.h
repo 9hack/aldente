@@ -172,6 +172,9 @@ namespace events {
         // The selected construct type has changed.
         extern signal<void(ConstructType)> construct_selected_event;
 
+        // Show the construct preview on the 3D build grid.
+        extern signal<void(ConstructType, bool)> construct_preview_event;
+
         // Client requests to build a construct.
         extern signal<void(proto::Construct &)> request_build_event;
 

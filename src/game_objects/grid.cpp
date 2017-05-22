@@ -54,11 +54,11 @@ void Grid::setup_listeners() {
         events::build::request_build_event(c);
     });
 
-    events::build::construct_selected_event.connect([&](ConstructType type) {
+    events::build::construct_preview_event.connect([&](ConstructType type, bool valid) {
         selected = type;
 
         // Change preview to this construct type.
-        preview.set_construct_type(type);
+        preview.set_construct_type(type, valid);
         children.push_back(&preview);
         // Update preview position based on hover position
         update_selection();

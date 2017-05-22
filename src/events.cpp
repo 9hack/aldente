@@ -56,6 +56,7 @@ namespace events {
         signal<void()> build_grid_place_event;
         signal<void()> select_grid_return_event;
         signal<void(ConstructType)> construct_selected_event;
+        signal<void(ConstructType, bool)> construct_preview_event;
         signal<void(proto::Construct &)> request_build_event;
         signal<void(proto::Construct &)> try_build_event;
         signal<void(proto::Construct &)> respond_build_event;

@@ -111,6 +111,17 @@ void BuildPhase::c_setup() {
         }
     });
 
+    events::build::construct_selected_event.connect([&](ConstructType type) {
+        Player* player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
+        assert(player);
+        int cost = Constructs::CONSTRUCTS.at(type).cost;
+        std::cerr << "cost of construct: " << cost << "\n";
+        bool afford = player->c_can_afford(cost);
+        std::cerr << (afford ? "can afford\n" : "cannot afford\n");
+
+        events::build::construct_preview_event(type, afford);
+    });
+
     // Play music
     events::AudioData d = { AudioManager::BUILD_MUSIC };
     events::music_event(d);
