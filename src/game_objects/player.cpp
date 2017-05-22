@@ -129,10 +129,9 @@ void Player::s_on_collision(GameObject *other) {
 }
 
 // Graphical collision
-void Player::c_on_collision(int type) {
-    // React accordingly to collision type
-    if (type == ReactionType::DAMAGE)
-        c_take_damage();
+void Player::c_on_collision(GameObject *other) {
+    // TODO: only take damage if other is a Spike
+    c_take_damage();
 }
 
 void Player::set_start_position(glm::vec3 pos) {

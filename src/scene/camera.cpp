@@ -69,6 +69,13 @@ void Camera::setup_listeners() {
             recalculate();
         }
     });
+
+    events::dungeon::post_dungeon_camera_event.connect([&]() {
+        cam_pos = glm::vec3(15.0f, 20.0f, 9.5f);
+        cam_front = glm::vec3(0, -1, 0);
+        cam_up = glm::vec3(0,0,-1);
+        recalculate();
+    });
 }
 
 void Camera::recalculate() {

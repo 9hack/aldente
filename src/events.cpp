@@ -29,6 +29,7 @@ namespace events {
     signal<void(GameObject *obj)> remove_rigidbody_event;
     signal<void(GameObject *obj)> disable_rigidbody_event;
     signal<void(GameObject *obj)> enable_rigidbody_event;
+    signal<void(int)> player_finished_event;
 
     namespace server {
         signal<void(proto::ServerMessage &)> announce;
@@ -65,8 +66,9 @@ namespace events {
         signal<void(Context*)> update_state_event;
         signal<void(int, int)> network_collision_event;
         signal<void()> player_interact_event;
-        signal<void(int)> network_interact_event;
+        signal<void(int, int)> network_interact_event;
         signal<void(int, int, int)> spawn_existing_goal_event;
         signal<void(int)> player_finished_event;
+        signal<void()> post_dungeon_camera_event;
     }
 }

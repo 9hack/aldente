@@ -75,15 +75,18 @@ void ServerNetworkManager::register_listeners() {
         }
 
         // If there were any game obj collisions, send those objects' ids.
-        for (auto coll : context->collisions) {
-            proto::Collision* collision = state->add_collisions();
-            collision->set_id(coll.first);
-            collision->set_type(coll.second);
+        for (const auto &collision : context->collisions) {
+            auto *cur = state->add_collisions();
+            cur->set_initiator(collision.first);
+            cur->set_other(collision.second);
         }
 
         // If there were any game obj interacts, send those objects' ids.
-        for (int obj_id : context->interacts)
-            state->add_interacts(obj_id);
+        for (const auto &interact : context->interacts) {
+            auto *cur = state->add_interacts();
+            cur->set_initiator(interact.first);
+            cur->set_other(interact.second);
+        }
 
         context->updated_objects.clear();
         context->collisions.clear();
@@ -235,12 +238,11 @@ void ClientNetworkManager::update() {
             // Call all collision handlers of game objects that collided. Only executed if all game object IDs sent
             // already exist, which avoids a potential race condition of a collision of a not-yet-created game obj.
             if (all_exist) {
-                for (auto & collision : state.collisions()) {
-                    std::cerr << "[c] got collision: " << collision.DebugString();
-                    GameObject::game_objects[collision.id()]->c_on_collision(collision.type());
+                for (auto &p : state.collisions()) {
+                    GameObject::game_objects[p.other()]->c_on_collision(GameObject::game_objects[p.initiator()]);
                 }
-                for (int obj_id : state.interacts()) {
-                    GameObject::game_objects[obj_id]->c_interact_trigger();
+                for (auto &p : state.interacts()) {
+                    GameObject::game_objects[p.other()]->c_interact_trigger(GameObject::game_objects[p.initiator()]);
                 }
             }
             break;
@@ -248,6 +250,10 @@ void ClientNetworkManager::update() {
         case proto::ServerMessage::MessageTypeCase::kPhaseUpdate: {
             proto::Phase phase = msg.phase_update();
             GameState::set_phase(phase);
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPlayerFinished: {
+            events::player_finished_event(msg.player_finished());
             break;
         }
         default:

@@ -11,6 +11,7 @@
 #include "btBulletDynamicsCommon.h"
 #include "construct.h"
 #include "events.h"
+#include "game/player_stats.h"
 
 class Player : public GameObject {
 private:
@@ -35,7 +36,7 @@ public:
     void s_update_this() override;
     void c_update_state(float x, float z, float wx, float wz, bool enab) override;
     void s_on_collision(GameObject *other) override;
-    void c_on_collision(int type) override;
+    void c_on_collision(GameObject *other) override;
 
     void setup_player_model(std::string &model_name); // Loads player model
 
@@ -59,4 +60,6 @@ public:
     // Damage functions
     void s_take_damage(); // Set period of invulnerability, drops coins, loses gold. 
     void c_take_damage(); // Graphical : Flickers player to show they've been hit
+
+    PlayerStats stats;
 };

@@ -71,7 +71,8 @@ Player* MainScene::s_spawn_player(int conn_id) {
 
 Player* MainScene::c_spawn_player(int obj_id) {
     Player *player = new Player(obj_id);
-    player->setup_player_model(std::string("cat"));
+    std::string name = "cat";
+    player->setup_player_model(name);
     objs.push_back(player);
 
     return player;

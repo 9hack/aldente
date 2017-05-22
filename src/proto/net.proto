@@ -9,6 +9,7 @@ message ServerMessage {
     JoinResponse join_response = 3;
     GameState state_update = 4;
     Phase phase_update = 5;
+    int32 player_finished = 6;
   }
 }
 
@@ -40,8 +41,13 @@ message JoinResponse {
 
 message GameState {
   repeated GameObject objects = 1;
-  repeated Collision collisions = 2;
-  repeated int32 interacts = 3;
+  repeated IdPair collisions = 2;
+  repeated IdPair interacts = 3;
+}
+
+message IdPair {
+  optional int32 initiator = 1;
+  optional int32 other = 2;
 }
 
 message GameObject {
