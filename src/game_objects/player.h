@@ -35,8 +35,6 @@ private:
 
     PlayerStats stats;
 public:
-    Currency currency;
-
     Player(int id = 0);
 
     void s_update_this() override;
@@ -73,6 +71,10 @@ public:
     // Damage functions
     bool s_take_damage(); // Set invulnerability, drop coins, lose gold (true if took damage)
     void c_take_damage(); // Graphical : Flickers player to show they've been hit
+
+    // Used for checking if player has been hit and in the period of invulnerability,
+    // since they cannot pick up essence during this time or interact w objects.
+    bool is_invulnerable() { return invulnerable; };
 
     // Allows manipulation of stats through callback.
     // This is done so that the clients can receive any associated updates.

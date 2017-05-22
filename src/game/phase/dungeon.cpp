@@ -121,9 +121,11 @@ void DungeonPhase::s_teardown() {
     collision_conn.disconnect();
     interact_conn.disconnect();
     flag_conn.disconnect();
+    essence_conn.disconnect();
 }
 
 void DungeonPhase::c_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
+    essence_conn.disconnect();
 }

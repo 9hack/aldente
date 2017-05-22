@@ -32,9 +32,6 @@ Player::Player(int id) : GameObject(id) {
 
         //Lock angular rotation
         rigidbody->setAngularFactor(0);
-
-        // Set inital currency
-        currency.set_gold(1000);
     }
 }
 
@@ -204,7 +201,6 @@ bool Player::s_take_damage() {
     std::cerr << "Player is hit: " << id << std::endl;
 
     // Player drops dream essence and loses essence
-
     for (int i = 0; i < 8; i++)
         events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
 

@@ -5,14 +5,15 @@
 #include "util/util_bt.h"
 #include "timer.h"
 #include "util/util.h"
+#include "game/collectibles/gold.h"
 
 #include <iostream>
 
 Essence::Essence(int id) : GameObject(id){
     tag = "ESSENCE";
 
-    // Set intial value
-    value = DEFAULT_ESSENSE_VAL;
+    // Set Value
+    value = std::make_unique<collectibles::Gold>(DEFAULT_ESSENSE_VAL);
 
     if (id == ON_SERVER) {
         // Setup rigid body
@@ -66,15 +67,15 @@ void Essence::s_update_this() {
 
 void Essence::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
-    if (player) {
-        return;
-        events::dungeon::network_collision_event(id, 0);
-        player->currency.add_gold(value);
+    if (player && !player->is_invulnerable()) {
+        //value->collected_by(player); // Award player
+        events::dungeon::network_collision_event(id, player->get_id());
         // TODO : Call disable() once client side animation ends
+        events::disable_rigidbody_event(this);
     }
 }
 
-void Essence::c_on_collision(int type) {
+void Essence::c_on_collision(GameObject *other) {
     disappear();
 }
 
@@ -91,13 +92,14 @@ void Essence::setup_model() {
 
 void Essence::disappear() {
 
-    int count = 1;
+    // TODO : Add "pick up" animation
+
+    int count = 0;
     // Slowly fade away
     cancel_fade = Timer::get()->do_every(
         std::chrono::milliseconds(50),
         [&, count]() mutable {
-        const int max_count = 20;
-
+        const float max_count = 20;
         if (count < max_count) {
             set_filter_alpha(1.0f - (count / max_count));
         }
@@ -117,6 +119,4 @@ void Essence::random_push() {
     rigidbody->setActivationState(true);
     rigidbody->applyCentralImpulse(btVector3(vel.x, 0, vel.y));
     rigidbody->setDamping(0.995, 0);
-
-    //rigidbody->setLinearVelocity(btVector3(vel.x, 0, vel.y));
 }
