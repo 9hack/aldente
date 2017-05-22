@@ -13,12 +13,14 @@ Essence::Essence(int id) : GameObject(id){
     // Set intial value
     value = DEFAULT_ESSENSE_VAL;
 
-    // Setup rigid body
-    events::RigidBodyData rigid;
-    rigid.object = this;
-    rigid.shape = hit_sphere;
-    events::add_rigidbody_event(rigid);
-    notify_on_collision = true;
+    if (id == ON_SERVER) {
+        // Setup rigid body
+        events::RigidBodyData rigid;
+        rigid.object = this;
+        rigid.shape = hit_sphere;
+        events::add_rigidbody_event(rigid);
+        notify_on_collision = true;
+    }
 
     // Makes rigid body moveable
     //get_rigid()->setActivationState(true);
@@ -30,7 +32,7 @@ void Essence::s_on_collision(GameObject *other) {
         std::cerr << "Player picked up a coin" << std::endl;
         events::dungeon::network_collision_event(id, 0);
         player->currency.add_gold(value);
-        disable(); // Coin can no longer be used and is not drawn. TODO : Garbage Collect
+        // TODO : Call disable() once client side animation ends
     }
 }
 
@@ -51,18 +53,17 @@ void Essence::setup_model() {
 void Essence::disappear() {
 
     int count = 1;
-    const int max_count = 20;
-
     // Slowly fade away
-    std::function<void()> cancel_fade = Timer::get()->do_every(
-        std::chrono::milliseconds(20),
-        [&, count, max_count, cancel_fade]() mutable {
+    cancel_fade = Timer::get()->do_every(
+        std::chrono::milliseconds(50),
+        [&, count]() mutable {
+        const int max_count = 20;
+
         if (count < max_count) {
-            set_alpha(1.0f - (max_count / count));
+            set_filter_alpha(1.0f - (count / max_count));
         }
         else {
             cancel_fade();
-            disable();
         }
 
         count++;

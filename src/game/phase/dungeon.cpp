@@ -1,6 +1,7 @@
 #include <game/game_state.h>
 #include "dungeon.h"
 #include "game_objects/player.h"
+#include "game_objects/essence.h"
 #include "audio/audio_manager.h"
 
 void DungeonPhase::s_setup() {
@@ -72,7 +73,7 @@ proto::Phase DungeonPhase::s_update() {
     // Send the position and orientation of the specified game objects.
     // Currently sending all Player objects and Constructs.
     for (auto const & o : GameObject::game_objects) {
-        if (dynamic_cast<Player*>(o.second) || dynamic_cast<Construct*>(o.second))
+        if (dynamic_cast<Player*>(o.second) || dynamic_cast<Construct*>(o.second) || dynamic_cast<Essence*>(o.second))
             context.updated_objects.insert(o.second);
     }
     events::dungeon::update_state_event(&context);

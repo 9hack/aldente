@@ -4,6 +4,8 @@
 #include "util/color.h"
 #include "light/pulse_point_light.h"
 
+#include "game_objects/essence.h" // TESTING ONLY
+
 MainScene::MainScene() : Scene() {
 
 }
@@ -28,7 +30,11 @@ void MainScene::setup_scene() {
     grid = new Grid("assets/maps/dungeon_wtf.txt");
     //grid = new Grid("assets/maps/dungeon_test.txt");
     objs.push_back(grid);
-
+    
+    // TESTING ONLY
+    Essence *ess = new Essence();
+    ess->set_position({ 4.f, 0.f, 4.f });
+    objs.push_back(ess);
 }
 
 void MainScene::graphical_setup() {
