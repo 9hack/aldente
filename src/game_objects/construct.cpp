@@ -55,7 +55,7 @@ Spikes::Spikes(int x, int z, int id) : Construct(x, z, id) {
         rigid.is_ghost = true;
         rigid.position = { x, 0.0f, z };
         events::add_rigidbody_event(rigid);
-	notify_on_collision = true;
+        notify_on_collision = true;
     }
 }
 
