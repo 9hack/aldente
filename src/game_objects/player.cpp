@@ -198,7 +198,7 @@ void Player::c_take_damage() {
 
     // Flicker
     cancel_flicker = Timer::get()->do_every(
-        std::chrono::milliseconds(40),
+        std::chrono::milliseconds(100),
         [&, count]() mutable {
         if (count % 2)
             set_filter_alpha(1.0f);
