@@ -70,6 +70,11 @@ message GameObject {
   optional bool enabled = 8;
 }
 
+message Collision {
+  optional int32 id = 1;
+  optional int32 type = 2;
+}
+
 message StickData {
   enum Stick {
     STICK_LEFT = 0;

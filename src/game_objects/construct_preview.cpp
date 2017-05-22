@@ -11,6 +11,9 @@ void ConstructPreview::set_construct_type(ConstructType type) {
             case CHEST:
                 cached_previews[type] = make_preview<Chest>();
                 break;
+            case SPIKES:
+                cached_previews[type] = make_preview<Spikes>();
+                break;
             default:
                 cached_previews[type] = make_preview<Chest>();
                 break;

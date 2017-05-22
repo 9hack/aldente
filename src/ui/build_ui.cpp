@@ -53,7 +53,7 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
     });
 
     events::ui_grid_selection_event.connect([&](int content_index) {
-        events::build::construct_selected_event(constructs[content_index].type);
+        events::build::construct_selected_event(this->constructs[content_index].type);
     });
 
     // Show or hide the grid.

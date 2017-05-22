@@ -143,6 +143,9 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
         case CHEST:
             to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
             break;
+        case SPIKES:
+            to_add = graphical ? new Spikes(col, row, id) : new Spikes(col, row);
+            break;
         default:
             return nullptr;
             break;

@@ -63,6 +63,14 @@ void AnimationPlayer::play() {
     last_time = glfwGetTime();
 }
 
+void AnimationPlayer::play_if_paused(std::string anim_name, float speed) {
+    if (check_paused()) {
+        set_anim(anim_name);
+        set_speed(speed);
+        play();
+    }
+}
+
 void AnimationPlayer::pause() {
     is_paused = true;
 }

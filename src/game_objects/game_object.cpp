@@ -103,6 +103,12 @@ void GameObject::connect_model_filter(){
     model->set_model_filter(model_filter);
 }
 
+void GameObject::disable_filter() {
+    model_filter.override_alpha = false;
+    model_filter.override_diffuse = false;
+    model_filter.override_shadows = false;
+}
+
 void GameObject::set_filter_color(Color color) {
     model_filter.material.diffuse = color;
     model_filter.override_diffuse = true;

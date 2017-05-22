@@ -15,6 +15,12 @@
 
 class Player : public GameObject {
 private:
+
+    std::function<void()> cancel_flicker; // Callback function to cancel damage flicker.
+    bool end_flicker; // Whether we should stop player flickering.
+    bool invulnerable; // Can't lose coins or collide with other harmful traps.
+    bool stunned; // Can't move.
+
     // to_move is for saving the joystick input in each frame.
     int to_moveX;
     int to_moveZ;
@@ -23,7 +29,7 @@ private:
 
     glm::vec3 start_pos;
 
-    btCapsuleShape *hit_capsule = new btCapsuleShape(0.5f, 1.0f);
+    btCapsuleShape *hit_capsule = new btCapsuleShape(0.2f, 1.0f);
 
     PlayerStats stats;
 public:
@@ -47,14 +53,15 @@ public:
     void start_walk();
     void stop_walk();
 
-    // TODO after we make more player models
-    void setup_model() {}
-
     // Set this player's spawn position.
     void set_start_position(glm::vec3 pos);
 
     // Sets the player's position to its set start position.
     void reset_position();
+
+    // Damage functions
+    bool s_take_damage(); // Set invulnerability, drop coins, lose gold (true if took damage)
+    void c_take_damage(); // Graphical : Flickers player to show they've been hit
 
     // Allows manipulation of stats through callback.
     // This is done so that the clients can receive any associated updates.
