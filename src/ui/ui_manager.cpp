@@ -21,10 +21,20 @@ void UIManager::setup_uis() {
     /* BUILD UI */
     std::vector<ConstructData> constructs;
     for (int i = 0; i < 12; i++) {
-        if (i % 2 == 0)
+        int type = (i % 3) + 1;
+        switch (type) {
+        case ConstructType::CHEST:
             constructs.push_back(Constructs::CHEST);
-        else
+            break;
+        case ConstructType::SPIKES:
+            constructs.push_back(Constructs::SPIKES);
+            break;
+        case ConstructType::REMOVE:
             constructs.push_back(Constructs::REMOVE);
+            break;
+        default:
+            break;
+        }
     }
     BuildUI *build_ui = new BuildUI(3, 4, aspect, constructs);
     ui_map["build"] = build_ui;
