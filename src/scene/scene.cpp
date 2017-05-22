@@ -11,7 +11,7 @@ Scene::~Scene() {
 
 void Scene::draw(Shader *shader) {
     for (GameObject *gameObj : objs) {
-        gameObj->draw(shader, info);
+        gameObj->c_draw(shader, info);
     }
 }
 
@@ -24,13 +24,13 @@ Camera &Scene::get_cam() {
     return info.camera;
 }
 
-void Scene::update() {
+void Scene::s_update() {
     for (GameObject *gameObj : objs) {
-        gameObj->update();
+        gameObj->s_update();
     }
 }
 
-void Scene::client_update() {
+void Scene::c_update() {
     info.update();
 }
 

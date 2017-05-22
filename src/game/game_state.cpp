@@ -34,7 +34,7 @@ void GameState::setup(bool is_server) {
                 resp.set_obj_id(player->get_id());
             } else {
                 // Need to create a new player for the client.
-                Player *player = add_new_player(conn_id);
+                Player *player = s_add_player(conn_id);
                 resp.set_obj_id(player->get_id());
                 context.player_ids.push_back(player->get_id());
                 players[conn_id] = player;
@@ -48,20 +48,20 @@ void GameState::setup(bool is_server) {
         scene_manager.get_current_scene()->graphical_setup();
 
         events::menu::spawn_existing_player_event.connect([](int id) {
-            add_existing_player(id, false);
+            c_add_player(id, false);
         });
     }
 }
 
-void GameState::update() {
+void GameState::s_update() {
     assert(curr_phase);
-    set_phase(curr_phase->update());
-    scene_manager.get_current_scene()->update();
+    set_phase(curr_phase->s_update());
+    scene_manager.get_current_scene()->s_update();
 }
 
-void GameState::client_update() {
-    scene_manager.get_current_scene()->client_update();
-    curr_phase->client_update();
+void GameState::c_update() {
+    scene_manager.get_current_scene()->c_update();
+    curr_phase->c_update();
 }
 
 void GameState::set_phase(Phase* phase) {
@@ -70,15 +70,15 @@ void GameState::set_phase(Phase* phase) {
 
     if (is_server) {
         if (curr_phase)
-            curr_phase->teardown();
+            curr_phase->s_teardown();
         curr_phase = phase;
-        curr_phase->setup();
+        curr_phase->s_setup();
     }
     else {
         if (curr_phase)
-            curr_phase->client_teardown();
+            curr_phase->c_teardown();
         curr_phase = phase;
-        curr_phase->client_setup();
+        curr_phase->c_setup();
     }
 }
 
@@ -109,17 +109,17 @@ void GameState::set_phase(proto::Phase phase) {
     }
 }
 
-Player* GameState::add_new_player(int conn_id) {
+Player* GameState::s_add_player(int conn_id) {
     // For now, only create players on the main scene.
     assert(scene_manager.get_current_scene() == &testScene);
-    return testScene.spawn_new_player(conn_id);
+    return testScene.s_spawn_player(conn_id);
 }
 
-Player* GameState::add_existing_player(int obj_id, bool is_client) {    
+Player* GameState::c_add_player(int obj_id, bool is_client) {    
     // For now, only create players on the main scene.
     assert(scene_manager.get_current_scene() == &testScene);
 
     if (is_client)
         context.player_id = obj_id;
-    return testScene.spawn_existing_player(obj_id);
+    return testScene.c_spawn_player(obj_id);
 }

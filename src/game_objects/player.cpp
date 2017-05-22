@@ -6,37 +6,34 @@
 
 #define ANIMATE_DELTA 0.001f
 
-Player::Player() : GameObject() {
+Player::Player(int id) : GameObject(id) {
     tag = "PLAYER";
-    to_moveX = 0;
-    to_moveZ = 0;
-    move_speed = 2.0f;
 
-    events::RigidBodyData rigid = {
-        glm::vec3(0.0f, 0.0f, 0.0f), //position
-        1, //mass
-        hit_capsule, //btshape
-        glm::vec3(0,0,0), //inertia
-        this, //the gameobject
-    };
-    events::add_rigidbody_event(rigid);
+    if (id == ON_SERVER) {
+        to_moveX = 0;
+        to_moveZ = 0;
+        move_speed = 2.0f;
 
-    // Notify on collision.
-    notify_on_collision = true;
+        events::RigidBodyData rigid;
+        rigid.object = this;
+        rigid.shape = hit_capsule;
+        rigid.mass = 1;
+        events::add_rigidbody_event(rigid);
 
-    // Lock y-axis
-    rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
-    //Lock angular rotation
-    rigidbody->setAngularFactor(0);
-}
+        // Notify on collision.
+        notify_on_collision = true;
 
-Player::Player(int obj_id) : GameObject(obj_id) {
-    tag = "PLAYER";
+        // Lock y-axis
+        rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
+
+        //Lock angular rotation
+        rigidbody->setAngularFactor(0);
+    }
 }
 
 // Just calls do_movement for now, can have more
 // functionality later.
-void Player::update_this() {
+void Player::s_update_this() {
 
     do_movement();
 
@@ -59,7 +56,7 @@ void Player::prepare_movement(int inX, int inZ) {
     to_moveZ = inZ;
 }
 
-void Player::update_state(float x, float z, float wx, float wz, bool enab) {
+void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     anim_player.update();
     float dx = std::fabs(x - transform.get_position().x);
     float dz = std::fabs(z - transform.get_position().z);
@@ -74,7 +71,7 @@ void Player::update_state(float x, float z, float wx, float wz, bool enab) {
             anim_player.play();
     }
 
-    GameObject::update_state(x, z, wx, wz, enab);
+    GameObject::c_update_state(x, z, wx, wz, enab);
 }
 
 void Player::do_movement() {
@@ -95,10 +92,10 @@ void Player::interact() {
             [&](GameObject *bt_hit) {
                 Construct *construct = dynamic_cast<Construct*>(bt_hit);
 
-                // Register interacts only on constructs for now. Send the game object ID 
-                // of the interacted construct to the server to process.
+                // Interacts with construct, construct itself will handle any client
+                // side effects needed.
                 if (construct) {
-                    events::dungeon::network_interact_event(construct->get_id());
+                    construct->s_interact_trigger(this);
                 }
             });
 }
@@ -114,14 +111,16 @@ void Player::start_walk() {
     anim_player.play();
 }
 
-void Player::on_collision(GameObject *other) {
+// Server collision
+void Player::s_on_collision(GameObject *other) {
     // TODO: actual game logic here...
 
     // Then notify clients that this collision happened.
     events::dungeon::network_collision_event(id);
 }
 
-void Player::on_collision_graphical() {
+// Graphical collision
+void Player::c_on_collision() {
     transform.rotate(0, 0.1f, 0);
 }
 
@@ -139,3 +138,15 @@ void Player::reset_position() {
     transform.look_at(direction);
 }
 
+void Player::setup_player_model(std::string &model_name) {
+    Model *player_model = AssetLoader::get_model(model_name);
+    player_model->set_shader(&ShaderManager::anim_unlit);
+    attach_model(player_model);
+    start_walk();
+
+    // Sets scale. Need better way to do this later.
+    if (model_name == "boy_two")
+        transform.set_scale({ 0.4f, 0.4f, 0.4f });
+    else if (model_name == "cat")
+        transform.set_scale({ 0.004f, 0.004f, 0.004f });
+}

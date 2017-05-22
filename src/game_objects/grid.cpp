@@ -25,16 +25,16 @@ Grid::Grid(const char *map_loc) :
 }
 
 // Override draw - using instanced rendering for performance purposes.
-void Grid::draw(Shader *shader, SceneInfo &scene_info) {
+void Grid::c_draw(Shader *shader, SceneInfo &scene_info) {
     // Draw all types of tiles using instanced rendering.
     for (auto it = tile_types.begin(); it != tile_types.end(); ++it) {
         std::vector<Tile *> & vec = it->second;
         // Do instanced draw call on first tile
-        vec[0]->draw_instanced(shader, scene_info); // do not pass in instance matrix because it doesn't change
+        vec[0]->c_draw_instanced(shader, scene_info); // do not pass in instance matrix because it doesn't change
     }
 
     // Draw all constructs by calling base class function.
-    GameObject::draw(shader, scene_info);
+    GameObject::c_draw(shader, scene_info);
 }
 
 void Grid::setup_listeners() {
@@ -91,7 +91,7 @@ void Grid::setup_listeners() {
 
     events::dungeon::place_goal_event.connect([&]() {
         remove_goal();
-        place_goal(glm::vec3(0.0f),20);
+        s_place_goal(glm::vec3(0.0f),20);
     });
 
     events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
@@ -102,7 +102,7 @@ void Grid::setup_listeners() {
                 children.erase(position);
             goal = nullptr;
         }
-        place_existing_goal(x, z, id);
+        c_place_goal(x, z, id);
     });
 
     events::build::end_build_event.connect([&]() {
@@ -124,20 +124,7 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
     Tile* candidate = grid[row][col];
     Construct* to_add = nullptr;
 
-    switch (type) {
-    case CHEST: {
-        to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
-        if (graphical) {
-            to_add->setup_model();
-            children.push_back(to_add);
-            candidate->set_construct(to_add);
-        } else {
-            candidate->buildable = false;
-            candidate->set_construct(to_add);
-        }
-        break;
-    }
-    case REMOVE: {
+    if (type == REMOVE) {
         // TODO: Move destructor to construct's destructor.
         if (candidate->get_construct() != nullptr) {
             if (!graphical) {
@@ -150,10 +137,23 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
                 candidate->set_construct(nullptr);
             }
         }
-        break;
     }
-    default:
-        break;
+    else if (type != NONE) {
+        switch (type) {
+        case CHEST:
+            to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
+            break;
+        default:
+            return nullptr;
+            break;
+        }
+	
+	if (graphical)
+            to_add->setup_model();
+
+        children.push_back(to_add);
+        candidate->set_construct(to_add);
+        candidate->buildable = false;
     }
 
     return to_add;
@@ -269,7 +269,7 @@ void Grid::setup_model() {
     }
 }
 
-void Grid::place_goal(glm::vec3 start, int min_dist) {
+void Grid::s_place_goal(glm::vec3 start, int min_dist) {
     // Goal will be in range of (min_dist, edge of map)
     int new_goal_x = rand() % width;
     int new_goal_z = rand() % height;
@@ -289,7 +289,7 @@ void Grid::place_goal(glm::vec3 start, int min_dist) {
     goal_z = new_goal_z;
 }
 
-void Grid::place_existing_goal(int x, int z, int id) {
+void Grid::c_place_goal(int x, int z, int id) {
     goal = new Goal(x, z, id);
 
     goal->setup_model();

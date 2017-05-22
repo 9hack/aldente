@@ -63,6 +63,10 @@ void ServerNetworkManager::register_listeners() {
                 go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
             else if (dynamic_cast<Goal*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_GOAL);
+            else if (dynamic_cast<Chest*>(obj))
+                go->set_type(proto::GameObject::Type::GameObject_Type_CHEST);
+            else if (dynamic_cast<Spikes*>(obj))
+                go->set_type(proto::GameObject::Type::GameObject_Type_SPIKE);
             go->set_x(obj->transform.get_position().x);
             go->set_z(obj->transform.get_position().z);
             go->set_wx(obj->direction.x);
@@ -201,7 +205,7 @@ void ClientNetworkManager::update() {
             // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                GameState::add_existing_player(resp.obj_id(), true)->get_id();
+                GameState::c_add_player(resp.obj_id(), true)->get_id();
             }
             break;
         }
@@ -221,7 +225,7 @@ void ClientNetworkManager::update() {
                     }
                     all_exist = false;
                 } else {
-                    GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), obj.enabled());
+                    GameObject::game_objects[obj.id()]->c_update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), obj.enabled());
                 }
             }
 
@@ -229,10 +233,10 @@ void ClientNetworkManager::update() {
             // already exist, which avoids a potential race condition of a collision of a not-yet-created game obj.
             if (all_exist) {
                 for (int obj_id : state.collisions()) {
-                    GameObject::game_objects[obj_id]->on_collision_graphical();
+                    GameObject::game_objects[obj_id]->c_on_collision();
                 }
                 for (int obj_id : state.interacts()) {
-                    GameObject::game_objects[obj_id]->interact_trigger();
+                    GameObject::game_objects[obj_id]->c_interact_trigger();
                 }
             }
             break;
