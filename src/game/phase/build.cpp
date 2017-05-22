@@ -6,6 +6,13 @@ bool BuildPhase::is_menu = true;
 
 void BuildPhase::s_setup() {
     transition_after(60, proto::Phase::DUNGEON);
+    ready_conn = events::build::player_ready_event.connect([&](int player_id) {
+        context.ready_flags[player_id] = true;
+    });
+
+    for (int id : context.player_ids) {
+        context.ready_flags[id] = false;
+    }
 }
 
 void BuildPhase::c_setup() {
@@ -65,6 +72,13 @@ void BuildPhase::c_setup() {
             }
         }
 
+        // Start button pressed.
+        else if (d.input == events::BTN_START && d.state == 1) {
+            proto::ClientMessage msg;
+            msg.set_ready_request(context.player_id);
+            events::client::send(msg);
+        }
+
         // D-Pad-Up pressed.
         else if (d.input == events::BTN_UP && d.state == 1) {
             dir = Direction::UP;
@@ -100,6 +114,21 @@ void BuildPhase::c_setup() {
     // Play music
     events::AudioData d = { AudioManager::BUILD_MUSIC };
     events::music_event(d);
+}
+
+proto::Phase BuildPhase::s_update() {
+    bool all_ready = true;
+    for (auto const &kv : context.ready_flags) {
+        if (!kv.second) {
+            all_ready = false;
+            break;
+        }
+    }
+
+    if (all_ready)
+        return proto::Phase::DUNGEON;
+    else
+        return proto::Phase::NOOP;
 }
 
 void BuildPhase::s_teardown() {

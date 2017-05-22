@@ -87,7 +87,7 @@ proto::Phase DungeonPhase::s_update() {
     if (all_players_done)
         return proto::Phase::BUILD;
     else
-        return next;
+        return proto::Phase::NOOP;
 }
 
 void DungeonPhase::c_update() {

@@ -37,6 +37,7 @@ void GameState::setup(bool is_server) {
                 Player *player = s_add_player(conn_id);
                 resp.set_obj_id(player->get_id());
                 context.player_ids.push_back(player->get_id());
+                context.ready_flags[player->get_id()] = false;
                 players[conn_id] = player;
                 num_players++;
             }

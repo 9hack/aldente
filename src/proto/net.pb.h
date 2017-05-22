@@ -314,6 +314,7 @@ class ClientMessage : public ::google::protobuf::Message {
     kMoveRequest = 4,
     kPhaseRequest = 5,
     kInteractRequest = 6,
+    kReadyRequest = 7,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -403,6 +404,13 @@ class ClientMessage : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 interact_request() const;
   inline void set_interact_request(::google::protobuf::int32 value);
 
+  // optional int32 ready_request = 7;
+  inline bool has_ready_request() const;
+  inline void clear_ready_request();
+  static const int kReadyRequestFieldNumber = 7;
+  inline ::google::protobuf::int32 ready_request() const;
+  inline void set_ready_request(::google::protobuf::int32 value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ClientMessage)
  private:
@@ -412,6 +420,7 @@ class ClientMessage : public ::google::protobuf::Message {
   inline void set_has_move_request();
   inline void set_has_phase_request();
   inline void set_has_interact_request();
+  inline void set_has_ready_request();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -428,6 +437,7 @@ class ClientMessage : public ::google::protobuf::Message {
     ::proto::StickData* move_request_;
     int phase_request_;
     ::google::protobuf::int32 interact_request_;
+    ::google::protobuf::int32 ready_request_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1972,6 +1982,33 @@ inline void ClientMessage::set_interact_request(::google::protobuf::int32 value)
     set_has_interact_request();
   }
   message_type_.interact_request_ = value;
+}
+
+// optional int32 ready_request = 7;
+inline bool ClientMessage::has_ready_request() const {
+  return message_type_case() == kReadyRequest;
+}
+inline void ClientMessage::set_has_ready_request() {
+  _oneof_case_[0] = kReadyRequest;
+}
+inline void ClientMessage::clear_ready_request() {
+  if (has_ready_request()) {
+    message_type_.ready_request_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::google::protobuf::int32 ClientMessage::ready_request() const {
+  if (has_ready_request()) {
+    return message_type_.ready_request_;
+  }
+  return 0;
+}
+inline void ClientMessage::set_ready_request(::google::protobuf::int32 value) {
+  if (!has_ready_request()) {
+    clear_message_type();
+    set_has_ready_request();
+  }
+  message_type_.ready_request_ = value;
 }
 
 inline bool ClientMessage::has_message_type() {

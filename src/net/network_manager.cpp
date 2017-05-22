@@ -130,6 +130,10 @@ void ServerNetworkManager::update() {
                 player->interact();
                 break;
             }
+            case proto::ClientMessage::MessageTypeCase::kReadyRequest: {
+                events::build::player_ready_event(msg.ready_request());
+                break;
+            }
             default:
                 break;
             }
@@ -146,6 +150,11 @@ void ClientNetworkManager::connect() {
 }
 
 void ClientNetworkManager::register_listeners() {
+    // Generic message to server.
+    events::client::send.connect([&](proto::ClientMessage &message) {
+        client.send(message);
+    });
+
     // Debug.
     events::debug::client_set_phase_event.connect([&](Phase* phase) {
         proto::ClientMessage msg;
