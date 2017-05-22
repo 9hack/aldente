@@ -31,10 +31,7 @@ void Chest::s_interact_trigger(GameObject *other) {
 
 // Activated when a player presses A on it, graphical
 void Chest::c_interact_trigger(GameObject *other) {
-    if (anim_player.check_paused()) {
-        anim_player.set_anim("open");
-        anim_player.play();
-    }
+    anim_player.play_if_paused("open");
 }
 
 void Chest::setup_model() {
@@ -62,20 +59,19 @@ Spikes::Spikes(int x, int z, int id) : Construct(x, z, id) {
 void Spikes::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player) {
-        events::dungeon::network_collision_event(other->get_id(), id);
         if (player->s_take_damage()) {
             // Send signal to client that this player was hit
-            events::dungeon::network_collision_event(id, other->get_id());
+            events::dungeon::network_collision_event(other->get_id(), id);
         }
     }
 }
 
 void Spikes::c_on_collision(GameObject *other) {
-    if (anim_player.check_paused()) {
-        anim_player.set_anim("trigger");
-        anim_player.set_speed(1.0f);
-        anim_player.play();
-    }
+    anim_player.play_if_paused("trigger");
+
+    Player* player = dynamic_cast<Player*>(other);
+    assert(player);
+    player->c_take_damage();
 }
 
 void Spikes::setup_model() {

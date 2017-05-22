@@ -130,8 +130,6 @@ void Player::s_on_collision(GameObject *other) {
 
 // Graphical collision
 void Player::c_on_collision(GameObject *other) {
-    if (dynamic_cast<Spikes*>(other))
-        c_take_damage();
 }
 
 void Player::set_start_position(glm::vec3 pos) {
@@ -213,7 +211,6 @@ void Player::c_take_damage() {
     // End
     Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
         [&]() {
-        disable_filter();
         end_flicker = true;
         cancel_flicker();
     });
