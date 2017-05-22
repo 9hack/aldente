@@ -39,6 +39,9 @@ void Chest::s_interact_trigger(GameObject *other) {
         contents = std::make_unique<collectibles::Nothing>();
     }
 
+    // Chest will fade away, no longer needs rigid body
+    events::disable_rigidbody_event(this);
+
     // Send signal to client to tell that this chest is opened
     events::dungeon::network_interact_event(other->get_id(), id);
 }
@@ -46,11 +49,36 @@ void Chest::s_interact_trigger(GameObject *other) {
 // Activated when a player presses A on it, graphical
 void Chest::c_interact_trigger(GameObject *other) {
     anim_player.play_if_paused("open");
+
+    Timer::get()->do_after(std::chrono::seconds(1),
+        [&]() {
+        disappear();
+    });
 }
 
 void Chest::setup_model() {
     attach_model(AssetLoader::get_model("chest_good"));
     transform.set_scale({ 0.006f, 0.006f, 0.006f });
+}
+
+// Causes chest to slowly fade away, Client
+void Chest::disappear() {
+    set_alpha(0.0f);
+    int count = 0;
+    cancel_fade = Timer::get()->do_every(
+        std::chrono::milliseconds(100),
+        [&, count]() mutable {
+        const int num_steps = 20;
+        if (count < num_steps) {
+            //set_filter_alpha(0.1f);
+            std::cerr << "Test" << count << std::endl;
+        }
+        else {
+            cancel_fade();
+            disable();
+        }
+        count++;
+    });
 }
 
 /************SPIKES***************/
