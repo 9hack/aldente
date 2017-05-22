@@ -2,7 +2,7 @@
 
 #include "game_object.h"
 
-#define DEFAULT_VALUE 10
+#define DEFAULT_ESSENSE_VAL 10
 
 /*
     Dropped objects that players can pick up for currency
