@@ -305,35 +305,21 @@ void protobuf_AddDesc_net_2eproto() {
     "t\022\014\n\004type\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n"
     "\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010\"O\n\014JoinRespons"
     "e\022\016\n\006status\030\001 \001(\010\022\023\n\013num_players\030\002 \001(\005\022\n"
-<<<<<<< HEAD
-    "\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\"V\n\tGameState\022"
-    "\"\n\007objects\030\001 \003(\0132\021.proto.GameObject\022\022\n\nc"
-    "ollisions\030\002 \003(\005\022\021\n\tinteracts\030\003 \003(\005\"\304\001\n\nG"
-    "ameObject\022\n\n\002id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.pr"
-    "oto.GameObject.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001("
-    "\002\022\n\n\002wx\030\005 \001(\002\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007"
-    " \001(\005\022\017\n\007enabled\030\010 \001(\010\"2\n\004Type\022\n\n\006PLAYER\020"
-    "\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\"~\n\tSti"
-=======
     "\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\"h\n\tGameState\022"
     "\"\n\007objects\030\001 \003(\0132\021.proto.GameObject\022$\n\nc"
     "ollisions\030\002 \003(\0132\020.proto.Collision\022\021\n\tint"
-    "eracts\030\003 \003(\005\"\263\001\n\nGameObject\022\n\n\002id\030\001 \001(\005\022"
+    "eracts\030\003 \003(\005\"\304\001\n\nGameObject\022\n\n\002id\030\001 \001(\005\022"
     "$\n\004type\030\002 \001(\0162\026.proto.GameObject.Type\022\t\n"
     "\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002\022\n\n\002wz\030\006 "
-    "\001(\002\022\021\n\tclient_id\030\007 \001(\005\"2\n\004Type\022\n\n\006PLAYER"
-    "\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\"%\n\tCo"
-    "llision\022\n\n\002id\030\001 \001(\005\022\014\n\004type\030\002 \001(\005\"~\n\tSti"
->>>>>>> 89571ad... Collisions represented by game obj id and numeric type
-    "ckData\022%\n\005input\030\001 \001(\0162\026.proto.StickData."
-    "Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\""
-    "(\n\005Stick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020"
-    "\001*A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020"
-<<<<<<< HEAD
-    "\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1108);
-=======
-    "\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1148);
->>>>>>> 89571ad... Collisions represented by game obj id and numeric type
+    "\001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n\007enabled\030\010 \001(\010\""
+    "2\n\004Type\022\n\n\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002"
+    "\022\t\n\005SPIKE\020\003\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022\014\n\004"
+    "type\030\002 \001(\005\"~\n\tStickData\022%\n\005input\030\001 \001(\0162\026"
+    ".proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003"
+    " \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT\020"
+    "\000\022\017\n\013STICK_RIGHT\020\001*A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n"
+    "\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIG"
+    "AME\020\003", 1165);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
