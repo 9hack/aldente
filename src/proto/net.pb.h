@@ -140,6 +140,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kPhaseUpdate = 5,
     kPlayerFinished = 6,
     kPlayerStatsUpdate = 7,
+    kTimeUpdate = 8,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -235,6 +236,13 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::proto::PlayerStats* release_player_stats_update();
   inline void set_allocated_player_stats_update(::proto::PlayerStats* player_stats_update);
 
+  // optional int32 time_update = 8;
+  inline bool has_time_update() const;
+  inline void clear_time_update();
+  static const int kTimeUpdateFieldNumber = 8;
+  inline ::google::protobuf::int32 time_update() const;
+  inline void set_time_update(::google::protobuf::int32 value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
@@ -245,6 +253,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_phase_update();
   inline void set_has_player_finished();
   inline void set_has_player_stats_update();
+  inline void set_has_time_update();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -262,6 +271,7 @@ class ServerMessage : public ::google::protobuf::Message {
     int phase_update_;
     ::google::protobuf::int32 player_finished_;
     ::proto::PlayerStats* player_stats_update_;
+    ::google::protobuf::int32 time_update_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1641,6 +1651,33 @@ inline void ServerMessage::set_allocated_player_stats_update(::proto::PlayerStat
     set_has_player_stats_update();
     message_type_.player_stats_update_ = player_stats_update;
   }
+}
+
+// optional int32 time_update = 8;
+inline bool ServerMessage::has_time_update() const {
+  return message_type_case() == kTimeUpdate;
+}
+inline void ServerMessage::set_has_time_update() {
+  _oneof_case_[0] = kTimeUpdate;
+}
+inline void ServerMessage::clear_time_update() {
+  if (has_time_update()) {
+    message_type_.time_update_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::google::protobuf::int32 ServerMessage::time_update() const {
+  if (has_time_update()) {
+    return message_type_.time_update_;
+  }
+  return 0;
+}
+inline void ServerMessage::set_time_update(::google::protobuf::int32 value) {
+  if (!has_time_update()) {
+    clear_message_type();
+    set_has_time_update();
+  }
+  message_type_.time_update_ = value;
 }
 
 inline bool ServerMessage::has_message_type() {

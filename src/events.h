@@ -144,6 +144,11 @@ namespace events {
         extern signal<void(int)> spawn_existing_player_event;
     }
 
+    namespace ui {
+        // Update the UI timer.
+        extern signal<void(int)> update_time;
+    }
+
     namespace build {
         // Move the selection in the 2D selection grid.
         extern signal<void(Direction)> select_grid_move_event;

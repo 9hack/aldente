@@ -11,6 +11,7 @@ message ServerMessage {
     Phase phase_update = 5;
     int32 player_finished = 6;
     PlayerStats player_stats_update = 7;
+    int32 time_update = 8; // in seconds
   }
 }
 
