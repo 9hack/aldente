@@ -26,7 +26,7 @@ Essence::Essence(int id) : GameObject(id){
         // Lock y-axis
         rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
 
-        //random_push();
+        random_push();
     }
     else {
         // Make the essence change colors continuously
@@ -53,6 +53,15 @@ Essence::Essence(int id) : GameObject(id){
             count = (count < num_steps * 2) ? count + 1 : 0;
         });
     }
+}
+
+void Essence::s_update_this() {
+
+    // Get the transform from Bullet and update
+    btTransform t;
+    rigidbody->getMotionState()->getWorldTransform(t);
+    btVector3 to_set = t.getOrigin();
+    transform.set_position(util_bt::convert_vec3(to_set));
 }
 
 void Essence::s_on_collision(GameObject *other) {
@@ -103,8 +112,11 @@ void Essence::disappear() {
 void Essence::random_push() {
     // Setup Initial Push in Random direction
     glm::vec2 vel = glm::vec2(Util::random(-1.f, 1.f), Util::random(-1.f, 1.f));
-    vel = vel * Util::random(1.f, 3.f); // Random Force
+    vel = vel * 25.f; // Impulse Force
 
     rigidbody->setActivationState(true);
-    rigidbody->setLinearVelocity(btVector3(vel.x, 0, vel.y));
+    rigidbody->applyCentralImpulse(btVector3(vel.x, 0, vel.y));
+    rigidbody->setDamping(0.995, 0);
+
+    //rigidbody->setLinearVelocity(btVector3(vel.x, 0, vel.y));
 }

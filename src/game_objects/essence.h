@@ -14,6 +14,8 @@ public:
 
     void set_value(int val) { value = val; };
 
+    void s_update_this() override;
+
     void s_on_collision(GameObject *other) override;
     void c_on_collision(int type) override;
 
