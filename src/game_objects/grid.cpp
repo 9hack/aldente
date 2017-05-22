@@ -1,4 +1,5 @@
 #include "grid.h"
+#include "audio/audio_manager.h"
 #include "events.h"
 #include "game/phase/phase.h"
 #include "util/color.h"
@@ -87,6 +88,9 @@ void Grid::setup_listeners() {
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
         build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
+
+        events::AudioData d = { AudioManager::BUILD_CONFIRM_SOUND, 80 };
+        events::sound_effects_event(d);
     });
 
     events::dungeon::s_prepare_dungeon_event.connect([&]() {
