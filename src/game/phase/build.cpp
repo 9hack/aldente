@@ -128,7 +128,7 @@ proto::Phase BuildPhase::s_update() {
     if (all_ready)
         return proto::Phase::DUNGEON;
     else
-        return proto::Phase::NOOP;
+        return next;
 }
 
 void BuildPhase::s_teardown() {
