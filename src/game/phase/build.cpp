@@ -10,6 +10,23 @@ void BuildPhase::s_setup() {
         context.ready_flags[player_id] = true;
     });
 
+    s_check_funds_conn = events::build::check_funds_event.connect([&](proto::Construct& c) {
+        Player* player = GameState::players[c.player_id()];
+        assert(player);
+        auto& construct = Constructs::CONSTRUCTS.at(static_cast<ConstructType>(c.type()));
+
+        if (player->can_afford(construct.cost)) {
+            events::build::try_build_event(c, [player, construct] {
+                player->s_modify_stats([player, construct](PlayerStats& stats) {
+                    stats.add_coins(-construct.cost);
+                });
+            });
+        }
+        else {
+            // TODO?
+        }
+    });
+
     for (int id : context.player_ids) {
         context.ready_flags[id] = false;
     }
@@ -111,12 +128,12 @@ void BuildPhase::c_setup() {
         }
     });
 
-    events::build::construct_selected_event.connect([&](ConstructType type) {
+    c_check_funds_conn = events::build::construct_selected_event.connect([&](ConstructType type) {
         Player* player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
         assert(player);
         int cost = Constructs::CONSTRUCTS.at(type).cost;
         std::cerr << "cost of construct: " << cost << "\n";
-        bool afford = player->c_can_afford(cost);
+        bool afford = player->can_afford(cost);
         std::cerr << (afford ? "can afford\n" : "cannot afford\n");
 
         events::build::construct_preview_event(type, afford);
@@ -144,11 +161,14 @@ proto::Phase BuildPhase::s_update() {
 
 void BuildPhase::s_teardown() {
     cancel_clock_every();
+    ready_conn.disconnect();
+    s_check_funds_conn.disconnect();
 }
 
 void BuildPhase::c_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
+    c_check_funds_conn.disconnect();
 
     events::build::end_build_event();
 }

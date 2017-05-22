@@ -82,5 +82,5 @@ public:
     void c_update_stats(const proto::PlayerStats &update);
 
     // Purchasing constructs
-    bool c_can_afford(int cost);
+    bool can_afford(int cost);
 };

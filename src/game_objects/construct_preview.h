@@ -12,7 +12,7 @@ public:
     Construct *curr_preview;
 private:
     template <typename T>
-    T* make_preview(bool valid);
+    T* make_preview();
 
     // make the previews lazily and fu<k;ng cache them
     std::map<ConstructType, Construct *> cached_previews;

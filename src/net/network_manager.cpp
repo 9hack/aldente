@@ -103,7 +103,7 @@ void ServerNetworkManager::update() {
             switch (msg.message_type_case()) {
             case proto::ClientMessage::MessageTypeCase::kBuildRequest: {
                 proto::Construct construct = msg.build_request();
-                events::build::try_build_event(construct);
+                events::build::check_funds_event(construct);
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kMoveRequest: {
@@ -176,6 +176,7 @@ void ClientNetworkManager::register_listeners() {
     // Build phase.
     events::build::request_build_event.connect([&](proto::Construct& c) {
         proto::ClientMessage msg;
+        c.set_player_id(client_id);
         msg.set_allocated_build_request(new proto::Construct(c));
         client.send(msg);
     });

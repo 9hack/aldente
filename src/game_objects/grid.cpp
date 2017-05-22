@@ -69,7 +69,7 @@ void Grid::setup_listeners() {
         remove_child(&preview);
     });
 
-    events::build::try_build_event.connect([&](proto::Construct& c) {
+    events::build::try_build_event.connect([&](proto::Construct& c, std::function<void()> success) {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
         // Build the construct locally on the server, without graphics.
@@ -79,6 +79,7 @@ void Grid::setup_listeners() {
             if (built) {
                 c.set_id(built->get_id());
             }
+            success();
         }
 
         events::build::respond_build_event(c);

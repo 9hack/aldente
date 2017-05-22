@@ -9,27 +9,27 @@ void ConstructPreview::set_construct_type(ConstructType type, bool valid) {
     if (cached_previews.find(type) == cached_previews.end()) {
         switch (type) {
             case CHEST:
-                cached_previews[type] = make_preview<Chest>(valid);
+                cached_previews[type] = make_preview<Chest>();
                 break;
             case SPIKES:
-                cached_previews[type] = make_preview<Spikes>(valid);
+                cached_previews[type] = make_preview<Spikes>();
                 break;
             default:
-                cached_previews[type] = make_preview<Chest>(valid);
+                cached_previews[type] = make_preview<Chest>();
                 break;
         }
     }
 
     // Set curr preview to be visibile
     curr_preview = cached_previews[type];
+    curr_preview->set_filter_color(valid ? Color::GREEN : Color::RED);
     add_child(curr_preview);
 }
 
 template <typename T>
-T* ConstructPreview::make_preview(bool valid) {
+T* ConstructPreview::make_preview() {
     T *construct_preview = new T(0, 0, CLIENT_ONLY_ID);
     construct_preview->setup_model();
-    construct_preview->set_filter_color(valid ? Color::GREEN : Color::RED);
     construct_preview->set_filter_alpha(0.5f);
     return construct_preview;
 }
