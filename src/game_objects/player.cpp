@@ -130,8 +130,8 @@ void Player::s_on_collision(GameObject *other) {
 
 // Graphical collision
 void Player::c_on_collision(GameObject *other) {
-    // TODO: only take damage if other is a Spike
-    c_take_damage();
+    if (dynamic_cast<Spikes*>(other))
+        c_take_damage();
 }
 
 void Player::set_start_position(glm::vec3 pos) {
@@ -161,9 +161,9 @@ void Player::setup_player_model(std::string &model_name) {
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
 }
 
-void Player::s_take_damage() {
+bool Player::s_take_damage() {
     if (invulnerable)
-        return;
+        return false;
 
     // Period of invulerability
     invulnerable = true;
@@ -187,8 +187,7 @@ void Player::s_take_damage() {
         invulnerable = false;
     });
 
-    // Send signal to client that this player was hit
-    events::dungeon::network_collision_event(id, ReactionType::DAMAGE);
+    return true;
 }
 
 void Player::c_take_damage() {

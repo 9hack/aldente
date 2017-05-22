@@ -58,7 +58,7 @@ public:
     void reset_position();
 
     // Damage functions
-    void s_take_damage(); // Set period of invulnerability, drops coins, loses gold. 
+    bool s_take_damage(); // Set invulnerability, drop coins, lose gold (true if took damage)
     void c_take_damage(); // Graphical : Flickers player to show they've been hit
 
     PlayerStats stats;

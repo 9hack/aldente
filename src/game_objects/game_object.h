@@ -27,15 +27,6 @@ private:
 
     void connect_model_filter();
 protected:
-
-    // The type of graphical reaction for the game object to perform on the client,
-    // directed by the server to the client. Currently, this isn't actually being used
-    // for any real reason, but it should be helpful in the future when we have more types
-    // of interactions.
-    enum ReactionType {
-        NONE, DAMAGE,
-    };
-
     Model *model;
     ModelFilter model_filter; // For passing parameters from game object down to mesh level
     AnimationPlayer anim_player;

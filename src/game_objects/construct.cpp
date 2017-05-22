@@ -63,8 +63,10 @@ void Spikes::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player) {
         events::dungeon::network_collision_event(other->get_id(), id);
-        events::dungeon::network_collision_event(id, other->get_id());
-        player->s_take_damage();
+        if (player->s_take_damage()) {
+            // Send signal to client that this player was hit
+            events::dungeon::network_collision_event(id, other->get_id());
+        }
     }
 }
 
