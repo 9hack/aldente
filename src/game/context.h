@@ -13,4 +13,5 @@ public:
 
     // Client
     int player_id;
+    bool player_finished;
 };

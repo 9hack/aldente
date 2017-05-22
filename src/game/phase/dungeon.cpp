@@ -19,6 +19,10 @@ void DungeonPhase::s_setup() {
     flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
         goal_reached_flags[player_id] = true;
         GameObject::game_objects[player_id]->disable();
+
+        proto::ServerMessage msg;
+        msg.set_player_finished(player_id);
+        events::server::announce(msg);
     });
 
     for (int id : context.player_ids) {
@@ -31,6 +35,7 @@ void DungeonPhase::s_setup() {
 }
 
 void DungeonPhase::c_setup() {
+    context.player_finished = false;
     joystick_conn = events::stick_event.connect([&](events::StickData d) {
         // Left stick
         if (d.input == events::STICK_LEFT) {
@@ -42,6 +47,15 @@ void DungeonPhase::c_setup() {
         // A button pressed.
         if (d.input == events::BTN_A && d.state == 1) {
             events::dungeon::player_interact_event();
+        }
+    });
+
+    player_finish_conn = events::player_finished_event.connect([&](int player_id) {
+        if (player_id == context.player_id) {
+            context.player_finished = true;
+            events::dungeon::post_dungeon_camera_event();
+        } else {
+            // TODO: can do client-side notification here, e.g. "Player X has reached the goal!"
         }
     });
 
@@ -78,7 +92,10 @@ proto::Phase DungeonPhase::s_update() {
 
 void DungeonPhase::c_update() {
     GameObject* player_obj = GameObject::game_objects[context.player_id];
-    events::dungeon::player_position_updated_event(player_obj->transform.get_position());
+    
+    // Only apply camera update if player is still exploring
+    if (!context.player_finished)
+        events::dungeon::player_position_updated_event(player_obj->transform.get_position());
 }
 
 void DungeonPhase::s_teardown() {

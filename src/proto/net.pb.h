@@ -135,6 +135,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kJoinResponse = 3,
     kStateUpdate = 4,
     kPhaseUpdate = 5,
+    kPlayerFinished = 6,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -214,6 +215,13 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::proto::Phase phase_update() const;
   inline void set_phase_update(::proto::Phase value);
 
+  // optional int32 player_finished = 6;
+  inline bool has_player_finished() const;
+  inline void clear_player_finished();
+  static const int kPlayerFinishedFieldNumber = 6;
+  inline ::google::protobuf::int32 player_finished() const;
+  inline void set_player_finished(::google::protobuf::int32 value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
@@ -222,6 +230,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_join_response();
   inline void set_has_state_update();
   inline void set_has_phase_update();
+  inline void set_has_player_finished();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -237,6 +246,7 @@ class ServerMessage : public ::google::protobuf::Message {
     ::proto::JoinResponse* join_response_;
     ::proto::GameState* state_update_;
     int phase_update_;
+    ::google::protobuf::int32 player_finished_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1279,6 +1289,33 @@ inline void ServerMessage::set_phase_update(::proto::Phase value) {
     set_has_phase_update();
   }
   message_type_.phase_update_ = value;
+}
+
+// optional int32 player_finished = 6;
+inline bool ServerMessage::has_player_finished() const {
+  return message_type_case() == kPlayerFinished;
+}
+inline void ServerMessage::set_has_player_finished() {
+  _oneof_case_[0] = kPlayerFinished;
+}
+inline void ServerMessage::clear_player_finished() {
+  if (has_player_finished()) {
+    message_type_.player_finished_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::google::protobuf::int32 ServerMessage::player_finished() const {
+  if (has_player_finished()) {
+    return message_type_.player_finished_;
+  }
+  return 0;
+}
+inline void ServerMessage::set_player_finished(::google::protobuf::int32 value) {
+  if (!has_player_finished()) {
+    clear_message_type();
+    set_has_player_finished();
+  }
+  message_type_.player_finished_ = value;
 }
 
 inline bool ServerMessage::has_message_type() {
