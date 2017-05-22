@@ -17,7 +17,7 @@ void DungeonPhase::s_setup() {
 
     events::dungeon::s_prepare_dungeon_event();
 
-    essence_conn = events::dungeon::s_spawn_essence_event.connect([&](int x, int z) {
+    essence_conn = events::dungeon::s_spawn_essence_event.connect([&](float x, float z) {
         Essence *ess = new Essence();
         ess->set_position({ x, 0, z });
         GameState::scene_manager.get_current_scene()->objs.push_back(ess);
@@ -70,8 +70,10 @@ void DungeonPhase::c_setup() {
         }
     });
 
-    essence_conn = events::dungeon::c_spawn_essence_event.connect([&](int id) {
+    essence_conn = events::dungeon::c_spawn_essence_event.connect([&](float x, float z, int id) {
         Essence *ess = new Essence(id);
+        ess->set_position({ x, 0, z });
+        ess->setup_model();
         GameState::scene_manager.get_current_scene()->objs.push_back(ess);
     });
 

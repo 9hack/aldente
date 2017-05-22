@@ -19,13 +19,14 @@ Essence::Essence(int id) : GameObject(id){
         events::RigidBodyData rigid;
         rigid.object = this;
         rigid.shape = hit_sphere;
+        rigid.mass = 1;
         events::add_rigidbody_event(rigid);
         notify_on_collision = true;
 
         // Lock y-axis
         rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
 
-        random_push();
+        //random_push();
     }
     else {
         // Make the essence change colors continuously
@@ -57,7 +58,7 @@ Essence::Essence(int id) : GameObject(id){
 void Essence::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player) {
-        std::cerr << "Player picked up a coin" << std::endl;
+        return;
         events::dungeon::network_collision_event(id, 0);
         player->currency.add_gold(value);
         // TODO : Call disable() once client side animation ends

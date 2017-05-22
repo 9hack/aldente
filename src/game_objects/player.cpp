@@ -35,12 +35,6 @@ Player::Player(int id) : GameObject(id) {
 
         // Set inital currency
         currency.set_gold(1000);
-
-        Timer::get()->do_every(
-            std::chrono::milliseconds(2000),
-            [&]() mutable {
-            std::cerr << currency.get_gold() << std::endl;
-        });
     }
 }
 

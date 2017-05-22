@@ -237,8 +237,8 @@ namespace events {
         // Sets camera to post-dungeon camera
         extern signal<void()> post_dungeon_camera_event;
         
-	// Spawns a Dream Essence object
-        extern signal<void(int, int)> s_spawn_essence_event; // Server
-        extern signal<void(int)> c_spawn_essence_event; // Client
+        // Spawns a Dream Essence object
+        extern signal<void(float, float)> s_spawn_essence_event; // Server
+        extern signal<void(float, float, int)> c_spawn_essence_event; // Client
     }
 }
