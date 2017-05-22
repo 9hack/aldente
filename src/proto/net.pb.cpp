@@ -40,6 +40,7 @@ struct ClientMessageOneofInstance {
   const ::proto::StickData* move_request_;
   int phase_request_;
   ::google::protobuf::int32 interact_request_;
+  ::google::protobuf::int32 ready_request_;
 }* ClientMessage_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* Construct_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -92,13 +93,14 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ServerMessage));
   ClientMessage_descriptor_ = file->message_type(1);
-  static const int ClientMessage_offsets_[7] = {
+  static const int ClientMessage_offsets_[8] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, message_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, build_request_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, join_request_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, move_request_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, phase_request_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, interact_request_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, ready_request_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientMessage, message_type_),
   };
   ClientMessage_reflection_ =
@@ -272,28 +274,28 @@ void protobuf_AddDesc_net_2eproto() {
     "2\023.proto.JoinResponseH\000\022(\n\014state_update\030"
     "\004 \001(\0132\020.proto.GameStateH\000\022$\n\014phase_updat"
     "e\030\005 \001(\0162\014.proto.PhaseH\000B\016\n\014message_type\""
-    "\342\001\n\rClientMessage\022\021\n\007message\030\001 \001(\tH\000\022)\n\r"
+    "\373\001\n\rClientMessage\022\021\n\007message\030\001 \001(\tH\000\022)\n\r"
     "build_request\030\002 \001(\0132\020.proto.ConstructH\000\022"
     "\026\n\014join_request\030\003 \001(\tH\000\022(\n\014move_request\030"
     "\004 \001(\0132\020.proto.StickDataH\000\022%\n\rphase_reque"
     "st\030\005 \001(\0162\014.proto.PhaseH\000\022\032\n\020interact_req"
-    "uest\030\006 \001(\005H\000B\016\n\014message_type\"K\n\tConstruc"
-    "t\022\014\n\004type\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n"
-    "\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010\"O\n\014JoinRespons"
-    "e\022\016\n\006status\030\001 \001(\010\022\023\n\013num_players\030\002 \001(\005\022\n"
-    "\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\"V\n\tGameState\022"
-    "\"\n\007objects\030\001 \003(\0132\021.proto.GameObject\022\022\n\nc"
-    "ollisions\030\002 \003(\005\022\021\n\tinteracts\030\003 \003(\005\"\263\001\n\nG"
-    "ameObject\022\n\n\002id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.pr"
-    "oto.GameObject.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001("
-    "\002\022\n\n\002wx\030\005 \001(\002\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007"
-    " \001(\005\"2\n\004Type\022\n\n\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CH"
-    "EST\020\002\022\t\n\005SPIKE\020\003\"~\n\tStickData\022%\n\005input\030\001"
-    " \001(\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022"
-    "\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK"
-    "_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001*A\n\005Phase\022\010\n\004NOO"
-    "P\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n"
-    "\010MINIGAME\020\003", 1091);
+    "uest\030\006 \001(\005H\000\022\027\n\rready_request\030\007 \001(\005H\000B\016\n"
+    "\014message_type\"K\n\tConstruct\022\014\n\004type\030\001 \001(\005"
+    "\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\022\016\n\006st"
+    "atus\030\005 \001(\010\"O\n\014JoinResponse\022\016\n\006status\030\001 \001"
+    "(\010\022\023\n\013num_players\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006o"
+    "bj_id\030\004 \001(\005\"V\n\tGameState\022\"\n\007objects\030\001 \003("
+    "\0132\021.proto.GameObject\022\022\n\ncollisions\030\002 \003(\005"
+    "\022\021\n\tinteracts\030\003 \003(\005\"\263\001\n\nGameObject\022\n\n\002id"
+    "\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.GameObject."
+    "Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002\022\n"
+    "\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\"2\n\004Type\022\n\n"
+    "\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020"
+    "\003\"~\n\tStickData\022%\n\005input\030\001 \001(\0162\026.proto.St"
+    "ickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002i"
+    "d\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STIC"
+    "K_RIGHT\020\001*A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t"
+    "\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1116);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -787,6 +789,7 @@ const int ClientMessage::kJoinRequestFieldNumber;
 const int ClientMessage::kMoveRequestFieldNumber;
 const int ClientMessage::kPhaseRequestFieldNumber;
 const int ClientMessage::kInteractRequestFieldNumber;
+const int ClientMessage::kReadyRequestFieldNumber;
 #endif  // !_MSC_VER
 
 ClientMessage::ClientMessage()
@@ -802,6 +805,7 @@ void ClientMessage::InitAsDefaultInstance() {
   ClientMessage_default_oneof_instance_->move_request_ = const_cast< ::proto::StickData*>(&::proto::StickData::default_instance());
   ClientMessage_default_oneof_instance_->phase_request_ = 4;
   ClientMessage_default_oneof_instance_->interact_request_ = 0;
+  ClientMessage_default_oneof_instance_->ready_request_ = 0;
 }
 
 ClientMessage::ClientMessage(const ClientMessage& from)
@@ -875,6 +879,10 @@ void ClientMessage::clear_message_type() {
       break;
     }
     case kInteractRequest: {
+      // No need to clear
+      break;
+    }
+    case kReadyRequest: {
       // No need to clear
       break;
     }
@@ -993,6 +1001,22 @@ bool ClientMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(56)) goto parse_ready_request;
+        break;
+      }
+
+      // optional int32 ready_request = 7;
+      case 7: {
+        if (tag == 56) {
+         parse_ready_request:
+          clear_message_type();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &message_type_.ready_request_)));
+          set_has_ready_request();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1065,6 +1089,11 @@ void ClientMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->interact_request(), output);
   }
 
+  // optional int32 ready_request = 7;
+  if (has_ready_request()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->ready_request(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1122,6 +1151,11 @@ void ClientMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->interact_request(), target);
   }
 
+  // optional int32 ready_request = 7;
+  if (has_ready_request()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->ready_request(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1173,6 +1207,13 @@ int ClientMessage::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->interact_request());
+      break;
+    }
+    // optional int32 ready_request = 7;
+    case kReadyRequest: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->ready_request());
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {
@@ -1227,6 +1268,10 @@ void ClientMessage::MergeFrom(const ClientMessage& from) {
     }
     case kInteractRequest: {
       set_interact_request(from.interact_request());
+      break;
+    }
+    case kReadyRequest: {
+      set_ready_request(from.ready_request());
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {

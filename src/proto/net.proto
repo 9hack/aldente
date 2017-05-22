@@ -20,6 +20,7 @@ message ClientMessage {
     StickData move_request = 4;
     Phase phase_request = 5;
     int32 interact_request = 6;
+    int32 ready_request = 7;
   }
 }
 

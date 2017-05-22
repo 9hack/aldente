@@ -31,6 +31,10 @@ namespace events {
         signal<void(proto::ServerMessage &)> announce;
     }
 
+    namespace client {
+        signal<void(proto::ClientMessage &)> send;
+    }
+
     namespace menu {
         signal<void(int)> request_join_event;
         signal<void(int, proto::JoinResponse &)> respond_join_event;
@@ -52,6 +56,7 @@ namespace events {
         signal<void(int,int)> hover_position_updated_event;
         signal<void()> start_build_event;
         signal<void()> end_build_event;
+        signal<void(int)> player_ready_event;
     }
 
     namespace dungeon {

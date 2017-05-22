@@ -15,4 +15,8 @@ private:
     static bool is_menu;
     boost::signals2::connection joystick_conn;
     boost::signals2::connection button_conn;
+    boost::signals2::connection ready_conn;
+
+    // <Player id, if ready>
+    std::unordered_map<int, bool> ready_flags;
 };

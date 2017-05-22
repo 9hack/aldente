@@ -119,6 +119,12 @@ void ServerNetworkManager::update() {
                 player->interact();
                 break;
             }
+            case proto::ClientMessage::MessageTypeCase::kReadyRequest: {
+                Player* player = dynamic_cast<Player*>(GameObject::game_objects[msg.ready_request()]);
+                assert(player);
+                // TODO
+                break;
+            }
             default:
                 break;
             }
@@ -135,6 +141,11 @@ void ClientNetworkManager::connect() {
 }
 
 void ClientNetworkManager::register_listeners() {
+    // Generic message to server.
+    events::client::send.connect([&](proto::ClientMessage &message) {
+        client.send(message);
+    });
+
     // Debug.
     events::debug::client_set_phase_event.connect([&](Phase* phase) {
         proto::ClientMessage msg;

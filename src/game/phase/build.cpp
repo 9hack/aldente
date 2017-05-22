@@ -6,6 +6,9 @@ bool BuildPhase::is_menu = true;
 
 void BuildPhase::setup() {
 //    transition_after(10, proto::Phase::DUNGEON);
+    ready_conn = events::build::player_ready_event.connect([&](int player_id) {
+        ready_flags[player_id] = true;
+    });
 }
 
 void BuildPhase::client_setup() {
@@ -58,6 +61,12 @@ void BuildPhase::client_setup() {
                 events::build::select_grid_return_event();
                 is_menu = true;
             }
+        }
+        // Start button pressed.
+        else if (d.input == events::BTN_START && d.state == 1) {
+            proto::ClientMessage msg;
+            msg.set_ready_request(context.player_id);
+            events::client::send(msg);
         }
     });
 

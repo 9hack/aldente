@@ -136,6 +136,10 @@ namespace events {
         extern signal<void(proto::ServerMessage &)> announce;
     }
 
+    namespace client {
+        extern signal<void(proto::ClientMessage &)> send;
+    }
+
     namespace menu {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
@@ -184,6 +188,9 @@ namespace events {
 
         // Signals that the build phase has ended
         extern signal<void()> end_build_event;
+
+        // Signals that we should toggle player's "ready" status.
+        extern signal<void(int)> player_ready_event;
     }
 
     namespace dungeon {
