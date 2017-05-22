@@ -6,6 +6,8 @@
 #include "timer.h"
 
 #define ANIMATE_DELTA 0.001f
+#define STUN_LENGTH 500 // milliseconds
+#define INVULNERABLE_LENGTH 3000 // ms
 
 Player::Player(int id) : GameObject(id) {
     tag = "PLAYER";
@@ -77,6 +79,12 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
 }
 
 void Player::do_movement() {
+
+    if (stunned) {
+        rigidbody->setActivationState(false);
+        return;
+    }
+
     // Should account for deltatime so movement is
     // framerate independent? Unsure how Bullet handles framerate.
     rigidbody->setActivationState(true);
@@ -90,18 +98,19 @@ void Player::do_movement() {
 void Player::interact() {
     // Asks physics for a raycast to check if the player
     // is facing a construct.
-    if (direction.x != 0 || direction.z != 0)
+    if (direction.x != 0 || direction.z != 0) {
         events::dungeon::player_request_raycast_event(
             transform.get_position(), direction,
             [&](GameObject *bt_hit) {
-                Construct *construct = dynamic_cast<Construct*>(bt_hit);
+            Construct *construct = dynamic_cast<Construct*>(bt_hit);
 
-                // Interacts with construct, construct itself will handle any client
-                // side effects needed.
-                if (construct) {
-                    construct->s_interact_trigger(this);
-                }
-            });
+            // Interacts with construct, construct itself will handle any client
+            // side effects needed.
+            if (construct) {
+                construct->s_interact_trigger(this);
+            }
+        });
+    }
 }
 
 void Player::stop_walk() {
@@ -117,15 +126,13 @@ void Player::start_walk() {
 
 // Server collision
 void Player::s_on_collision(GameObject *other) {
-    // TODO: actual game logic here...
-
-    // Then notify clients that this collision happened.
-    events::dungeon::network_collision_event(id, other->get_id());
+    // By default, does not need to notify the client of any collisions.
+    // If it triggers a trap, the trap will notify the client that the
+    // player is hit. 
 }
 
 // Graphical collision
 void Player::c_on_collision(GameObject *other) {
-    transform.rotate(0, 0.1f, 0);
 }
 
 void Player::set_start_position(glm::vec3 pos) {
@@ -179,4 +186,78 @@ void Player::c_begin_warp() {
         anim_player.set_loop(true);
         exiting = false;
     });
+}
+
+bool Player::s_take_damage() {
+    if (invulnerable)
+        return false;
+
+    // Period of invulerability
+    invulnerable = true;
+
+    // Period of stunned
+    stunned = true;
+
+    std::cerr << "Player is hit: " << id << std::endl;
+
+    // Player should drop gold and lose gold somewhere here
+
+    // End Stunned
+    Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
+        [&]() {
+        stunned = false;
+    });
+
+    // End Invulernability
+    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
+        [&]() {
+        invulnerable = false;
+    });
+
+    return true;
+}
+
+void Player::c_take_damage() {
+
+    int count = 0;
+    end_flicker = false;
+
+    // Flicker
+    cancel_flicker = Timer::get()->do_every(
+        std::chrono::milliseconds(100),
+        [&, count]() mutable {
+        if (count % 2)
+            set_filter_alpha(1.0f);
+        else
+            set_filter_alpha(0.2f);
+
+        if (end_flicker)
+            disable_filter();
+
+        count++;
+    });
+
+    // End
+    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
+        [&]() {
+        end_flicker = true;
+        cancel_flicker();
+    });
+}
+
+void Player::s_modify_stats(std::function<void(PlayerStats &)> modifier) {
+    modifier(stats);
+
+    // Dispatch an update to the clients
+    proto::ServerMessage msg;
+    auto *psu = msg.mutable_player_stats_update();
+    psu->set_id(id);
+    psu->set_coins(stats.get_coins());
+    events::server::announce(msg);
+}
+
+void Player::c_update_stats(const proto::PlayerStats &update) {
+    stats.set_coins(update.coins());
+
+    std::cerr << "ID " << id << " COINS NOW @ " << stats.get_coins() << std::endl;
 }

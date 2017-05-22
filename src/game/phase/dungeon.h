@@ -13,7 +13,6 @@ public:
     void c_setup() override;
     void c_update() override;
     void c_teardown() override;
-    std::map<int, bool> get_flags() override { return goal_reached_flags; };
 
 private:
     boost::signals2::connection joystick_conn;

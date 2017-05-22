@@ -4,6 +4,12 @@
 #include "game_object.h"
 #include "btBulletDynamicsCommon.h"
 #include "events.h"
+#include "game/collectibles/collectible.h"
+
+// Forward declare Collectible
+namespace collectibles {
+class Collectible;
+}
 
 // Note: Opengl has the x and z axis as its ground plane
 
@@ -30,6 +36,7 @@ public:
 
 private:
     btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
+    std::unique_ptr<collectibles::Collectible> contents;
 };
 
 class Goal : public Construct {
@@ -54,5 +61,5 @@ public:
     void c_on_collision(GameObject *other) override;
 
 private:
-    btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
+    btBoxShape *hit_box = new btBoxShape(btVector3(0.25f, 0.25f, 0.25f));
 };

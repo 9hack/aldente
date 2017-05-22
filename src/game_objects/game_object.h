@@ -76,6 +76,7 @@ public:
     void attach_model(Model *m);
 
     // Changing game obejcts material
+    void disable_filter();  // Turns off any filter
     void set_filter_color(Color color); // Filter is to apply temporarily to entire object
     void set_filter_alpha(float alpha);
     void set_filter_shadows(bool enable);

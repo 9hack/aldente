@@ -16,6 +16,7 @@ public:
 
     void update(); // Updates bone matrices for model based on animation playing
     void play(); // Tells the animation player to start playing
+    void play_if_paused(std::string anim_name, float speed = 1.0f); // Play animation if currently paused
     void pause(); // Pauses the animation player without reseting animation loop
     void stop(); // Pauses the animation player and resets the animation loop
 
