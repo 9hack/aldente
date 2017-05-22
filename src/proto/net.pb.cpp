@@ -215,7 +215,23 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameObject));
   GameObject_Type_descriptor_ = GameObject_descriptor_->enum_type(0);
-  StickData_descriptor_ = file->message_type(7);
+  Collision_descriptor_ = file->message_type(7);
+  static const int Collision_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Collision, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Collision, type_),
+  };
+  Collision_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Collision_descriptor_,
+      Collision::default_instance_,
+      Collision_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Collision, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Collision, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Collision));
+  StickData_descriptor_ = file->message_type(8);
   static const int StickData_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StickData, input_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StickData, x_),
@@ -324,12 +340,13 @@ void protobuf_AddDesc_net_2eproto() {
     "\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002\022\n\n\002wz"
     "\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n\007enabled\030\010 \001"
     "(\010\"2\n\004Type\022\n\n\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHES"
-    "T\020\002\022\t\n\005SPIKE\020\003\"~\n\tStickData\022%\n\005input\030\001 \001"
-    "(\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n"
-    "\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_L"
-    "EFT\020\000\022\017\n\013STICK_RIGHT\020\001*A\n\005Phase\022\010\n\004NOOP\020"
-    "\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010M"
-    "INIGAME\020\003", 1209);
+    "T\020\002\022\t\n\005SPIKE\020\003\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022"
+    "\014\n\004type\030\002 \001(\005\"~\n\tStickData\022%\n\005input\030\001 \001("
+    "\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001"
+    "y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LE"
+    "FT\020\000\022\017\n\013STICK_RIGHT\020\001*A\n\005Phase\022\010\n\004NOOP\020\004"
+    "\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MI"
+    "NIGAME\020\003", 1248);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
