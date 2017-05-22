@@ -11,6 +11,9 @@ void ConstructPreview::set_construct_type(ConstructType type) {
             case CHEST:
                 cached_previews[type] = make_preview<Chest>();
                 break;
+            case SPIKES:
+                cached_previews[type] = make_preview<Spikes>();
+                break;
             default:
                 cached_previews[type] = make_preview<Chest>();
                 break;
@@ -24,7 +27,7 @@ void ConstructPreview::set_construct_type(ConstructType type) {
 
 template <typename T>
 T* ConstructPreview::make_preview() {
-    T *construct_preview = new T(0, 0, -1);
+    T *construct_preview = new T(0, 0, CLIENT_ONLY_ID);
     construct_preview->setup_model();
     construct_preview->set_filter_color(Color::GREEN);
     construct_preview->set_filter_alpha(0.5f);

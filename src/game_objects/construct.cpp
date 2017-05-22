@@ -1,73 +1,116 @@
 #include "construct.h"
 #include "asset_loader.h"
 #include "player.h"
-
-Construct::Construct(int x, int z) : GameObject() {
-    tag = "CONSTRUCT";
-    transform.set_position(x, 0.0f, z);
-}
+#include "game/collectibles/gold.h"
+#include "game/collectibles/nothing.h"
 
 Construct::Construct(int x, int z, int id) : GameObject(id) {
     tag = "CONSTRUCT";
-    transform.set_position(x, 0.0f, z);
+    set_position({ x, 0.0f, z });
 }
 
-Chest::Chest(int x, int z) : Construct(x, z) {
-    transform.set_scale(0.6f, 0.6f, 0.6f);
-    events::RigidBodyData rigid = {
-        glm::vec3(x,0.5f,z), //position
-        0, //mass
-        hit_box, //btshape
-        glm::vec3(0,0,0), //inertia
-        this, //the gameobject
-        false, // is a ghost object
-    };
-    events::add_rigidbody_event(rigid);
-}
+/************CHEST***************/
 
 Chest::Chest(int x, int z, int id) : Construct(x, z, id) {
-    transform.set_scale(0.6f, 0.6f, 0.6f);
+    tag = "CHEST";
+
+    // Chest should hold nothing until specified
+    // TODO(metakirby5): Swap with Nothing and add a set_contents method
+    contents = std::make_unique<collectibles::Gold>(10);
+
+    if (id == ON_SERVER) {
+        //Creates Rigid Body
+        events::RigidBodyData rigid;
+        rigid.object = this;
+        rigid.shape = hit_box;
+        rigid.position = { x, 0.0f, z };
+        events::add_rigidbody_event(rigid);
+    }
 }
 
-void Chest::update_this() {
-    anim_player.update();
+void Chest::s_interact_trigger(GameObject *other) {
+    // Check if other is a player, than grant some money
+    Player *player = dynamic_cast<Player*>(other);
+    if (player) {
+        contents->collected_by(player);
+
+        // Remove the item once collected
+        contents = std::make_unique<collectibles::Nothing>();
+    }
+
+    // Send signal to client to tell that this chest is opened
+    events::dungeon::network_interact_event(other->get_id(), id);
 }
 
-// Activated when a player presses A on it
-void Chest::interact_trigger() {
-    anim_player.set_anim("open");
-    anim_player.play();
+// Activated when a player presses A on it, graphical
+void Chest::c_interact_trigger(GameObject *other) {
+    anim_player.play_if_paused("open");
 }
 
 void Chest::setup_model() {
     attach_model(AssetLoader::get_model("chest_good"));
-    transform.set_scale({ 0.005f, 0.005f, 0.005f });
+    transform.set_scale({ 0.006f, 0.006f, 0.006f });
 }
 
-Goal::Goal(int x, int z) : Construct(x, z) {
-    transform.set_scale(0.006f, 0.006f, 0.006f);
-    tag = "GOAL";
+/************SPIKES***************/
 
-    events::RigidBodyData rigid = {
-        glm::vec3(x,0.5f,z), //position
-        0, //mass
-        goal_hit_box, //btshape
-        glm::vec3(0,0,0), //inertia
-        this, //the gameobject
-        true, // is a ghost object
-    };
-    events::add_rigidbody_event(rigid);
+Spikes::Spikes(int x, int z, int id) : Construct(x, z, id) {
+    tag = "SPIKES";
 
-    notify_on_collision = true;
+    if (id == ON_SERVER) {
+        //Creates Rigid Body
+        events::RigidBodyData rigid;
+        rigid.object = this;
+        rigid.shape = hit_box;
+        rigid.is_ghost = true;
+        rigid.position = { x, 0.0f, z };
+        events::add_rigidbody_event(rigid);
+        notify_on_collision = true;
+    }
 }
 
+void Spikes::s_on_collision(GameObject *other) {
+    Player *player = dynamic_cast<Player*>(other);
+    if (player) {
+        if (player->s_take_damage()) {
+            // Send signal to client that this player was hit
+            events::dungeon::network_collision_event(other->get_id(), id);
+        }
+    }
+}
+
+void Spikes::c_on_collision(GameObject *other) {
+    anim_player.play_if_paused("trigger");
+
+    Player* player = dynamic_cast<Player*>(other);
+    assert(player);
+    player->c_take_damage();
+}
+
+void Spikes::setup_model() {
+    attach_model(AssetLoader::get_model("spikes"));
+    transform.set_scale({ 0.4f, 0.4f, 0.4f });
+}
+
+/************GOAL***************/
 Goal::Goal(int x, int z, int id) : Construct(x, z, id) {
-    transform.set_scale(0.006f, 0.006f, 0.006f);
     tag = "GOAL";
+
+    if (id == ON_SERVER) {
+        events::RigidBodyData rigid;
+        rigid.object = this;
+        rigid.shape = goal_hit_box;
+        rigid.is_ghost = true;
+        rigid.position = { x, 0.5f, z };
+        events::add_rigidbody_event(rigid);
+
+        notify_on_collision = true;
+    }
 }
 
 void Goal::setup_model() {
     attach_model(AssetLoader::get_model("warp"));
+    transform.set_scale(0.006f, 0.006f, 0.006f);
     model->set_shader(&ShaderManager::anim_unlit);
     anim_player.set_speed(1.0f);
     anim_player.set_anim("spin");
@@ -75,17 +118,11 @@ void Goal::setup_model() {
     anim_player.play();
 }
 
-void Goal::on_collision(GameObject *other) {
+void Goal::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
-    if (player) {
-        events::dungeon::network_collision_event(id);
+
+    if (player && player->is_enabled()) {
+        events::dungeon::network_collision_event(other->get_id(), id);
         events::dungeon::player_finished_event(player->get_id());
     }
-}
-
-void Goal::on_collision_graphical() {
-}
-
-void Goal::update_this() {
-    anim_player.update();
 }

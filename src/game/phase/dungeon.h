@@ -7,13 +7,12 @@ const auto DUNGEON_TIME = std::chrono::seconds(10);
 class DungeonPhase : public TimedPhase {
 public:
     DungeonPhase(Context& context) : TimedPhase(context) {};
-    void setup();
-    proto::Phase update() override;
-    void teardown();
-    void client_setup();
-    void client_update();
-    void client_teardown();
-    std::map<int, bool> get_flags() override { return goal_reached_flags; };
+    void s_setup() override;
+    proto::Phase s_update() override;
+    void s_teardown() override;
+    void c_setup() override;
+    void c_update() override;
+    void c_teardown() override;
 
 private:
     boost::signals2::connection joystick_conn;
@@ -21,6 +20,7 @@ private:
     boost::signals2::connection collision_conn;
     boost::signals2::connection interact_conn;
     boost::signals2::connection flag_conn;
+    boost::signals2::connection player_finish_conn;
 
     // <Player id, if goal reached>
     std::map<int, bool> goal_reached_flags;

@@ -65,6 +65,7 @@ namespace events {
     };
     extern signal<void(AudioData &)> music_event;
     extern signal<void(AudioData &)> sound_effects_event;
+    extern signal<void()> toggle_mute_event;
 
     struct WindowSizeData {
         Window *window;
@@ -119,18 +120,19 @@ namespace events {
 
     // Struct for parameters for rigidbody initialization
     struct RigidBodyData {
-        glm::vec3 position;
-        float mass;
-        btCollisionShape *shape;
-        glm::vec3 inertia;
-
-        //Object that has the rigidBody
-        GameObject *object;
-        // whether this rigidbody is a ghost/trigger
-        bool is_ghost;
+        GameObject *object = nullptr; //Object that has the rigidBody
+        btCollisionShape *shape = nullptr; // Collider Shape
+        bool is_ghost = false; // whether this rigidbody is a ghost/trigger
+        float mass = 0.0f;
+        glm::vec3 inertia = glm::vec3(0.0f);
+        glm::vec3 position = glm::vec3(0.0f); // Initial position
     };
+
     extern signal<void(RigidBodyData d)> add_rigidbody_event;
     extern signal<void(GameObject *obj)> remove_rigidbody_event;
+    extern signal<void(GameObject *obj)> disable_rigidbody_event;
+    extern signal<void(GameObject *obj)> enable_rigidbody_event;
+    extern signal<void(int)> player_finished_event;
 
     namespace server {
         extern signal<void(proto::ServerMessage &)> announce;
@@ -144,6 +146,11 @@ namespace events {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
         extern signal<void(int)> spawn_existing_player_event;
+    }
+
+    namespace ui {
+        // Update the UI timer.
+        extern signal<void(int)> update_time;
     }
 
     namespace build {
@@ -209,19 +216,24 @@ namespace events {
         // Server sends context containing position, collisions, and interactions of game objects to all clients.
         extern signal<void(Context*)> update_state_event;
 
-        // Server notifying clients that a collision occurred with game object of given id.
-        extern signal<void(int)> network_collision_event;
+        // Server notifying clients that a collision occurred with game object of given ids.
+        // Convention for ID order is (dispatcher, other).
+        extern signal<void(int, int)> network_collision_event;
 
         // Player interact (e.g opening a chest)
         extern signal<void()> player_interact_event;
 
         // Send an interaction over the network.
-        extern signal<void(int)> network_interact_event;
+        // Convention for ID order is (dispatcher, other).
+        extern signal<void(int, int)> network_interact_event;
         
         // Spawn an existing goal object on the client, at the given position.
         extern signal<void(int, int, int)> spawn_existing_goal_event;
 
         // Player reached the goal
         extern signal<void(int)> player_finished_event;
+
+        // Sets camera to post-dungeon camera
+        extern signal<void()> post_dungeon_camera_event;
     }
 }

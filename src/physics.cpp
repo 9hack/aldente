@@ -37,6 +37,14 @@ Physics::Physics() {
 
         raycast_mouse(d.x_pos, d.y_pos, width, height);
     });
+
+    events::enable_rigidbody_event.connect([&](GameObject *obj) {
+        enable_rigid(obj);
+    });
+
+    events::disable_rigidbody_event.connect([&](GameObject *obj) {
+        disable_rigid(obj);
+    });
 }
 
 Physics::~Physics() {}
@@ -127,8 +135,8 @@ void Physics::collision_detection() {
         GameObject *go_a = static_cast<GameObject *>(obj_a->getUserPointer());
         GameObject *go_b = static_cast<GameObject *>(obj_b->getUserPointer());
         // ORDER OF THESE ON_COLLISION CALLS MAY MATTER HERE. CONSIDER BUFFERING.
-        if (go_a->notify_on_collision) go_a->on_collision(go_b);
-        if (go_b->notify_on_collision) go_b->on_collision(go_a);
+        if (go_a->notify_on_collision) go_a->s_on_collision(go_b);
+        if (go_b->notify_on_collision) go_b->s_on_collision(go_a);
 
         // Determine points at which the objects collide.
         // Unused so far.
@@ -199,6 +207,16 @@ void Physics::add_rigid(events::RigidBodyData d) {
 }
 
 void Physics::remove_rigid(GameObject *obj) {
+    if (obj->get_rigid()) {
+        dynamicsWorld->removeRigidBody(obj->get_rigid());
+        obj->set_rigid(nullptr);
+    }
+}
+
+void Physics::disable_rigid(GameObject *obj) {
     dynamicsWorld->removeRigidBody(obj->get_rigid());
-    obj->set_rigid(nullptr);
+}
+
+void Physics::enable_rigid(GameObject *obj) {
+    dynamicsWorld->addRigidBody(obj->get_rigid());
 }

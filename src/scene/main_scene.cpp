@@ -1,7 +1,5 @@
 #include "main_scene.h"
-#include "game_objects/test_chest.h"
 #include "game_objects/player.h"
-#include "game_objects/test_coin.h"
 #include "events.h"
 #include "util/color.h"
 #include "light/pulse_point_light.h"
@@ -10,13 +8,12 @@ MainScene::MainScene() : Scene() {
 
 }
 
-void MainScene::update() {
-    Scene::update();
+void MainScene::s_update() {
+    Scene::s_update();
 }
 
-void MainScene::client_update() {
-    Scene::client_update();
-    grid->update();
+void MainScene::c_update() {
+    Scene::c_update();
 
     // Rotate directional light sources just to test shadows.
     if (lights_debug_on) {
@@ -60,27 +57,23 @@ void MainScene::graphical_setup() {
     }
 }
 
-Player* MainScene::spawn_new_player(int conn_id) {
+Player* MainScene::s_spawn_player(int conn_id) {
     Player *player = new Player();
-    player->transform.set_scale({ 0.4f, 0.4f, 0.4f });
 
     // TODO: determine where each player starts based on client id. 
     // For now, players 1-4 start at (2, 2), (2, 3), (2, 4), (2, 5) respectively.
     player->set_start_position({ 2.f, 0, 1.f + conn_id });
+    player->reset_position();
     objs.push_back(player);
 
     return player;
 }
 
-Player* MainScene::spawn_existing_player(int obj_id) {
+Player* MainScene::c_spawn_player(int obj_id) {
     Player *player = new Player(obj_id);
-    player->transform.set_scale({ 0.004f, 0.004f, 0.004f });
+    std::string name = "cat";
+    player->setup_player_model(name);
     objs.push_back(player);
-    
-    Model *player_model = AssetLoader::get_model(std::string("cat"));
-    player_model->set_shader(&ShaderManager::anim_unlit);
-    player->attach_model(player_model);
-    player->start_walk();
-    
+
     return player;
 }

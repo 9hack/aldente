@@ -3,40 +3,40 @@
 #include "asset_loader.h"
 #include "assert.h"
 #include "events.h"
+#include "timer.h"
 
 #define ANIMATE_DELTA 0.001f
+#define STUN_LENGTH 500 // milliseconds
+#define INVULNERABLE_LENGTH 3000 // ms
 
-Player::Player() : GameObject() {
+Player::Player(int id) : GameObject(id) {
     tag = "PLAYER";
-    to_moveX = 0;
-    to_moveZ = 0;
-    move_speed = 2.0f;
 
-    events::RigidBodyData rigid = {
-        glm::vec3(0.0f, 0.0f, 0.0f), //position
-        1, //mass
-        hit_capsule, //btshape
-        glm::vec3(0,0,0), //inertia
-        this, //the gameobject
-    };
-    events::add_rigidbody_event(rigid);
+    if (id == ON_SERVER) {
+        to_moveX = 0;
+        to_moveZ = 0;
+        move_speed = 2.0f;
 
-    // Notify on collision.
-    notify_on_collision = true;
+        events::RigidBodyData rigid;
+        rigid.object = this;
+        rigid.shape = hit_capsule;
+        rigid.mass = 1;
+        events::add_rigidbody_event(rigid);
 
-    // Lock y-axis
-    rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
-    //Lock angular rotation
-    rigidbody->setAngularFactor(0);
-}
+        // Notify on collision.
+        notify_on_collision = true;
 
-Player::Player(int obj_id) : GameObject(obj_id) {
-    tag = "PLAYER";
+        // Lock y-axis
+        rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
+
+        //Lock angular rotation
+        rigidbody->setAngularFactor(0);
+    }
 }
 
 // Just calls do_movement for now, can have more
 // functionality later.
-void Player::update_this() {
+void Player::s_update_this() {
 
     do_movement();
 
@@ -59,7 +59,7 @@ void Player::prepare_movement(int inX, int inZ) {
     to_moveZ = inZ;
 }
 
-void Player::update_state(float x, float z, float wx, float wz) {
+void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     anim_player.update();
     float dx = std::fabs(x - transform.get_position().x);
     float dz = std::fabs(z - transform.get_position().z);
@@ -74,10 +74,16 @@ void Player::update_state(float x, float z, float wx, float wz) {
             anim_player.play();
     }
 
-    GameObject::update_state(x, z, wx, wz);
+    GameObject::c_update_state(x, z, wx, wz, enab);
 }
 
 void Player::do_movement() {
+
+    if (stunned) {
+        rigidbody->setActivationState(false);
+        return;
+    }
+
     // Should account for deltatime so movement is
     // framerate independent? Unsure how Bullet handles framerate.
     rigidbody->setActivationState(true);
@@ -89,18 +95,19 @@ void Player::do_movement() {
 void Player::interact() {
     // Asks physics for a raycast to check if the player
     // is facing a construct.
-    if (direction.x != 0 || direction.z != 0)
+    if (direction.x != 0 || direction.z != 0) {
         events::dungeon::player_request_raycast_event(
             transform.get_position(), direction,
             [&](GameObject *bt_hit) {
-                Construct *construct = dynamic_cast<Construct*>(bt_hit);
+            Construct *construct = dynamic_cast<Construct*>(bt_hit);
 
-                // Register interacts only on constructs for now. Send the game object ID 
-                // of the interacted construct to the server to process.
-                if (construct) {
-                    events::dungeon::network_interact_event(construct->get_id());
-                }
-            });
+            // Interacts with construct, construct itself will handle any client
+            // side effects needed.
+            if (construct) {
+                construct->s_interact_trigger(this);
+            }
+        });
+    }
 }
 
 void Player::stop_walk() {
@@ -114,15 +121,15 @@ void Player::start_walk() {
     anim_player.play();
 }
 
-void Player::on_collision(GameObject *other) {
-    // TODO: actual game logic here...
-
-    // Then notify clients that this collision happened.
-    events::dungeon::network_collision_event(id);
+// Server collision
+void Player::s_on_collision(GameObject *other) {
+    // By default, does not need to notify the client of any collisions.
+    // If it triggers a trap, the trap will notify the client that the
+    // player is hit. 
 }
 
-void Player::on_collision_graphical() {
-    transform.rotate(0, 0.1f, 0);
+// Graphical collision
+void Player::c_on_collision(GameObject *other) {
 }
 
 void Player::set_start_position(glm::vec3 pos) {
@@ -139,3 +146,89 @@ void Player::reset_position() {
     transform.look_at(direction);
 }
 
+void Player::setup_player_model(std::string &model_name) {
+    Model *player_model = AssetLoader::get_model(model_name);
+    player_model->set_shader(&ShaderManager::anim_unlit);
+    attach_model(player_model);
+    start_walk();
+
+    // Sets scale. Need better way to do this later.
+    if (model_name == "boy_two")
+        transform.set_scale({ 0.4f, 0.4f, 0.4f });
+    else if (model_name == "cat")
+        transform.set_scale({ 0.004f, 0.004f, 0.004f });
+}
+
+bool Player::s_take_damage() {
+    if (invulnerable)
+        return false;
+
+    // Period of invulerability
+    invulnerable = true;
+
+    // Period of stunned
+    stunned = true;
+
+    std::cerr << "Player is hit: " << id << std::endl;
+
+    // Player should drop gold and lose gold somewhere here
+
+    // End Stunned
+    Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
+        [&]() {
+        stunned = false;
+    });
+
+    // End Invulernability
+    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
+        [&]() {
+        invulnerable = false;
+    });
+
+    return true;
+}
+
+void Player::c_take_damage() {
+
+    int count = 0;
+    end_flicker = false;
+
+    // Flicker
+    cancel_flicker = Timer::get()->do_every(
+        std::chrono::milliseconds(100),
+        [&, count]() mutable {
+        if (count % 2)
+            set_filter_alpha(1.0f);
+        else
+            set_filter_alpha(0.2f);
+
+        if (end_flicker)
+            disable_filter();
+
+        count++;
+    });
+
+    // End
+    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
+        [&]() {
+        end_flicker = true;
+        cancel_flicker();
+    });
+}
+
+void Player::s_modify_stats(std::function<void(PlayerStats &)> modifier) {
+    modifier(stats);
+
+    // Dispatch an update to the clients
+    proto::ServerMessage msg;
+    auto *psu = msg.mutable_player_stats_update();
+    psu->set_id(id);
+    psu->set_coins(stats.get_coins());
+    events::server::announce(msg);
+}
+
+void Player::c_update_stats(const proto::PlayerStats &update) {
+    stats.set_coins(update.coins());
+
+    std::cerr << "ID " << id << " COINS NOW @ " << stats.get_coins() << std::endl;
+}

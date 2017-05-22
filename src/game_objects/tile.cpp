@@ -6,11 +6,12 @@ Tile::Tile() :
     GameObject(),
     construct(nullptr) {
     tag = "TILE";
+    // Currently, Tile IDs are not being set by the server, and is being done independently
+    // for the client and server, so they aren't properly in sync. 
+    // This is fine for now, but will need to be changed later if we want dynamic tile changes. 
 }
 
 FloorTile::FloorTile(int x, int z) : Tile::Tile() {
-    width = 1;
-    height = 1;
     this->x = x;
     this->z = z;
     buildable = true;
@@ -33,22 +34,15 @@ void FloorTile::setup_instanced_model(int num_instances, std::vector<glm::mat4> 
 }
 
 WallTile::WallTile(int x, int z) : Tile::Tile() {
-    width = 1;
-    height = 1;
     this->x = x;
     this->z = z;
     buildable = false;
 
-    set_position({x, 0.5f, z});
-
-    events::RigidBodyData rigid = {
-        glm::vec3(x,0.5f,z), //position
-        0, //mass
-        hit_box, //btshape
-        glm::vec3(0,0,0), //inertia
-        this //the gameobject
-    };
+    events::RigidBodyData rigid;
+    rigid.object = this;
+    rigid.shape = hit_box;
     events::add_rigidbody_event(rigid);
+    set_position({ x, 0.5f, z });
 }
 
 void WallTile::setup_instanced_model(int num_instances, std::vector<glm::mat4> instance_matrix){

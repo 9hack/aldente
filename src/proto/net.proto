@@ -9,6 +9,9 @@ message ServerMessage {
     JoinResponse join_response = 3;
     GameState state_update = 4;
     Phase phase_update = 5;
+    int32 player_finished = 6;
+    PlayerStats player_stats_update = 7;
+    int32 time_update = 8; // in seconds
   }
 }
 
@@ -41,8 +44,13 @@ message JoinResponse {
 
 message GameState {
   repeated GameObject objects = 1;
-  repeated int32 collisions = 2;
-  repeated int32 interacts = 3;
+  repeated IdPair collisions = 2;
+  repeated IdPair interacts = 3;
+}
+
+message IdPair {
+  optional int32 initiator = 1;
+  optional int32 other = 2;
 }
 
 message GameObject {
@@ -60,6 +68,12 @@ message GameObject {
   optional float wx = 5;
   optional float wz = 6;
   optional int32 client_id = 7;
+  optional bool enabled = 8;
+}
+
+message Collision {
+  optional int32 id = 1;
+  optional int32 type = 2;
 }
 
 message StickData {
@@ -80,4 +94,9 @@ enum Phase {
   BUILD = 1;
   DUNGEON = 2;
   MINIGAME = 3;
+}
+
+message PlayerStats {
+  optional int32 id = 1; // Refers to GameObject ID of player.
+  optional int32 coins = 2;
 }

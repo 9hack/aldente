@@ -7,6 +7,7 @@ namespace events {
     signal<void(StickData &)> stick_event;
     signal<void(AudioData &)> music_event;
     signal<void(AudioData &)> sound_effects_event;
+    signal<void()> toggle_mute_event;
     signal<void(WindowSizeData &)> window_buffer_resize_event;
     signal<void(WindowKeyData &)> window_key_event;
     signal<void(WindowCursorData &)> window_cursor_event;
@@ -26,6 +27,9 @@ namespace events {
     signal<void(int)> ui_grid_movement_event;
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
+    signal<void(GameObject *obj)> disable_rigidbody_event;
+    signal<void(GameObject *obj)> enable_rigidbody_event;
+    signal<void(int)> player_finished_event;
 
     namespace server {
         signal<void(proto::ServerMessage &)> announce;
@@ -39,6 +43,10 @@ namespace events {
         signal<void(int)> request_join_event;
         signal<void(int, proto::JoinResponse &)> respond_join_event;
         signal<void(int)> spawn_existing_player_event;
+    }
+
+    namespace ui {
+        signal<void(int)> update_time;
     }
 
     namespace build {
@@ -65,10 +73,11 @@ namespace events {
         signal<void()> place_goal_event;
         signal<void(StickData &)> network_player_move_event;
         signal<void(Context*)> update_state_event;
-        signal<void(int)> network_collision_event;
+        signal<void(int, int)> network_collision_event;
         signal<void()> player_interact_event;
-        signal<void(int)> network_interact_event;
+        signal<void(int, int)> network_interact_event;
         signal<void(int, int, int)> spawn_existing_goal_event;
         signal<void(int)> player_finished_event;
+        signal<void()> post_dungeon_camera_event;
     }
 }

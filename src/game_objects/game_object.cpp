@@ -1,18 +1,23 @@
 #include "game_object.h"
 #include "util/util_bt.h"
 #include <iostream>
+#include "events.h"
 
 std::unordered_map<int, GameObject*> GameObject::game_objects;
-int GameObject::id_counter = 0;
-
-GameObject::GameObject() : GameObject(id_counter++) {
-}
+int GameObject::id_counter = STARTING_ID;
 
 GameObject::GameObject(int id) : id(id) {
+
+    if (id == REQUIRE_ID) {
+        // This object is new and being made on the server
+        this->id = id_counter++;
+    }
+
     model = new Model();
     rigidbody = nullptr;
-    game_objects[id] = this;
+    game_objects[this->id] = this;
     direction = glm::vec3(0.0f);
+    enabled = true;
 }
 
 GameObject::~GameObject(){
@@ -42,18 +47,20 @@ void GameObject::remove_all() {
 }
 
 // Renders model and children's models in scene
-void GameObject::draw(Shader *shader, SceneInfo &scene_info) {
+void GameObject::c_draw(Shader *shader, SceneInfo &scene_info) {
+    if (!enabled) return;
+
     if (model) {
         connect_model_filter();
         model->draw(shader, scene_info, transform.get_world_mat());
     }
 
     for (GameObject *obj : children)
-        obj->draw(shader, scene_info);
+        obj->c_draw(shader, scene_info);
 }
 
 // Draw multiple instances of this GameObject, which should have no children.
-void GameObject::draw_instanced(Shader *shader, SceneInfo &scene_info,
+void GameObject::c_draw_instanced(Shader *shader, SceneInfo &scene_info,
                       std::vector<glm::mat4> instance_matrix) {
     if (model) {
         connect_model_filter();
@@ -62,18 +69,24 @@ void GameObject::draw_instanced(Shader *shader, SceneInfo &scene_info,
 }
 
 // Runs Game Object's update loop
-void GameObject::update() {
+void GameObject::s_update() {
+    if (!enabled) return;
 
-    update_this();
+    s_update_this();
 
     for (GameObject *obj : children)
-        obj->update();
+        obj->s_update();
 }
 
-void GameObject::update_state(float x, float z, float wx, float wz) {
-    transform.set_position(x, 0.0f, z);
-    direction = glm::vec3(wx, 0, wz);
-    transform.look_at(direction);
+void GameObject::c_update_state(float x, float z, float wx, float wz, bool enab) {
+    enabled = enab;
+    if (enabled) {
+        transform.set_position(x, 0.0f, z);
+        direction = glm::vec3(wx, 0, wz);
+        transform.look_at(direction);
+
+        anim_player.update();
+    }
 }
 
 void GameObject::attach_model(Model *m) {
@@ -88,6 +101,12 @@ void GameObject::attach_model(Model *m) {
 // one's draw call (i.e. cannot just be done in update)
 void GameObject::connect_model_filter(){
     model->set_model_filter(model_filter);
+}
+
+void GameObject::disable_filter() {
+    model_filter.override_alpha = false;
+    model_filter.override_diffuse = false;
+    model_filter.override_shadows = false;
 }
 
 void GameObject::set_filter_color(Color color) {
@@ -133,5 +152,23 @@ void GameObject::set_position(glm::vec3 pos) {
         initialTransform.setRotation(btQuaternion::getIdentity());
         rigidbody->setWorldTransform(initialTransform);
         rigidbody->getMotionState()->setWorldTransform(initialTransform);
+    }
+}
+
+void GameObject::disable() {
+    if (enabled) {
+        enabled = false;
+        if (rigidbody) {
+            events::disable_rigidbody_event(this);
+        }
+    }
+}
+
+void GameObject::enable() {
+    if (!enabled) {
+        enabled = true;
+        if (rigidbody) {
+            events::enable_rigidbody_event(this);
+        }
     }
 }

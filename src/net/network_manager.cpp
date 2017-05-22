@@ -63,19 +63,30 @@ void ServerNetworkManager::register_listeners() {
                 go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
             else if (dynamic_cast<Goal*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_GOAL);
+            else if (dynamic_cast<Chest*>(obj))
+                go->set_type(proto::GameObject::Type::GameObject_Type_CHEST);
+            else if (dynamic_cast<Spikes*>(obj))
+                go->set_type(proto::GameObject::Type::GameObject_Type_SPIKE);
             go->set_x(obj->transform.get_position().x);
             go->set_z(obj->transform.get_position().z);
             go->set_wx(obj->direction.x);
             go->set_wz(obj->direction.z);
+            go->set_enabled(obj->is_enabled());
         }
 
         // If there were any game obj collisions, send those objects' ids.
-        for (int obj_id : context->collisions)
-            state->add_collisions(obj_id);
+        for (const auto &collision : context->collisions) {
+            auto *cur = state->add_collisions();
+            cur->set_initiator(collision.first);
+            cur->set_other(collision.second);
+        }
 
         // If there were any game obj interacts, send those objects' ids.
-        for (int obj_id : context->interacts)
-            state->add_interacts(obj_id);
+        for (const auto &interact : context->interacts) {
+            auto *cur = state->add_interacts();
+            cur->set_initiator(interact.first);
+            cur->set_other(interact.second);
+        }
 
         context->updated_objects.clear();
         context->collisions.clear();
@@ -209,7 +220,7 @@ void ClientNetworkManager::update() {
             // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                GameState::add_existing_player(resp.obj_id(), true)->get_id();
+                GameState::c_add_player(resp.obj_id(), true)->get_id();
             }
             break;
         }
@@ -229,18 +240,18 @@ void ClientNetworkManager::update() {
                     }
                     all_exist = false;
                 } else {
-                    GameObject::game_objects[obj.id()]->update_state(obj.x(), obj.z(), obj.wx(), obj.wz());
+                    GameObject::game_objects[obj.id()]->c_update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), obj.enabled());
                 }
             }
 
             // Call all collision handlers of game objects that collided. Only executed if all game object IDs sent
             // already exist, which avoids a potential race condition of a collision of a not-yet-created game obj.
             if (all_exist) {
-                for (int obj_id : state.collisions()) {
-                    GameObject::game_objects[obj_id]->on_collision_graphical();
+                for (auto &p : state.collisions()) {
+                    GameObject::game_objects[p.other()]->c_on_collision(GameObject::game_objects[p.initiator()]);
                 }
-                for (int obj_id : state.interacts()) {
-                    GameObject::game_objects[obj_id]->interact_trigger();
+                for (auto &p : state.interacts()) {
+                    GameObject::game_objects[p.other()]->c_interact_trigger(GameObject::game_objects[p.initiator()]);
                 }
             }
             break;
@@ -248,6 +259,25 @@ void ClientNetworkManager::update() {
         case proto::ServerMessage::MessageTypeCase::kPhaseUpdate: {
             proto::Phase phase = msg.phase_update();
             GameState::set_phase(phase);
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPlayerFinished: {
+            events::player_finished_event(msg.player_finished());
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPlayerStatsUpdate: {
+            const auto &update = msg.player_stats_update();
+
+            // Find the player in question and update their status
+            Player *player = dynamic_cast<Player *>(GameObject::game_objects[update.id()]);
+            assert(player);
+            player->c_update_stats(update);
+
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kTimeUpdate: {
+            // Update the graphical timer
+            events::ui::update_time(msg.time_update());
             break;
         }
         default:
