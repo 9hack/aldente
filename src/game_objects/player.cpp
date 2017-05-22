@@ -209,7 +209,9 @@ bool Player::s_take_damage() {
 
     std::cerr << "Player is hit: " << id << std::endl;
 
-    // Player should drop gold and lose gold somewhere here
+    // Player drops dream essence and loses essence
+
+    events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
 
     // End Stunned
     Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),

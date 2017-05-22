@@ -21,6 +21,11 @@ Essence::Essence(int id) : GameObject(id){
         rigid.shape = hit_sphere;
         events::add_rigidbody_event(rigid);
         notify_on_collision = true;
+
+        // Setup Initial Push in random direction
+        glm::vec2 vel = glm::vec2(Util::random(-1.f, 1.f), Util::random(-1.f, 1.f));
+        vel = vel * Util::random(1.f, 3.f);
+        set_velocity(vel.x, vel.y);
     }
     else {
         // Make the essence change colors continuously
@@ -95,4 +100,8 @@ void Essence::disappear() {
 
         count++;
     });
+}
+
+void Essence::set_velocity(int vel_x, int vel_z) {
+
 }

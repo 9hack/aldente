@@ -19,6 +19,7 @@ public:
 
     void setup_model() override;
 
+    void set_velocity(int vel_x, int vel_z);
     void disappear();
 
 private:

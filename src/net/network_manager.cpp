@@ -1,6 +1,7 @@
 #include "network_manager.h"
 #include "util/config.h"
 #include "game_objects/player.h"
+#include "game_objects/essence.h"
 #include "game/game_state.h"
 #include <GLFW/glfw3.h>
 #include <unordered_set>
@@ -67,6 +68,8 @@ void ServerNetworkManager::register_listeners() {
                 go->set_type(proto::GameObject::Type::GameObject_Type_CHEST);
             else if (dynamic_cast<Spikes*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_SPIKE);
+            //else if (dynamic_cast<Essence*>(obj))
+                //go->set_type(p // TODO : Richard, I leave this to you.
             go->set_x(obj->transform.get_position().x);
             go->set_z(obj->transform.get_position().z);
             go->set_wx(obj->direction.x);
@@ -235,6 +238,9 @@ void ClientNetworkManager::update() {
                         events::menu::spawn_existing_player_event(obj.id());
                     } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
                         events::dungeon::spawn_existing_goal_event(obj.x(), obj.z(), obj.id());
+                    //}
+                    //else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {
+                        //events::dungeon::c_spawn_essence_event(obj.id());
                     } else {
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }

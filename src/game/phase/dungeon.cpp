@@ -17,6 +17,14 @@ void DungeonPhase::s_setup() {
 
     events::dungeon::s_prepare_dungeon_event();
 
+    essence_conn = events::dungeon::s_spawn_essence_event.connect([&](int x, int z) {
+        Essence *ess = new Essence();
+        ess->set_position({ x, 0, z });
+        GameState::scene_manager.get_current_scene()->objs.push_back(ess);
+    });
+
+    events::dungeon::place_goal_event();
+
     flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
         Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
         assert(player);
@@ -60,6 +68,11 @@ void DungeonPhase::c_setup() {
         } else {
             // TODO: can do client-side notification here, e.g. "Player X has reached the goal!"
         }
+    });
+
+    essence_conn = events::dungeon::c_spawn_essence_event.connect([&](int id) {
+        Essence *ess = new Essence(id);
+        GameState::scene_manager.get_current_scene()->objs.push_back(ess);
     });
 
     // Play music

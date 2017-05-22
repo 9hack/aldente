@@ -21,6 +21,7 @@ private:
     boost::signals2::connection interact_conn;
     boost::signals2::connection flag_conn;
     boost::signals2::connection player_finish_conn;
+    boost::signals2::connection essence_conn;
 
     // <Player id, if goal reached>
     std::map<int, bool> goal_reached_flags;
