@@ -41,6 +41,10 @@ namespace events {
         signal<void(int)> spawn_existing_player_event;
     }
 
+    namespace ui {
+        signal<void(int)> update_time;
+    }
+
     namespace build {
         signal<void(Direction)> select_grid_move_event;
         signal<void(Direction)> build_grid_move_event;

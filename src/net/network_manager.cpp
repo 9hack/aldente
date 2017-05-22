@@ -266,6 +266,11 @@ void ClientNetworkManager::update() {
 
             break;
         }
+        case proto::ServerMessage::MessageTypeCase::kTimeUpdate: {
+            // Update the graphical timer
+            events::ui::update_time(msg.time_update());
+            break;
+        }
         default:
             break;
         }

@@ -5,7 +5,7 @@
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::s_setup() {
-//    transition_after(10, proto::Phase::DUNGEON);
+    transition_after(60, proto::Phase::DUNGEON);
 }
 
 void BuildPhase::c_setup() {

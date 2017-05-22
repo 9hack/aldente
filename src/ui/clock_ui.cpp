@@ -1,3 +1,4 @@
+#include <events.h>
 #include "clock_ui.h"
 
 #include "timer.h"
@@ -5,14 +6,10 @@
 
 ClockUI::ClockUI(float aspect)
     : clock(40.f * aspect, 90.f, 20.f * aspect, 10.f, Color::WHITE, Color::BLACK) {
-
     attach(clock);
 
-    // TEST. REMOVE ME.
-    Timer::get()->do_every(std::chrono::seconds(1), [&]() {
-        static int seconds = 0;
-        ++seconds;
-        clock.set_time(seconds);
+    events::ui::update_time.connect([&](int time) {
+        clock.set_time(time);
     });
 }
 
