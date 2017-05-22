@@ -17,8 +17,10 @@ void DungeonPhase::s_setup() {
     events::dungeon::place_goal_event();
 
     flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
+        Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
+        assert(player);
+        player->disable();
         goal_reached_flags[player_id] = true;
-        GameObject::game_objects[player_id]->disable();
 
         proto::ServerMessage msg;
         msg.set_player_finished(player_id);

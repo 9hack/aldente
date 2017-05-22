@@ -16,6 +16,7 @@ Player::Player(int id) : GameObject(id) {
         to_moveX = 0;
         to_moveZ = 0;
         move_speed = 2.0f;
+        exiting = false;
 
         events::RigidBodyData rigid;
         rigid.object = this;
@@ -37,8 +38,8 @@ Player::Player(int id) : GameObject(id) {
 // Just calls do_movement for now, can have more
 // functionality later.
 void Player::s_update_this() {
-
-    do_movement();
+    if(!exiting)
+        do_movement();
 
     btTransform t;
 
@@ -65,7 +66,7 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     float dz = std::fabs(z - transform.get_position().z);
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
-    if (!animate) {
+    if (!animate && !exiting) {
         if (!anim_player.check_paused())
             anim_player.stop();
     }
@@ -89,7 +90,9 @@ void Player::do_movement() {
     rigidbody->setActivationState(true);
     rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
     transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
-    direction = glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed);
+    
+    if(to_moveX != 0 || to_moveZ != 0)
+        direction = glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed);
 }
 
 void Player::interact() {
@@ -157,6 +160,32 @@ void Player::setup_player_model(std::string &model_name) {
         transform.set_scale({ 0.4f, 0.4f, 0.4f });
     else if (model_name == "cat")
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
+}
+
+void Player::s_begin_warp(float x, float z) {
+    set_position({ x, 0, z });
+    rigidbody->setLinearVelocity(btVector3(0, 0, 0));
+
+    // Wait for animation before signaling phase
+    Timer::get()->do_after(std::chrono::seconds(1), [&]() {
+        events::dungeon::player_finished_event(id);
+    });
+}
+
+void Player::c_begin_warp() {
+    // Set up warp animation
+    anim_player.set_speed(1.0f);
+    anim_player.set_anim("exit");
+    anim_player.set_loop(true);
+    anim_player.play();
+    exiting = true;
+
+    Timer::get()->do_after(std::chrono::seconds(1), [&]() {
+        anim_player.set_speed(3.0f);
+        anim_player.set_anim("walk");
+        anim_player.set_loop(true);
+        exiting = false;
+    });
 }
 
 bool Player::s_take_damage() {

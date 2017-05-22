@@ -29,6 +29,8 @@ private:
 
     glm::vec3 start_pos;
 
+    bool exiting;
+
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.2f, 1.0f);
 
     PlayerStats stats;
@@ -41,6 +43,9 @@ public:
     void c_on_collision(GameObject *other) override;
 
     void setup_player_model(std::string &model_name); // Loads player model
+
+    bool get_exiting_status() { return exiting; };
+    void set_exiting_status(bool to_set) { exiting = to_set; };
 
     // Player movement
     void prepare_movement(int inX, int inZ);
@@ -58,6 +63,10 @@ public:
 
     // Sets the player's position to its set start position.
     void reset_position();
+
+    // Sets up the warping animation and signals phase
+    void s_begin_warp(float x, float z);
+    void c_begin_warp();
 
     // Damage functions
     bool s_take_damage(); // Set invulnerability, drop coins, lose gold (true if took damage)

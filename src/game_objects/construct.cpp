@@ -1,6 +1,7 @@
 #include "construct.h"
 #include "asset_loader.h"
 #include "player.h"
+#include "timer.h"
 #include "game/collectibles/gold.h"
 #include "game/collectibles/nothing.h"
 
@@ -122,7 +123,14 @@ void Goal::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
 
     if (player && player->is_enabled()) {
+        player->s_begin_warp(transform.get_position().x, transform.get_position().z);
         events::dungeon::network_collision_event(other->get_id(), id);
-        events::dungeon::player_finished_event(player->get_id());
+    }
+}
+
+void Goal::c_on_collision(GameObject *other) {
+    Player *player = dynamic_cast<Player*>(other);
+    if (player && !player->get_exiting_status()) {
+        player->c_begin_warp();
     }
 }
