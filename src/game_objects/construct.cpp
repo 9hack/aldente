@@ -1,6 +1,7 @@
 #include "construct.h"
 #include "asset_loader.h"
 #include "player.h"
+#include "timer.h"
 
 Construct::Construct(int x, int z, int id) : GameObject(id) {
     tag = "CONSTRUCT";
@@ -101,8 +102,15 @@ void Goal::setup_model() {
 
 void Goal::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
+    if (player && player->is_enabled()) {
+        player->s_begin_warp(transform.get_position().x, transform.get_position().z);
+        events::dungeon::network_collision_event(other->get_id(), id);
+    }
+}
+
+void Goal::c_on_collision(GameObject *other) {
+    Player *player = dynamic_cast<Player*>(other);
     if (player && !player->get_exiting_status()) {
-        events::dungeon::network_collision_event(id);
-        player->begin_warp(transform.get_position().x,transform.get_position().z);
+        player->c_begin_warp();
     }
 }

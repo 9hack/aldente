@@ -62,5 +62,6 @@ public:
     PlayerStats stats;
 
     // Sets up the warping animation and signals phase
-    void begin_warp(float x, float z);
+    void s_begin_warp(float x, float z);
+    void c_begin_warp();
 };

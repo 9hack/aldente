@@ -14,6 +14,7 @@ Player::Player(int id) : GameObject(id) {
         to_moveX = 0;
         to_moveZ = 0;
         move_speed = 2.0f;
+        exiting = false;
 
         events::RigidBodyData rigid;
         rigid.object = this;
@@ -81,7 +82,9 @@ void Player::do_movement() {
     rigidbody->setActivationState(true);
     rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
     transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
-    direction = glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed);
+    
+    if(to_moveX != 0 || to_moveZ != 0)
+        direction = glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed);
 }
 
 void Player::interact() {
@@ -152,21 +155,25 @@ void Player::setup_player_model(std::string &model_name) {
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
 }
 
-void Player::begin_warp(float x, float z) {
+void Player::s_begin_warp(float x, float z) {
+    set_position({ x, 0, z });
+    rigidbody->setLinearVelocity(btVector3(0, 0, 0));
+
+    // Wait for animation before signaling phase
+    Timer::get()->do_after(std::chrono::seconds(1), [&]() {
+        events::dungeon::player_finished_event(id);
+    });
+}
+
+void Player::c_begin_warp() {
     // Set up warp animation
     anim_player.set_speed(1.0f);
     anim_player.set_anim("exit");
     anim_player.set_loop(true);
     anim_player.play();
-    set_position({ x, 0, z });
-    rigidbody->setLinearVelocity(btVector3(0, 0, 0));
     exiting = true;
 
-    // After animation is complete, signal the phase
-    // and reset the anim back to walk
     Timer::get()->do_after(std::chrono::seconds(1), [&]() {
-        events::dungeon::player_finished_event(id);
-
         anim_player.set_speed(3.0f);
         anim_player.set_anim("walk");
         anim_player.set_loop(true);
