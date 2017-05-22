@@ -98,7 +98,7 @@ void BuildPhase::client_setup() {
     });
 
     // Play music
-    events::AudioData d = { AudioManager::BUILD_MUSIC };
+    events::AudioData d = { AudioManager::BUILD_MUSIC, 50 };
     events::music_event(d);
 }
 

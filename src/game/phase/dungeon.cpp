@@ -44,7 +44,7 @@ void DungeonPhase::client_setup() {
     });
 
     // Play music
-    events::AudioData d = { AudioManager::DUNGEON_MUSIC };
+    events::AudioData d = { AudioManager::DUNGEON_MUSIC, 50 };
     events::music_event(d);
 }
 
