@@ -4,8 +4,22 @@
 #include "util/color.h"
 #include "light/pulse_point_light.h"
 
-MainScene::MainScene() : Scene() {
+MainScene::MainScene() : Scene(), goal(nullptr) {
+    events::dungeon::s_prepare_dungeon_event.connect([&]() {
+        remove_goal();
+        s_place_goal(glm::vec3(0.0f), 20);
+    });
 
+    events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
+        std::unique_lock<std::mutex> lock(goal_mutex);
+        if (goal) {
+            auto position = std::find(objs.begin(), objs.end(), goal);
+            if (position != objs.end())
+                objs.erase(position);
+            goal = nullptr;
+        }
+        c_place_goal(x, z, id);
+    });
 }
 
 void MainScene::s_update() {
@@ -77,4 +91,40 @@ Player* MainScene::c_spawn_player(int obj_id) {
     objs.push_back(player);
 
     return player;
+}
+
+void MainScene::s_place_goal(glm::vec3 start, int min_dist) {
+    // Goal will be in range of (min_dist, edge of map)
+    int new_goal_x = rand() % grid->get_width();
+    int new_goal_z = rand() % grid->get_height();
+
+    // If not buildable or too close, find another
+    while (!grid->get_grid()[new_goal_z][new_goal_x]->isBuildable() ||
+        (abs(new_goal_x - start.x) + abs(new_goal_z - start.z) < min_dist)) {
+        new_goal_x = rand() % grid->get_width();
+        new_goal_z = rand() % grid->get_height();
+    }
+
+    Goal *new_goal = new Goal(new_goal_x, new_goal_z);
+
+    grid->get_grid()[new_goal_z][new_goal_x]->set_construct(new_goal);
+    goal = new_goal;
+    goal_x = new_goal_x;
+    goal_z = new_goal_z;
+}
+
+void MainScene::c_place_goal(int x, int z, int id) {
+    goal = new Goal(x, z, id);
+
+    goal->setup_model();
+    objs.push_back(goal);
+}
+
+void MainScene::remove_goal() {
+    //TODO destructor for goal
+    if (goal) {
+        GameObject::game_objects.erase(goal->get_id());
+        grid->get_grid()[goal_z][goal_x]->set_construct(nullptr);
+        events::remove_rigidbody_event(goal);
+    }
 }

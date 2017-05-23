@@ -18,6 +18,10 @@ private:
     Grid *grid;
     Tile *hover;
     bool lights_debug_on = false;
+
+    Goal *goal;
+    std::mutex goal_mutex; // In case a new goal is created before old one is removed.
+    int goal_z, goal_x;
 public:
     MainScene();
     void s_update() override;
@@ -27,4 +31,8 @@ public:
 
     Player* s_spawn_player(int conn_id); // Server: spawn new Player, auto-assign id.
     Player* c_spawn_player(int obj_id); // Client: spawn existing Player with id from server.
+
+    void s_place_goal(glm::vec3 start, int min_dist);
+    void c_place_goal(int x, int z, int id);
+    void remove_goal();
 };
