@@ -38,7 +38,22 @@ AudioManager::AudioManager() : muted(true) {
         }
     });
 
+    events::sound_effects_event.connect([&](const events::AudioData &d) {
+        std::string filename = d.filename;
+
+        if (!muted) {
+            sounds[filename]->setVolume(d.volume);
+            sounds[filename]->setLoop(d.loop);
+            sounds[filename]->play();
+        }
+    });
+
+    events::stop_sound_effects_event.connect([&](const std::string filename) {
+        sounds[filename]->stop();
+    });
+
     events::toggle_mute_event.connect([&]() {
+        std::cerr << "Toggling mute" << std::endl;
         muted = !muted;
         if (muted) {
             music.pause();

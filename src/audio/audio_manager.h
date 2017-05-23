@@ -21,6 +21,7 @@ private:
     bool muted;
     
     // Sound effects
+
     sf::SoundBuffer build_confirm_buffer;
     sf::Sound build_confirm_sound;
 
