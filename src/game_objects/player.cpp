@@ -1,5 +1,5 @@
 #include "player.h"
-
+#include "audio/audio_manager.h"
 #include "asset_loader.h"
 #include "assert.h"
 #include "events.h"
@@ -71,8 +71,12 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
             anim_player.stop();
     }
     else {
-        if (anim_player.check_paused())
+        if (anim_player.check_paused()) {
+            events::AudioData d = { AudioManager::FOOTSTEPS_SOUND, 100 };
+            events::sound_effects_event(d);
+
             anim_player.play();
+        }
     }
 
     GameObject::c_update_state(x, z, wx, wz, enab);
