@@ -13,10 +13,11 @@ void BuildPhase::s_setup() {
     s_check_funds_conn = events::build::check_funds_event.connect([&](proto::Construct& c) {
         Player* player = GameState::players[c.player_id()];
         assert(player);
-        auto& construct = Constructs::CONSTRUCTS.at(static_cast<ConstructType>(c.type()));
+        auto type = static_cast<ConstructType>(c.type());
+        auto& construct = Constructs::CONSTRUCTS.at(type);
 
         if (player->can_afford(construct.cost)) {
-            events::build::try_build_event(c, [player, construct] {
+            events::build::try_build_event(c, [player, construct]() {
                 player->s_modify_stats([player, construct](PlayerStats& stats) {
                     stats.add_coins(-construct.cost);
                 });

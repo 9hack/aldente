@@ -15,6 +15,7 @@ Grid::Grid(const char *map_loc) :
     tag = "GRID";
     model = nullptr;
     rigidbody = nullptr;
+    enough_funds = true;
 
     load_map(map_loc);
 
@@ -56,12 +57,18 @@ void Grid::setup_listeners() {
 
     events::build::construct_preview_event.connect([&](ConstructType type, bool valid) {
         selected = type;
+        enough_funds = valid;
 
         // Change preview to this construct type.
         preview.set_construct_type(type, valid);
         children.push_back(&preview);
         // Update preview position based on hover position
         update_selection();
+    });
+
+    events::player_coins_update_event.connect([&](int balance) {
+        enough_funds = balance >= Constructs::CONSTRUCTS.at(selected).cost;
+        preview.set_valid(hover->buildable && enough_funds);
     });
 
     events::build::select_grid_return_event.connect([&]() {
@@ -188,6 +195,7 @@ void Grid::update_selection() {
 
     // Move preview to selected tile
     preview.curr_preview->transform.set_position(hover_col, 0.0f, hover_row);
+    preview.set_valid(hover->buildable && enough_funds);
 }
 
 void Grid::load_map(const char *map_loc) {

@@ -30,6 +30,7 @@ namespace events {
     signal<void(GameObject *obj)> disable_rigidbody_event;
     signal<void(GameObject *obj)> enable_rigidbody_event;
     signal<void(int)> player_finished_event;
+    signal<void(int)> player_coins_update_event;
 
     namespace server {
         signal<void(proto::ServerMessage &)> announce;

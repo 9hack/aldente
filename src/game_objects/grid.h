@@ -30,6 +30,7 @@ private:
     int goal_z, goal_x;
 
     ConstructPreview preview; // the currently selected construct as a transparent preview on the grid
+    bool enough_funds;
 
     void setup_listeners();
 

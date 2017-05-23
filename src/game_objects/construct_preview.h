@@ -9,6 +9,8 @@
 class ConstructPreview : public GameObject {
 public:
     void set_construct_type(ConstructType type, bool valid);
+    void set_valid(bool valid);
+    bool get_valid() const;
     Construct *curr_preview;
 private:
     template <typename T>
@@ -16,4 +18,5 @@ private:
 
     // make the previews lazily and fu<k;ng cache them
     std::map<ConstructType, Construct *> cached_previews;
+    bool valid;
 };
