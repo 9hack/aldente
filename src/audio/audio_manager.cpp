@@ -38,10 +38,19 @@ AudioManager::AudioManager() : muted(true) {
         }
     });
 
+	events::stop_sound_effects_event.connect([&](const std::string filename) {
+		sounds[filename]->stop();
+	});
+
     events::toggle_mute_event.connect([&]() {
         muted = !muted;
         if (muted) {
             music.pause();
+            
+			// Mute all sound effects
+			for (auto it = sounds.begin(); it != sounds.end(); it++) {
+				it->second->pause();
+			}
         } else {
             music.play();
         }
