@@ -41,7 +41,10 @@ void Chest::s_interact_trigger(GameObject *other) {
 
     // Chest will fade away, no longer needs rigid body
     // TODO : Change to Disable() once Client Animation Finishes
-    events::disable_rigidbody_event(this);
+    Timer::get()->do_after(std::chrono::milliseconds(1500), [&]() {
+        events::disable_rigidbody_event(this);
+        disable();
+    });
 
     // Send signal to client to tell that this chest is opened
     events::dungeon::network_interact_event(other->get_id(), id);
@@ -66,13 +69,14 @@ void Chest::setup_model() {
 void Chest::disappear() {
     int count = 0;
     cancel_fade = Timer::get()->do_every(
-        std::chrono::milliseconds(100),
+        std::chrono::milliseconds(50),
         [&, count]() mutable {
         const float num_steps = 20;
         if (count <= num_steps) {
            set_filter_alpha(1.f - (count / num_steps));
         }
         else {
+            anim_player.stop();
             cancel_fade();
         }
         count++;
