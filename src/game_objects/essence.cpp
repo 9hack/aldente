@@ -68,10 +68,16 @@ void Essence::s_update_this() {
 void Essence::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player && !player->is_invulnerable()) {
-        //value->collected_by(player); // Award player
-        events::dungeon::network_collision_event(id, player->get_id());
-        // TODO : Call disable() once client side animation ends
-        events::disable_rigidbody_event(this);
+        value->collected_by(player); // Award player
+        events::dungeon::network_collision_event(player->get_id(), id);
+
+        // Call disable() once client side animation ends
+        events::disable_rigidbody_event(this); // Disables rigid body first to prevent moving
+        Timer::get()->do_after(
+            std::chrono::milliseconds(500),
+            [&]() {
+            disable();
+        });
     }
 }
 
@@ -92,16 +98,17 @@ void Essence::setup_model() {
 
 void Essence::disappear() {
 
-    // TODO : Add "pick up" animation
+    // Add "pick up" animation
 
     int count = 0;
     // Slowly fade away
     cancel_fade = Timer::get()->do_every(
         std::chrono::milliseconds(50),
         [&, count]() mutable {
-        const float max_count = 20;
+        const float max_count = 10;
         if (count < max_count) {
             set_filter_alpha(1.0f - (count / max_count));
+            transform.translate({ 0, 0.02f, 0 }); // Bounce up animation
         }
         else {
             cancel_fade();

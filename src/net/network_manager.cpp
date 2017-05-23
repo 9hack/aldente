@@ -243,7 +243,7 @@ void ClientNetworkManager::update() {
                     } else {
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }
-                    all_exist = false;
+                    // all_exist = false; // TODO : Find better fix. This is causing a bug where collisions aren't called if creating new objects
                 } else {
                     GameObject::game_objects[obj.id()]->c_update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), obj.enabled());
                 }

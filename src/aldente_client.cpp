@@ -108,7 +108,7 @@ void AldenteClient::start() {
     // Setup framerate counter.
     GLuint frame = 0;
     Timer::get()->do_every(std::chrono::seconds(1), [&](){
-        std::cerr << "FPS: " << frame << std::endl;
+        //std::cerr << "FPS: " << frame << std::endl;
         frame = 0;
     });
 
