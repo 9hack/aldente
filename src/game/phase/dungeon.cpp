@@ -23,8 +23,6 @@ void DungeonPhase::s_setup() {
         GameState::scene_manager.get_current_scene()->objs.push_back(ess);
     });
 
-    events::dungeon::place_goal_event();
-
     flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
         Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
         assert(player);
