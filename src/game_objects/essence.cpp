@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "util/util.h"
 #include "game/collectibles/gold.h"
+#include "game/collectibles/nothing.h"
 
 #include <iostream>
 
@@ -69,6 +70,8 @@ void Essence::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
     if (player && !player->is_invulnerable()) {
         value->collected_by(player); // Award player
+        value = std::make_unique<collectibles::Nothing>();
+
         events::dungeon::network_collision_event(player->get_id(), id);
 
         // Call disable() once client side animation ends
@@ -99,6 +102,11 @@ void Essence::setup_model() {
 void Essence::disappear() {
 
     // Add "pick up" animation
+
+    anim_player.set_anim("up");
+    anim_player.set_speed(3.0f);
+    anim_player.set_loop(false);
+    anim_player.play();
 
     int count = 0;
     // Slowly fade away

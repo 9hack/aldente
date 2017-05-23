@@ -200,8 +200,15 @@ bool Player::s_take_damage() {
 
     std::cerr << "Player is hit: " << id << std::endl;
 
-    // Player drops dream essence and loses essence
-    for (int i = 0; i < 8; i++)
+    // Player loses percentage essence
+    const float percent_loss = .20f;
+    int amount_loss = (int) stats.get_coins() * percent_loss;
+    stats.add_coins(-amount_loss);
+
+    // Drop essence to total amount loss, rounded down. Assuming that each essence has 10 coin value. 
+    const float essence_val = 10.0f; // Currently hardcoded
+    int number_essence_loss = (int)floor(amount_loss / essence_val);
+    for (int i = 1; i <= (amount_loss / 10.0f); i++)
         events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
 
     // End Stunned
