@@ -163,12 +163,14 @@ void Player::setup_player_model(std::string &model_name) {
 }
 
 void Player::s_begin_warp(float x, float z) {
+    exiting = true;
     set_position({ x, 0, z });
     rigidbody->setLinearVelocity(btVector3(0, 0, 0));
 
     // Wait for animation before signaling phase
     Timer::get()->do_after(std::chrono::seconds(1), [&]() {
         events::dungeon::player_finished_event(id);
+        exiting = false;
     });
 }
 
