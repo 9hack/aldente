@@ -103,7 +103,7 @@ void ServerNetworkManager::update() {
             switch (msg.message_type_case()) {
             case proto::ClientMessage::MessageTypeCase::kBuildRequest: {
                 proto::Construct construct = msg.build_request();
-                events::build::check_funds_event(construct);
+                events::build::s_check_funds_event(construct);
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kMoveRequest: {

@@ -10,7 +10,7 @@ void BuildPhase::s_setup() {
         context.ready_flags[player_id] = true;
     });
 
-    s_check_funds_conn = events::build::check_funds_event.connect([&](proto::Construct& c) {
+    s_check_funds_conn = events::build::s_check_funds_event.connect([&](proto::Construct& c) {
         Player* player = GameState::players[c.player_id()];
         assert(player);
         auto type = static_cast<ConstructType>(c.type());
@@ -76,7 +76,6 @@ void BuildPhase::c_setup() {
                 events::build::select_grid_confirm_event();
             else
                 events::build::build_grid_place_event();
-            is_menu = false;
         }
 
         // B button pressed.
@@ -126,13 +125,25 @@ void BuildPhase::c_setup() {
         }
     });
 
-    c_check_funds_conn = events::build::construct_selected_event.connect([&](ConstructType type) {
+    c_preview_conn = events::build::construct_selected_event.connect([&](ConstructType type) {
         Player* player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
         assert(player);
         int cost = Constructs::CONSTRUCTS.at(type).cost;
         bool afford = player->can_afford(cost);
 
         events::build::construct_preview_event(type, afford);
+    });
+
+    c_check_funds_conn = events::build::c_check_funds_event.connect([&](ConstructType type) {
+        Player* player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
+        assert(player);
+        int cost = Constructs::CONSTRUCTS.at(type).cost;
+        bool afford = player->can_afford(cost);
+
+        if (player->can_afford(cost)) {
+            is_menu = false;
+            events::build::construct_selected_event(type);
+        }
     });
 
     // Play music
@@ -164,6 +175,7 @@ void BuildPhase::s_teardown() {
 void BuildPhase::c_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
+    c_preview_conn.disconnect();
     c_check_funds_conn.disconnect();
 
     events::build::end_build_event();

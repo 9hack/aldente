@@ -59,7 +59,8 @@ namespace events {
         signal<void(ConstructType)> construct_selected_event;
         signal<void(ConstructType, bool)> construct_preview_event;
         signal<void(proto::Construct &)> request_build_event;
-        signal<void(proto::Construct &)> check_funds_event;
+        signal<void(ConstructType)> c_check_funds_event;
+        signal<void(proto::Construct &)> s_check_funds_event;
         signal<void(proto::Construct &, std::function<void()>)> try_build_event;
         signal<void(proto::Construct &)> respond_build_event;
         signal<void(proto::Construct &)> update_build_event;

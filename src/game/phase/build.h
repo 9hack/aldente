@@ -19,4 +19,5 @@ private:
     boost::signals2::connection ready_conn;
     boost::signals2::connection s_check_funds_conn;
     boost::signals2::connection c_check_funds_conn;
+    boost::signals2::connection c_preview_conn;
 };

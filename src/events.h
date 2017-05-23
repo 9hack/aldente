@@ -179,8 +179,11 @@ namespace events {
         // Client requests to build a construct.
         extern signal<void(proto::Construct &)> request_build_event;
 
-        // Check if the player has enough funds to purchase.
-        extern signal<void(proto::Construct &)> check_funds_event;
+        // Check if the player has enough funds to purchase, if so, allows selection of item.
+        extern signal<void(ConstructType)> c_check_funds_event;
+
+        // Check if the player has enough funds to purchase, if so, tries to build.
+        extern signal<void(proto::Construct &)> s_check_funds_event;
 
         // Server attempts to build the construct.
         extern signal<void(proto::Construct &, std::function<void()>)> try_build_event;
