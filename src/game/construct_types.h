@@ -19,7 +19,7 @@ namespace Constructs {
     const static ConstructData REMOVE = { ConstructType::REMOVE, 200, "Remove", "Remove a block.", "Tomato.jpg" };
     const static std::map<ConstructType, ConstructData> CONSTRUCTS = {
         { ConstructType::CHEST, CHEST },
-        { ConstructType::SPIKES, SPIKES},
+        { ConstructType::SPIKES, SPIKES },
         { ConstructType::REMOVE, REMOVE }
     };
 }

@@ -81,6 +81,6 @@ public:
     // FOR CLIENT USE ONLY.
     void c_update_stats(const proto::PlayerStats &update);
 
-    // Purchasing constructs
+    // Checks if a player has enough funds to afford a cost.
     bool can_afford(int cost);
 };

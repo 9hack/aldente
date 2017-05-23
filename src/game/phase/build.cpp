@@ -18,13 +18,10 @@ void BuildPhase::s_setup() {
 
         if (player->can_afford(construct.cost)) {
             events::build::try_build_event(c, [player, construct]() {
-                player->s_modify_stats([player, construct](PlayerStats& stats) {
+                player->s_modify_stats([construct](PlayerStats& stats) {
                     stats.add_coins(-construct.cost);
                 });
             });
-        }
-        else {
-            // TODO?
         }
     });
 
@@ -133,9 +130,7 @@ void BuildPhase::c_setup() {
         Player* player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
         assert(player);
         int cost = Constructs::CONSTRUCTS.at(type).cost;
-        std::cerr << "cost of construct: " << cost << "\n";
         bool afford = player->can_afford(cost);
-        std::cerr << (afford ? "can afford\n" : "cannot afford\n");
 
         events::build::construct_preview_event(type, afford);
     });

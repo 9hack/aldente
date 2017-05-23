@@ -30,7 +30,7 @@ private:
     int goal_z, goal_x;
 
     ConstructPreview preview; // the currently selected construct as a transparent preview on the grid
-    bool enough_funds;
+    bool build_permissible; // Did build pass initial check (game logic) for building?
 
     void setup_listeners();
 

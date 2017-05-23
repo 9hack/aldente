@@ -15,7 +15,7 @@ Grid::Grid(const char *map_loc) :
     tag = "GRID";
     model = nullptr;
     rigidbody = nullptr;
-    enough_funds = true;
+    build_permissible = true;
 
     load_map(map_loc);
 
@@ -57,7 +57,7 @@ void Grid::setup_listeners() {
 
     events::build::construct_preview_event.connect([&](ConstructType type, bool valid) {
         selected = type;
-        enough_funds = valid;
+        build_permissible = valid;
 
         // Change preview to this construct type.
         preview.set_construct_type(type, valid);
@@ -67,8 +67,8 @@ void Grid::setup_listeners() {
     });
 
     events::player_coins_update_event.connect([&](int balance) {
-        enough_funds = balance >= Constructs::CONSTRUCTS.at(selected).cost;
-        preview.set_valid(hover->buildable && enough_funds);
+        build_permissible = balance >= Constructs::CONSTRUCTS.at(selected).cost;
+        preview.set_valid(hover->buildable && build_permissible);
     });
 
     events::build::select_grid_return_event.connect([&]() {
@@ -195,7 +195,7 @@ void Grid::update_selection() {
 
     // Move preview to selected tile
     preview.curr_preview->transform.set_position(hover_col, 0.0f, hover_row);
-    preview.set_valid(hover->buildable && enough_funds);
+    preview.set_valid(hover->buildable && build_permissible);
 }
 
 void Grid::load_map(const char *map_loc) {

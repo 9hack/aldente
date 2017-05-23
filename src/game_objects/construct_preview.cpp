@@ -35,10 +35,5 @@ T* ConstructPreview::make_preview() {
 }
 
 void ConstructPreview::set_valid(bool valid) {
-    this->valid = valid;
     curr_preview->set_filter_color(valid ? Color::GREEN : Color::RED);
-}
-
-bool ConstructPreview::get_valid() const {
-    return valid;
 }
