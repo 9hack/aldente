@@ -34,9 +34,12 @@ public:
     void s_interact_trigger(GameObject *other) override;
     void c_interact_trigger(GameObject *other) override;
 
+    void disappear(); // Causes chest to fade away
 private:
     btBoxShape *hit_box = new btBoxShape(btVector3(0.5f, 0.5f, 0.5f));
     std::unique_ptr<collectibles::Collectible> contents;
+
+    std::function<void()> cancel_fade; // Callback function to cancel fading away.
 };
 
 class Goal : public Construct {
