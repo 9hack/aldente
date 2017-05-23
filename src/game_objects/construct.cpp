@@ -42,7 +42,6 @@ void Chest::s_interact_trigger(GameObject *other) {
     // Chest will fade away, no longer needs rigid body
     // TODO : Change to Disable() once Client Animation Finishes
     Timer::get()->do_after(std::chrono::milliseconds(1500), [&]() {
-        events::disable_rigidbody_event(this);
         disable();
     });
 
