@@ -22,6 +22,15 @@ private:
     boost::signals2::connection flag_conn;
     boost::signals2::connection player_finish_conn;
 
-    // <Player id, if goal reached>
-    std::map<int, bool> goal_reached_flags;
+    // <Player id, order of completion>
+    std::map<int, int> goal_reached_flags;
+
+    // Counter for finish order
+    int next_place;
+
+    // Vector for points, the player's ranking is 
+    // the index used for accessing the reward
+    // (0th place indicates you didn't finish)
+    std::vector<int> rewards =
+    { 0, 100, 75, 50, 25 };
 };
