@@ -68,11 +68,13 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
 
     if (!animate && !exiting) {
         if (!anim_player.check_paused())
+            events::stop_sound_effects_event(AudioManager::FOOTSTEPS_SOUND);
+
             anim_player.stop();
     }
     else {
         if (anim_player.check_paused()) {
-            events::AudioData d = { AudioManager::FOOTSTEPS_SOUND, 100 };
+            events::AudioData d = { AudioManager::FOOTSTEPS_SOUND, 100, true };
             events::sound_effects_event(d);
 
             anim_player.play();

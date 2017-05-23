@@ -63,9 +63,11 @@ namespace events {
     struct AudioData {
         std::string filename;
         int volume;
+        bool loop;
     };
     extern signal<void(AudioData &)> music_event;
     extern signal<void(AudioData &)> sound_effects_event;
+    extern signal<void(std::string)> stop_sound_effects_event;
     extern signal<void()> toggle_mute_event;
 
     struct WindowSizeData {

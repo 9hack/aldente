@@ -89,7 +89,7 @@ void Grid::setup_listeners() {
         // Build on the client, with graphics.
         build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
 
-        events::AudioData d = { AudioManager::BUILD_CONFIRM_SOUND, 80 };
+        events::AudioData d = { AudioManager::BUILD_CONFIRM_SOUND, 80, false };
         events::sound_effects_event(d);
     });
 

@@ -64,7 +64,7 @@ void DungeonPhase::c_setup() {
     });
 
     // Play music
-    events::AudioData d = { AudioManager::DUNGEON_MUSIC, 50 };
+    events::AudioData d = { AudioManager::DUNGEON_MUSIC, 50, true };
     events::music_event(d);
 }
 
