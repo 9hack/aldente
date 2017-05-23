@@ -10,14 +10,17 @@ void BuildPhase::s_setup() {
         context.ready_flags[player_id] = true;
     });
 
-    s_check_funds_conn = events::build::s_check_funds_event.connect([&](proto::Construct& c) {
+    verify_and_build_conn = events::build::s_check_funds_event.connect([&](proto::Construct& c) {
         Player* player = GameState::players[c.player_id()];
         assert(player);
         auto type = static_cast<ConstructType>(c.type());
         auto& construct = Constructs::CONSTRUCTS.at(type);
 
+        // If player can afford to purchase, try to build on the tile.
         if (player->can_afford(construct.cost)) {
-            events::build::try_build_event(c, [player, construct]() {
+            events::build::try_build_event(c, [&]() {
+
+                // If build successful, deduct the cost from player's funds.
                 player->s_modify_stats([construct](PlayerStats& stats) {
                     stats.add_coins(-construct.cost);
                 });
@@ -131,6 +134,7 @@ void BuildPhase::c_setup() {
         int cost = Constructs::CONSTRUCTS.at(type).cost;
         bool afford = player->can_afford(cost);
 
+        // Create a construct preview, tinted green/red based on whether or not player can afford.
         events::build::construct_preview_event(type, afford);
     });
 
@@ -140,6 +144,7 @@ void BuildPhase::c_setup() {
         int cost = Constructs::CONSTRUCTS.at(type).cost;
         bool afford = player->can_afford(cost);
 
+        // Switch to building on the 3D grid, since player can afford to build this construct.
         if (player->can_afford(cost)) {
             is_menu = false;
             events::build::construct_selected_event(type);
@@ -169,7 +174,7 @@ proto::Phase BuildPhase::s_update() {
 void BuildPhase::s_teardown() {
     cancel_clock_every();
     ready_conn.disconnect();
-    s_check_funds_conn.disconnect();
+    verify_and_build_conn.disconnect();
 }
 
 void BuildPhase::c_teardown() {
