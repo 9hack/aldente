@@ -79,6 +79,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\lib\Bullet;..\src;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;assimp-vc140-mtd.lib;opengl32.lib;glu32.lib;soil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -92,6 +94,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\lib\Bullet;..\src;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;assimp-vc140-mtd.lib;opengl32.lib;glu32.lib;soil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -114,6 +118,8 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\lib\Bullet;..\src;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -131,6 +137,8 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\lib\Bullet;..\src;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -140,13 +148,196 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\**\*.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\**\*.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\aldente.h" />
+    <ClInclude Include="..\src\aldente_client.h" />
+    <ClInclude Include="..\src\aldente_server.h" />
+    <ClInclude Include="..\src\animation\animation.h" />
+    <ClInclude Include="..\src\animation\animation_player.h" />
+    <ClInclude Include="..\src\asset_loader.h" />
+    <ClInclude Include="..\src\audio\audio_manager.h" />
+    <ClInclude Include="..\src\bt_debug.h" />
+    <ClInclude Include="..\src\catch.h" />
+    <ClInclude Include="..\src\debug_input.h" />
+    <ClInclude Include="..\src\events.h" />
+    <ClInclude Include="..\src\game\collectibles\collectible.h" />
+    <ClInclude Include="..\src\game\collectibles\gold.h" />
+    <ClInclude Include="..\src\game\collectibles\nothing.h" />
+    <ClInclude Include="..\src\game\construct_types.h" />
+    <ClInclude Include="..\src\game\context.h" />
+    <ClInclude Include="..\src\game\direction.h" />
+    <ClInclude Include="..\src\game\game_state.h" />
+    <ClInclude Include="..\src\game\phase\build.h" />
+    <ClInclude Include="..\src\game\phase\dungeon.h" />
+    <ClInclude Include="..\src\game\phase\phase.h" />
+    <ClInclude Include="..\src\game\player_stats.h" />
+    <ClInclude Include="..\src\game_objects\construct.h" />
+    <ClInclude Include="..\src\game_objects\construct_preview.h" />
+    <ClInclude Include="..\src\game_objects\game_object.h" />
+    <ClInclude Include="..\src\game_objects\grid.h" />
+    <ClInclude Include="..\src\game_objects\player.h" />
+    <ClInclude Include="..\src\game_objects\tile.h" />
+    <ClInclude Include="..\src\input\axis_combiner.h" />
+    <ClInclude Include="..\src\input\conceptual_translator.h" />
+    <ClInclude Include="..\src\input\raw_maps\debug.h" />
+    <ClInclude Include="..\src\input\raw_maps\matricom.h" />
+    <ClInclude Include="..\src\input\raw_maps\raw_map.h" />
+    <ClInclude Include="..\src\input\raw_maps\xbox.h" />
+    <ClInclude Include="..\src\model\geometry.h" />
+    <ClInclude Include="..\src\model\geometry_generator.h" />
+    <ClInclude Include="..\src\model\material.h" />
+    <ClInclude Include="..\src\model\mesh.h" />
+    <ClInclude Include="..\src\model\model.h" />
+    <ClInclude Include="..\src\model\model_filter.h" />
+    <ClInclude Include="..\src\model\plane.h" />
+    <ClInclude Include="..\src\model\skeleton.h" />
+    <ClInclude Include="..\src\net\connection.h" />
+    <ClInclude Include="..\src\net\network_client.h" />
+    <ClInclude Include="..\src\net\network_manager.h" />
+    <ClInclude Include="..\src\net\network_server.h" />
+    <ClInclude Include="..\src\net\threadsafe_queue.h" />
+    <ClInclude Include="..\src\physics.h" />
+    <ClInclude Include="..\src\poll\glfw_poller.h" />
+    <ClInclude Include="..\src\poll\input_poller.h" />
+    <ClInclude Include="..\src\poll\poller.h" />
+    <ClInclude Include="..\src\proto\net.pb.h" />
+    <ClInclude Include="..\src\render.h" />
+    <ClInclude Include="..\src\scene\camera.h" />
+    <ClInclude Include="..\src\scene\light\directional_light.h" />
+    <ClInclude Include="..\src\scene\light\light.h" />
+    <ClInclude Include="..\src\scene\light\point_light.h" />
+    <ClInclude Include="..\src\scene\light\pulse_point_light.h" />
+    <ClInclude Include="..\src\scene\light\spot_light.h" />
+    <ClInclude Include="..\src\scene\main_scene.h" />
+    <ClInclude Include="..\src\scene\scene.h" />
+    <ClInclude Include="..\src\scene\scene_info.h" />
+    <ClInclude Include="..\src\scene_manager.h" />
+    <ClInclude Include="..\src\shaders\basic_shader.h" />
+    <ClInclude Include="..\src\shaders\debug_shadow_shader.h" />
+    <ClInclude Include="..\src\shaders\shader.h" />
+    <ClInclude Include="..\src\shaders\shader_manager.h" />
+    <ClInclude Include="..\src\shaders\shadow_shader.h" />
+    <ClInclude Include="..\src\shaders\skybox_shader.h" />
+    <ClInclude Include="..\src\shaders\text_shader.h" />
+    <ClInclude Include="..\src\shaders\ui_shader.h" />
+    <ClInclude Include="..\src\shadows.h" />
+    <ClInclude Include="..\src\timer.h" />
+    <ClInclude Include="..\src\transform.h" />
+    <ClInclude Include="..\src\ui\build_ui.h" />
+    <ClInclude Include="..\src\ui\clock_ui.h" />
+    <ClInclude Include="..\src\ui\render2d.h" />
+    <ClInclude Include="..\src\ui\ui.h" />
+    <ClInclude Include="..\src\ui\ui_clock.h" />
+    <ClInclude Include="..\src\ui\ui_container.h" />
+    <ClInclude Include="..\src\ui\ui_element.h" />
+    <ClInclude Include="..\src\ui\ui_grid.h" />
+    <ClInclude Include="..\src\ui\ui_halo_container.h" />
+    <ClInclude Include="..\src\ui\ui_image_node.h" />
+    <ClInclude Include="..\src\ui\ui_manager.h" />
+    <ClInclude Include="..\src\ui\ui_rectangle.h" />
+    <ClInclude Include="..\src\ui\ui_text_node.h" />
+    <ClInclude Include="..\src\util\color.h" />
+    <ClInclude Include="..\src\util\config.h" />
+    <ClInclude Include="..\src\util\util.h" />
+    <ClInclude Include="..\src\util\util_bt.h" />
+    <ClInclude Include="..\src\window.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\aldente_client.cpp" />
+    <ClCompile Include="..\src\aldente_server.cpp" />
+    <ClCompile Include="..\src\animation\animation.cpp" />
+    <ClCompile Include="..\src\animation\animation_player.cpp" />
+    <ClCompile Include="..\src\asset_loader.cpp" />
+    <ClCompile Include="..\src\audio\audio_manager.cpp" />
+    <ClCompile Include="..\src\bt_debug.cpp" />
+    <ClCompile Include="..\src\debug_input.cpp" />
+    <ClCompile Include="..\src\events.cpp" />
+    <ClCompile Include="..\src\example_test.cpp" />
+    <ClCompile Include="..\src\game\collectibles\gold.cpp" />
+    <ClCompile Include="..\src\game\game_state.cpp" />
+    <ClCompile Include="..\src\game\phase\build.cpp" />
+    <ClCompile Include="..\src\game\phase\dungeon.cpp" />
+    <ClCompile Include="..\src\game\phase\phase.cpp" />
+    <ClCompile Include="..\src\game\player_stats.cpp" />
+    <ClCompile Include="..\src\game_objects\construct.cpp" />
+    <ClCompile Include="..\src\game_objects\construct_preview.cpp" />
+    <ClCompile Include="..\src\game_objects\game_object.cpp" />
+    <ClCompile Include="..\src\game_objects\grid.cpp" />
+    <ClCompile Include="..\src\game_objects\player.cpp" />
+    <ClCompile Include="..\src\game_objects\tile.cpp" />
+    <ClCompile Include="..\src\input\axis_combiner.cpp" />
+    <ClCompile Include="..\src\input\conceptual_translator.cpp" />
+    <ClCompile Include="..\src\input\conceptual_translator_test.cpp" />
+    <ClCompile Include="..\src\input\raw_maps\raw_map.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\model\geometry.cpp" />
+    <ClCompile Include="..\src\model\geometry_generator.cpp" />
+    <ClCompile Include="..\src\model\mesh.cpp" />
+    <ClCompile Include="..\src\model\model.cpp" />
+    <ClCompile Include="..\src\net\connection.cpp" />
+    <ClCompile Include="..\src\net\network_client.cpp" />
+    <ClCompile Include="..\src\net\network_manager.cpp" />
+    <ClCompile Include="..\src\net\network_server.cpp" />
+    <ClCompile Include="..\src\physics.cpp" />
+    <ClCompile Include="..\src\poll\glfw_poller.cpp" />
+    <ClCompile Include="..\src\poll\input_poller.cpp" />
+    <ClCompile Include="..\src\proto\net.pb.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="..\src\render.cpp" />
+    <ClCompile Include="..\src\scene\camera.cpp" />
+    <ClCompile Include="..\src\scene\main_scene.cpp" />
+    <ClCompile Include="..\src\scene\scene.cpp" />
+    <ClCompile Include="..\src\scene\scene_info.cpp" />
+    <ClCompile Include="..\src\scene_manager.cpp" />
+    <ClCompile Include="..\src\shaders\basic_shader.cpp" />
+    <ClCompile Include="..\src\shaders\debug_shadow_shader.cpp" />
+    <ClCompile Include="..\src\shaders\shader.cpp" />
+    <ClCompile Include="..\src\shaders\shader_manager.cpp" />
+    <ClCompile Include="..\src\shaders\shadow_shader.cpp" />
+    <ClCompile Include="..\src\shaders\skybox_shader.cpp" />
+    <ClCompile Include="..\src\shaders\text_shader.cpp" />
+    <ClCompile Include="..\src\shaders\ui_shader.cpp" />
+    <ClCompile Include="..\src\shadows.cpp" />
+    <ClCompile Include="..\src\timer.cpp" />
+    <ClCompile Include="..\src\transform.cpp" />
+    <ClCompile Include="..\src\ui\build_ui.cpp" />
+    <ClCompile Include="..\src\ui\clock_ui.cpp" />
+    <ClCompile Include="..\src\ui\render2d.cpp" />
+    <ClCompile Include="..\src\ui\ui.cpp" />
+    <ClCompile Include="..\src\ui\ui_clock.cpp" />
+    <ClCompile Include="..\src\ui\ui_container.cpp" />
+    <ClCompile Include="..\src\ui\ui_grid.cpp" />
+    <ClCompile Include="..\src\ui\ui_halo_container.cpp" />
+    <ClCompile Include="..\src\ui\ui_image_node.cpp" />
+    <ClCompile Include="..\src\ui\ui_manager.cpp" />
+    <ClCompile Include="..\src\ui\ui_rectangle.cpp" />
+    <ClCompile Include="..\src\ui\ui_text_node.cpp" />
+    <ClCompile Include="..\src\util\color.cpp" />
+    <ClCompile Include="..\src\util\config.cpp" />
+    <ClCompile Include="..\src\util\util.cpp" />
+    <ClCompile Include="..\src\util\util_bt.cpp" />
+    <ClCompile Include="..\src\window.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
