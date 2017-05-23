@@ -113,7 +113,6 @@ void DungeonPhase::s_teardown() {
     for (auto const &kv : goal_reached_flags) {
         curr_player = dynamic_cast<Player*>(GameObject::game_objects[kv.first]);
         assert(curr_player);
-        std::cerr << kv.first << ", " << rewards[kv.second] << std::endl;
         curr_player->s_modify_stats([&, kv](PlayerStats &stats) {
             stats.add_coins(rewards[kv.second]);
         });
