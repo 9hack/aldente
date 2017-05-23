@@ -112,7 +112,7 @@ void BuildPhase::c_setup() {
     });
 
     // Play music
-    events::AudioData d = { AudioManager::BUILD_MUSIC, 50 };
+    events::AudioData d = { AudioManager::BUILD_MUSIC, 50, true };
     events::music_event(d);
 }
 

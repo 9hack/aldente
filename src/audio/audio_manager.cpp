@@ -21,9 +21,10 @@ AudioManager::AudioManager() : muted(true) {
         if (!music.openFromFile(filename)) {
             std::cerr << "AudioManager: Cannot open " << filename << std::endl;;
         }
-        music.setLoop(true);
+
         if (!muted) {
             music.setVolume(d.volume);
+            music.setLoop(d.loop);
             music.play();
         }
     });
@@ -32,6 +33,7 @@ AudioManager::AudioManager() : muted(true) {
         std::string filename = d.filename;
         if (!muted) {
             sounds[filename]->setVolume(d.volume);
+            sounds[filename]->setLoop(d.loop);
             sounds[filename]->play();
         }
     });
