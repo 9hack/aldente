@@ -20,7 +20,7 @@ void DungeonPhase::s_setup() {
         Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
         assert(player);
         player->disable();
-        goal_reached_flags[player_id] = true;
+        goal_reached_flags[player_id] = next_place++;
 
         proto::ServerMessage msg;
         msg.set_player_finished(player_id);
@@ -28,12 +28,14 @@ void DungeonPhase::s_setup() {
     });
 
     for (int id : context.player_ids) {
-        goal_reached_flags[id] = false;
+        goal_reached_flags[id] = 0;
         Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
         assert(player);
         player->reset_position();
         player->enable();
     }
+
+    next_place = 1;
 }
 
 void DungeonPhase::c_setup() {
@@ -105,6 +107,17 @@ void DungeonPhase::s_teardown() {
     collision_conn.disconnect();
     interact_conn.disconnect();
     flag_conn.disconnect();
+
+    // Assigns rewards depending on player's ranking
+    Player *curr_player;
+    for (auto const &kv : goal_reached_flags) {
+        curr_player = dynamic_cast<Player*>(GameObject::game_objects[kv.first]);
+        assert(curr_player);
+        std::cerr << kv.first << ", " << rewards[kv.second] << std::endl;
+        curr_player->s_modify_stats([&, kv](PlayerStats &stats) {
+            stats.add_coins(rewards[kv.second]);
+        });
+    }
 }
 
 void DungeonPhase::c_teardown() {
