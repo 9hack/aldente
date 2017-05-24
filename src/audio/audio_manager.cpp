@@ -22,29 +22,27 @@ AudioManager::AudioManager() : muted(true) {
             std::cerr << "AudioManager: Cannot open " << filename << std::endl;;
         }
 
+        music.setVolume(d.volume);
+        music.setLoop(d.loop);
+
         if (!muted) {
-            music.setVolume(d.volume);
-            music.setLoop(d.loop);
             music.play();
         }
     });
 
     events::sound_effects_event.connect([&](const events::AudioData &d) {
         std::string filename = d.filename;
+
+        sounds[filename]->setVolume(d.volume);
+        sounds[filename]->setLoop(d.loop);
+
         if (!muted) {
-            sounds[filename]->setVolume(d.volume);
-            sounds[filename]->setLoop(d.loop);
             sounds[filename]->play();
         }
-    });
-
-    events::sound_effects_event.connect([&](const events::AudioData &d) {
-        std::string filename = d.filename;
-
-        if (!muted) {
-            sounds[filename]->setVolume(d.volume);
-            sounds[filename]->setLoop(d.loop);
+        else if (muted && d.loop) {
+            // Change state to paused so that when audio is un-muted, the looped sound will play
             sounds[filename]->play();
+            sounds[filename]->pause();
         }
     });
 
@@ -53,12 +51,24 @@ AudioManager::AudioManager() : muted(true) {
     });
 
     events::toggle_mute_event.connect([&]() {
-        std::cerr << "Toggling mute" << std::endl;
         muted = !muted;
         if (muted) {
             music.pause();
-        } else {
+
+            // Mute all sound effects
+            for (auto it = sounds.begin(); it != sounds.end(); it++) {
+                it->second->pause();
+            }
+        }
+        else {
             music.play();
+
+            // Play looped sound effects that has been paused
+            for (auto it = sounds.begin(); it != sounds.end(); it++) {
+                if (it->second->getStatus() == sf::SoundSource::Status::Paused) {
+                    it->second->play();
+                }
+            }
         }
     });
 }

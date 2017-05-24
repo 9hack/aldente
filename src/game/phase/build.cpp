@@ -13,6 +13,13 @@ void BuildPhase::s_setup() {
     for (int id : context.player_ids) {
         context.ready_flags[id] = false;
     }
+
+    // Re-enable chests on server side.
+    for (auto & kv : GameObject::game_objects) {
+        if (dynamic_cast<Chest*>(kv.second)) {
+            kv.second->enable();
+        }
+    }
 }
 
 void BuildPhase::c_setup() {
@@ -112,8 +119,16 @@ void BuildPhase::c_setup() {
     });
 
     // Play music
-    events::AudioData d = { AudioManager::BUILD_MUSIC, 50, true };
+    events::AudioData d = { AudioManager::BUILD_MUSIC, 30, true };
     events::music_event(d);
+
+    // Make opened chests reappear at start of build phase.
+    for (auto & kv : GameObject::game_objects) {
+        if (dynamic_cast<Chest*>(kv.second)) {
+            kv.second->set_filter_alpha(1.f);
+            kv.second->enable();
+        }
+    }
 }
 
 proto::Phase BuildPhase::s_update() {

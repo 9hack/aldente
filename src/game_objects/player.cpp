@@ -67,10 +67,11 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
     if (!animate && !exiting) {
-        if (!anim_player.check_paused())
+        if (!anim_player.check_paused()) {
             events::stop_sound_effects_event(AudioManager::FOOTSTEPS_SOUND);
 
             anim_player.stop();
+        }
     }
     else {
         if (anim_player.check_paused()) {
@@ -169,12 +170,14 @@ void Player::setup_player_model(std::string &model_name) {
 }
 
 void Player::s_begin_warp(float x, float z) {
+    exiting = true;
     set_position({ x, 0, z });
     rigidbody->setLinearVelocity(btVector3(0, 0, 0));
 
     // Wait for animation before signaling phase
     Timer::get()->do_after(std::chrono::seconds(1), [&]() {
         events::dungeon::player_finished_event(id);
+        exiting = false;
     });
 }
 
