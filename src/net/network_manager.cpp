@@ -106,7 +106,7 @@ void ServerNetworkManager::update() {
             switch (msg.message_type_case()) {
             case proto::ClientMessage::MessageTypeCase::kBuildRequest: {
                 proto::Construct construct = msg.build_request();
-                events::build::try_build_event(construct);
+                events::build::s_verify_and_build(construct);
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kMoveRequest: {
@@ -179,6 +179,7 @@ void ClientNetworkManager::register_listeners() {
     // Build phase.
     events::build::request_build_event.connect([&](proto::Construct& c) {
         proto::ClientMessage msg;
+        c.set_player_id(client_id);
         msg.set_allocated_build_request(new proto::Construct(c));
         client.send(msg);
     });
@@ -223,7 +224,7 @@ void ClientNetworkManager::update() {
             // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                GameState::c_add_player(resp.obj_id(), true)->get_id();
+                GameState::c_add_player(resp.obj_id(), true)->c_set_client_player();
             }
             break;
         }
