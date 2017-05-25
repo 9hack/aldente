@@ -31,6 +31,7 @@ namespace events {
     signal<void(GameObject *obj)> disable_rigidbody_event;
     signal<void(GameObject *obj)> enable_rigidbody_event;
     signal<void(int)> player_finished_event;
+    signal<void(int)> c_player_coins_update_event;
 
     namespace server {
         signal<void(proto::ServerMessage &)> announce;
@@ -57,8 +58,11 @@ namespace events {
         signal<void()> build_grid_place_event;
         signal<void()> select_grid_return_event;
         signal<void(ConstructType)> construct_selected_event;
+        signal<void(ConstructType, bool)> c_construct_preview_event;
         signal<void(proto::Construct &)> request_build_event;
-        signal<void(proto::Construct &)> try_build_event;
+        signal<void(ConstructType)> c_check_funds_event;
+        signal<void(proto::Construct &)> s_verify_and_build;
+        signal<void(proto::Construct &, std::function<void()>)> s_try_build_event;
         signal<void(proto::Construct &)> respond_build_event;
         signal<void(proto::Construct &)> update_build_event;
         signal<void(std::pair<int, int>)> pan_camera_event;

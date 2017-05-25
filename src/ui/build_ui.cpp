@@ -53,17 +53,23 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
     });
 
     events::ui_grid_selection_event.connect([&](int content_index) {
-        events::build::construct_selected_event(this->constructs[content_index].type);
+        events::build::c_check_funds_event(this->constructs[content_index].type);
     });
 
     // Show or hide the grid.
-    events::build::select_grid_confirm_event.connect([&]() {
+    events::build::construct_selected_event.connect([&](ConstructType type) {
         shop_panel.disable();
         player_panel.disable();
     });
     events::build::select_grid_return_event.connect([&]() {
         shop_panel.enable();
         player_panel.enable();
+    });
+
+    // Update the player's current gold balance.
+    events::c_player_coins_update_event.connect([&](int coins) {
+        std::string s = std::to_string(coins) + "g";
+        balance_label.set_text(s);
     });
 }
 

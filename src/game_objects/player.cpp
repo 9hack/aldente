@@ -9,7 +9,7 @@
 #define STUN_LENGTH 500 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 
-Player::Player(int id) : GameObject(id) {
+Player::Player(int id) : GameObject(id), is_client(false) {
     tag = "PLAYER";
 
     if (id == ON_SERVER) {
@@ -260,6 +260,17 @@ void Player::s_modify_stats(std::function<void(PlayerStats &)> modifier) {
 
 void Player::c_update_stats(const proto::PlayerStats &update) {
     stats.set_coins(update.coins());
-
+    
     std::cerr << "ID " << id << " COINS NOW @ " << stats.get_coins() << std::endl;
+
+    if (is_client)
+        events::c_player_coins_update_event(update.coins());
+}
+
+bool Player::can_afford(int cost) {
+    return stats.get_coins() >= cost;
+}
+
+void Player::c_set_client_player() {
+    is_client = true;
 }
