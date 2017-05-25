@@ -119,8 +119,7 @@ void BuildPhase::c_setup() {
     });
 
     // Play music
-    events::AudioData d = { AudioManager::BUILD_MUSIC, 30, true };
-    events::music_event(d);
+    events::music_event(events::AudioData{ AudioManager::BUILD_MUSIC, 30, true });
 
     // Make opened chests reappear at start of build phase.
     for (auto & kv : GameObject::game_objects) {

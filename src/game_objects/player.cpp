@@ -75,8 +75,7 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     }
     else {
         if (anim_player.check_paused()) {
-            events::AudioData d = { AudioManager::FOOTSTEPS_SOUND, 100, true };
-            events::sound_effects_event(d);
+            events::sound_effects_event(events::AudioData{ AudioManager::FOOTSTEPS_SOUND, 100, true });
 
             anim_player.play();
         }

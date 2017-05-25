@@ -1,6 +1,12 @@
+#include "audio_manager.h"
+
+#include <boost/range.hpp>
+#include <boost/filesystem.hpp>
+
 #include <string>
 #include <iostream>
-#include "audio_manager.h"
+
+#define SOUND_DIR_PATH "assets/audio/sound/"
 
 const std::string AudioManager::BUILD_MUSIC = "assets/audio/music/mikoto.wav";
 const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/k_theme.wav";
@@ -25,29 +31,29 @@ AudioManager::AudioManager() : muted(true) {
         music.setVolume(d.volume);
         music.setLoop(d.loop);
 
-        if (!muted) {
-            music.play();
-        }
+        if (muted) return;
+        
+        music.play();
     });
 
     events::sound_effects_event.connect([&](const events::AudioData &d) {
         std::string filename = d.filename;
 
-        sounds[filename]->setVolume(d.volume);
-        sounds[filename]->setLoop(d.loop);
+        sounds[filename].setVolume(d.volume);
+        sounds[filename].setLoop(d.loop);
 
-        if (!muted) {
-            sounds[filename]->play();
+        if (d.loop) {
+            sounds[filename].play();
+            sounds[filename].pause();
         }
-        else if (muted && d.loop) {
-            // Change state to paused so that when audio is un-muted, the looped sound will play
-            sounds[filename]->play();
-            sounds[filename]->pause();
-        }
+
+        if (muted) return;
+
+        sounds[filename].play();
     });
 
     events::stop_sound_effects_event.connect([&](const std::string filename) {
-        sounds[filename]->stop();
+        sounds[filename].stop();
     });
 
     events::toggle_mute_event.connect([&]() {
@@ -56,39 +62,31 @@ AudioManager::AudioManager() : muted(true) {
             music.pause();
 
             // Mute all sound effects
-            for (auto it = sounds.begin(); it != sounds.end(); it++) {
-                it->second->pause();
+            for (auto &sound : sounds) {
+                sound.second.pause();
             }
-        }
-        else {
+        } else {
             music.play();
 
             // Play looped sound effects that has been paused
-            for (auto it = sounds.begin(); it != sounds.end(); it++) {
-                if (it->second->getStatus() == sf::SoundSource::Status::Paused) {
-                    it->second->play();
+            for (auto &sound : sounds) {
+                if (sound.second.getStatus() == sf::SoundSource::Status::Paused) {
+                    sound.second.play();
                 }
             }
         }
     });
 }
 
-void AudioManager::loadSound(sf::SoundBuffer * soundBuffer, std::string filename) {
-    if (!soundBuffer->loadFromFile(filename)) {
-        std::cerr << "AudioManager: Cannot open" << filename << std::endl;;
-    }
-}
-
 void AudioManager::loadSounds() {
     // Load sound effects into memory
-
-    // BUILD_CONFIRM_SOUND
-    loadSound(&build_confirm_buffer, BUILD_CONFIRM_SOUND);
-    build_confirm_sound.setBuffer(build_confirm_buffer);
-    sounds[BUILD_CONFIRM_SOUND] = &build_confirm_sound;
-
-    // FOOTSTEPS_SOUND
-    loadSound(&footsteps_buffer, FOOTSTEPS_SOUND);
-    footsteps_sound.setBuffer(footsteps_buffer);
-    sounds[FOOTSTEPS_SOUND] = &footsteps_sound;
+    boost::filesystem::path path = boost::filesystem::path(SOUND_DIR_PATH);
+    
+    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
+        std::string filename = SOUND_DIR_PATH + entry.path().filename().string();
+        if (!sound_buffers[filename].loadFromFile(filename)) {
+            std::cerr << "AudioManager: Cannot open" << filename << std::endl;
+        }
+        sounds[filename] = sf::Sound(sound_buffers[filename]);
+    }
 }
