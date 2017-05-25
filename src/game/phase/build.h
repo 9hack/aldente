@@ -17,7 +17,7 @@ private:
     boost::signals2::connection joystick_conn;
     boost::signals2::connection button_conn;
     boost::signals2::connection ready_conn;
-    boost::signals2::connection verify_and_build_conn;
+    boost::signals2::connection s_verify_and_build_conn;
     boost::signals2::connection c_check_funds_conn;
     boost::signals2::connection c_preview_conn;
 };

@@ -86,6 +86,5 @@ public:
     bool can_afford(int cost);
 
     // Client side. Whether or not this player is the client player.
-    void set_client_player();
-    bool is_client_player() const;
+    void c_set_client_player();
 };

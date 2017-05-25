@@ -55,7 +55,7 @@ void Grid::setup_listeners() {
         events::build::request_build_event(c);
     });
 
-    events::build::construct_preview_event.connect([&](ConstructType type, bool valid) {
+    events::build::c_construct_preview_event.connect([&](ConstructType type, bool valid) {
         selected = type;
         build_permissible = valid;
 
@@ -66,7 +66,7 @@ void Grid::setup_listeners() {
         update_selection();
     });
 
-    events::player_coins_update_event.connect([&](int balance) {
+    events::c_player_coins_update_event.connect([&](int balance) {
         build_permissible = balance >= Constructs::CONSTRUCTS.at(selected).cost;
         preview.set_valid(hover->buildable && build_permissible);
     });
@@ -76,7 +76,7 @@ void Grid::setup_listeners() {
         remove_child(&preview);
     });
 
-    events::build::try_build_event.connect([&](proto::Construct& c, std::function<void()> success) {
+    events::build::s_try_build_event.connect([&](proto::Construct& c, std::function<void()> success) {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
         // Build the construct locally on the server, without graphics.

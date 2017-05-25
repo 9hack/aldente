@@ -67,7 +67,7 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
     });
 
     // Update the player's current gold balance.
-    events::player_coins_update_event.connect([&](int coins) {
+    events::c_player_coins_update_event.connect([&](int coins) {
         std::string s = std::to_string(coins) + "g";
         balance_label.set_text(s);
     });

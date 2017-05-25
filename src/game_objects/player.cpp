@@ -262,17 +262,13 @@ void Player::c_update_stats(const proto::PlayerStats &update) {
     std::cerr << "ID " << id << " COINS NOW @ " << stats.get_coins() << std::endl;
 
     if (is_client)
-        events::player_coins_update_event(update.coins());
+        events::c_player_coins_update_event(update.coins());
 }
 
 bool Player::can_afford(int cost) {
     return stats.get_coins() >= cost;
 }
 
-void Player::set_client_player() {
+void Player::c_set_client_player() {
     is_client = true;
-}
-
-bool Player::is_client_player() const {
-    return is_client;
 }

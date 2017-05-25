@@ -135,7 +135,7 @@ namespace events {
     extern signal<void(int)> player_finished_event;
 
     // Client-side. Called when the client player's gold amount has updated.
-    extern signal<void(int)> player_coins_update_event;
+    extern signal<void(int)> c_player_coins_update_event;
 
     namespace server {
         extern signal<void(proto::ServerMessage &)> announce;
@@ -177,7 +177,7 @@ namespace events {
 
         // Show the construct preview on the 3D build grid.
         // Tint green if valid bool is true, otherwise tint red.
-        extern signal<void(ConstructType, bool)> construct_preview_event;
+        extern signal<void(ConstructType, bool)> c_construct_preview_event;
 
         // Client requests to build a construct.
         extern signal<void(proto::Construct &)> request_build_event;
@@ -188,11 +188,11 @@ namespace events {
 
         // Check if the player has enough funds to purchase, if so, tries to build.
         // Provide the construct proto object (containing player id) to build.
-        extern signal<void(proto::Construct &)> s_check_funds_event;
+        extern signal<void(proto::Construct &)> s_verify_and_build;
 
         // Server attempts to build the construct.
         // Calls the given success function if the build succeeded.
-        extern signal<void(proto::Construct &, std::function<void()>)> try_build_event;
+        extern signal<void(proto::Construct &, std::function<void()>)> s_try_build_event;
 
         // Server responds whether or not the build was successful.
         extern signal<void(proto::Construct &)> respond_build_event;
