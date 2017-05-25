@@ -4,6 +4,8 @@
 #include "util/color.h"
 #include "light/pulse_point_light.h"
 
+std::vector<std::string> MainScene::player_models = { "tomato", "cat", "boy_two" };
+
 MainScene::MainScene() : Scene() {
 
 }
@@ -66,16 +68,16 @@ Player* MainScene::s_spawn_player(int conn_id) {
     // TODO: determine where each player starts based on client id. 
     // For now, players 1-4 start at (2, 2), (2, 3), (2, 4), (2, 5) respectively.
     player->set_start_position({ 2.f, 0, 1.f + conn_id });
+    player->s_set_model_name(player_models[conn_id % 3]);   // TODO: temporary 3 because no lizard
     player->reset_position();
     objs.push_back(player);
 
     return player;
 }
 
-Player* MainScene::c_spawn_player(int obj_id) {
+Player* MainScene::c_spawn_player(int obj_id, std::string& model_name) {
     Player *player = new Player(obj_id);
-    std::string name = "cat";
-    player->setup_player_model(name);
+    player->setup_player_model(model_name);
     objs.push_back(player);
 
     return player;

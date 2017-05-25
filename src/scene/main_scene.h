@@ -18,6 +18,7 @@ private:
     Grid *grid;
     Tile *hover;
     bool lights_debug_on = false;
+    static std::vector<std::string> player_models;
 public:
     MainScene();
     void s_update() override;
@@ -26,5 +27,5 @@ public:
     void c_setup() override;
 
     Player* s_spawn_player(int conn_id); // Server: spawn new Player, auto-assign id.
-    Player* c_spawn_player(int obj_id); // Client: spawn existing Player with id from server.
+    Player* c_spawn_player(int obj_id, std::string& model_name); // Client: spawn existing Player with id from server.
 };
