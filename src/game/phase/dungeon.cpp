@@ -78,8 +78,7 @@ void DungeonPhase::c_setup() {
     });
 
     // Play music
-    events::AudioData d = { AudioManager::DUNGEON_MUSIC };
-    events::music_event(d);
+    events::music_event(events::AudioData{ AudioManager::DUNGEON_MUSIC, 30, true });
 }
 
 proto::Phase DungeonPhase::s_update() {
