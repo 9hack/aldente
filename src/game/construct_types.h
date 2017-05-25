@@ -14,12 +14,9 @@ struct ConstructData {
 };
 
 namespace Constructs {
-    const static ConstructData CHEST = { ConstructType::CHEST, 50, "Chest", "A treasure chest full of gold.", "test.png" };
-    const static ConstructData SPIKES = { ConstructType::SPIKES, 50, "Spikes", "It was me, spikes.", "dio.jpg" };
-    const static ConstructData REMOVE = { ConstructType::REMOVE, 200, "Remove", "Remove a block.", "Tomato.jpg" };
     const static std::map<ConstructType, ConstructData> CONSTRUCTS = {
-        { ConstructType::CHEST, CHEST },
-        { ConstructType::SPIKES, SPIKES },
-        { ConstructType::REMOVE, REMOVE }
+        { ConstructType::CHEST, { ConstructType::CHEST, 50, "Chest", "A treasure chest full of gold.", "test.png" } },
+        { ConstructType::SPIKES, { ConstructType::SPIKES, 50, "Spikes", "It was me, spikes.", "dio.jpg" } },
+        { ConstructType::REMOVE, { ConstructType::REMOVE, 200, "Remove", "Remove a block.", "Tomato.jpg" } }
     };
 }

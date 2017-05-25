@@ -24,13 +24,13 @@ void UIManager::setup_uis() {
         int type = (i % 3) + 1;
         switch (type) {
         case ConstructType::CHEST:
-            constructs.push_back(Constructs::CHEST);
+            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::CHEST));
             break;
         case ConstructType::SPIKES:
-            constructs.push_back(Constructs::SPIKES);
+            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::SPIKES));
             break;
         case ConstructType::REMOVE:
-            constructs.push_back(Constructs::REMOVE);
+            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::REMOVE));
             break;
         default:
             break;

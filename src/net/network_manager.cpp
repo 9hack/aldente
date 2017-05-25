@@ -221,7 +221,7 @@ void ClientNetworkManager::update() {
             // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                client_player = GameState::c_add_player(resp.obj_id(), true);
+                GameState::c_add_player(resp.obj_id(), true)->set_client_player();
             }
             break;
         }
@@ -273,9 +273,6 @@ void ClientNetworkManager::update() {
             Player *player = dynamic_cast<Player *>(GameObject::game_objects[update.id()]);
             assert(player);
             player->c_update_stats(update);
-
-            if (client_player && update.id() == client_player->get_id())
-                events::player_coins_update_event(update.coins());
 
             break;
         }
