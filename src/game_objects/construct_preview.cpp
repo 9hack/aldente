@@ -35,5 +35,6 @@ T* ConstructPreview::make_preview() {
 }
 
 void ConstructPreview::set_valid(bool valid) {
-    curr_preview->set_filter_color(valid ? Color::GREEN : Color::RED);
+    if (curr_preview)
+        curr_preview->set_filter_color(valid ? Color::GREEN : Color::RED);
 }

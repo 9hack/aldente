@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene/scene_info.h"
-#include "transform.h"
+#include "components/transform.h"
 #include "shaders/shader.h"
 #include "animation/animation_player.h"
 #include "btBulletDynamicsCommon.h"
@@ -92,6 +92,7 @@ public:
     // Sets both transform and rigid body position at the same time
     void set_position(glm::vec3 pos);
 
+    void set_ghost(bool b);
     void disable();
     void enable();
     bool is_enabled() { return enabled; };

@@ -22,8 +22,8 @@ public:
     MainScene();
     void s_update() override;
     void c_update() override;
-    void setup_scene() override;
-    void graphical_setup() override;
+    void s_setup() override;
+    void c_setup() override;
 
     Player* s_spawn_player(int conn_id); // Server: spawn new Player, auto-assign id.
     Player* c_spawn_player(int obj_id); // Client: spawn existing Player with id from server.

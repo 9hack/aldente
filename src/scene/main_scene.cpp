@@ -23,15 +23,17 @@ void MainScene::c_update() {
     }
 }
 
-void MainScene::setup_scene() {
+void MainScene::s_setup() {
     //Setting up map
-    grid = new Grid("assets/maps/dungeon_wtf.txt");
-    //grid = new Grid("assets/maps/dungeon_test.txt");
+    grid = new Grid("assets/maps/dungeon_test.txt");
     objs.push_back(grid);
-
 }
 
-void MainScene::graphical_setup() {
+void MainScene::c_setup() {
+    //Setting up map
+    grid = new Grid("assets/maps/dungeon_test.txt");
+    objs.push_back(grid);
+
     // Setup lights.
     DirectionalLight *sun = new DirectionalLight(glm::vec3(0.f, -1.f, -1.f),
                                                  Color::WHITE, 0.5f);

@@ -13,7 +13,7 @@
 #include "scene_manager.h"
 #include "shadows.h"
 #include "timer.h"
-#include "transform.h"
+#include "components/transform.h"
 #include "window.h"
 
 #include "animation/animation.h"

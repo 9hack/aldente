@@ -160,6 +160,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\audio\audio_manager.h" />
     <ClInclude Include="..\src\bt_debug.h" />
     <ClInclude Include="..\src\catch.h" />
+    <ClInclude Include="..\src\components\transform.h" />
     <ClInclude Include="..\src\debug_input.h" />
     <ClInclude Include="..\src\events.h" />
     <ClInclude Include="..\src\game\collectibles\collectible.h" />
@@ -175,6 +176,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game\player_stats.h" />
     <ClInclude Include="..\src\game_objects\construct.h" />
     <ClInclude Include="..\src\game_objects\construct_preview.h" />
+    <ClInclude Include="..\src\game_objects\essence.h" />
     <ClInclude Include="..\src\game_objects\game_object.h" />
     <ClInclude Include="..\src\game_objects\grid.h" />
     <ClInclude Include="..\src\game_objects\player.h" />
@@ -224,7 +226,6 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\shaders\ui_shader.h" />
     <ClInclude Include="..\src\shadows.h" />
     <ClInclude Include="..\src\timer.h" />
-    <ClInclude Include="..\src\transform.h" />
     <ClInclude Include="..\src\ui\build_ui.h" />
     <ClInclude Include="..\src\ui\clock_ui.h" />
     <ClInclude Include="..\src\ui\gold_ui.h" />
@@ -254,6 +255,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\asset_loader.cpp" />
     <ClCompile Include="..\src\audio\audio_manager.cpp" />
     <ClCompile Include="..\src\bt_debug.cpp" />
+    <ClCompile Include="..\src\components\transform.cpp" />
     <ClCompile Include="..\src\debug_input.cpp" />
     <ClCompile Include="..\src\events.cpp" />
     <ClCompile Include="..\src\example_test.cpp" />
@@ -265,6 +267,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\game\player_stats.cpp" />
     <ClCompile Include="..\src\game_objects\construct.cpp" />
     <ClCompile Include="..\src\game_objects\construct_preview.cpp" />
+    <ClCompile Include="..\src\game_objects\essence.cpp" />
     <ClCompile Include="..\src\game_objects\game_object.cpp" />
     <ClCompile Include="..\src\game_objects\grid.cpp" />
     <ClCompile Include="..\src\game_objects\player.cpp" />
@@ -315,7 +318,6 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\shaders\ui_shader.cpp" />
     <ClCompile Include="..\src\shadows.cpp" />
     <ClCompile Include="..\src\timer.cpp" />
-    <ClCompile Include="..\src\transform.cpp" />
     <ClCompile Include="..\src\ui\build_ui.cpp" />
     <ClCompile Include="..\src\ui\clock_ui.cpp" />
     <ClCompile Include="..\src\ui\gold_ui.cpp" />

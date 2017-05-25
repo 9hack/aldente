@@ -1,6 +1,7 @@
 #include "network_manager.h"
 #include "util/config.h"
 #include "game_objects/player.h"
+#include "game_objects/essence.h"
 #include "game/game_state.h"
 #include <GLFW/glfw3.h>
 #include <unordered_set>
@@ -67,6 +68,8 @@ void ServerNetworkManager::register_listeners() {
                 go->set_type(proto::GameObject::Type::GameObject_Type_CHEST);
             else if (dynamic_cast<Spikes*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_SPIKE);
+            else if (dynamic_cast<Essence*>(obj))
+                go->set_type(proto::GameObject::Type::GameObject_Type_ESSENCE);
             go->set_x(obj->transform.get_position().x);
             go->set_z(obj->transform.get_position().z);
             go->set_wx(obj->direction.x);
@@ -227,7 +230,6 @@ void ClientNetworkManager::update() {
         }
         case proto::ServerMessage::MessageTypeCase::kStateUpdate: {
             proto::GameState state = msg.state_update();
-            bool all_exist = true;
 
             for (auto obj : state.objects()) {
                 if (GameObject::game_objects.find(obj.id()) == GameObject::game_objects.end()) {
@@ -236,24 +238,29 @@ void ClientNetworkManager::update() {
                         events::menu::spawn_existing_player_event(obj.id());
                     } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
                         events::dungeon::spawn_existing_goal_event(obj.x(), obj.z(), obj.id());
+                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {
+                        events::dungeon::c_spawn_essence_event(obj.x(), obj.z(), obj.id());
                     } else {
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }
-                    all_exist = false;
                 } else {
                     GameObject::game_objects[obj.id()]->c_update_state(obj.x(), obj.z(), obj.wx(), obj.wz(), obj.enabled());
                 }
             }
 
-            // Call all collision handlers of game objects that collided. Only executed if all game object IDs sent
-            // already exist, which avoids a potential race condition of a collision of a not-yet-created game obj.
-            if (all_exist) {
-                for (auto &p : state.collisions()) {
-                    GameObject::game_objects[p.other()]->c_on_collision(GameObject::game_objects[p.initiator()]);
-                }
-                for (auto &p : state.interacts()) {
-                    GameObject::game_objects[p.other()]->c_interact_trigger(GameObject::game_objects[p.initiator()]);
-                }
+            // Call all collision handlers of game objects that collided, but only ones that already exist, 
+            // which avoids collision of a not-yet-created game obj.
+            for (auto &p : state.collisions()) {
+                GameObject* other = GameObject::game_objects[p.other()];
+                GameObject* initiator = GameObject::game_objects[p.initiator()];
+                if (other && initiator)
+                    other->c_on_collision(initiator);
+            }
+            for (auto &p : state.interacts()) {
+                GameObject* other = GameObject::game_objects[p.other()];
+                GameObject* initiator = GameObject::game_objects[p.initiator()];
+                if (other && initiator)
+                    other->c_interact_trigger(initiator);
             }
             break;
         }

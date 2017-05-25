@@ -37,9 +37,9 @@ public:
     virtual void s_update();
     virtual void c_update();
 
-    // Sets up scene but not its models
-    virtual void setup_scene() = 0;
+    // Sets up scene but not its models on server only
+    virtual void s_setup() = 0;
 
-    // Sets up scene's models (please call after setup_scene). Do not call on server
-    virtual void graphical_setup() = 0;
+    // Sets up scene's models (please call after s_setup) on client only
+    virtual void c_setup() = 0;
 };
