@@ -74,8 +74,10 @@ void Essence::s_on_collision(GameObject *other) {
 
         events::dungeon::network_collision_event(player->get_id(), id);
 
+        // Object becomes a ghost, so not moved while disappearing.
+        set_ghost(true);
+
         // Call disable() once client side animation ends
-        events::disable_rigidbody_event(this); // Disables rigid body first to prevent moving
         Timer::get()->do_after(
             std::chrono::milliseconds(500),
             [&]() {

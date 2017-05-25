@@ -155,6 +155,16 @@ void GameObject::set_position(glm::vec3 pos) {
     }
 }
 
+void GameObject::set_ghost(bool b) {
+    if (!rigidbody)
+        return;
+
+    if (b)
+        rigidbody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+    else
+        rigidbody->setCollisionFlags(0);
+}
+
 void GameObject::disable() {
     if (enabled) {
         enabled = false;

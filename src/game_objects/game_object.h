@@ -92,6 +92,7 @@ public:
     // Sets both transform and rigid body position at the same time
     void set_position(glm::vec3 pos);
 
+    void set_ghost(bool b);
     void disable();
     void enable();
     bool is_enabled() { return enabled; };
