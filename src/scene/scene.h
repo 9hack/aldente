@@ -34,6 +34,11 @@ public:
     void add_light(PointLight *l);
     void add_light(SpotLight *l);
 
+    // Remove lights from the scene
+    void remove_light(DirectionalLight *l);
+    void remove_light(PointLight *l);
+    void remove_light(SpotLight *l);
+
     virtual void s_update();
     virtual void c_update();
 
