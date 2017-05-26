@@ -189,8 +189,10 @@ void Player::c_setup_player_model(int index) {
         transform.set_scale({ 0.4f, 0.4f, 0.4f });
     else if (model_name == "cat")
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
+    else if (model_name == "lizard")
+        transform.set_scale({ 0.0043f, 0.0043f, 0.0043f });
     else if (model_name == "tomato")
-        transform.set_scale({ 0.004f, 0.004f, 0.004f });
+        transform.set_scale({ 0.0043f, 0.0043f, 0.0043f });
 }
 
 void Player::s_begin_warp(float x, float z) {
