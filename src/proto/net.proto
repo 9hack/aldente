@@ -12,6 +12,7 @@ message ServerMessage {
     int32 player_finished = 6;
     PlayerStats player_stats_update = 7;
     int32 time_update = 8; // in seconds
+    AvatarChange change_avatar_update = 9;
   }
 }
 
@@ -24,6 +25,7 @@ message ClientMessage {
     Phase phase_request = 5;
     int32 interact_request = 6;
     int32 ready_request = 7;
+    AvatarChange change_avatar_request = 8;
   }
 }
 
@@ -103,4 +105,9 @@ enum Phase {
 message PlayerStats {
   optional int32 id = 1; // Refers to GameObject ID of player.
   optional int32 coins = 2;
+}
+
+message AvatarChange {
+  optional int32 player_id = 1;
+  optional string model_name = 2;
 }

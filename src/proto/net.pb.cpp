@@ -32,6 +32,7 @@ struct ServerMessageOneofInstance {
   ::google::protobuf::int32 player_finished_;
   const ::proto::PlayerStats* player_stats_update_;
   ::google::protobuf::int32 time_update_;
+  const ::proto::AvatarChange* change_avatar_update_;
 }* ServerMessage_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* ClientMessage_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -44,6 +45,7 @@ struct ClientMessageOneofInstance {
   int phase_request_;
   ::google::protobuf::int32 interact_request_;
   ::google::protobuf::int32 ready_request_;
+  const ::proto::AvatarChange* change_avatar_request_;
 }* ClientMessage_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* Construct_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -71,6 +73,9 @@ const ::google::protobuf::EnumDescriptor* StickData_Stick_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* PlayerStats_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   PlayerStats_reflection_ = NULL;
+const ::google::protobuf::Descriptor* AvatarChange_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  AvatarChange_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* Phase_descriptor_ = NULL;
 
 }  // namespace
@@ -83,7 +88,7 @@ void protobuf_AssignDesc_net_2eproto() {
       "net.proto");
   GOOGLE_CHECK(file != NULL);
   ServerMessage_descriptor_ = file->message_type(0);
-  static const int ServerMessage_offsets_[9] = {
+  static const int ServerMessage_offsets_[10] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, message_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, build_update_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, join_response_),
@@ -92,6 +97,7 @@ void protobuf_AssignDesc_net_2eproto() {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, player_finished_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, player_stats_update_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, time_update_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, change_avatar_update_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerMessage, message_type_),
   };
   ServerMessage_reflection_ =
@@ -108,7 +114,7 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ServerMessage));
   ClientMessage_descriptor_ = file->message_type(1);
-  static const int ClientMessage_offsets_[8] = {
+  static const int ClientMessage_offsets_[9] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, message_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, build_request_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, join_request_),
@@ -116,6 +122,7 @@ void protobuf_AssignDesc_net_2eproto() {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, phase_request_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, interact_request_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, ready_request_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ClientMessage_default_oneof_instance_, change_avatar_request_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientMessage, message_type_),
   };
   ClientMessage_reflection_ =
@@ -278,6 +285,22 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PlayerStats));
+  AvatarChange_descriptor_ = file->message_type(10);
+  static const int AvatarChange_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AvatarChange, player_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AvatarChange, model_name_),
+  };
+  AvatarChange_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      AvatarChange_descriptor_,
+      AvatarChange::default_instance_,
+      AvatarChange_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AvatarChange, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AvatarChange, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(AvatarChange));
   Phase_descriptor_ = file->enum_type(0);
 }
 
@@ -311,6 +334,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     StickData_descriptor_, &StickData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     PlayerStats_descriptor_, &PlayerStats::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    AvatarChange_descriptor_, &AvatarChange::default_instance());
 }
 
 }  // namespace
@@ -338,6 +363,8 @@ void protobuf_ShutdownFile_net_2eproto() {
   delete StickData_reflection_;
   delete PlayerStats::default_instance_;
   delete PlayerStats_reflection_;
+  delete AvatarChange::default_instance_;
+  delete AvatarChange_reflection_;
 }
 
 void protobuf_AddDesc_net_2eproto() {
@@ -347,7 +374,7 @@ void protobuf_AddDesc_net_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\tnet.proto\022\005proto\"\277\002\n\rServerMessage\022\021\n\007"
+    "\n\tnet.proto\022\005proto\"\364\002\n\rServerMessage\022\021\n\007"
     "message\030\001 \001(\tH\000\022(\n\014build_update\030\002 \001(\0132\020."
     "proto.ConstructH\000\022,\n\rjoin_response\030\003 \001(\013"
     "2\023.proto.JoinResponseH\000\022(\n\014state_update\030"
@@ -355,35 +382,39 @@ void protobuf_AddDesc_net_2eproto() {
     "e\030\005 \001(\0162\014.proto.PhaseH\000\022\031\n\017player_finish"
     "ed\030\006 \001(\005H\000\0221\n\023player_stats_update\030\007 \001(\0132"
     "\022.proto.PlayerStatsH\000\022\025\n\013time_update\030\010 \001"
-    "(\005H\000B\016\n\014message_type\"\373\001\n\rClientMessage\022\021"
-    "\n\007message\030\001 \001(\tH\000\022)\n\rbuild_request\030\002 \001(\013"
-    "2\020.proto.ConstructH\000\022\026\n\014join_request\030\003 \001"
-    "(\tH\000\022(\n\014move_request\030\004 \001(\0132\020.proto.Stick"
-    "DataH\000\022%\n\rphase_request\030\005 \001(\0162\014.proto.Ph"
-    "aseH\000\022\032\n\020interact_request\030\006 \001(\005H\000\022\027\n\rrea"
-    "dy_request\030\007 \001(\005H\000B\016\n\014message_type\"^\n\tCo"
-    "nstruct\022\014\n\004type\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 "
-    "\001(\005\022\n\n\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010\022\021\n\tplaye"
-    "r_id\030\006 \001(\005\"c\n\014JoinResponse\022\016\n\006status\030\001 \001"
-    "(\010\022\023\n\013num_players\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006o"
-    "bj_id\030\004 \001(\005\022\022\n\nmodel_name\030\005 \001(\t\"t\n\tGameS"
-    "tate\022\"\n\007objects\030\001 \003(\0132\021.proto.GameObject"
-    "\022!\n\ncollisions\030\002 \003(\0132\r.proto.IdPair\022 \n\ti"
-    "nteracts\030\003 \003(\0132\r.proto.IdPair\"*\n\006IdPair\022"
-    "\021\n\tinitiator\030\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\345\001\n\nGa"
-    "meObject\022\n\n\002id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.pro"
-    "to.GameObject.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002"
-    "\022\n\n\002wx\030\005 \001(\002\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 "
-    "\001(\005\022\017\n\007enabled\030\010 \001(\010\022\022\n\nmodel_name\030\t \001(\t"
-    "\"\?\n\004Type\022\n\n\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020"
-    "\002\022\t\n\005SPIKE\020\003\022\013\n\007ESSENCE\020\004\"%\n\tCollision\022\n"
-    "\n\002id\030\001 \001(\005\022\014\n\004type\030\002 \001(\005\"~\n\tStickData\022%\n"
-    "\005input\030\001 \001(\0162\026.proto.StickData.Stick\022\t\n\001"
-    "x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022"
-    "\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013Play"
-    "erStats\022\n\n\002id\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005*A\n\005Ph"
-    "ase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DU"
-    "NGEON\020\002\022\014\n\010MINIGAME\020\003", 1461);
+    "(\005H\000\0223\n\024change_avatar_update\030\t \001(\0132\023.pro"
+    "to.AvatarChangeH\000B\016\n\014message_type\"\261\002\n\rCl"
+    "ientMessage\022\021\n\007message\030\001 \001(\tH\000\022)\n\rbuild_"
+    "request\030\002 \001(\0132\020.proto.ConstructH\000\022\026\n\014joi"
+    "n_request\030\003 \001(\tH\000\022(\n\014move_request\030\004 \001(\0132"
+    "\020.proto.StickDataH\000\022%\n\rphase_request\030\005 \001"
+    "(\0162\014.proto.PhaseH\000\022\032\n\020interact_request\030\006"
+    " \001(\005H\000\022\027\n\rready_request\030\007 \001(\005H\000\0224\n\025chang"
+    "e_avatar_request\030\010 \001(\0132\023.proto.AvatarCha"
+    "ngeH\000B\016\n\014message_type\"^\n\tConstruct\022\014\n\004ty"
+    "pe\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001"
+    "(\005\022\016\n\006status\030\005 \001(\010\022\021\n\tplayer_id\030\006 \001(\005\"c\n"
+    "\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013num_pla"
+    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\022\022"
+    "\n\nmodel_name\030\005 \001(\t\"t\n\tGameState\022\"\n\007objec"
+    "ts\030\001 \003(\0132\021.proto.GameObject\022!\n\ncollision"
+    "s\030\002 \003(\0132\r.proto.IdPair\022 \n\tinteracts\030\003 \003("
+    "\0132\r.proto.IdPair\"*\n\006IdPair\022\021\n\tinitiator\030"
+    "\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\345\001\n\nGameObject\022\n\n\002i"
+    "d\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.GameObject"
+    ".Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002\022"
+    "\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n\007enable"
+    "d\030\010 \001(\010\022\022\n\nmodel_name\030\t \001(\t\"\?\n\004Type\022\n\n\006P"
+    "LAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\022"
+    "\013\n\007ESSENCE\020\004\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022\014\n"
+    "\004type\030\002 \001(\005\"~\n\tStickData\022%\n\005input\030\001 \001(\0162"
+    "\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030"
+    "\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT"
+    "\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013PlayerStats\022\n\n\002id"
+    "\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"5\n\014AvatarChange\022\021\n"
+    "\tplayer_id\030\001 \001(\005\022\022\n\nmodel_name\030\002 \001(\t*A\n\005"
+    "Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007"
+    "DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1623);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -398,6 +429,7 @@ void protobuf_AddDesc_net_2eproto() {
   Collision::default_instance_ = new Collision();
   StickData::default_instance_ = new StickData();
   PlayerStats::default_instance_ = new PlayerStats();
+  AvatarChange::default_instance_ = new AvatarChange();
   ServerMessage::default_instance_->InitAsDefaultInstance();
   ClientMessage::default_instance_->InitAsDefaultInstance();
   Construct::default_instance_->InitAsDefaultInstance();
@@ -408,6 +440,7 @@ void protobuf_AddDesc_net_2eproto() {
   Collision::default_instance_->InitAsDefaultInstance();
   StickData::default_instance_->InitAsDefaultInstance();
   PlayerStats::default_instance_->InitAsDefaultInstance();
+  AvatarChange::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_net_2eproto);
 }
 
@@ -446,6 +479,7 @@ const int ServerMessage::kPhaseUpdateFieldNumber;
 const int ServerMessage::kPlayerFinishedFieldNumber;
 const int ServerMessage::kPlayerStatsUpdateFieldNumber;
 const int ServerMessage::kTimeUpdateFieldNumber;
+const int ServerMessage::kChangeAvatarUpdateFieldNumber;
 #endif  // !_MSC_VER
 
 ServerMessage::ServerMessage()
@@ -463,6 +497,7 @@ void ServerMessage::InitAsDefaultInstance() {
   ServerMessage_default_oneof_instance_->player_finished_ = 0;
   ServerMessage_default_oneof_instance_->player_stats_update_ = const_cast< ::proto::PlayerStats*>(&::proto::PlayerStats::default_instance());
   ServerMessage_default_oneof_instance_->time_update_ = 0;
+  ServerMessage_default_oneof_instance_->change_avatar_update_ = const_cast< ::proto::AvatarChange*>(&::proto::AvatarChange::default_instance());
 }
 
 ServerMessage::ServerMessage(const ServerMessage& from)
@@ -545,6 +580,10 @@ void ServerMessage::clear_message_type() {
     }
     case kTimeUpdate: {
       // No need to clear
+      break;
+    }
+    case kChangeAvatarUpdate: {
+      delete message_type_.change_avatar_update_;
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {
@@ -687,6 +726,19 @@ bool ServerMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(74)) goto parse_change_avatar_update;
+        break;
+      }
+
+      // optional .proto.AvatarChange change_avatar_update = 9;
+      case 9: {
+        if (tag == 74) {
+         parse_change_avatar_update:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_change_avatar_update()));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -766,6 +818,12 @@ void ServerMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->time_update(), output);
   }
 
+  // optional .proto.AvatarChange change_avatar_update = 9;
+  if (has_change_avatar_update()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      9, this->change_avatar_update(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -829,6 +887,13 @@ void ServerMessage::SerializeWithCachedSizes(
   // optional int32 time_update = 8;
   if (has_time_update()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->time_update(), target);
+  }
+
+  // optional .proto.AvatarChange change_avatar_update = 9;
+  if (has_change_avatar_update()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        9, this->change_avatar_update(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -898,6 +963,13 @@ int ServerMessage::ByteSize() const {
           this->time_update());
       break;
     }
+    // optional .proto.AvatarChange change_avatar_update = 9;
+    case kChangeAvatarUpdate: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->change_avatar_update());
+      break;
+    }
     case MESSAGE_TYPE_NOT_SET: {
       break;
     }
@@ -960,6 +1032,10 @@ void ServerMessage::MergeFrom(const ServerMessage& from) {
       set_time_update(from.time_update());
       break;
     }
+    case kChangeAvatarUpdate: {
+      mutable_change_avatar_update()->::proto::AvatarChange::MergeFrom(from.change_avatar_update());
+      break;
+    }
     case MESSAGE_TYPE_NOT_SET: {
       break;
     }
@@ -1013,6 +1089,7 @@ const int ClientMessage::kMoveRequestFieldNumber;
 const int ClientMessage::kPhaseRequestFieldNumber;
 const int ClientMessage::kInteractRequestFieldNumber;
 const int ClientMessage::kReadyRequestFieldNumber;
+const int ClientMessage::kChangeAvatarRequestFieldNumber;
 #endif  // !_MSC_VER
 
 ClientMessage::ClientMessage()
@@ -1029,6 +1106,7 @@ void ClientMessage::InitAsDefaultInstance() {
   ClientMessage_default_oneof_instance_->phase_request_ = 4;
   ClientMessage_default_oneof_instance_->interact_request_ = 0;
   ClientMessage_default_oneof_instance_->ready_request_ = 0;
+  ClientMessage_default_oneof_instance_->change_avatar_request_ = const_cast< ::proto::AvatarChange*>(&::proto::AvatarChange::default_instance());
 }
 
 ClientMessage::ClientMessage(const ClientMessage& from)
@@ -1107,6 +1185,10 @@ void ClientMessage::clear_message_type() {
     }
     case kReadyRequest: {
       // No need to clear
+      break;
+    }
+    case kChangeAvatarRequest: {
+      delete message_type_.change_avatar_request_;
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {
@@ -1240,6 +1322,19 @@ bool ClientMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(66)) goto parse_change_avatar_request;
+        break;
+      }
+
+      // optional .proto.AvatarChange change_avatar_request = 8;
+      case 8: {
+        if (tag == 66) {
+         parse_change_avatar_request:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_change_avatar_request()));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1317,6 +1412,12 @@ void ClientMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->ready_request(), output);
   }
 
+  // optional .proto.AvatarChange change_avatar_request = 8;
+  if (has_change_avatar_request()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      8, this->change_avatar_request(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1379,6 +1480,13 @@ void ClientMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->ready_request(), target);
   }
 
+  // optional .proto.AvatarChange change_avatar_request = 8;
+  if (has_change_avatar_request()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        8, this->change_avatar_request(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1439,6 +1547,13 @@ int ClientMessage::ByteSize() const {
           this->ready_request());
       break;
     }
+    // optional .proto.AvatarChange change_avatar_request = 8;
+    case kChangeAvatarRequest: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->change_avatar_request());
+      break;
+    }
     case MESSAGE_TYPE_NOT_SET: {
       break;
     }
@@ -1495,6 +1610,10 @@ void ClientMessage::MergeFrom(const ClientMessage& from) {
     }
     case kReadyRequest: {
       set_ready_request(from.ready_request());
+      break;
+    }
+    case kChangeAvatarRequest: {
+      mutable_change_avatar_request()->::proto::AvatarChange::MergeFrom(from.change_avatar_request());
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {
@@ -4459,6 +4578,290 @@ void PlayerStats::Swap(PlayerStats* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = PlayerStats_descriptor_;
   metadata.reflection = PlayerStats_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int AvatarChange::kPlayerIdFieldNumber;
+const int AvatarChange::kModelNameFieldNumber;
+#endif  // !_MSC_VER
+
+AvatarChange::AvatarChange()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:proto.AvatarChange)
+}
+
+void AvatarChange::InitAsDefaultInstance() {
+}
+
+AvatarChange::AvatarChange(const AvatarChange& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:proto.AvatarChange)
+}
+
+void AvatarChange::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  player_id_ = 0;
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+AvatarChange::~AvatarChange() {
+  // @@protoc_insertion_point(destructor:proto.AvatarChange)
+  SharedDtor();
+}
+
+void AvatarChange::SharedDtor() {
+  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete model_name_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void AvatarChange::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* AvatarChange::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return AvatarChange_descriptor_;
+}
+
+const AvatarChange& AvatarChange::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_net_2eproto();
+  return *default_instance_;
+}
+
+AvatarChange* AvatarChange::default_instance_ = NULL;
+
+AvatarChange* AvatarChange::New() const {
+  return new AvatarChange;
+}
+
+void AvatarChange::Clear() {
+  if (_has_bits_[0 / 32] & 3) {
+    player_id_ = 0;
+    if (has_model_name()) {
+      if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        model_name_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool AvatarChange::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:proto.AvatarChange)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 player_id = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &player_id_)));
+          set_has_player_id();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_model_name;
+        break;
+      }
+
+      // optional string model_name = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_model_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_model_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->model_name().data(), this->model_name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "model_name");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:proto.AvatarChange)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:proto.AvatarChange)
+  return false;
+#undef DO_
+}
+
+void AvatarChange::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:proto.AvatarChange)
+  // optional int32 player_id = 1;
+  if (has_player_id()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->player_id(), output);
+  }
+
+  // optional string model_name = 2;
+  if (has_model_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->model_name().data(), this->model_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "model_name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->model_name(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:proto.AvatarChange)
+}
+
+::google::protobuf::uint8* AvatarChange::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:proto.AvatarChange)
+  // optional int32 player_id = 1;
+  if (has_player_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->player_id(), target);
+  }
+
+  // optional string model_name = 2;
+  if (has_model_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->model_name().data(), this->model_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "model_name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->model_name(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:proto.AvatarChange)
+  return target;
+}
+
+int AvatarChange::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 player_id = 1;
+    if (has_player_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->player_id());
+    }
+
+    // optional string model_name = 2;
+    if (has_model_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->model_name());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void AvatarChange::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const AvatarChange* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const AvatarChange*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void AvatarChange::MergeFrom(const AvatarChange& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_player_id()) {
+      set_player_id(from.player_id());
+    }
+    if (from.has_model_name()) {
+      set_model_name(from.model_name());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void AvatarChange::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void AvatarChange::CopyFrom(const AvatarChange& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool AvatarChange::IsInitialized() const {
+
+  return true;
+}
+
+void AvatarChange::Swap(AvatarChange* other) {
+  if (other != this) {
+    std::swap(player_id_, other->player_id_);
+    std::swap(model_name_, other->model_name_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata AvatarChange::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = AvatarChange_descriptor_;
+  metadata.reflection = AvatarChange_reflection_;
   return metadata;
 }
 

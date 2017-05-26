@@ -96,4 +96,6 @@ public:
     // Set the player's model name.
     void s_set_model_name(std::string& name);
     std::string c_get_model_name() const;
+
+    static std::vector<std::string> PLAYER_MODELS;
 };

@@ -42,6 +42,25 @@ void ServerNetworkManager::register_listeners() {
         proto::ServerMessage msg;
         msg.set_allocated_join_response(new proto::JoinResponse(resp));
         server.send_to(conn_id, msg);
+
+        // Then, send the state of all players to all clients.
+        proto::ServerMessage update_msg;
+        proto::GameState* state = new proto::GameState();
+        for (auto & kv : GameState::players) {
+            proto::GameObject* go = state->add_objects();
+            Player* player = kv.second;
+            go->set_id(player->get_id());
+            go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
+            go->set_model_name(player->c_get_model_name());
+            go->set_x(player->transform.get_position().x);
+            go->set_z(player->transform.get_position().z);
+            go->set_wx(player->direction.x);
+            go->set_wz(player->direction.z);
+            go->set_enabled(player->is_enabled());
+        }
+        
+        update_msg.set_allocated_state_update(state);
+        server.send_to_all(update_msg);
     });
 
     // Build phase.

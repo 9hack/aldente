@@ -9,6 +9,8 @@
 #define STUN_LENGTH 500 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 
+std::vector<std::string> Player::PLAYER_MODELS = { "tomato", "cat", "boy_two" };
+
 Player::Player(int id) : GameObject(id), is_client(false) {
     tag = "PLAYER";
 
@@ -151,6 +153,7 @@ void Player::reset_position() {
 
 void Player::setup_player_model(std::string &model_name) {
     Model *player_model = AssetLoader::get_model(model_name);
+    this->model_name = model_name;
     player_model->set_shader(&ShaderManager::anim_unlit);
     attach_model(player_model);
     start_walk();
@@ -159,6 +162,8 @@ void Player::setup_player_model(std::string &model_name) {
     if (model_name == "boy_two")
         transform.set_scale({ 0.4f, 0.4f, 0.4f });
     else if (model_name == "cat")
+        transform.set_scale({ 0.004f, 0.004f, 0.004f });
+    else if (model_name == "tomato")
         transform.set_scale({ 0.004f, 0.004f, 0.004f });
 }
 

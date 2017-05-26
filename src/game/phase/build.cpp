@@ -80,51 +80,58 @@ void BuildPhase::c_setup() {
         Direction dir;
         bool d_pad = false;
 
-        // A button pressed.
-        if (d.input == events::BTN_A && d.state == 1) {
-            if (is_menu)
-                events::build::select_grid_confirm_event();
-            else
-                events::build::build_grid_place_event();
-        }
-
-        // B button pressed.
-        else if (d.input == events::BTN_B && d.state == 1) {
-            if (!is_menu) {
-                events::build::select_grid_return_event();
-                is_menu = true;
+        if (d.state == 0) return;
+        switch (d.input) {
+            case events::BTN_A: {
+                if (is_menu)
+                    events::build::select_grid_confirm_event();
+                else
+                    events::build::build_grid_place_event();
+                break;
             }
-        }
-
-        // Start button pressed.
-        else if (d.input == events::BTN_START && d.state == 1) {
-            proto::ClientMessage msg;
-            msg.set_ready_request(context.player_id);
-            events::client::send(msg);
-        }
-
-        // D-Pad-Up pressed.
-        else if (d.input == events::BTN_UP && d.state == 1) {
-            dir = Direction::UP;
-            d_pad = true;
-        }
-
-        // D-Pad-Right pressed.
-        else if (d.input == events::BTN_RIGHT && d.state == 1) {
-            dir = Direction::RIGHT;
-            d_pad = true;
-        }
-
-        // D-Pad-Down pressed.
-        else if (d.input == events::BTN_DOWN && d.state == 1) {
-            dir = Direction::DOWN;
-            d_pad = true;
-        }
-
-        // D-Pad-Left pressed.
-        else if (d.input == events::BTN_LEFT && d.state == 1) {
-            dir = Direction::LEFT;
-            d_pad = true;
+            case events::BTN_B: {
+                if (!is_menu) {
+                    events::build::select_grid_return_event();
+                    is_menu = true;
+                }
+                break;
+            }
+            case events::BTN_START: {
+                proto::ClientMessage msg;
+                msg.set_ready_request(context.player_id);
+                events::client::send(msg);
+                break;
+            }
+            case events::BTN_UP: {
+                dir = Direction::UP;
+                d_pad = true;
+                break;
+            }
+            case events::BTN_RIGHT: {
+                dir = Direction::RIGHT;
+                d_pad = true;
+                break;
+            }
+            case events::BTN_DOWN: {
+                dir = Direction::DOWN;
+                d_pad = true;
+                break;
+            }
+            case events::BTN_LEFT: {
+                dir = Direction::LEFT;
+                d_pad = true;
+                break;
+            }
+            case events::BTN_LB: {
+                std::cerr << "left bumper\n";
+                break;
+            }
+            case events::BTN_RB: {
+                std::cerr << "right bumper\n";
+                break;
+            }
+            default:
+                break;
         }
 
         if (d_pad) {

@@ -18,7 +18,6 @@ private:
     Grid *grid;
     Tile *hover;
     bool lights_debug_on = false;
-    static std::vector<std::string> player_models;
 public:
     MainScene();
     void s_update() override;
