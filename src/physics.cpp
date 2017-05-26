@@ -31,11 +31,6 @@ Physics::Physics() {
         remove_rigid(obj);
     });
 
-    events::window_cursor_event.connect([&](events::WindowCursorData d) {
-        int width, height;
-        std::tie(width, height) = d.window->get_size();
-    });
-
     events::enable_rigidbody_event.connect([&](GameObject *obj) {
         enable_rigid(obj);
     });
