@@ -4,6 +4,7 @@
 #include "asset_loader.h"
 #include "game_objects/grid.h"
 #include "game_objects/player.h"
+#include "light/pulse_point_light.h"
 
 /*
 Main Scene for having stuff in our game, especially for testing.
@@ -20,6 +21,7 @@ private:
     bool lights_debug_on = false;
 
     Goal *goal;
+    PulsePointLight *goal_light;
     std::mutex goal_mutex; // In case a new goal is created before old one is removed.
     int goal_z, goal_x;
 public:

@@ -2,7 +2,6 @@
 #include "game_objects/player.h"
 #include "events.h"
 #include "util/color.h"
-#include "light/pulse_point_light.h"
 
 MainScene::MainScene() : Scene(), goal(nullptr) {
     events::dungeon::s_prepare_dungeon_event.connect([&]() {
@@ -18,6 +17,9 @@ MainScene::MainScene() : Scene(), goal(nullptr) {
                 objs.erase(position);
             goal = nullptr;
         }
+        if (goal_light)
+            remove_light(goal_light);
+
         c_place_goal(x, z, id);
     });
 }
@@ -115,6 +117,10 @@ void MainScene::s_place_goal(glm::vec3 start, int min_dist) {
 
 void MainScene::c_place_goal(int x, int z, int id) {
     goal = new Goal(x, z, id);
+
+    goal_light = 
+        new PulsePointLight(glm::vec3(x, 2.0f, z), Color::OCEAN_BLUE, 0, 0.5f, 0.05f);
+    add_light(goal_light);
 
     goal->setup_model();
     objs.push_back(goal);
