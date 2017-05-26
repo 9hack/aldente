@@ -287,7 +287,7 @@ void Camera::displace_cam_clamp(glm::vec3 displacement, glm::vec3 clamp) {
 }
 
 void Camera::rotate_cam(glm::vec3 axis, float angle) {
-    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis);
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::normalize(axis));
     glm::vec4 front = glm::vec4(cam_front, 1);
     glm::vec4 up = glm::vec4(cam_up, 1);
 
