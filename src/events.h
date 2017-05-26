@@ -62,9 +62,12 @@ namespace events {
     // Audio
     struct AudioData {
         std::string filename;
+        int volume;
+        bool loop;
     };
     extern signal<void(AudioData &)> music_event;
     extern signal<void(AudioData &)> sound_effects_event;
+    extern signal<void(std::string)> stop_sound_effects_event;
     extern signal<void()> toggle_mute_event;
 
     struct WindowSizeData {
@@ -113,11 +116,9 @@ namespace events {
         extern signal<void(Phase*)> client_set_phase_event;
         extern signal<void()> toggle_bt_debug_drawer_event;
         extern signal<void()> toggle_ui_text_box_background_event;
+        extern signal<void()> toggle_fps_event;
+        extern signal<void(int)> fps_count_event;
     }
-
-    // The user has made a selection on the UI grid.
-    extern signal<void(int)> ui_grid_selection_event;
-    extern signal<void(int)> ui_grid_movement_event;
 
     // Struct for parameters for rigidbody initialization
     struct RigidBodyData {

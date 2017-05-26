@@ -7,6 +7,7 @@ namespace events {
     signal<void(StickData &)> stick_event;
     signal<void(AudioData &)> music_event;
     signal<void(AudioData &)> sound_effects_event;
+    signal<void(std::string)> stop_sound_effects_event;
     signal<void()> toggle_mute_event;
     signal<void(WindowSizeData &)> window_buffer_resize_event;
     signal<void(WindowKeyData &)> window_key_event;
@@ -22,10 +23,10 @@ namespace events {
         signal<void(Phase*)> client_set_phase_event;
         signal<void()> toggle_bt_debug_drawer_event;
         signal<void()> toggle_ui_text_box_background_event;
+        signal<void()> toggle_fps_event;
+        signal<void(int)> fps_count_event;
     }
 
-    signal<void(int)> ui_grid_selection_event;
-    signal<void(int)> ui_grid_movement_event;
     signal<void(RigidBodyData d)> add_rigidbody_event;
     signal<void(GameObject *obj)> remove_rigidbody_event;
     signal<void(GameObject *obj)> disable_rigidbody_event;

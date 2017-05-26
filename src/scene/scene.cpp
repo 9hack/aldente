@@ -54,3 +54,21 @@ void Scene::add_light(SpotLight *l) {
     else
         assert(false); // stop adding so many lights, light-advocate!
 }
+
+void Scene::remove_light(DirectionalLight *l) {
+    auto position = std::find(info.dir_lights.begin(), info.dir_lights.end(), l);
+    if (position != info.dir_lights.end())
+        info.dir_lights.erase(position);
+}
+
+void Scene::remove_light(PointLight *l) {
+    auto position = std::find(info.point_lights.begin(), info.point_lights.end(), l);
+    if (position != info.point_lights.end())
+        info.point_lights.erase(position);
+}
+
+void Scene::remove_light(SpotLight *l) {
+    auto position = std::find(info.spot_lights.begin(), info.spot_lights.end(), l);
+    if (position != info.spot_lights.end())
+        info.spot_lights.erase(position);
+}

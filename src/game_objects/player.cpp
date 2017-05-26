@@ -1,5 +1,5 @@
 #include "player.h"
-
+#include "audio/audio_manager.h"
 #include "asset_loader.h"
 #include "assert.h"
 #include "events.h"
@@ -88,12 +88,18 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
     if (!animate && !exiting) {
-        if (!anim_player.check_paused())
+        if (!anim_player.check_paused()) {
+            events::stop_sound_effects_event(AudioManager::FOOTSTEPS_SOUND);
+
             anim_player.stop();
+        }
     }
     else {
-        if (anim_player.check_paused())
+        if (anim_player.check_paused()) {
+            events::sound_effects_event(events::AudioData{ AudioManager::FOOTSTEPS_SOUND, 100, true });
+
             anim_player.play();
+        }
     }
 
     GameObject::c_update_state(x, z, wx, wz, enab);
@@ -230,7 +236,9 @@ bool Player::s_take_damage() {
     // Player loses percentage essence
     const float percent_loss = .20f;
     int amount_loss = (int) stats.get_coins() * percent_loss;
-    stats.add_coins(-amount_loss);
+    s_modify_stats([&](PlayerStats & stats) {
+        stats.add_coins(-amount_loss);
+    });
 
     // Drop essence to total amount loss, rounded down. Assuming that each essence has 10 coin value. 
     const float essence_val = 10.0f; // Currently hardcoded

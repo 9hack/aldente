@@ -1,4 +1,5 @@
 #include "grid.h"
+#include "audio/audio_manager.h"
 #include "events.h"
 #include "game/phase/phase.h"
 #include "util/color.h"
@@ -10,7 +11,7 @@
 
 Grid::Grid(const char *map_loc) :
         hover(nullptr), hover_col(0), hover_row(0),
-        width(0), height(0), goal(nullptr) {
+        width(0), height(0) {
 
     tag = "GRID";
     model = nullptr;
@@ -95,22 +96,8 @@ void Grid::setup_listeners() {
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
         build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
-    });
 
-    events::dungeon::s_prepare_dungeon_event.connect([&]() {
-        remove_goal();
-        s_place_goal(glm::vec3(0.0f),20);
-    });
-
-    events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
-        std::unique_lock<std::mutex> lock(goal_mutex);
-        if (goal) {
-            auto position = std::find(children.begin(), children.end(), goal);
-            if (position != children.end())
-                children.erase(position);
-            goal = nullptr;
-        }
-        c_place_goal(x, z, id);
+        events::sound_effects_event(events::AudioData{ AudioManager::BUILD_CONFIRM_SOUND, 80, false });
     });
 
     events::build::end_build_event.connect([&]() {
@@ -278,41 +265,5 @@ void Grid::setup_model() {
         }
 
         vec[0]->setup_instanced_model(vec.size(), instance_matrix);
-    }
-}
-
-void Grid::s_place_goal(glm::vec3 start, int min_dist) {
-    // Goal will be in range of (min_dist, edge of map)
-    int new_goal_x = rand() % width;
-    int new_goal_z = rand() % height;
-
-    // If not buildable or too close, find another
-    while (!grid[new_goal_z][new_goal_x]->isBuildable() ||
-        (abs(new_goal_x-start.x) + abs(new_goal_z-start.z) < min_dist)) {
-        new_goal_x = rand() % width;
-        new_goal_z = rand() % height;
-    }
-
-    Goal *new_goal = new Goal(new_goal_x, new_goal_z);
-
-    grid[new_goal_z][new_goal_x]->set_construct(new_goal);
-    goal = new_goal;
-    goal_x = new_goal_x;
-    goal_z = new_goal_z;
-}
-
-void Grid::c_place_goal(int x, int z, int id) {
-    goal = new Goal(x, z, id);
-
-    goal->setup_model();
-    children.push_back(goal);
-}
-
-void Grid::remove_goal() {
-    //TODO destructor for goal
-    if (goal) {
-        GameObject::game_objects.erase(goal->get_id());
-        grid[goal_z][goal_x]->set_construct(nullptr);
-        events::remove_rigidbody_event(goal);
     }
 }
