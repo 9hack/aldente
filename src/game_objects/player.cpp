@@ -9,7 +9,7 @@
 #define STUN_LENGTH 500 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 
-std::vector<std::string> Player::PLAYER_MODELS = { "tomato", "cat", "boy_two" };
+std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
 
 Player::Player(int id) : GameObject(id), is_client(false) {
     tag = "PLAYER";

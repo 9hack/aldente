@@ -24,8 +24,6 @@ private:
     PulsePointLight *goal_light;
     std::mutex goal_mutex; // In case a new goal is created before old one is removed.
     int goal_z, goal_x;
-
-    static std::vector<std::string> player_models;
 public:
     MainScene();
     void s_update() override;
