@@ -149,7 +149,9 @@ namespace events {
     namespace menu {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
-        extern signal<void(int, std::string &)> spawn_existing_player_event;
+
+        // Spawns a player with given obj id and model index.
+        extern signal<void(int, int)> spawn_existing_player_event;
     }
 
     namespace ui {

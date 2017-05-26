@@ -51,7 +51,7 @@ void ServerNetworkManager::register_listeners() {
             Player* player = kv.second;
             go->set_id(player->get_id());
             go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
-            go->set_model_name(player->c_get_model_name());
+            go->set_model_index(player->c_get_model_index());
             go->set_x(player->transform.get_position().x);
             go->set_z(player->transform.get_position().z);
             go->set_wx(player->direction.x);
@@ -83,7 +83,7 @@ void ServerNetworkManager::register_listeners() {
 
             if ((player = dynamic_cast<Player*>(obj))) {
                 go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
-                go->set_model_name(player->c_get_model_name());
+                go->set_model_index(player->c_get_model_index());
             }
             else if (dynamic_cast<Goal*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_GOAL);
@@ -244,7 +244,7 @@ void ClientNetworkManager::update() {
             // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                GameState::c_add_player(resp.obj_id(), std::string(resp.model_name()), true)->c_set_client_player();
+                GameState::c_add_player(resp.obj_id(), resp.model_index(), true)->c_set_client_player();
             }
             break;
         }
@@ -255,7 +255,7 @@ void ClientNetworkManager::update() {
                 if (GameObject::game_objects.find(obj.id()) == GameObject::game_objects.end()) {
                     // Game object with that ID doesn't exist on this client yet; create it.
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
-                        events::menu::spawn_existing_player_event(obj.id(), std::string(obj.model_name()));
+                        events::menu::spawn_existing_player_event(obj.id(), obj.model_index());
                     } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
                         events::dungeon::spawn_existing_goal_event(obj.x(), obj.z(), obj.id());
                     } else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {

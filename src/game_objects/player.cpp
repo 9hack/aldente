@@ -151,9 +151,10 @@ void Player::reset_position() {
     transform.look_at(direction);
 }
 
-void Player::setup_player_model(std::string &model_name) {
+void Player::setup_player_model(int index) {
+    model_index = index;
+    std::string model_name = PLAYER_MODELS[model_index];
     Model *player_model = AssetLoader::get_model(model_name);
-    this->model_name = model_name;
     player_model->set_shader(&ShaderManager::anim_unlit);
     attach_model(player_model);
     start_walk();
@@ -180,6 +181,9 @@ void Player::s_begin_warp(float x, float z) {
 }
 
 void Player::c_begin_warp() {
+    model_index = (model_index + 1) % PLAYER_MODELS.size();
+    setup_player_model(model_index);
+
     // Set up warp animation
     anim_player.set_speed(1.0f);
     anim_player.set_anim("exit");
@@ -287,10 +291,10 @@ void Player::c_set_client_player() {
     is_client = true;
 }
 
-void Player::s_set_model_name(std::string& name) {
-    model_name = name;
+void Player::s_set_model_index(int index) {
+    model_index = index;
 }
 
-std::string Player::c_get_model_name() const {
-    return model_name;
+int Player::c_get_model_index() const {
+    return model_index;
 }

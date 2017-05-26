@@ -26,5 +26,5 @@ public:
     void c_setup() override;
 
     Player* s_spawn_player(int conn_id); // Server: spawn new Player, auto-assign id.
-    Player* c_spawn_player(int obj_id, std::string& model_name); // Client: spawn existing Player with id from server.
+    Player* c_spawn_player(int obj_id, int model_index); // Client: spawn existing Player with id from server.
 };

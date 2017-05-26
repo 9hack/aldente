@@ -164,7 +164,7 @@ void protobuf_AssignDesc_net_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, num_players_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, obj_id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, model_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinResponse, model_index_),
   };
   JoinResponse_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -220,7 +220,7 @@ void protobuf_AssignDesc_net_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameObject, wz_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameObject, client_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameObject, enabled_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameObject, model_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameObject, model_index_),
   };
   GameObject_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -393,28 +393,28 @@ void protobuf_AddDesc_net_2eproto() {
     "e_avatar_request\030\010 \001(\0132\023.proto.AvatarCha"
     "ngeH\000B\016\n\014message_type\"^\n\tConstruct\022\014\n\004ty"
     "pe\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001"
-    "(\005\022\016\n\006status\030\005 \001(\010\022\021\n\tplayer_id\030\006 \001(\005\"c\n"
+    "(\005\022\016\n\006status\030\005 \001(\010\022\021\n\tplayer_id\030\006 \001(\005\"d\n"
     "\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013num_pla"
-    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\022\022"
-    "\n\nmodel_name\030\005 \001(\t\"t\n\tGameState\022\"\n\007objec"
-    "ts\030\001 \003(\0132\021.proto.GameObject\022!\n\ncollision"
-    "s\030\002 \003(\0132\r.proto.IdPair\022 \n\tinteracts\030\003 \003("
-    "\0132\r.proto.IdPair\"*\n\006IdPair\022\021\n\tinitiator\030"
-    "\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\345\001\n\nGameObject\022\n\n\002i"
-    "d\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.GameObject"
-    ".Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002\022"
-    "\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n\007enable"
-    "d\030\010 \001(\010\022\022\n\nmodel_name\030\t \001(\t\"\?\n\004Type\022\n\n\006P"
-    "LAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\022"
-    "\013\n\007ESSENCE\020\004\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022\014\n"
-    "\004type\030\002 \001(\005\"~\n\tStickData\022%\n\005input\030\001 \001(\0162"
-    "\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030"
-    "\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT"
-    "\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013PlayerStats\022\n\n\002id"
-    "\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"5\n\014AvatarChange\022\021\n"
-    "\tplayer_id\030\001 \001(\005\022\022\n\nmodel_name\030\002 \001(\t*A\n\005"
-    "Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007"
-    "DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1623);
+    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\022\023"
+    "\n\013model_index\030\005 \001(\005\"t\n\tGameState\022\"\n\007obje"
+    "cts\030\001 \003(\0132\021.proto.GameObject\022!\n\ncollisio"
+    "ns\030\002 \003(\0132\r.proto.IdPair\022 \n\tinteracts\030\003 \003"
+    "(\0132\r.proto.IdPair\"*\n\006IdPair\022\021\n\tinitiator"
+    "\030\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\346\001\n\nGameObject\022\n\n\002"
+    "id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.GameObjec"
+    "t.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002"
+    "\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n\007enabl"
+    "ed\030\010 \001(\010\022\023\n\013model_index\030\t \001(\005\"\?\n\004Type\022\n\n"
+    "\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020"
+    "\003\022\013\n\007ESSENCE\020\004\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022"
+    "\014\n\004type\030\002 \001(\005\"~\n\tStickData\022%\n\005input\030\001 \001("
+    "\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001"
+    "y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LE"
+    "FT\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013PlayerStats\022\n\n\002"
+    "id\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"5\n\014AvatarChange\022"
+    "\021\n\tplayer_id\030\001 \001(\005\022\022\n\nmodel_name\030\002 \001(\t*A"
+    "\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013"
+    "\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1625);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -2092,7 +2092,7 @@ const int JoinResponse::kStatusFieldNumber;
 const int JoinResponse::kNumPlayersFieldNumber;
 const int JoinResponse::kIdFieldNumber;
 const int JoinResponse::kObjIdFieldNumber;
-const int JoinResponse::kModelNameFieldNumber;
+const int JoinResponse::kModelIndexFieldNumber;
 #endif  // !_MSC_VER
 
 JoinResponse::JoinResponse()
@@ -2112,13 +2112,12 @@ JoinResponse::JoinResponse(const JoinResponse& from)
 }
 
 void JoinResponse::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   status_ = false;
   num_players_ = 0;
   id_ = 0;
   obj_id_ = 0;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_index_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2128,9 +2127,6 @@ JoinResponse::~JoinResponse() {
 }
 
 void JoinResponse::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_name_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -2168,12 +2164,7 @@ void JoinResponse::Clear() {
   } while (0)
 
   if (_has_bits_[0 / 32] & 31) {
-    ZR_(status_, obj_id_);
-    if (has_model_name()) {
-      if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        model_name_->clear();
-      }
-    }
+    ZR_(status_, model_index_);
   }
 
 #undef OFFSET_OF_FIELD_
@@ -2248,20 +2239,18 @@ bool JoinResponse::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(42)) goto parse_model_name;
+        if (input->ExpectTag(40)) goto parse_model_index;
         break;
       }
 
-      // optional string model_name = 5;
+      // optional int32 model_index = 5;
       case 5: {
-        if (tag == 42) {
-         parse_model_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_model_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->model_name().data(), this->model_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "model_name");
+        if (tag == 40) {
+         parse_model_index:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &model_index_)));
+          set_has_model_index();
         } else {
           goto handle_unusual;
         }
@@ -2314,14 +2303,9 @@ void JoinResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->obj_id(), output);
   }
 
-  // optional string model_name = 5;
-  if (has_model_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->model_name().data(), this->model_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model_name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      5, this->model_name(), output);
+  // optional int32 model_index = 5;
+  if (has_model_index()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->model_index(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2354,15 +2338,9 @@ void JoinResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->obj_id(), target);
   }
 
-  // optional string model_name = 5;
-  if (has_model_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->model_name().data(), this->model_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model_name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->model_name(), target);
+  // optional int32 model_index = 5;
+  if (has_model_index()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->model_index(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2403,11 +2381,11 @@ int JoinResponse::ByteSize() const {
           this->obj_id());
     }
 
-    // optional string model_name = 5;
-    if (has_model_name()) {
+    // optional int32 model_index = 5;
+    if (has_model_index()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model_name());
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->model_index());
     }
 
   }
@@ -2449,8 +2427,8 @@ void JoinResponse::MergeFrom(const JoinResponse& from) {
     if (from.has_obj_id()) {
       set_obj_id(from.obj_id());
     }
-    if (from.has_model_name()) {
-      set_model_name(from.model_name());
+    if (from.has_model_index()) {
+      set_model_index(from.model_index());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2479,7 +2457,7 @@ void JoinResponse::Swap(JoinResponse* other) {
     std::swap(num_players_, other->num_players_);
     std::swap(id_, other->id_);
     std::swap(obj_id_, other->obj_id_);
-    std::swap(model_name_, other->model_name_);
+    std::swap(model_index_, other->model_index_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3104,7 +3082,7 @@ const int GameObject::kWxFieldNumber;
 const int GameObject::kWzFieldNumber;
 const int GameObject::kClientIdFieldNumber;
 const int GameObject::kEnabledFieldNumber;
-const int GameObject::kModelNameFieldNumber;
+const int GameObject::kModelIndexFieldNumber;
 #endif  // !_MSC_VER
 
 GameObject::GameObject()
@@ -3124,7 +3102,6 @@ GameObject::GameObject(const GameObject& from)
 }
 
 void GameObject::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   id_ = 0;
   type_ = 0;
@@ -3134,7 +3111,7 @@ void GameObject::SharedCtor() {
   wz_ = 0;
   client_id_ = 0;
   enabled_ = false;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_index_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3144,9 +3121,6 @@ GameObject::~GameObject() {
 }
 
 void GameObject::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_name_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -3186,11 +3160,7 @@ void GameObject::Clear() {
   if (_has_bits_[0 / 32] & 255) {
     ZR_(id_, enabled_);
   }
-  if (has_model_name()) {
-    if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-      model_name_->clear();
-    }
-  }
+  model_index_ = 0;
 
 #undef OFFSET_OF_FIELD_
 #undef ZR_
@@ -3329,20 +3299,18 @@ bool GameObject::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(74)) goto parse_model_name;
+        if (input->ExpectTag(72)) goto parse_model_index;
         break;
       }
 
-      // optional string model_name = 9;
+      // optional int32 model_index = 9;
       case 9: {
-        if (tag == 74) {
-         parse_model_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_model_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->model_name().data(), this->model_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "model_name");
+        if (tag == 72) {
+         parse_model_index:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &model_index_)));
+          set_has_model_index();
         } else {
           goto handle_unusual;
         }
@@ -3416,14 +3384,9 @@ void GameObject::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->enabled(), output);
   }
 
-  // optional string model_name = 9;
-  if (has_model_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->model_name().data(), this->model_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model_name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      9, this->model_name(), output);
+  // optional int32 model_index = 9;
+  if (has_model_index()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->model_index(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3477,15 +3440,9 @@ void GameObject::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->enabled(), target);
   }
 
-  // optional string model_name = 9;
-  if (has_model_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->model_name().data(), this->model_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model_name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        9, this->model_name(), target);
+  // optional int32 model_index = 9;
+  if (has_model_index()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->model_index(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3547,11 +3504,11 @@ int GameObject::ByteSize() const {
 
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional string model_name = 9;
-    if (has_model_name()) {
+    // optional int32 model_index = 9;
+    if (has_model_index()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model_name());
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->model_index());
     }
 
   }
@@ -3607,8 +3564,8 @@ void GameObject::MergeFrom(const GameObject& from) {
     }
   }
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    if (from.has_model_name()) {
-      set_model_name(from.model_name());
+    if (from.has_model_index()) {
+      set_model_index(from.model_index());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3641,7 +3598,7 @@ void GameObject::Swap(GameObject* other) {
     std::swap(wz_, other->wz_);
     std::swap(client_id_, other->client_id_);
     std::swap(enabled_, other->enabled_);
-    std::swap(model_name_, other->model_name_);
+    std::swap(model_index_, other->model_index_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

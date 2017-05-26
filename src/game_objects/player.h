@@ -35,7 +35,7 @@ private:
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.2f, 1.0f);
 
     PlayerStats stats;
-    std::string model_name;
+    int model_index;
 public:
     Player(int id = 0);
 
@@ -44,7 +44,7 @@ public:
     void s_on_collision(GameObject *other) override;
     void c_on_collision(GameObject *other) override;
 
-    void setup_player_model(std::string &model_name); // Loads player model
+    void setup_player_model(int index); // Loads player model
 
     bool get_exiting_status() { return exiting; };
     void set_exiting_status(bool to_set) { exiting = to_set; };
@@ -93,9 +93,9 @@ public:
     // Client side. Whether or not this player is the client player.
     void c_set_client_player();
 
-    // Set the player's model name.
-    void s_set_model_name(std::string& name);
-    std::string c_get_model_name() const;
+    // Set the player's model index.
+    void s_set_model_index(int index);
+    int c_get_model_index() const;
 
     static std::vector<std::string> PLAYER_MODELS;
 };

@@ -66,16 +66,17 @@ Player* MainScene::s_spawn_player(int conn_id) {
     // TODO: determine where each player starts based on client id. 
     // For now, players 1-4 start at (2, 2), (2, 3), (2, 4), (2, 5) respectively.
     player->set_start_position({ 2.f, 0, 1.f + conn_id });
-    player->s_set_model_name(Player::PLAYER_MODELS[conn_id % 3]);   // TODO: temporary 3 because no lizard
+
+    player->s_set_model_index(conn_id % Player::PLAYER_MODELS.size());
     player->reset_position();
     objs.push_back(player);
 
     return player;
 }
 
-Player* MainScene::c_spawn_player(int obj_id, std::string& model_name) {
+Player* MainScene::c_spawn_player(int obj_id, int model_index) {
     Player *player = new Player(obj_id);
-    player->setup_player_model(model_name);
+    player->setup_player_model(model_index);
     objs.push_back(player);
 
     return player;
