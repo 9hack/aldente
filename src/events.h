@@ -137,6 +137,15 @@ namespace events {
     // Client-side. Called when the client player's gold amount has updated.
     extern signal<void(const proto::PlayerStats &)> c_player_stats_updated;
 
+    /* Events for camera animation. Call on client
+    * Position: The end position of the transition
+    * Angle: The total amount of rotation desired (degrees)
+    * Axis: The axis of rotation
+    * Time: Amount of time the transition should take (milliseconds)
+    */
+    extern signal<void(glm::vec3 position, int time)> camera_anim_position_event;
+    extern signal<void(glm::vec3 axis, float angle, int time)> camera_anim_rotate_event;
+
     namespace server {
         extern signal<void(proto::ServerMessage &)> announce;
     }

@@ -76,6 +76,44 @@ void Camera::setup_listeners() {
         cam_up = glm::vec3(0,0,-1);
         recalculate();
     });
+
+    events::camera_anim_position_event.connect([&](glm::vec3 pos, int time) {
+        // Calculate position step needed to achieve end goal in alloted time
+        float dist = glm::distance(cam_pos, pos);
+        float pos_step = dist / time;
+
+        // Calculate direction and magnitude
+        glm::vec3 direction = pos - cam_pos;
+        direction = glm::normalize(direction);
+        glm::vec3 to_move = direction * pos_step;
+        to_move *= 30.0f;
+
+        std::function<void()> end_animation;
+
+        end_animation = Timer::get()->do_every(std::chrono::milliseconds(30), [&, to_move, pos]() {
+            displace_cam_clamp(to_move, pos);
+        });
+
+        Timer::get()->do_after(std::chrono::milliseconds(time), [&, end_animation]() {
+            end_animation();
+        });
+    });
+
+    events::camera_anim_rotate_event.connect([&](glm::vec3 axis, float angle, int time) {
+        // Calculate angle step needed to achieve end goal in alloted time
+        float angle_step = angle / time;
+        angle_step *= 30;
+
+        std::function<void()> end_animation;
+
+        end_animation = Timer::get()->do_every(std::chrono::milliseconds(30), [&, angle_step, axis]() {
+            rotate_cam(axis, angle_step);
+        });
+
+        Timer::get()->do_after(std::chrono::milliseconds(time), [&, end_animation]() {
+            end_animation();
+        });
+    });
 }
 
 void Camera::recalculate() {
@@ -201,4 +239,59 @@ void Camera::update_frustum_planes() {
         frustum_planes[i].normal = -frustum_planes[i].normal / length;
         frustum_planes[i].d = frustum_planes[i].d / length;
     }
+}
+
+void Camera::displace_cam_clamp(glm::vec3 displacement, glm::vec3 clamp) {
+    glm::vec3 direction = clamp - cam_pos;
+
+    if (direction.x > 0) {
+        if (cam_pos.x + displacement.x > clamp.x)
+            cam_pos.x = clamp.x;
+        else
+            cam_pos.x += displacement.x;
+    }
+    else if (direction.x < 0) {
+        if (cam_pos.x + displacement.x < clamp.x)
+            cam_pos.x = clamp.x;
+        else
+            cam_pos.x += displacement.x;
+    }
+
+    if (direction.y > 0) {
+        if (cam_pos.y + displacement.y > clamp.y)
+            cam_pos.y = clamp.y;
+        else
+            cam_pos.y += displacement.y;
+    }
+    else if (direction.y < 0) {
+        if (cam_pos.y + displacement.y < clamp.y)
+            cam_pos.y = clamp.y;
+        else
+            cam_pos.y += displacement.y;
+    }
+
+    if (direction.z > 0) {
+        if (cam_pos.z + displacement.z > clamp.z)
+            cam_pos.z = clamp.z;
+        else
+            cam_pos.z += displacement.z;
+    }
+    else if (direction.z < 0) {
+        if (cam_pos.z + displacement.z < clamp.z)
+            cam_pos.z = clamp.z;
+        else
+            cam_pos.z += displacement.z;
+    }
+
+    recalculate();
+}
+
+void Camera::rotate_cam(glm::vec3 axis, float angle) {
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis);
+    glm::vec4 front = glm::vec4(cam_front, 1);
+    glm::vec4 up = glm::vec4(cam_up, 1);
+
+    cam_front = glm::normalize(rot * front);
+    cam_up = glm::normalize(rot * up);
+    recalculate();
 }

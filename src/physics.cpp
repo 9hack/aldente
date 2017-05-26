@@ -34,8 +34,6 @@ Physics::Physics() {
     events::window_cursor_event.connect([&](events::WindowCursorData d) {
         int width, height;
         std::tie(width, height) = d.window->get_size();
-
-        raycast_mouse(d.x_pos, d.y_pos, width, height);
     });
 
     events::enable_rigidbody_event.connect([&](GameObject *obj) {

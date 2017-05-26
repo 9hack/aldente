@@ -46,6 +46,11 @@ public:
 
     void displace_cam(glm::vec3 displacement);
 
+    // Displaces cam but get clamped if neccessary (for use in camera anim)
+    void displace_cam_clamp(glm::vec3 displacement, glm::vec3 clamp);
+
     glm::mat4 frustum_ortho(glm::vec3 light_pos);
+
+    void rotate_cam(glm::vec3 axis, float angle);
 };
 

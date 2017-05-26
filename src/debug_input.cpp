@@ -64,6 +64,11 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                 case GLFW_KEY_3:
                     // FIXME(metakirby5)
                     break;
+                case GLFW_KEY_4:
+                    // Camera animation debug. Feel free to remove if needed
+                    events::camera_anim_position_event(glm::vec3(0, 10.0f, 0), 2000);
+                    events::camera_anim_rotate_event(glm::vec3(0, 1, 0), 720, 2000);
+                    break;
                 default:
                     break;
             }
