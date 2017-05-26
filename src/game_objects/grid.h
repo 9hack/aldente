@@ -27,6 +27,7 @@ private:
     ConstructType selected = ConstructType::REMOVE;
 
     ConstructPreview preview; // the currently selected construct as a transparent preview on the grid
+    bool build_permissible; // Did build pass initial check (game logic) for building?
 
     void setup_listeners();
 

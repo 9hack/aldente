@@ -1,6 +1,7 @@
 #include <game/game_state.h>
 #include "dungeon.h"
 #include "game_objects/player.h"
+#include "game_objects/essence.h"
 #include "audio/audio_manager.h"
 
 void DungeonPhase::s_setup() {
@@ -15,6 +16,12 @@ void DungeonPhase::s_setup() {
     });
 
     events::dungeon::s_prepare_dungeon_event();
+
+    essence_conn = events::dungeon::s_spawn_essence_event.connect([&](float x, float z) {
+        Essence *ess = new Essence();
+        ess->set_position({ x, 0, z });
+        GameState::scene_manager.get_current_scene()->objs.push_back(ess);
+    });
 
     flag_conn = events::dungeon::player_finished_event.connect([&](int player_id) {
         Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
@@ -63,9 +70,15 @@ void DungeonPhase::c_setup() {
         }
     });
 
+    essence_conn = events::dungeon::c_spawn_essence_event.connect([&](float x, float z, int id) {
+        Essence *ess = new Essence(id);
+        ess->set_position({ x, 0, z });
+        ess->setup_model();
+        GameState::scene_manager.get_current_scene()->objs.push_back(ess);
+    });
+
     // Play music
-    events::AudioData d = { AudioManager::DUNGEON_MUSIC };
-    events::music_event(d);
+    events::music_event(events::AudioData{ AudioManager::DUNGEON_MUSIC, 30, true });
 }
 
 proto::Phase DungeonPhase::s_update() {
@@ -74,7 +87,7 @@ proto::Phase DungeonPhase::s_update() {
     // Send the position and orientation of the specified game objects.
     // Currently sending all Player objects and Constructs.
     for (auto const & o : GameObject::game_objects) {
-        if (dynamic_cast<Player*>(o.second) || dynamic_cast<Construct*>(o.second))
+        if (dynamic_cast<Player*>(o.second) || dynamic_cast<Goal*>(o.second) || dynamic_cast<Essence*>(o.second))
             context.updated_objects.insert(o.second);
     }
     events::dungeon::update_state_event(&context);
@@ -107,6 +120,7 @@ void DungeonPhase::s_teardown() {
     collision_conn.disconnect();
     interact_conn.disconnect();
     flag_conn.disconnect();
+    essence_conn.disconnect();
 
     // Assigns rewards depending on player's ranking
     Player *curr_player;
@@ -122,4 +136,5 @@ void DungeonPhase::s_teardown() {
 void DungeonPhase::c_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
+    essence_conn.disconnect();
 }

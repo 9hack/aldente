@@ -33,6 +33,7 @@ message Construct {
   optional int32 z = 3;
   optional int32 id = 4;
   optional bool status = 5;
+  optional int32 player_id = 6;
 }
 
 message JoinResponse {
@@ -59,6 +60,7 @@ message GameObject {
     GOAL = 1;
     CHEST = 2;
     SPIKE = 3;
+    ESSENCE = 4;
   }
 
   optional int32 id = 1;

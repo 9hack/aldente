@@ -1,5 +1,5 @@
 #include "player.h"
-
+#include "audio/audio_manager.h"
 #include "asset_loader.h"
 #include "assert.h"
 #include "events.h"
@@ -9,7 +9,7 @@
 #define STUN_LENGTH 500 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 
-Player::Player(int id) : GameObject(id) {
+Player::Player(int id) : GameObject(id), is_client(false) {
     tag = "PLAYER";
 
     if (id == ON_SERVER) {
@@ -67,12 +67,18 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
     if (!animate && !exiting) {
-        if (!anim_player.check_paused())
+        if (!anim_player.check_paused()) {
+            events::stop_sound_effects_event(AudioManager::FOOTSTEPS_SOUND);
+
             anim_player.stop();
+        }
     }
     else {
-        if (anim_player.check_paused())
+        if (anim_player.check_paused()) {
+            events::sound_effects_event(events::AudioData{ AudioManager::FOOTSTEPS_SOUND, 100, true });
+
             anim_player.play();
+        }
     }
 
     GameObject::c_update_state(x, z, wx, wz, enab);
@@ -202,7 +208,18 @@ bool Player::s_take_damage() {
 
     std::cerr << "Player is hit: " << id << std::endl;
 
-    // Player should drop gold and lose gold somewhere here
+    // Player loses percentage essence
+    const float percent_loss = .20f;
+    int amount_loss = (int) stats.get_coins() * percent_loss;
+    s_modify_stats([&](PlayerStats & stats) {
+        stats.add_coins(-amount_loss);
+    });
+
+    // Drop essence to total amount loss, rounded down. Assuming that each essence has 10 coin value. 
+    const float essence_val = 10.0f; // Currently hardcoded
+    int number_essence_loss = (int)floor(amount_loss / essence_val);
+    for (int i = 1; i <= (amount_loss / 10.0f); i++)
+        events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
 
     // End Stunned
     Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
@@ -261,5 +278,14 @@ void Player::s_modify_stats(std::function<void(PlayerStats &)> modifier) {
 void Player::c_update_stats(const proto::PlayerStats &update) {
     stats.set_coins(update.coins());
 
-    std::cerr << "ID " << id << " COINS NOW @ " << stats.get_coins() << std::endl;
+    if (is_client)
+        events::c_player_stats_updated(update);
+}
+
+bool Player::can_afford(int cost) {
+    return stats.get_coins() >= cost;
+}
+
+void Player::c_set_client_player() {
+    is_client = true;
 }

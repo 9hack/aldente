@@ -49,11 +49,12 @@ enum GameObject_Type {
   GameObject_Type_PLAYER = 0,
   GameObject_Type_GOAL = 1,
   GameObject_Type_CHEST = 2,
-  GameObject_Type_SPIKE = 3
+  GameObject_Type_SPIKE = 3,
+  GameObject_Type_ESSENCE = 4
 };
 bool GameObject_Type_IsValid(int value);
 const GameObject_Type GameObject_Type_Type_MIN = GameObject_Type_PLAYER;
-const GameObject_Type GameObject_Type_Type_MAX = GameObject_Type_SPIKE;
+const GameObject_Type GameObject_Type_Type_MAX = GameObject_Type_ESSENCE;
 const int GameObject_Type_Type_ARRAYSIZE = GameObject_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* GameObject_Type_descriptor();
@@ -538,6 +539,13 @@ class Construct : public ::google::protobuf::Message {
   inline bool status() const;
   inline void set_status(bool value);
 
+  // optional int32 player_id = 6;
+  inline bool has_player_id() const;
+  inline void clear_player_id();
+  static const int kPlayerIdFieldNumber = 6;
+  inline ::google::protobuf::int32 player_id() const;
+  inline void set_player_id(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:proto.Construct)
  private:
   inline void set_has_type();
@@ -550,6 +558,8 @@ class Construct : public ::google::protobuf::Message {
   inline void clear_has_id();
   inline void set_has_status();
   inline void clear_has_status();
+  inline void set_has_player_id();
+  inline void clear_has_player_id();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -560,6 +570,7 @@ class Construct : public ::google::protobuf::Message {
   ::google::protobuf::int32 z_;
   ::google::protobuf::int32 id_;
   bool status_;
+  ::google::protobuf::int32 player_id_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -931,6 +942,7 @@ class GameObject : public ::google::protobuf::Message {
   static const Type GOAL = GameObject_Type_GOAL;
   static const Type CHEST = GameObject_Type_CHEST;
   static const Type SPIKE = GameObject_Type_SPIKE;
+  static const Type ESSENCE = GameObject_Type_ESSENCE;
   static inline bool Type_IsValid(int value) {
     return GameObject_Type_IsValid(value);
   }
@@ -2142,6 +2154,30 @@ inline void Construct::set_status(bool value) {
   set_has_status();
   status_ = value;
   // @@protoc_insertion_point(field_set:proto.Construct.status)
+}
+
+// optional int32 player_id = 6;
+inline bool Construct::has_player_id() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Construct::set_has_player_id() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Construct::clear_has_player_id() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Construct::clear_player_id() {
+  player_id_ = 0;
+  clear_has_player_id();
+}
+inline ::google::protobuf::int32 Construct::player_id() const {
+  // @@protoc_insertion_point(field_get:proto.Construct.player_id)
+  return player_id_;
+}
+inline void Construct::set_player_id(::google::protobuf::int32 value) {
+  set_has_player_id();
+  player_id_ = value;
+  // @@protoc_insertion_point(field_set:proto.Construct.player_id)
 }
 
 // -------------------------------------------------------------------

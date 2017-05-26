@@ -1,4 +1,5 @@
 #include "grid.h"
+#include "audio/audio_manager.h"
 #include "events.h"
 #include "game/phase/phase.h"
 #include "util/color.h"
@@ -15,6 +16,7 @@ Grid::Grid(const char *map_loc) :
     tag = "GRID";
     model = nullptr;
     rigidbody = nullptr;
+    build_permissible = true;
 
     load_map(map_loc);
 
@@ -54,14 +56,20 @@ void Grid::setup_listeners() {
         events::build::request_build_event(c);
     });
 
-    events::build::construct_selected_event.connect([&](ConstructType type) {
+    events::build::c_construct_preview_event.connect([&](ConstructType type, bool valid) {
         selected = type;
+        build_permissible = valid;
 
         // Change preview to this construct type.
-        preview.set_construct_type(type);
+        preview.set_construct_type(type, valid);
         children.push_back(&preview);
         // Update preview position based on hover position
         update_selection();
+    });
+
+    events::c_player_stats_updated.connect([&](const proto::PlayerStats &update) {
+        build_permissible = update.coins() >= Constructs::CONSTRUCTS.at(selected).cost;
+        preview.set_valid(hover->buildable && build_permissible);
     });
 
     events::build::select_grid_return_event.connect([&]() {
@@ -69,7 +77,7 @@ void Grid::setup_listeners() {
         remove_child(&preview);
     });
 
-    events::build::try_build_event.connect([&](proto::Construct& c) {
+    events::build::s_try_build_event.connect([&](proto::Construct& c, std::function<void()> success) {
         bool permitted = verify_build(static_cast<ConstructType>(c.type()), c.x(), c.z());
         c.set_status(permitted);
         // Build the construct locally on the server, without graphics.
@@ -79,6 +87,7 @@ void Grid::setup_listeners() {
             if (built) {
                 c.set_id(built->get_id());
             }
+            success();
         }
 
         events::build::respond_build_event(c);
@@ -87,6 +96,8 @@ void Grid::setup_listeners() {
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
         build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
+
+        events::sound_effects_event(events::AudioData{ AudioManager::BUILD_CONFIRM_SOUND, 80, false });
     });
 
     events::build::end_build_event.connect([&]() {
@@ -171,6 +182,7 @@ void Grid::update_selection() {
 
     // Move preview to selected tile
     preview.curr_preview->transform.set_position(hover_col, 0.0f, hover_row);
+    preview.set_valid(hover->buildable && build_permissible);
 }
 
 void Grid::load_map(const char *map_loc) {

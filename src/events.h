@@ -62,9 +62,12 @@ namespace events {
     // Audio
     struct AudioData {
         std::string filename;
+        int volume;
+        bool loop;
     };
     extern signal<void(AudioData &)> music_event;
     extern signal<void(AudioData &)> sound_effects_event;
+    extern signal<void(std::string)> stop_sound_effects_event;
     extern signal<void()> toggle_mute_event;
 
     struct WindowSizeData {
@@ -115,10 +118,6 @@ namespace events {
         extern signal<void()> toggle_ui_text_box_background_event;
     }
 
-    // The user has made a selection on the UI grid.
-    extern signal<void(int)> ui_grid_selection_event;
-    extern signal<void(int)> ui_grid_movement_event;
-
     // Struct for parameters for rigidbody initialization
     struct RigidBodyData {
         GameObject *object = nullptr; //Object that has the rigidBody
@@ -134,6 +133,9 @@ namespace events {
     extern signal<void(GameObject *obj)> disable_rigidbody_event;
     extern signal<void(GameObject *obj)> enable_rigidbody_event;
     extern signal<void(int)> player_finished_event;
+
+    // Client-side. Called when the client player's gold amount has updated.
+    extern signal<void(const proto::PlayerStats &)> c_player_stats_updated;
 
     namespace server {
         extern signal<void(proto::ServerMessage &)> announce;
@@ -173,11 +175,24 @@ namespace events {
         // The selected construct type has changed.
         extern signal<void(ConstructType)> construct_selected_event;
 
+        // Show the construct preview on the 3D build grid.
+        // Tint green if valid bool is true, otherwise tint red.
+        extern signal<void(ConstructType, bool)> c_construct_preview_event;
+
         // Client requests to build a construct.
         extern signal<void(proto::Construct &)> request_build_event;
 
+        // Check if the player has enough funds to purchase, if so, allows selection of item.
+        // Provide the type of the construct to build.
+        extern signal<void(ConstructType)> c_check_funds_event;
+
+        // Check if the player has enough funds to purchase, if so, tries to build.
+        // Provide the construct proto object (containing player id) to build.
+        extern signal<void(proto::Construct &)> s_verify_and_build;
+
         // Server attempts to build the construct.
-        extern signal<void(proto::Construct &)> try_build_event;
+        // Calls the given success function if the build succeeded.
+        extern signal<void(proto::Construct &, std::function<void()>)> s_try_build_event;
 
         // Server responds whether or not the build was successful.
         extern signal<void(proto::Construct &)> respond_build_event;
@@ -236,5 +251,9 @@ namespace events {
 
         // Sets camera to post-dungeon camera
         extern signal<void()> post_dungeon_camera_event;
+        
+        // Spawns a Dream Essence object
+        extern signal<void(float, float)> s_spawn_essence_event; // Server
+        extern signal<void(float, float, int)> c_spawn_essence_event; // Client
     }
 }

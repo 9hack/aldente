@@ -4,6 +4,7 @@
 #include "game/construct_types.h"
 #include "build_ui.h"
 #include "clock_ui.h"
+#include "gold_ui.h"
 
 UIManager::~UIManager() {
     for (auto it = ui_map.begin(); it != ui_map.end(); ++it) {
@@ -24,40 +25,30 @@ void UIManager::setup_uis() {
         int type = (i % 3) + 1;
         switch (type) {
         case ConstructType::CHEST:
-            constructs.push_back(Constructs::CHEST);
+            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::CHEST));
             break;
         case ConstructType::SPIKES:
-            constructs.push_back(Constructs::SPIKES);
+            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::SPIKES));
             break;
         case ConstructType::REMOVE:
-            constructs.push_back(Constructs::REMOVE);
+            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::REMOVE));
             break;
         default:
             break;
         }
     }
-    BuildUI *build_ui = new BuildUI(3, 4, aspect, constructs);
-    ui_map["build"] = build_ui;
+    ui_map["build"] = new BuildUI(3, 4, aspect, constructs);
 
     /* CLOCK UI */
-    ClockUI *clock_ui = new ClockUI(aspect);
-    ui_map["clock"] = clock_ui;
+    ui_map["clock"] = new ClockUI(aspect);
+
+    /* GOLD UI */
+    ui_map["gold"] = new GoldUI(aspect);
 }
 
 void UIManager::setup_listeners() {
     events::debug::toggle_ui_event.connect([&](void) {
         all_enabled = !all_enabled;
-    });
-
-    // Build UI disable/enable triggers.
-    // Enables Build UI on the start of the build phase
-    events::build::start_build_event.connect([&]() {
-        ui_map["build"]->enable(); // TODO: assert that ui_map["build"] exists?
-    });
-
-    // Disables Build UI at the end of the build phase
-    events::build::end_build_event.connect([&]() {
-        ui_map["build"]->disable();
     });
 }
 

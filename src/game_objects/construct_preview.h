@@ -8,7 +8,8 @@
 
 class ConstructPreview : public GameObject {
 public:
-    void set_construct_type(ConstructType type);
+    void set_construct_type(ConstructType type, bool valid);
+    void set_valid(bool valid);
     Construct *curr_preview;
 private:
     template <typename T>
