@@ -152,6 +152,10 @@ namespace events {
 
         // Spawns a player with given obj id and model index.
         extern signal<void(int, int)> spawn_existing_player_event;
+
+        // Cycles to the next player avatar model.
+        // Bool direction decides if we're cycling forward or backward.
+        extern signal<void(bool)> c_cycle_player_model_event;
     }
 
     namespace ui {

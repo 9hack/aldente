@@ -44,7 +44,7 @@ public:
     void s_on_collision(GameObject *other) override;
     void c_on_collision(GameObject *other) override;
 
-    void setup_player_model(int index); // Loads player model
+    void c_setup_player_model(int index); // Loads player model
 
     bool get_exiting_status() { return exiting; };
     void set_exiting_status(bool to_set) { exiting = to_set; };

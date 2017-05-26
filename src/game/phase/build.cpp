@@ -123,11 +123,11 @@ void BuildPhase::c_setup() {
                 break;
             }
             case events::BTN_LB: {
-                std::cerr << "left bumper\n";
+                events::menu::c_cycle_player_model_event(false);
                 break;
             }
             case events::BTN_RB: {
-                std::cerr << "right bumper\n";
+                events::menu::c_cycle_player_model_event(true);
                 break;
             }
             default:

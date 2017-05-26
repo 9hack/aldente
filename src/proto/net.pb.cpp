@@ -288,7 +288,7 @@ void protobuf_AssignDesc_net_2eproto() {
   AvatarChange_descriptor_ = file->message_type(10);
   static const int AvatarChange_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AvatarChange, player_id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AvatarChange, model_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AvatarChange, model_index_),
   };
   AvatarChange_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -411,10 +411,10 @@ void protobuf_AddDesc_net_2eproto() {
     "\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001"
     "y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LE"
     "FT\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013PlayerStats\022\n\n\002"
-    "id\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"5\n\014AvatarChange\022"
-    "\021\n\tplayer_id\030\001 \001(\005\022\022\n\nmodel_name\030\002 \001(\t*A"
-    "\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013"
-    "\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1625);
+    "id\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"6\n\014AvatarChange\022"
+    "\021\n\tplayer_id\030\001 \001(\005\022\023\n\013model_index\030\002 \001(\005*"
+    "A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022"
+    "\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1626);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -4543,7 +4543,7 @@ void PlayerStats::Swap(PlayerStats* other) {
 
 #ifndef _MSC_VER
 const int AvatarChange::kPlayerIdFieldNumber;
-const int AvatarChange::kModelNameFieldNumber;
+const int AvatarChange::kModelIndexFieldNumber;
 #endif  // !_MSC_VER
 
 AvatarChange::AvatarChange()
@@ -4563,10 +4563,9 @@ AvatarChange::AvatarChange(const AvatarChange& from)
 }
 
 void AvatarChange::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   player_id_ = 0;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_index_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4576,9 +4575,6 @@ AvatarChange::~AvatarChange() {
 }
 
 void AvatarChange::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_name_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -4605,14 +4601,21 @@ AvatarChange* AvatarChange::New() const {
 }
 
 void AvatarChange::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    player_id_ = 0;
-    if (has_model_name()) {
-      if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        model_name_->clear();
-      }
-    }
-  }
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<AvatarChange*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  ZR_(player_id_, model_index_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -4637,20 +4640,18 @@ bool AvatarChange::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_model_name;
+        if (input->ExpectTag(16)) goto parse_model_index;
         break;
       }
 
-      // optional string model_name = 2;
+      // optional int32 model_index = 2;
       case 2: {
-        if (tag == 18) {
-         parse_model_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_model_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->model_name().data(), this->model_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "model_name");
+        if (tag == 16) {
+         parse_model_index:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &model_index_)));
+          set_has_model_index();
         } else {
           goto handle_unusual;
         }
@@ -4688,14 +4689,9 @@ void AvatarChange::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->player_id(), output);
   }
 
-  // optional string model_name = 2;
-  if (has_model_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->model_name().data(), this->model_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model_name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->model_name(), output);
+  // optional int32 model_index = 2;
+  if (has_model_index()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->model_index(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4713,15 +4709,9 @@ void AvatarChange::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->player_id(), target);
   }
 
-  // optional string model_name = 2;
-  if (has_model_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->model_name().data(), this->model_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model_name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->model_name(), target);
+  // optional int32 model_index = 2;
+  if (has_model_index()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->model_index(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4743,11 +4733,11 @@ int AvatarChange::ByteSize() const {
           this->player_id());
     }
 
-    // optional string model_name = 2;
-    if (has_model_name()) {
+    // optional int32 model_index = 2;
+    if (has_model_index()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model_name());
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->model_index());
     }
 
   }
@@ -4780,8 +4770,8 @@ void AvatarChange::MergeFrom(const AvatarChange& from) {
     if (from.has_player_id()) {
       set_player_id(from.player_id());
     }
-    if (from.has_model_name()) {
-      set_model_name(from.model_name());
+    if (from.has_model_index()) {
+      set_model_index(from.model_index());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -4807,7 +4797,7 @@ bool AvatarChange::IsInitialized() const {
 void AvatarChange::Swap(AvatarChange* other) {
   if (other != this) {
     std::swap(player_id_, other->player_id_);
-    std::swap(model_name_, other->model_name_);
+    std::swap(model_index_, other->model_index_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

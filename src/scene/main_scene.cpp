@@ -76,7 +76,7 @@ Player* MainScene::s_spawn_player(int conn_id) {
 
 Player* MainScene::c_spawn_player(int obj_id, int model_index) {
     Player *player = new Player(obj_id);
-    player->setup_player_model(model_index);
+    player->c_setup_player_model(model_index);
     objs.push_back(player);
 
     return player;

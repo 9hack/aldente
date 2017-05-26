@@ -1478,31 +1478,26 @@ class AvatarChange : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 player_id() const;
   inline void set_player_id(::google::protobuf::int32 value);
 
-  // optional string model_name = 2;
-  inline bool has_model_name() const;
-  inline void clear_model_name();
-  static const int kModelNameFieldNumber = 2;
-  inline const ::std::string& model_name() const;
-  inline void set_model_name(const ::std::string& value);
-  inline void set_model_name(const char* value);
-  inline void set_model_name(const char* value, size_t size);
-  inline ::std::string* mutable_model_name();
-  inline ::std::string* release_model_name();
-  inline void set_allocated_model_name(::std::string* model_name);
+  // optional int32 model_index = 2;
+  inline bool has_model_index() const;
+  inline void clear_model_index();
+  static const int kModelIndexFieldNumber = 2;
+  inline ::google::protobuf::int32 model_index() const;
+  inline void set_model_index(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:proto.AvatarChange)
  private:
   inline void set_has_player_id();
   inline void clear_has_player_id();
-  inline void set_has_model_name();
-  inline void clear_has_model_name();
+  inline void set_has_model_index();
+  inline void clear_has_model_index();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::std::string* model_name_;
   ::google::protobuf::int32 player_id_;
+  ::google::protobuf::int32 model_index_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -3129,80 +3124,28 @@ inline void AvatarChange::set_player_id(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.AvatarChange.player_id)
 }
 
-// optional string model_name = 2;
-inline bool AvatarChange::has_model_name() const {
+// optional int32 model_index = 2;
+inline bool AvatarChange::has_model_index() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void AvatarChange::set_has_model_name() {
+inline void AvatarChange::set_has_model_index() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void AvatarChange::clear_has_model_name() {
+inline void AvatarChange::clear_has_model_index() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void AvatarChange::clear_model_name() {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_->clear();
-  }
-  clear_has_model_name();
+inline void AvatarChange::clear_model_index() {
+  model_index_ = 0;
+  clear_has_model_index();
 }
-inline const ::std::string& AvatarChange::model_name() const {
-  // @@protoc_insertion_point(field_get:proto.AvatarChange.model_name)
-  return *model_name_;
+inline ::google::protobuf::int32 AvatarChange::model_index() const {
+  // @@protoc_insertion_point(field_get:proto.AvatarChange.model_index)
+  return model_index_;
 }
-inline void AvatarChange::set_model_name(const ::std::string& value) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(value);
-  // @@protoc_insertion_point(field_set:proto.AvatarChange.model_name)
-}
-inline void AvatarChange::set_model_name(const char* value) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(value);
-  // @@protoc_insertion_point(field_set_char:proto.AvatarChange.model_name)
-}
-inline void AvatarChange::set_model_name(const char* value, size_t size) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:proto.AvatarChange.model_name)
-}
-inline ::std::string* AvatarChange::mutable_model_name() {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:proto.AvatarChange.model_name)
-  return model_name_;
-}
-inline ::std::string* AvatarChange::release_model_name() {
-  clear_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = model_name_;
-    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void AvatarChange::set_allocated_model_name(::std::string* model_name) {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_name_;
-  }
-  if (model_name) {
-    set_has_model_name();
-    model_name_ = model_name;
-  } else {
-    clear_has_model_name();
-    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:proto.AvatarChange.model_name)
+inline void AvatarChange::set_model_index(::google::protobuf::int32 value) {
+  set_has_model_index();
+  model_index_ = value;
+  // @@protoc_insertion_point(field_set:proto.AvatarChange.model_index)
 }
 
 

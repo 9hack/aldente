@@ -157,6 +157,18 @@ void ServerNetworkManager::update() {
                 events::build::player_ready_event(msg.ready_request());
                 break;
             }
+            case proto::ClientMessage::MessageTypeCase::kChangeAvatarRequest: {
+                proto::AvatarChange change = msg.change_avatar_request();
+                Player* player = dynamic_cast<Player*>(GameObject::game_objects[change.player_id()]);
+                assert(player);
+                player->s_set_model_index(change.model_index());
+
+                // Send the avatar change update to all clients.
+                proto::ServerMessage response;
+                response.set_allocated_change_avatar_update(new proto::AvatarChange(change));
+                server.send_to_all(response);
+                break;
+            }
             default:
                 break;
             }
@@ -306,6 +318,13 @@ void ClientNetworkManager::update() {
         case proto::ServerMessage::MessageTypeCase::kTimeUpdate: {
             // Update the graphical timer
             events::ui::update_time(msg.time_update());
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kChangeAvatarUpdate: {
+            proto::AvatarChange change = msg.change_avatar_update();
+            Player* player = dynamic_cast<Player*>(GameObject::game_objects[change.player_id()]);
+            assert(player);
+            player->c_setup_player_model(change.model_index());
             break;
         }
         default:

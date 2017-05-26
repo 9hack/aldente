@@ -35,6 +35,25 @@ Player::Player(int id) : GameObject(id), is_client(false) {
         //Lock angular rotation
         rigidbody->setAngularFactor(0);
     }
+
+    events::menu::c_cycle_player_model_event.connect([&](bool forward) {
+        if (!is_client) return;
+
+        // Determine the next model index to switch to.
+        int next_index = forward ?
+            (model_index + 1) % PLAYER_MODELS.size() :
+            model_index == 0 ?
+                PLAYER_MODELS.size() - 1 :
+                (model_index - 1) % PLAYER_MODELS.size();
+
+        // Send the request to the server.
+        proto::ClientMessage msg;
+        proto::AvatarChange* request = new proto::AvatarChange();
+        request->set_model_index(next_index);
+        request->set_player_id(get_id());
+        msg.set_allocated_change_avatar_request(request);
+        events::client::send(msg);
+    });
 }
 
 // Just calls do_movement for now, can have more
@@ -151,7 +170,7 @@ void Player::reset_position() {
     transform.look_at(direction);
 }
 
-void Player::setup_player_model(int index) {
+void Player::c_setup_player_model(int index) {
     model_index = index;
     std::string model_name = PLAYER_MODELS[model_index];
     Model *player_model = AssetLoader::get_model(model_name);
@@ -181,9 +200,6 @@ void Player::s_begin_warp(float x, float z) {
 }
 
 void Player::c_begin_warp() {
-    model_index = (model_index + 1) % PLAYER_MODELS.size();
-    setup_player_model(model_index);
-
     // Set up warp animation
     anim_player.set_speed(1.0f);
     anim_player.set_anim("exit");
