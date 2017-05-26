@@ -53,17 +53,6 @@ void MainScene::graphical_setup() {
                                                  Color::WHITE, 0.5f);
     add_light(sun);
 
-    PointLight *bulb = new PointLight(glm::vec3(5.f, 2.f, 5.f), Color::BONE_WHITE, 0.1f);
-    add_light(bulb);
-
-    PulsePointLight *bulb2 = new PulsePointLight(glm::vec3(7.f, 2.f, 10.f), Color::WINDWAKER_GREEN);
-    add_light(bulb2);
-
-    SpotLight *spot_light = new SpotLight(glm::vec3(10.f, 4.f, 5.f),
-                                          glm::vec3(0.f, -1.f, 0.f),
-                                          Color::MAGENTA);
-    add_light(spot_light);
-
     // Setup light debug callback.
     events::debug::toggle_light_rotation_event.connect([&](void) {
         lights_debug_on = !lights_debug_on;
@@ -119,7 +108,7 @@ void MainScene::c_place_goal(int x, int z, int id) {
     goal = new Goal(x, z, id);
 
     goal_light = 
-        new PulsePointLight(glm::vec3(x, 2.0f, z), Color::OCEAN_BLUE, 0, 0.5f, 0.05f);
+        new PulsePointLight(glm::vec3(x, 0.5f, z), Color::OCEAN_BLUE, 0, 0.15f, 0.0055f, 0.1f);
     add_light(goal_light);
 
     goal->setup_model();

@@ -12,8 +12,9 @@ public:
                     Color color = Color::WHITE,
                     float low_intensity = 0.f,
                     float high_intensity = 0.5f,
-                    float step = 0.1f) :
-        PointLight(default_position, color, high_intensity),
+                    float step = 0.1f,
+                    float attenuation = 0.07f) :
+        PointLight(default_position, color, high_intensity, attenuation),
         high_intensity(high_intensity),
         low_intensity(low_intensity),
         step(step) {
