@@ -36,9 +36,6 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                 case GLFW_KEY_Q:
                     events::debug::toggle_debug_shadows_event();
                     break;
-                case GLFW_KEY_U:
-                    events::debug::toggle_ui_event();
-                    break;
                 case GLFW_KEY_L:
                     events::debug::toggle_light_rotation_event();
                     break;

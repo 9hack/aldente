@@ -163,7 +163,13 @@ namespace events {
     namespace menu {
         extern signal<void(int)> request_join_event;
         extern signal<void(int, proto::JoinResponse &)> respond_join_event;
-        extern signal<void(int, std::string &)> spawn_existing_player_event;
+
+        // Spawns a player with given obj id and model index.
+        extern signal<void(int, int)> spawn_existing_player_event;
+
+        // Cycles to the next player avatar model.
+        // Bool direction decides if we're cycling forward or backward.
+        extern signal<void(bool)> c_cycle_player_model_event;
     }
 
     namespace ui {

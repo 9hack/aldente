@@ -45,15 +45,15 @@ void GameState::setup(bool is_server) {
                 num_players++;
             }
 
-            resp.set_model_name(player->c_get_model_name());
+            resp.set_model_index(player->c_get_model_index());
             events::menu::respond_join_event(conn_id, resp);
         });
     }
     else {
         scene_manager.get_current_scene()->c_setup();
 
-        events::menu::spawn_existing_player_event.connect([](int id, std::string& model_name) {
-            c_add_player(id, model_name, false);
+        events::menu::spawn_existing_player_event.connect([](int id, int model_index) {
+            c_add_player(id, model_index, false);
         });
     }
 }
@@ -120,11 +120,11 @@ Player* GameState::s_add_player(int conn_id) {
     return testScene.s_spawn_player(conn_id);
 }
 
-Player* GameState::c_add_player(int obj_id, std::string& model_name, bool is_client) {    
+Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
     // For now, only create players on the main scene.
     assert(scene_manager.get_current_scene() == &testScene);
 
     if (is_client)
         context.player_id = obj_id;
-    return testScene.c_spawn_player(obj_id, model_name);
+    return testScene.c_spawn_player(obj_id, model_index);
 }

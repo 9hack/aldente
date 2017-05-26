@@ -9,6 +9,8 @@
 #define STUN_LENGTH 500 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 
+std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
+
 Player::Player(int id) : GameObject(id), is_client(false) {
     tag = "PLAYER";
 
@@ -33,6 +35,25 @@ Player::Player(int id) : GameObject(id), is_client(false) {
         //Lock angular rotation
         rigidbody->setAngularFactor(0);
     }
+
+    events::menu::c_cycle_player_model_event.connect([&](bool forward) {
+        if (!is_client) return;
+
+        // Determine the next model index to switch to.
+        int next_index = forward ?
+            (model_index + 1) % PLAYER_MODELS.size() :
+            model_index == 0 ?
+                PLAYER_MODELS.size() - 1 :
+                (model_index - 1) % PLAYER_MODELS.size();
+
+        // Send the request to the server.
+        proto::ClientMessage msg;
+        proto::AvatarChange* request = new proto::AvatarChange();
+        request->set_model_index(next_index);
+        request->set_player_id(get_id());
+        msg.set_allocated_change_avatar_request(request);
+        events::client::send(msg);
+    });
 }
 
 // Just calls do_movement for now, can have more
@@ -155,7 +176,9 @@ void Player::reset_position() {
     transform.look_at(direction);
 }
 
-void Player::setup_player_model(std::string &model_name) {
+void Player::c_setup_player_model(int index) {
+    model_index = index;
+    std::string model_name = PLAYER_MODELS[model_index];
     Model *player_model = AssetLoader::get_model(model_name);
     player_model->set_shader(&ShaderManager::anim_unlit);
     attach_model(player_model);
@@ -294,10 +317,10 @@ void Player::c_set_client_player() {
     is_client = true;
 }
 
-void Player::s_set_model_name(std::string& name) {
-    model_name = name;
+void Player::s_set_model_index(int index) {
+    model_index = index;
 }
 
-std::string Player::c_get_model_name() const {
-    return model_name;
+int Player::c_get_model_index() const {
+    return model_index;
 }

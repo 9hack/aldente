@@ -42,6 +42,25 @@ void ServerNetworkManager::register_listeners() {
         proto::ServerMessage msg;
         msg.set_allocated_join_response(new proto::JoinResponse(resp));
         server.send_to(conn_id, msg);
+
+        // Then, send the state of all players to all clients.
+        proto::ServerMessage update_msg;
+        proto::GameState* state = new proto::GameState();
+        for (auto & kv : GameState::players) {
+            proto::GameObject* go = state->add_objects();
+            Player* player = kv.second;
+            go->set_id(player->get_id());
+            go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
+            go->set_model_index(player->c_get_model_index());
+            go->set_x(player->transform.get_position().x);
+            go->set_z(player->transform.get_position().z);
+            go->set_wx(player->direction.x);
+            go->set_wz(player->direction.z);
+            go->set_enabled(player->is_enabled());
+        }
+        
+        update_msg.set_allocated_state_update(state);
+        server.send_to_all(update_msg);
     });
 
     // Build phase.
@@ -64,7 +83,7 @@ void ServerNetworkManager::register_listeners() {
 
             if ((player = dynamic_cast<Player*>(obj))) {
                 go->set_type(proto::GameObject::Type::GameObject_Type_PLAYER);
-                go->set_model_name(player->c_get_model_name());
+                go->set_model_index(player->c_get_model_index());
             }
             else if (dynamic_cast<Goal*>(obj))
                 go->set_type(proto::GameObject::Type::GameObject_Type_GOAL);
@@ -136,6 +155,18 @@ void ServerNetworkManager::update() {
             }
             case proto::ClientMessage::MessageTypeCase::kReadyRequest: {
                 events::build::player_ready_event(msg.ready_request());
+                break;
+            }
+            case proto::ClientMessage::MessageTypeCase::kChangeAvatarRequest: {
+                proto::AvatarChange change = msg.change_avatar_request();
+                Player* player = dynamic_cast<Player*>(GameObject::game_objects[change.player_id()]);
+                assert(player);
+                player->s_set_model_index(change.model_index());
+
+                // Send the avatar change update to all clients.
+                proto::ServerMessage response;
+                response.set_allocated_change_avatar_update(new proto::AvatarChange(change));
+                server.send_to_all(response);
                 break;
             }
             default:
@@ -225,7 +256,7 @@ void ClientNetworkManager::update() {
             // If the server successfully added this client to the game, create a local Player object.
             if (resp.status()) {
                 client_id = resp.id();
-                GameState::c_add_player(resp.obj_id(), std::string(resp.model_name()), true)->c_set_client_player();
+                GameState::c_add_player(resp.obj_id(), resp.model_index(), true)->c_set_client_player();
             }
             break;
         }
@@ -236,7 +267,7 @@ void ClientNetworkManager::update() {
                 if (GameObject::game_objects.find(obj.id()) == GameObject::game_objects.end()) {
                     // Game object with that ID doesn't exist on this client yet; create it.
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
-                        events::menu::spawn_existing_player_event(obj.id(), std::string(obj.model_name()));
+                        events::menu::spawn_existing_player_event(obj.id(), obj.model_index());
                     } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
                         events::dungeon::spawn_existing_goal_event(obj.x(), obj.z(), obj.id());
                     } else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {
@@ -287,6 +318,13 @@ void ClientNetworkManager::update() {
         case proto::ServerMessage::MessageTypeCase::kTimeUpdate: {
             // Update the graphical timer
             events::ui::update_time(msg.time_update());
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kChangeAvatarUpdate: {
+            proto::AvatarChange change = msg.change_avatar_update();
+            Player* player = dynamic_cast<Player*>(GameObject::game_objects[change.player_id()]);
+            assert(player);
+            player->c_setup_player_model(change.model_index());
             break;
         }
         default:

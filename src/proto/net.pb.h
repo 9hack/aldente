@@ -44,6 +44,7 @@ class GameObject;
 class Collision;
 class StickData;
 class PlayerStats;
+class AvatarChange;
 
 enum GameObject_Type {
   GameObject_Type_PLAYER = 0,
@@ -142,6 +143,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kPlayerFinished = 6,
     kPlayerStatsUpdate = 7,
     kTimeUpdate = 8,
+    kChangeAvatarUpdate = 9,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -244,6 +246,15 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 time_update() const;
   inline void set_time_update(::google::protobuf::int32 value);
 
+  // optional .proto.AvatarChange change_avatar_update = 9;
+  inline bool has_change_avatar_update() const;
+  inline void clear_change_avatar_update();
+  static const int kChangeAvatarUpdateFieldNumber = 9;
+  inline const ::proto::AvatarChange& change_avatar_update() const;
+  inline ::proto::AvatarChange* mutable_change_avatar_update();
+  inline ::proto::AvatarChange* release_change_avatar_update();
+  inline void set_allocated_change_avatar_update(::proto::AvatarChange* change_avatar_update);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
@@ -255,6 +266,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_player_finished();
   inline void set_has_player_stats_update();
   inline void set_has_time_update();
+  inline void set_has_change_avatar_update();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -273,6 +285,7 @@ class ServerMessage : public ::google::protobuf::Message {
     ::google::protobuf::int32 player_finished_;
     ::proto::PlayerStats* player_stats_update_;
     ::google::protobuf::int32 time_update_;
+    ::proto::AvatarChange* change_avatar_update_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -316,6 +329,7 @@ class ClientMessage : public ::google::protobuf::Message {
     kPhaseRequest = 5,
     kInteractRequest = 6,
     kReadyRequest = 7,
+    kChangeAvatarRequest = 8,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -412,6 +426,15 @@ class ClientMessage : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 ready_request() const;
   inline void set_ready_request(::google::protobuf::int32 value);
 
+  // optional .proto.AvatarChange change_avatar_request = 8;
+  inline bool has_change_avatar_request() const;
+  inline void clear_change_avatar_request();
+  static const int kChangeAvatarRequestFieldNumber = 8;
+  inline const ::proto::AvatarChange& change_avatar_request() const;
+  inline ::proto::AvatarChange* mutable_change_avatar_request();
+  inline ::proto::AvatarChange* release_change_avatar_request();
+  inline void set_allocated_change_avatar_request(::proto::AvatarChange* change_avatar_request);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ClientMessage)
  private:
@@ -422,6 +445,7 @@ class ClientMessage : public ::google::protobuf::Message {
   inline void set_has_phase_request();
   inline void set_has_interact_request();
   inline void set_has_ready_request();
+  inline void set_has_change_avatar_request();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -439,6 +463,7 @@ class ClientMessage : public ::google::protobuf::Message {
     int phase_request_;
     ::google::protobuf::int32 interact_request_;
     ::google::protobuf::int32 ready_request_;
+    ::proto::AvatarChange* change_avatar_request_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -661,17 +686,12 @@ class JoinResponse : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 obj_id() const;
   inline void set_obj_id(::google::protobuf::int32 value);
 
-  // optional string model_name = 5;
-  inline bool has_model_name() const;
-  inline void clear_model_name();
-  static const int kModelNameFieldNumber = 5;
-  inline const ::std::string& model_name() const;
-  inline void set_model_name(const ::std::string& value);
-  inline void set_model_name(const char* value);
-  inline void set_model_name(const char* value, size_t size);
-  inline ::std::string* mutable_model_name();
-  inline ::std::string* release_model_name();
-  inline void set_allocated_model_name(::std::string* model_name);
+  // optional int32 model_index = 5;
+  inline bool has_model_index() const;
+  inline void clear_model_index();
+  static const int kModelIndexFieldNumber = 5;
+  inline ::google::protobuf::int32 model_index() const;
+  inline void set_model_index(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:proto.JoinResponse)
  private:
@@ -683,8 +703,8 @@ class JoinResponse : public ::google::protobuf::Message {
   inline void clear_has_id();
   inline void set_has_obj_id();
   inline void clear_has_obj_id();
-  inline void set_has_model_name();
-  inline void clear_has_model_name();
+  inline void set_has_model_index();
+  inline void clear_has_model_index();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -694,7 +714,7 @@ class JoinResponse : public ::google::protobuf::Message {
   ::google::protobuf::int32 num_players_;
   ::google::protobuf::int32 id_;
   ::google::protobuf::int32 obj_id_;
-  ::std::string* model_name_;
+  ::google::protobuf::int32 model_index_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -1037,17 +1057,12 @@ class GameObject : public ::google::protobuf::Message {
   inline bool enabled() const;
   inline void set_enabled(bool value);
 
-  // optional string model_name = 9;
-  inline bool has_model_name() const;
-  inline void clear_model_name();
-  static const int kModelNameFieldNumber = 9;
-  inline const ::std::string& model_name() const;
-  inline void set_model_name(const ::std::string& value);
-  inline void set_model_name(const char* value);
-  inline void set_model_name(const char* value, size_t size);
-  inline ::std::string* mutable_model_name();
-  inline ::std::string* release_model_name();
-  inline void set_allocated_model_name(::std::string* model_name);
+  // optional int32 model_index = 9;
+  inline bool has_model_index() const;
+  inline void clear_model_index();
+  static const int kModelIndexFieldNumber = 9;
+  inline ::google::protobuf::int32 model_index() const;
+  inline void set_model_index(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:proto.GameObject)
  private:
@@ -1067,8 +1082,8 @@ class GameObject : public ::google::protobuf::Message {
   inline void clear_has_client_id();
   inline void set_has_enabled();
   inline void clear_has_enabled();
-  inline void set_has_model_name();
-  inline void clear_has_model_name();
+  inline void set_has_model_index();
+  inline void clear_has_model_index();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1082,7 +1097,7 @@ class GameObject : public ::google::protobuf::Message {
   float wz_;
   ::google::protobuf::int32 client_id_;
   bool enabled_;
-  ::std::string* model_name_;
+  ::google::protobuf::int32 model_index_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -1400,6 +1415,95 @@ class PlayerStats : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static PlayerStats* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class AvatarChange : public ::google::protobuf::Message {
+ public:
+  AvatarChange();
+  virtual ~AvatarChange();
+
+  AvatarChange(const AvatarChange& from);
+
+  inline AvatarChange& operator=(const AvatarChange& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const AvatarChange& default_instance();
+
+  void Swap(AvatarChange* other);
+
+  // implements Message ----------------------------------------------
+
+  AvatarChange* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const AvatarChange& from);
+  void MergeFrom(const AvatarChange& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 player_id = 1;
+  inline bool has_player_id() const;
+  inline void clear_player_id();
+  static const int kPlayerIdFieldNumber = 1;
+  inline ::google::protobuf::int32 player_id() const;
+  inline void set_player_id(::google::protobuf::int32 value);
+
+  // optional int32 model_index = 2;
+  inline bool has_model_index() const;
+  inline void clear_model_index();
+  static const int kModelIndexFieldNumber = 2;
+  inline ::google::protobuf::int32 model_index() const;
+  inline void set_model_index(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:proto.AvatarChange)
+ private:
+  inline void set_has_player_id();
+  inline void clear_has_player_id();
+  inline void set_has_model_index();
+  inline void clear_has_model_index();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::int32 player_id_;
+  ::google::protobuf::int32 model_index_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static AvatarChange* default_instance_;
 };
 // ===================================================================
 
@@ -1732,6 +1836,49 @@ inline void ServerMessage::set_time_update(::google::protobuf::int32 value) {
   message_type_.time_update_ = value;
 }
 
+// optional .proto.AvatarChange change_avatar_update = 9;
+inline bool ServerMessage::has_change_avatar_update() const {
+  return message_type_case() == kChangeAvatarUpdate;
+}
+inline void ServerMessage::set_has_change_avatar_update() {
+  _oneof_case_[0] = kChangeAvatarUpdate;
+}
+inline void ServerMessage::clear_change_avatar_update() {
+  if (has_change_avatar_update()) {
+    delete message_type_.change_avatar_update_;
+    clear_has_message_type();
+  }
+}
+inline const ::proto::AvatarChange& ServerMessage::change_avatar_update() const {
+  return has_change_avatar_update() ? *message_type_.change_avatar_update_
+                      : ::proto::AvatarChange::default_instance();
+}
+inline ::proto::AvatarChange* ServerMessage::mutable_change_avatar_update() {
+  if (!has_change_avatar_update()) {
+    clear_message_type();
+    set_has_change_avatar_update();
+    message_type_.change_avatar_update_ = new ::proto::AvatarChange;
+  }
+  return message_type_.change_avatar_update_;
+}
+inline ::proto::AvatarChange* ServerMessage::release_change_avatar_update() {
+  if (has_change_avatar_update()) {
+    clear_has_message_type();
+    ::proto::AvatarChange* temp = message_type_.change_avatar_update_;
+    message_type_.change_avatar_update_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void ServerMessage::set_allocated_change_avatar_update(::proto::AvatarChange* change_avatar_update) {
+  clear_message_type();
+  if (change_avatar_update) {
+    set_has_change_avatar_update();
+    message_type_.change_avatar_update_ = change_avatar_update;
+  }
+}
+
 inline bool ServerMessage::has_message_type() {
   return message_type_case() != MESSAGE_TYPE_NOT_SET;
 }
@@ -2053,6 +2200,49 @@ inline void ClientMessage::set_ready_request(::google::protobuf::int32 value) {
   message_type_.ready_request_ = value;
 }
 
+// optional .proto.AvatarChange change_avatar_request = 8;
+inline bool ClientMessage::has_change_avatar_request() const {
+  return message_type_case() == kChangeAvatarRequest;
+}
+inline void ClientMessage::set_has_change_avatar_request() {
+  _oneof_case_[0] = kChangeAvatarRequest;
+}
+inline void ClientMessage::clear_change_avatar_request() {
+  if (has_change_avatar_request()) {
+    delete message_type_.change_avatar_request_;
+    clear_has_message_type();
+  }
+}
+inline const ::proto::AvatarChange& ClientMessage::change_avatar_request() const {
+  return has_change_avatar_request() ? *message_type_.change_avatar_request_
+                      : ::proto::AvatarChange::default_instance();
+}
+inline ::proto::AvatarChange* ClientMessage::mutable_change_avatar_request() {
+  if (!has_change_avatar_request()) {
+    clear_message_type();
+    set_has_change_avatar_request();
+    message_type_.change_avatar_request_ = new ::proto::AvatarChange;
+  }
+  return message_type_.change_avatar_request_;
+}
+inline ::proto::AvatarChange* ClientMessage::release_change_avatar_request() {
+  if (has_change_avatar_request()) {
+    clear_has_message_type();
+    ::proto::AvatarChange* temp = message_type_.change_avatar_request_;
+    message_type_.change_avatar_request_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void ClientMessage::set_allocated_change_avatar_request(::proto::AvatarChange* change_avatar_request) {
+  clear_message_type();
+  if (change_avatar_request) {
+    set_has_change_avatar_request();
+    message_type_.change_avatar_request_ = change_avatar_request;
+  }
+}
+
 inline bool ClientMessage::has_message_type() {
   return message_type_case() != MESSAGE_TYPE_NOT_SET;
 }
@@ -2310,80 +2500,28 @@ inline void JoinResponse::set_obj_id(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.JoinResponse.obj_id)
 }
 
-// optional string model_name = 5;
-inline bool JoinResponse::has_model_name() const {
+// optional int32 model_index = 5;
+inline bool JoinResponse::has_model_index() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void JoinResponse::set_has_model_name() {
+inline void JoinResponse::set_has_model_index() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void JoinResponse::clear_has_model_name() {
+inline void JoinResponse::clear_has_model_index() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void JoinResponse::clear_model_name() {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_->clear();
-  }
-  clear_has_model_name();
+inline void JoinResponse::clear_model_index() {
+  model_index_ = 0;
+  clear_has_model_index();
 }
-inline const ::std::string& JoinResponse::model_name() const {
-  // @@protoc_insertion_point(field_get:proto.JoinResponse.model_name)
-  return *model_name_;
+inline ::google::protobuf::int32 JoinResponse::model_index() const {
+  // @@protoc_insertion_point(field_get:proto.JoinResponse.model_index)
+  return model_index_;
 }
-inline void JoinResponse::set_model_name(const ::std::string& value) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(value);
-  // @@protoc_insertion_point(field_set:proto.JoinResponse.model_name)
-}
-inline void JoinResponse::set_model_name(const char* value) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(value);
-  // @@protoc_insertion_point(field_set_char:proto.JoinResponse.model_name)
-}
-inline void JoinResponse::set_model_name(const char* value, size_t size) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:proto.JoinResponse.model_name)
-}
-inline ::std::string* JoinResponse::mutable_model_name() {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:proto.JoinResponse.model_name)
-  return model_name_;
-}
-inline ::std::string* JoinResponse::release_model_name() {
-  clear_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = model_name_;
-    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void JoinResponse::set_allocated_model_name(::std::string* model_name) {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_name_;
-  }
-  if (model_name) {
-    set_has_model_name();
-    model_name_ = model_name;
-  } else {
-    clear_has_model_name();
-    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:proto.JoinResponse.model_name)
+inline void JoinResponse::set_model_index(::google::protobuf::int32 value) {
+  set_has_model_index();
+  model_index_ = value;
+  // @@protoc_insertion_point(field_set:proto.JoinResponse.model_index)
 }
 
 // -------------------------------------------------------------------
@@ -2729,80 +2867,28 @@ inline void GameObject::set_enabled(bool value) {
   // @@protoc_insertion_point(field_set:proto.GameObject.enabled)
 }
 
-// optional string model_name = 9;
-inline bool GameObject::has_model_name() const {
+// optional int32 model_index = 9;
+inline bool GameObject::has_model_index() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
-inline void GameObject::set_has_model_name() {
+inline void GameObject::set_has_model_index() {
   _has_bits_[0] |= 0x00000100u;
 }
-inline void GameObject::clear_has_model_name() {
+inline void GameObject::clear_has_model_index() {
   _has_bits_[0] &= ~0x00000100u;
 }
-inline void GameObject::clear_model_name() {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_->clear();
-  }
-  clear_has_model_name();
+inline void GameObject::clear_model_index() {
+  model_index_ = 0;
+  clear_has_model_index();
 }
-inline const ::std::string& GameObject::model_name() const {
-  // @@protoc_insertion_point(field_get:proto.GameObject.model_name)
-  return *model_name_;
+inline ::google::protobuf::int32 GameObject::model_index() const {
+  // @@protoc_insertion_point(field_get:proto.GameObject.model_index)
+  return model_index_;
 }
-inline void GameObject::set_model_name(const ::std::string& value) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(value);
-  // @@protoc_insertion_point(field_set:proto.GameObject.model_name)
-}
-inline void GameObject::set_model_name(const char* value) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(value);
-  // @@protoc_insertion_point(field_set_char:proto.GameObject.model_name)
-}
-inline void GameObject::set_model_name(const char* value, size_t size) {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  model_name_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:proto.GameObject.model_name)
-}
-inline ::std::string* GameObject::mutable_model_name() {
-  set_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    model_name_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:proto.GameObject.model_name)
-  return model_name_;
-}
-inline ::std::string* GameObject::release_model_name() {
-  clear_has_model_name();
-  if (model_name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = model_name_;
-    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void GameObject::set_allocated_model_name(::std::string* model_name) {
-  if (model_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_name_;
-  }
-  if (model_name) {
-    set_has_model_name();
-    model_name_ = model_name;
-  } else {
-    clear_has_model_name();
-    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:proto.GameObject.model_name)
+inline void GameObject::set_model_index(::google::protobuf::int32 value) {
+  set_has_model_index();
+  model_index_ = value;
+  // @@protoc_insertion_point(field_set:proto.GameObject.model_index)
 }
 
 // -------------------------------------------------------------------
@@ -3008,6 +3094,58 @@ inline void PlayerStats::set_coins(::google::protobuf::int32 value) {
   set_has_coins();
   coins_ = value;
   // @@protoc_insertion_point(field_set:proto.PlayerStats.coins)
+}
+
+// -------------------------------------------------------------------
+
+// AvatarChange
+
+// optional int32 player_id = 1;
+inline bool AvatarChange::has_player_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void AvatarChange::set_has_player_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void AvatarChange::clear_has_player_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void AvatarChange::clear_player_id() {
+  player_id_ = 0;
+  clear_has_player_id();
+}
+inline ::google::protobuf::int32 AvatarChange::player_id() const {
+  // @@protoc_insertion_point(field_get:proto.AvatarChange.player_id)
+  return player_id_;
+}
+inline void AvatarChange::set_player_id(::google::protobuf::int32 value) {
+  set_has_player_id();
+  player_id_ = value;
+  // @@protoc_insertion_point(field_set:proto.AvatarChange.player_id)
+}
+
+// optional int32 model_index = 2;
+inline bool AvatarChange::has_model_index() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void AvatarChange::set_has_model_index() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void AvatarChange::clear_has_model_index() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void AvatarChange::clear_model_index() {
+  model_index_ = 0;
+  clear_has_model_index();
+}
+inline ::google::protobuf::int32 AvatarChange::model_index() const {
+  // @@protoc_insertion_point(field_get:proto.AvatarChange.model_index)
+  return model_index_;
+}
+inline void AvatarChange::set_model_index(::google::protobuf::int32 value) {
+  set_has_model_index();
+  model_index_ = value;
+  // @@protoc_insertion_point(field_set:proto.AvatarChange.model_index)
 }
 
 
