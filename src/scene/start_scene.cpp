@@ -22,7 +22,7 @@ void StartScene::c_setup() {
     // Serves no functionality other than just being visible.
     for (int i = 0; i < 4; i++) {
         GameObject *platform = new GameObject();
-        platform->transform.set_position(glm::vec3(2 * i, -1, 0));
+        platform->transform.set_position(glm::vec3(2 * i, -0.8f, 0));
         platform->attach_model(AssetLoader::get_model("chest_good"));
         platform->transform.set_scale({ 0.006f, 0.006f, 0.006f });
 

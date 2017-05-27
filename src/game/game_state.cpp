@@ -57,6 +57,12 @@ void GameState::setup(bool is_server) {
         events::menu::spawn_existing_player_event.connect([](int id, int model_index) {
             c_add_player(id, model_index, false);
         });
+
+        events::menu::end_menu_event.connect([&]() {
+            std::cerr << "menu phase ended\n";
+            physics.set_scene(&main_scene);
+            scene_manager.set_current_scene(&main_scene);
+        });
     }
 }
 

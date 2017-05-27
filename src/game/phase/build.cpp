@@ -122,14 +122,6 @@ void BuildPhase::c_setup() {
                 d_pad = true;
                 break;
             }
-            case events::BTN_LB: {
-                events::menu::c_cycle_player_model_event(false);
-                break;
-            }
-            case events::BTN_RB: {
-                events::menu::c_cycle_player_model_event(true);
-                break;
-            }
             default:
                 break;
         }

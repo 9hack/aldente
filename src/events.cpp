@@ -50,6 +50,7 @@ namespace events {
         signal<void(int, proto::JoinResponse &)> respond_join_event;
         signal<void(int, int)> spawn_existing_player_event;
         signal<void(bool)> c_cycle_player_model_event;
+        signal<void()> end_menu_event;
     }
 
     namespace ui {

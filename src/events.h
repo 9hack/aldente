@@ -170,6 +170,9 @@ namespace events {
         // Cycles to the next player avatar model.
         // Bool direction decides if we're cycling forward or backward.
         extern signal<void(bool)> c_cycle_player_model_event;
+
+        // Signals the end of menu phase.
+        extern signal<void()> end_menu_event;
     }
 
     namespace ui {

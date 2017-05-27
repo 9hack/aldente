@@ -13,4 +13,5 @@ public:
     void c_teardown() override;
 
 private:
+    boost::signals2::connection button_conn;
 };
