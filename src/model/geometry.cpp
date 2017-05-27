@@ -64,7 +64,7 @@ void Geometry::populate_buffers() {
     }
 
     // Bind instanced VBO if more than one instance
-    if (num_instances > 1) {
+    if (num_instances != 0) {
         glBindBuffer(GL_ARRAY_BUFFER, IVBO);
         glBufferData(GL_ARRAY_BUFFER, num_instances * sizeof(glm::mat4),
                      NULL, // no instance data as of yet, to be binded at render time

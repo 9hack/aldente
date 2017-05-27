@@ -40,11 +40,11 @@ void StartScene::c_setup() {
     for (GameObject *obj : platforms) {
         obj->attach_model(AssetLoader::get_model("chest_good"));
         obj->setup_model();
-        //obj->transform.set_scale({ 0.006f, 0.006f, 0.006f });
+        obj->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     }
 
-    info.camera.cam_pos = glm::vec3(4.0f, 0, 5.f);
-    info.camera.recalculate();
+    //info.camera.cam_pos = glm::vec3(4.0f, 0, 5.f);
+    //info.camera.recalculate();
     // Setup lights.
     DirectionalLight *sun = new DirectionalLight(glm::vec3(0.f, -1.f, -1.f),
         Color::WHITE, 0.5f);
