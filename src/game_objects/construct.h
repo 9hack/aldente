@@ -14,9 +14,6 @@ class Collectible;
 // Note: Opengl has the x and z axis as its ground plane
 
 class Construct : public GameObject {
-protected:
-    // The direction the construct is facing
-    glm::vec3 forward;
 public:
     Construct(int x, int z, int id = 0);
 
@@ -26,11 +23,6 @@ public:
     virtual void c_interact_trigger(GameObject *other) override {};
     virtual void s_on_collision(GameObject *other) override {};
     virtual void c_on_collision(GameObject *other) override {};
-
-    // Does not actually physically rotate the construct, these
-    // change the construct's forward vector
-    void rotate_dir_left();
-    void rotate_dir_right();
 };
 
 class Chest : public Construct {
