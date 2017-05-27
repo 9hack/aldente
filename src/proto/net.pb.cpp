@@ -139,13 +139,16 @@ void protobuf_AssignDesc_net_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ClientMessage));
   Construct_descriptor_ = file->message_type(2);
-  static const int Construct_offsets_[6] = {
+  static const int Construct_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, z_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, player_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, fwd_x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, fwd_y_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Construct, fwd_z_),
   };
   Construct_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -391,30 +394,31 @@ void protobuf_AddDesc_net_2eproto() {
     "(\0162\014.proto.PhaseH\000\022\032\n\020interact_request\030\006"
     " \001(\005H\000\022\027\n\rready_request\030\007 \001(\005H\000\0224\n\025chang"
     "e_avatar_request\030\010 \001(\0132\023.proto.AvatarCha"
-    "ngeH\000B\016\n\014message_type\"^\n\tConstruct\022\014\n\004ty"
-    "pe\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001"
-    "(\005\022\016\n\006status\030\005 \001(\010\022\021\n\tplayer_id\030\006 \001(\005\"d\n"
-    "\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013num_pla"
-    "yers\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\022\023"
-    "\n\013model_index\030\005 \001(\005\"t\n\tGameState\022\"\n\007obje"
-    "cts\030\001 \003(\0132\021.proto.GameObject\022!\n\ncollisio"
-    "ns\030\002 \003(\0132\r.proto.IdPair\022 \n\tinteracts\030\003 \003"
-    "(\0132\r.proto.IdPair\"*\n\006IdPair\022\021\n\tinitiator"
-    "\030\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\346\001\n\nGameObject\022\n\n\002"
-    "id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.GameObjec"
-    "t.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx\030\005 \001(\002"
-    "\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n\007enabl"
-    "ed\030\010 \001(\010\022\023\n\013model_index\030\t \001(\005\"\?\n\004Type\022\n\n"
-    "\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020"
-    "\003\022\013\n\007ESSENCE\020\004\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022"
-    "\014\n\004type\030\002 \001(\005\"~\n\tStickData\022%\n\005input\030\001 \001("
-    "\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001"
-    "y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LE"
-    "FT\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013PlayerStats\022\n\n\002"
-    "id\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"6\n\014AvatarChange\022"
-    "\021\n\tplayer_id\030\001 \001(\005\022\023\n\013model_index\030\002 \001(\005*"
-    "A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022"
-    "\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1626);
+    "ngeH\000B\016\n\014message_type\"\213\001\n\tConstruct\022\014\n\004t"
+    "ype\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 "
+    "\001(\005\022\016\n\006status\030\005 \001(\010\022\021\n\tplayer_id\030\006 \001(\005\022\r"
+    "\n\005fwd_x\030\007 \001(\002\022\r\n\005fwd_y\030\010 \001(\002\022\r\n\005fwd_z\030\t "
+    "\001(\002\"d\n\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013n"
+    "um_players\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004"
+    " \001(\005\022\023\n\013model_index\030\005 \001(\005\"t\n\tGameState\022\""
+    "\n\007objects\030\001 \003(\0132\021.proto.GameObject\022!\n\nco"
+    "llisions\030\002 \003(\0132\r.proto.IdPair\022 \n\tinterac"
+    "ts\030\003 \003(\0132\r.proto.IdPair\"*\n\006IdPair\022\021\n\tini"
+    "tiator\030\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\346\001\n\nGameObje"
+    "ct\022\n\n\002id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.Gam"
+    "eObject.Type\022\t\n\001x\030\003 \001(\002\022\t\n\001z\030\004 \001(\002\022\n\n\002wx"
+    "\030\005 \001(\002\022\n\n\002wz\030\006 \001(\002\022\021\n\tclient_id\030\007 \001(\005\022\017\n"
+    "\007enabled\030\010 \001(\010\022\023\n\013model_index\030\t \001(\005\"\?\n\004T"
+    "ype\022\n\n\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005"
+    "SPIKE\020\003\022\013\n\007ESSENCE\020\004\"%\n\tCollision\022\n\n\002id\030"
+    "\001 \001(\005\022\014\n\004type\030\002 \001(\005\"~\n\tStickData\022%\n\005inpu"
+    "t\030\001 \001(\0162\026.proto.StickData.Stick\022\t\n\001x\030\002 \001"
+    "(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick\022\016\n\nST"
+    "ICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013PlayerSta"
+    "ts\022\n\n\002id\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"6\n\014AvatarC"
+    "hange\022\021\n\tplayer_id\030\001 \001(\005\022\023\n\013model_index\030"
+    "\002 \001(\005*A\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BU"
+    "ILD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003", 1672);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -1668,6 +1672,9 @@ const int Construct::kZFieldNumber;
 const int Construct::kIdFieldNumber;
 const int Construct::kStatusFieldNumber;
 const int Construct::kPlayerIdFieldNumber;
+const int Construct::kFwdXFieldNumber;
+const int Construct::kFwdYFieldNumber;
+const int Construct::kFwdZFieldNumber;
 #endif  // !_MSC_VER
 
 Construct::Construct()
@@ -1694,6 +1701,9 @@ void Construct::SharedCtor() {
   id_ = 0;
   status_ = false;
   player_id_ = 0;
+  fwd_x_ = 0;
+  fwd_y_ = 0;
+  fwd_z_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1739,9 +1749,10 @@ void Construct::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 63) {
-    ZR_(type_, player_id_);
+  if (_has_bits_[0 / 32] & 255) {
+    ZR_(type_, fwd_y_);
   }
+  fwd_z_ = 0;
 
 #undef OFFSET_OF_FIELD_
 #undef ZR_
@@ -1845,6 +1856,51 @@ bool Construct::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(61)) goto parse_fwd_x;
+        break;
+      }
+
+      // optional float fwd_x = 7;
+      case 7: {
+        if (tag == 61) {
+         parse_fwd_x:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &fwd_x_)));
+          set_has_fwd_x();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(69)) goto parse_fwd_y;
+        break;
+      }
+
+      // optional float fwd_y = 8;
+      case 8: {
+        if (tag == 69) {
+         parse_fwd_y:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &fwd_y_)));
+          set_has_fwd_y();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(77)) goto parse_fwd_z;
+        break;
+      }
+
+      // optional float fwd_z = 9;
+      case 9: {
+        if (tag == 77) {
+         parse_fwd_z:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &fwd_z_)));
+          set_has_fwd_z();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1904,6 +1960,21 @@ void Construct::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->player_id(), output);
   }
 
+  // optional float fwd_x = 7;
+  if (has_fwd_x()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->fwd_x(), output);
+  }
+
+  // optional float fwd_y = 8;
+  if (has_fwd_y()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->fwd_y(), output);
+  }
+
+  // optional float fwd_z = 9;
+  if (has_fwd_z()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(9, this->fwd_z(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1942,6 +2013,21 @@ void Construct::SerializeWithCachedSizes(
   // optional int32 player_id = 6;
   if (has_player_id()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->player_id(), target);
+  }
+
+  // optional float fwd_x = 7;
+  if (has_fwd_x()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->fwd_x(), target);
+  }
+
+  // optional float fwd_y = 8;
+  if (has_fwd_y()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->fwd_y(), target);
+  }
+
+  // optional float fwd_z = 9;
+  if (has_fwd_z()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(9, this->fwd_z(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1996,6 +2082,23 @@ int Construct::ByteSize() const {
           this->player_id());
     }
 
+    // optional float fwd_x = 7;
+    if (has_fwd_x()) {
+      total_size += 1 + 4;
+    }
+
+    // optional float fwd_y = 8;
+    if (has_fwd_y()) {
+      total_size += 1 + 4;
+    }
+
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional float fwd_z = 9;
+    if (has_fwd_z()) {
+      total_size += 1 + 4;
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -2041,6 +2144,17 @@ void Construct::MergeFrom(const Construct& from) {
     if (from.has_player_id()) {
       set_player_id(from.player_id());
     }
+    if (from.has_fwd_x()) {
+      set_fwd_x(from.fwd_x());
+    }
+    if (from.has_fwd_y()) {
+      set_fwd_y(from.fwd_y());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_fwd_z()) {
+      set_fwd_z(from.fwd_z());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2070,6 +2184,9 @@ void Construct::Swap(Construct* other) {
     std::swap(id_, other->id_);
     std::swap(status_, other->status_);
     std::swap(player_id_, other->player_id_);
+    std::swap(fwd_x_, other->fwd_x_);
+    std::swap(fwd_y_, other->fwd_y_);
+    std::swap(fwd_z_, other->fwd_z_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
