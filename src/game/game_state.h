@@ -40,8 +40,8 @@ public:
     static Player* c_add_player(int obj_id, int model_index, bool is_client);
 private:
     static void set_phase(Phase* phase);
-    static MainScene testScene;
-    static StartScene startScene;
+    static MainScene main_scene;
+    static StartScene start_scene;
     static int num_players;
     static bool is_server;
 };

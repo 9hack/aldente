@@ -18,28 +18,40 @@ void StartScene::s_setup() {
     /* Set up platforms on which the player will stand
      * Not using their own class because they serve no functionality
      * other than just being visible */
+    
+}
+
+void StartScene::c_setup() {
+    Chest* chest = new Chest(0, 0, -1);
+    chest->setup_model();
+    objs.push_back(chest);
+
     for (int i = 0; i < 4; i++) {
         GameObject *platform = new GameObject();
         platform->transform.set_position(glm::vec3(2 * i, 0, 0));
         objs.push_back(platform);
         platforms.push_back(platform);
     }
-}
 
-void StartScene::c_setup() {
-    for (GameObject *obj : objs) {
+    /*for (GameObject *obj : objs) {
         obj->setup_model();
-    }
+    }*/
 
     for (GameObject *obj : platforms) {
         obj->attach_model(AssetLoader::get_model("chest_good"));
-        obj->transform.set_scale({ 0.006f, 0.006f, 0.006f });
+        obj->setup_model();
+        //obj->transform.set_scale({ 0.006f, 0.006f, 0.006f });
     }
 
-    info.camera.cam_pos = glm::vec3(4.0f, 0, 0);
+    info.camera.cam_pos = glm::vec3(4.0f, 0, 5.f);
+    info.camera.recalculate();
+    // Setup lights.
+    DirectionalLight *sun = new DirectionalLight(glm::vec3(0.f, -1.f, -1.f),
+        Color::WHITE, 0.5f);
+    add_light(sun);
 }
 
-/*Player* StartScene::s_spawn_player(int conn_id) {
+Player* StartScene::s_spawn_player(int conn_id) {
     Player *player = new Player();
 
     // TODO: determine where each player starts based on client id. 
@@ -58,4 +70,4 @@ Player* StartScene::c_spawn_player(int obj_id, int model_index) {
     objs.push_back(player);
 
     return player;
-}*/
+}

@@ -9,8 +9,8 @@ std::map<int, Player*> GameState::players;
 
 Physics GameState::physics;
 SceneManager GameState::scene_manager;
-MainScene GameState::testScene;
-StartScene GameState::startScene;
+MainScene GameState::main_scene;
+StartScene GameState::start_scene;
 int GameState::num_players = 0;
 bool GameState::is_server = true;
 
@@ -18,8 +18,8 @@ void GameState::setup(bool is_server) {
     GameState::is_server = is_server;
 
     // TODO: shouldn't need physics on client, but this is needed to create tiles & their rigid bodies.
-    physics.set_scene(&testScene);
-    scene_manager.set_current_scene(&testScene);
+    physics.set_scene(&start_scene);
+    scene_manager.set_current_scene(&start_scene);
 
     if (is_server) {
         scene_manager.get_current_scene()->s_setup();
@@ -116,16 +116,16 @@ void GameState::set_phase(proto::Phase phase) {
 }
 
 Player* GameState::s_add_player(int conn_id) {
-    // For now, only create players on the main scene.
-    assert(scene_manager.get_current_scene() == &testScene);
-    return testScene.s_spawn_player(conn_id);
+    // For now, only create players on the start scene.
+    //assert(scene_manager.get_current_scene() == &start_scene);
+    return start_scene.s_spawn_player(conn_id);
 }
 
 Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
-    // For now, only create players on the main scene.
-    assert(scene_manager.get_current_scene() == &testScene);
+    // For now, only create players on the start scene.
+    //assert(scene_manager.get_current_scene() == &start_scene);
 
     if (is_client)
         context.player_id = obj_id;
-    return testScene.c_spawn_player(obj_id, model_index);
+    return start_scene.c_spawn_player(obj_id, model_index);
 }
