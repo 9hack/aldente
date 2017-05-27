@@ -31,6 +31,7 @@
 #include "game/collectibles/nothing.h"
 #include "game/phase/build.h"
 #include "game/phase/dungeon.h"
+#include "game/phase/menu.h"
 #include "game/phase/phase.h"
 
 #include "game_objects/construct.h"

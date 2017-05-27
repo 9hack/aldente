@@ -37,13 +37,8 @@ void MainScene::s_setup() {
 }
 
 void MainScene::c_setup() {
-    Chest* chest = new Chest(3, 3, -1);
-    chest->setup_model();
-    objs.push_back(chest);
-
     //Setting up map
     grid = new Grid(chosen_map);
-    grid->setup_model();
     objs.push_back(grid);
 
     // Setup lights.

@@ -84,9 +84,9 @@ void AldenteClient::start() {
     Timer timer(GAME_TICK);
     Timer::provide(&timer);
 
-    // Game logic. Temporarily start game with build phase.
+    // Game logic. Start game with menu phase.
     GameState::setup(false);
-    GameState::set_phase(proto::Phase::BUILD);
+    GameState::set_phase(proto::Phase::MENU);
 
     Render render(window, GameState::scene_manager);
 

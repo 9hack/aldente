@@ -53,7 +53,7 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     events::toggle_mute_event();
                     break;
                 case GLFW_KEY_0:
-                    // FIXME(metakirby5)
+                    events::debug::client_set_phase_event(&GameState::menu_phase);
                     break;
                 case GLFW_KEY_1:
                     events::debug::client_set_phase_event(&GameState::build_phase);

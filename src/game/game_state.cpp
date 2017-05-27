@@ -1,6 +1,7 @@
 #include "game_state.h"
 
 Context GameState::context;
+MenuPhase GameState::menu_phase(context);
 BuildPhase GameState::build_phase(context);
 DungeonPhase GameState::dungeon_phase(context);
 
@@ -94,7 +95,7 @@ void GameState::set_phase(proto::Phase phase) {
     case proto::Phase::NOOP:
         return;
     case proto::Phase::MENU:
-        // FIXME(metakirby5)
+        GameState::set_phase(&GameState::menu_phase);
         break;
     case proto::Phase::BUILD:
         GameState::set_phase(&GameState::build_phase);

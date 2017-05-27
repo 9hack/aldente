@@ -5,6 +5,7 @@
 #include "scene_manager.h"
 #include "context.h"
 #include "phase/phase.h"
+#include "phase/menu.h"
 #include "phase/build.h"
 #include "phase/dungeon.h"
 #include <map>
@@ -13,6 +14,7 @@
 class GameState {
 public:
     static Context context;
+    static MenuPhase menu_phase;
     static BuildPhase build_phase;
     static DungeonPhase dungeon_phase;
 
