@@ -22,21 +22,12 @@ UIManager::UIManager(float aspect)
 void UIManager::setup_uis() {
     /* BUILD UI */
     std::vector<ConstructData> constructs;
-    for (int i = 0; i < 12; i++) {
-        int type = (i % 3) + 1;
-        switch (type) {
-        case ConstructType::CHEST:
-            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::CHEST));
-            break;
-        case ConstructType::SPIKES:
-            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::SPIKES));
-            break;
-        case ConstructType::REMOVE:
+    for (int i = 1; i <= 12; i++) {
+        int num_available_constructs = Constructs::CONSTRUCTS.size();
+        if (i < num_available_constructs)
+            constructs.push_back(Constructs::CONSTRUCTS.at((ConstructType) i));
+        else
             constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::REMOVE));
-            break;
-        default:
-            break;
-        }
     }
     ui_map["build"] = new BuildUI(3, 4, aspect, constructs);
 

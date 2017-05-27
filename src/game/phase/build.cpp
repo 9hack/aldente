@@ -5,6 +5,8 @@
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::s_setup() {
+    events::build::start_build_event();
+
     transition_after(60, proto::Phase::DUNGEON);
     ready_conn = events::build::player_ready_event.connect([&](int player_id) {
         context.ready_flags[player_id] = true;
@@ -32,11 +34,9 @@ void BuildPhase::s_setup() {
         context.ready_flags[id] = false;
     }
 
-    // Re-enable chests on server side.
+    // Resets all game objects
     for (auto & kv : GameObject::game_objects) {
-        if (dynamic_cast<Chest*>(kv.second)) {
-            kv.second->enable();
-        }
+        kv.second->s_reset();
     }
 }
 
@@ -178,12 +178,9 @@ void BuildPhase::c_setup() {
     // Play music
     events::music_event(events::AudioData{ AudioManager::BUILD_MUSIC, 30, true });
 
-    // Make opened chests reappear at start of build phase.
+    // Resets game objects on client side
     for (auto & kv : GameObject::game_objects) {
-        if (dynamic_cast<Chest*>(kv.second)) {
-            kv.second->set_filter_alpha(1.f);
-            kv.second->enable();
-        }
+        kv.second->c_reset();
     }
 }
 
@@ -206,6 +203,8 @@ void BuildPhase::s_teardown() {
     cancel_clock_every();
     ready_conn.disconnect();
     s_verify_and_build_conn.disconnect();
+
+    events::build::end_build_event();
 }
 
 void BuildPhase::c_teardown() {

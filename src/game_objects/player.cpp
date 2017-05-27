@@ -8,7 +8,7 @@
 #include "util/util.h"
 
 #define ANIMATE_DELTA 0.001f
-#define STUN_LENGTH 500 // milliseconds
+#define STUN_LENGTH 1000 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 
 std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
@@ -122,10 +122,13 @@ void Player::do_movement() {
 }
 
 void Player::interact() {
+    if (stunned)
+        return;
+
     // Asks physics for a raycast to check if the player
     // is facing a construct.
     if (transform.get_forward().x != 0 || transform.get_forward().z != 0) {
-        events::dungeon::player_request_raycast_event(
+        events::dungeon::request_raycast_event(
             transform.get_position(), transform.get_forward(),
             [&](GameObject *bt_hit) {
             Construct *construct = dynamic_cast<Construct*>(bt_hit);
@@ -147,7 +150,6 @@ void Player::start_walk() {
     anim_player.set_speed(3.0f);
     anim_player.set_anim("walk");
     anim_player.set_loop(true);
-    anim_player.play();
 }
 
 // Server collision
@@ -234,16 +236,19 @@ bool Player::s_take_damage() {
     std::cerr << "Player is hit: " << id << std::endl;
 
     // Player loses percentage essence
-    const float percent_loss = .20f;
+    const float percent_loss = .20f; // Hardcoded. Should change later to make it variable based on traps?
     int amount_loss = (int) stats.get_coins() * percent_loss;
+    amount_loss = amount_loss - (amount_loss % 10); // Round down to nearest tenth
+    amount_loss = (amount_loss <= 0 && stats.get_coins() > 0) ? 10 : amount_loss; // Loses a minimum of 10 essence
     s_modify_stats([&](PlayerStats & stats) {
-        stats.add_coins(-amount_loss);
+        if (stats.get_coins() > 0)
+            stats.add_coins(-amount_loss);
     });
 
     // Drop essence to total amount loss, rounded down. Assuming that each essence has 10 coin value. 
     const float essence_val = 10.0f; // Currently hardcoded
     int number_essence_loss = (int)floor(amount_loss / essence_val);
-    for (int i = 1; i <= (amount_loss / 10.0f); i++)
+    for (int i = 0; i < number_essence_loss; i++)
         events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
 
     // End Stunned
