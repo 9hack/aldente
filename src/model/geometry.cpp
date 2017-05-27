@@ -108,6 +108,17 @@ GLuint Geometry::get_texture() {
 
 void Geometry::draw() {
     if (num_instances == 1) {
+        // send defaults to the vertex attribute
+        glm::mat4 default_mat = glm::mat4( 1, 0, 0, 0,
+                                           0, 1, 0, 0,
+                                           0, 0, 1, 0,
+                                           0, 0, 0, 1);
+        glBindBuffer(GL_ARRAY_BUFFER, IVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        sizeof(glm::mat4),
+                        glm::value_ptr(default_mat));
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
         glDrawElements(draw_type, (GLsizei) indices.size(), GL_UNSIGNED_INT, 0);
     } else {
         glDrawElementsInstanced(draw_type, (GLsizei) indices.size(), GL_UNSIGNED_INT, 0,
