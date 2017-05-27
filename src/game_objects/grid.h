@@ -49,7 +49,8 @@ public:
     bool verify_build(ConstructType type, int col, int row);
 
     // Builds a construct at a location.
-    Construct* build(ConstructType type, int col, int row, bool graphical, int id = -1);
+    Construct* build(ConstructType type, int col, int row, bool graphical, 
+        float fx, float fy, float fz, int id = -1);
 
     // For moving cursor on tile during build phase
     void move_selection(Direction d);

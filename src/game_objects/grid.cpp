@@ -53,6 +53,9 @@ void Grid::setup_listeners() {
         c.set_type(selected);
         c.set_x(hover->getX());
         c.set_z(hover->getZ());
+        c.set_fwd_x(preview.curr_preview->transform.get_forward().x);
+        c.set_fwd_y(preview.curr_preview->transform.get_forward().y);
+        c.set_fwd_z(preview.curr_preview->transform.get_forward().z);
         events::build::request_build_event(c);
     });
 
@@ -90,7 +93,8 @@ void Grid::setup_listeners() {
         // Build the construct locally on the server, without graphics.
         // A build is permitted if the desired tile is buildable, e.g. not a wall and has no existing construct.
         if (permitted) {
-            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
+            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false,
+                c.fwd_x(), c.fwd_y(), c.fwd_z());
             if (built) {
                 c.set_id(built->get_id());
             }
@@ -102,7 +106,8 @@ void Grid::setup_listeners() {
 
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
-        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
+        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, 
+            c.fwd_x(), c.fwd_y(), c.fwd_z(), c.id());
 
         events::sound_effects_event(events::AudioData{ AudioManager::BUILD_CONFIRM_SOUND, 80, false });
     });
@@ -122,7 +127,8 @@ bool Grid::verify_build(ConstructType type, int col, int row) {
     return candidate->buildable;
 }
 
-Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int id) {
+Construct* Grid::build(ConstructType type, int col, int row, bool graphical,
+        float fx, float fy, float fz, int id) {
     Tile* candidate = grid[row][col];
     Construct* to_add = nullptr;
 
@@ -156,6 +162,7 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
 	    if (graphical)
             to_add->setup_model();
 
+        to_add->transform.look_at(glm::vec3(fx, fy, fz));
         children.push_back(to_add);
         candidate->set_construct(to_add);
         candidate->buildable = false;
