@@ -41,6 +41,7 @@ public:
 private:
     static void set_phase(Phase* phase);
     static MainScene testScene;
+    static StartScene startScene;
     static int num_players;
     static bool is_server;
 };

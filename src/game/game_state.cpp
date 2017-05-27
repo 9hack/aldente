@@ -10,6 +10,7 @@ std::map<int, Player*> GameState::players;
 Physics GameState::physics;
 SceneManager GameState::scene_manager;
 MainScene GameState::testScene;
+StartScene GameState::startScene;
 int GameState::num_players = 0;
 bool GameState::is_server = true;
 
