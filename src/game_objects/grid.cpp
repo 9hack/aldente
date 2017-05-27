@@ -67,12 +67,12 @@ void Grid::setup_listeners() {
         update_selection();
     });
 
-    /*events::build::c_rotate_preview_event.connect([&](bool cw) {
+    events::build::c_rotate_preview_event.connect([&](bool cw) {
         if (cw)
-            preview.curr_preview->transform.rotate(glm::vec3(-90, 0, 0));
+            preview.curr_preview->transform.rotate(glm::vec3(0, -90, 0));
         else
-            preview.curr_preview->transform.rotate(glm::vec3(90, 0, 0));
-    });*/
+            preview.curr_preview->transform.rotate(glm::vec3(0, 90, 0));
+    });
 
     events::c_player_stats_updated.connect([&](const proto::PlayerStats &update) {
         build_permissible = update.coins() >= Constructs::CONSTRUCTS.at(selected).cost;
