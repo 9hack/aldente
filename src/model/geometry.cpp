@@ -14,7 +14,7 @@ Geometry::Geometry(int num_instances, GLenum draw, GLint wrap, GLint filter) :
     glGenBuffers(1, &EBO);
     glGenBuffers(1, &BBO);
     glGenBuffers(1, &WBO);
-    if (num_instances > 1) glGenBuffers(1, &IVBO); // only generate buffer if more than one instance
+    glGenBuffers(1, &IVBO); // only generate buffer if more than one instance
 }
 
 Geometry::~Geometry() {}
@@ -65,9 +65,14 @@ void Geometry::populate_buffers() {
 
     // Bind instanced VBO if more than one instance
     if (num_instances != 0) {
+
+        // HACKY FIX FOR RENDERING BUG WITH DEFAULT INSTANCE MATRIX BEING UNINITIALIZED
+        std::vector<glm::mat4> default_mat;
+        default_mat.push_back(glm::mat4(1.0f));
+
         glBindBuffer(GL_ARRAY_BUFFER, IVBO);
         glBufferData(GL_ARRAY_BUFFER, num_instances * sizeof(glm::mat4),
-                     NULL, // no instance data as of yet, to be binded at render time
+                     default_mat.data(), // no instance data as of yet, to be binded at render time
                      GL_DYNAMIC_DRAW); // instances can change their positions on the fly
 
         // Setup 4 vertex attributes for a mat4

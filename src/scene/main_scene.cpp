@@ -44,8 +44,8 @@ void MainScene::c_setup() {
     //Setting up map
     grid = new Grid(chosen_map);
     grid->setup_model();
-    //objs.push_back(grid);
-    /*
+    objs.push_back(grid);
+
     // Setup lights.
     DirectionalLight *sun = new DirectionalLight(glm::vec3(0.f, -1.f, -1.f),
                                                  Color::WHITE, 0.5f);
@@ -54,7 +54,7 @@ void MainScene::c_setup() {
     // Setup light debug callback.
     events::debug::toggle_light_rotation_event.connect([&](void) {
         lights_debug_on = !lights_debug_on;
-    });*/
+    });
 
     for (GameObject *obj : objs) {
         obj->setup_model();
