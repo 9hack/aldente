@@ -146,7 +146,7 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
             break;
         }
 	
-	if (graphical)
+	    if (graphical)
             to_add->setup_model();
 
         children.push_back(to_add);

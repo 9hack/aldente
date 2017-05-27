@@ -11,6 +11,13 @@ Construct::Construct(int x, int z, int id) : GameObject(id) {
     initial_transform.set_position({ x, 0.0f, z });
 }
 
+void Construct::rotate_dir_left() {
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+}
+
+void Construct::rotate_dir_right() {
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0, 1, 0));
+}
 /************CHEST***************/
 
 Chest::Chest(int x, int z, int id) : Construct(x, z, id) {
