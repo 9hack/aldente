@@ -107,4 +107,7 @@ public:
     void disable();
     void enable();
     bool is_enabled() { return enabled; };
+
+    // Set's initial transform's rotation
+    void set_initial_direction(glm::vec3);
 };

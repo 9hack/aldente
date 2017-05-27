@@ -177,7 +177,7 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical,
 	    if (graphical)
             to_add->setup_model();
 
-        to_add->transform.look_at(glm::vec3(fx, fy, fz));
+        to_add->set_initial_direction(glm::vec3(fx, fy, fz));
         children.push_back(to_add);
         candidate->set_construct(to_add);
         candidate->buildable = false;
