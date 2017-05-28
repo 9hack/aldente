@@ -6,6 +6,8 @@
 #include "clock_ui.h"
 #include "gold_ui.h"
 #include "fps_ui.h"
+#include "leaderboard_ui.h"
+#include "legend_ui.h"
 
 UIManager::~UIManager() {
     for (auto it = ui_map.begin(); it != ui_map.end(); ++it) {
@@ -39,6 +41,12 @@ void UIManager::setup_uis() {
 
     /* FPS UI */
     ui_map["fps"] = new FPSUI(aspect);
+
+    /* LEADERBOARD UI */
+    ui_map["leaderboard"] = new LeaderboardUI(aspect);
+
+    /* LEGEND UI */
+    ui_map["legend"] = new LegendUI(aspect, 15.f, 5.f, 1.f);
 }
 
 void UIManager::setup_listeners() {
