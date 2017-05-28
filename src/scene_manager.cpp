@@ -37,7 +37,7 @@ void SceneManager::add_scene(Scene* scene) {
     scenes.push_back(scene);
 }
 
-void SceneManager::set_current_scene(Scene* scene, bool is_server) {
+void SceneManager::set_current_scene(Scene* scene) {
     //Add the scene if not currently added
     if (std::find(scenes.begin(), scenes.end(), scene) == scenes.end()) {
         add_scene(scene);

@@ -42,25 +42,3 @@ void StartScene::c_setup() {
         Color::WHITE, 0.5f);
     add_light(sun);
 }
-
-Player* StartScene::s_spawn_player(int conn_id) {
-    assert(false);
-    Player *player = new Player();
-
-    // TODO: determine where each player starts based on client id. 
-    player->set_start_position({ (2 * (conn_id - 1)), 0, 0 });
-    player->s_set_model_index(conn_id % Player::PLAYER_MODELS.size());
-    player->reset_position();
-    objs.push_back(player);
-
-    return player;
-}
-
-Player* StartScene::c_spawn_player(int obj_id, int model_index) {
-    assert(false);
-    Player *player = new Player(obj_id);
-    player->c_setup_player_model(model_index);
-    objs.push_back(player);
-
-    return player;
-}

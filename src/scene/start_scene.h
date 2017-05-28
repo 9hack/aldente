@@ -19,7 +19,4 @@ public:
     void c_update() override;
     void s_setup() override;
     void c_setup() override;
-
-    Player* s_spawn_player(int conn_id); // Server: spawn new Player, auto-assign id.
-    Player* c_spawn_player(int obj_id, int model_index); // Client: spawn existing Player with id from server.
 };

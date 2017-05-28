@@ -72,7 +72,7 @@ void GameState::setup(bool is_server) {
         }
 
         physics.set_scene(&main_scene);
-        scene_manager.set_current_scene(&main_scene, GameState::is_server);
+        scene_manager.set_current_scene(&main_scene);
 
         // Enable rigid bodies on the next scene.
         for (auto & kv : players) {
@@ -80,7 +80,7 @@ void GameState::setup(bool is_server) {
         }
     });
 
-    scene_manager.set_current_scene(&start_scene, is_server);
+    scene_manager.set_current_scene(&start_scene);
 }
 
 void GameState::s_update() {

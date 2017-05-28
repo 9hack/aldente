@@ -73,6 +73,7 @@
 #include "scene/main_scene.h"
 #include "scene/scene.h"
 #include "scene/scene_info.h"
+#include "scene/start_scene.h"
 #include "scene/light/directional_light.h"
 #include "scene/light/light.h"
 #include "scene/light/point_light.h"

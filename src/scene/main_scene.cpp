@@ -82,29 +82,6 @@ void MainScene::disconnect_listeners() {
     goal_conn.disconnect();
 }
 
-Player* MainScene::s_spawn_player(int conn_id) {
-    assert(false);
-    Player *player = new Player();
-
-    // TODO: determine where each player starts based on client id. 
-    // For now, players 1-4 start at (2, 2), (2, 3), (2, 4), (2, 5) respectively.
-    player->set_start_position({ 2.f, 0, 1.f + conn_id });
-    player->s_set_model_index(conn_id % Player::PLAYER_MODELS.size());
-    player->reset_position();
-    objs.push_back(player);
-
-    return player;
-}
-
-Player* MainScene::c_spawn_player(int obj_id, int model_index) {
-    assert(false);
-    Player *player = new Player(obj_id);
-    player->c_setup_player_model(model_index);
-    objs.push_back(player);
-
-    return player;
-}
-
 void MainScene::s_place_goal(glm::vec3 start, int min_dist) {
     // Goal will be in range of (min_dist, edge of map)
     int new_goal_x = rand() % grid->get_width();
