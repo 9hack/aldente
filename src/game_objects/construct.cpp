@@ -90,7 +90,8 @@ void Chest::s_reset() {
 }
 
 void Chest::c_reset() {
-    cancel_fade();
+    if(cancel_fade)
+        cancel_fade();
     anim_player.stop();
     set_filter_alpha(1.0f);
     enable();
