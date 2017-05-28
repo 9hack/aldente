@@ -20,27 +20,8 @@ void GameState::setup(bool is_server) {
     scene_manager.add_scene(&start_scene);
     scene_manager.add_scene(&main_scene);
 
-    // TODO: shouldn't need physics on client, but this is needed to create tiles & their rigid bodies.
-    // physics.set_scene(&start_scene);
-    // scene_manager.set_current_scene(&start_scene, is_server);
-
-    events::menu::end_menu_event.connect([&]() {
-
-        for (auto & kv : players) {
-            events::remove_rigidbody_event(dynamic_cast<GameObject*>(kv.second));
-        }
-
-        std::cerr << "menu phase ended\n";
-        physics.set_scene(&main_scene);
-        scene_manager.set_current_scene(&main_scene, GameState::is_server);
-
-        for (auto & kv : players) {
-            kv.second->add_rigidbody();
-        }
-    });
-
     if (is_server) {
-        //scene_manager.get_current_scene()->s_setup();
+        // Setup the main scene first, since we want the grid/tiles to be created first.
         physics.set_scene(&main_scene);
         main_scene.s_setup();
         physics.set_scene(&start_scene);
@@ -61,7 +42,6 @@ void GameState::setup(bool is_server) {
             } else {
                 // Need to create a new player for the client.
                 player = s_add_player(conn_id);
-                player->add_rigidbody();
                 resp.set_obj_id(player->get_id());
                 context.player_ids.push_back(player->get_id());
                 context.ready_flags[player->get_id()] = false;
@@ -74,7 +54,7 @@ void GameState::setup(bool is_server) {
         });
     }
     else {
-        //scene_manager.get_current_scene()->c_setup();
+        // Setup the main scene first, since we want the grid/tiles to be created first.
         physics.set_scene(&main_scene);
         main_scene.c_setup();
         physics.set_scene(&start_scene);
@@ -84,6 +64,21 @@ void GameState::setup(bool is_server) {
             c_add_player(id, model_index, false);
         });
     }
+
+    events::menu::end_menu_event.connect([&]() {
+        // Disable rigid bodies on the previous scene.
+        for (auto & kv : players) {
+            events::disable_rigidbody_event(kv.second);
+        }
+
+        physics.set_scene(&main_scene);
+        scene_manager.set_current_scene(&main_scene, GameState::is_server);
+
+        // Enable rigid bodies on the next scene.
+        for (auto & kv : players) {
+            events::enable_rigidbody_event(kv.second);
+        }
+    });
 
     scene_manager.set_current_scene(&start_scene, is_server);
 }
@@ -145,12 +140,9 @@ void GameState::set_phase(proto::Phase phase) {
 }
 
 Player* GameState::s_add_player(int conn_id) {
-    // For now, only create players on the start scene.
-    //assert(scene_manager.get_current_scene() == &start_scene);
     Player *player = new Player();
 
-    // TODO: determine where each player starts based on client id. 
-    // For now, players 1-4 start at (2, 2), (2, 3), (2, 4), (2, 5) respectively.
+    // Determine where each player starts based on client id. 
     player->set_start_position({ (2 * (conn_id - 1)), 0, 0 });
     player->s_set_model_index(conn_id % Player::PLAYER_MODELS.size());
     player->reset_position();
@@ -158,16 +150,10 @@ Player* GameState::s_add_player(int conn_id) {
     start_scene.objs.push_back(player);
     main_scene.objs.push_back(player);
 
-    return player; //start_scene.s_spawn_player(conn_id);
+    return player;
 }
 
 Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
-    // For now, only create players on the start scene.
-    //assert(scene_manager.get_current_scene() == &start_scene);
-
-    // NOTE: players joining after menu phase ends will produce undefined behavior.
-    // DEBUG: discarding obj_id
-
     if (is_client)
         context.player_id = obj_id;
 
@@ -177,5 +163,5 @@ Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
     start_scene.objs.push_back(player);
     main_scene.objs.push_back(player);
 
-    return player; // start_scene.c_spawn_player(obj_id, model_index);
+    return player;
 }
