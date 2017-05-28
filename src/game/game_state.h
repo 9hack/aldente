@@ -3,6 +3,8 @@
 #include "game_objects/player.h"
 #include "physics.h"
 #include "scene_manager.h"
+#include "scene/main_scene.h"
+#include "scene/start_scene.h"
 #include "context.h"
 #include "phase/phase.h"
 #include "phase/menu.h"
