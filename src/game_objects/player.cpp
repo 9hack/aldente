@@ -22,20 +22,20 @@ Player::Player(int id) : GameObject(id), is_client(false) {
         move_speed = 2.0f;
         exiting = false;
 
-        events::RigidBodyData rigid;
+        /*events::RigidBodyData rigid;
         rigid.object = this;
         rigid.shape = hit_capsule;
         rigid.mass = 1;
-        events::add_rigidbody_event(rigid);
+        events::add_rigidbody_event(rigid);*/
 
         // Notify on collision.
         notify_on_collision = true;
 
-        // Lock y-axis
+        /*// Lock y-axis
         rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
 
         //Lock angular rotation
-        rigidbody->setAngularFactor(0);
+        rigidbody->setAngularFactor(0);*/
     }
 
     events::menu::c_cycle_player_model_event.connect([&](bool forward) {
@@ -321,4 +321,18 @@ void Player::s_set_model_index(int index) {
 
 int Player::c_get_model_index() const {
     return model_index;
+}
+
+void Player::add_rigidbody() {
+    events::RigidBodyData rigid;
+    rigid.object = this;
+    rigid.shape = hit_capsule;
+    rigid.mass = 1;
+    events::add_rigidbody_event(rigid);
+
+    // Lock y-axis
+    rigidbody->setLinearFactor(btVector3(1, 0.0f, 1));
+
+    //Lock angular rotation
+    rigidbody->setAngularFactor(0);
 }

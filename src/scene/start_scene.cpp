@@ -44,6 +44,7 @@ void StartScene::c_setup() {
 }
 
 Player* StartScene::s_spawn_player(int conn_id) {
+    assert(false);
     Player *player = new Player();
 
     // TODO: determine where each player starts based on client id. 
@@ -56,6 +57,7 @@ Player* StartScene::s_spawn_player(int conn_id) {
 }
 
 Player* StartScene::c_spawn_player(int obj_id, int model_index) {
+    assert(false);
     Player *player = new Player(obj_id);
     player->c_setup_player_model(model_index);
     objs.push_back(player);

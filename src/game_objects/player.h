@@ -95,5 +95,8 @@ public:
     void s_set_model_index(int index);
     int c_get_model_index() const;
 
+    // Get rigidbody data for this player.
+    void add_rigidbody();
+
     static std::vector<std::string> PLAYER_MODELS;
 };

@@ -16,6 +16,8 @@ GameObject::GameObject(int id) : id(id) {
     model = new Model();
     rigidbody = nullptr;
     game_objects[this->id] = this;
+    if (this->id < 10 || this->id > 890)
+        std::cerr << "go: " << this->id << "\n";
     enabled = true;
 }
 

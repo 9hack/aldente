@@ -48,9 +48,4 @@ void SceneManager::set_current_scene(Scene* scene, bool is_server) {
     current_scene = scene;
     camera = &scene->get_cam();
     current_scene->connect_listeners();
-
-    if (is_server)
-        current_scene->s_setup();
-    else
-        current_scene->c_setup();
 }

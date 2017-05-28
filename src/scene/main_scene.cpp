@@ -31,14 +31,12 @@ void MainScene::c_update() {
 }
 
 void MainScene::s_setup() {
-    std::cerr << "[s] main scene setup\n";
     //Setting up map
     grid = new Grid(chosen_map);
     objs.push_back(grid);
 }
 
 void MainScene::c_setup() {
-    std::cerr << "[c] main scene setup\n";
     //Setting up map
     grid = new Grid(chosen_map);
     objs.push_back(grid);
@@ -85,6 +83,7 @@ void MainScene::disconnect_listeners() {
 }
 
 Player* MainScene::s_spawn_player(int conn_id) {
+    assert(false);
     Player *player = new Player();
 
     // TODO: determine where each player starts based on client id. 
@@ -98,6 +97,7 @@ Player* MainScene::s_spawn_player(int conn_id) {
 }
 
 Player* MainScene::c_spawn_player(int obj_id, int model_index) {
+    assert(false);
     Player *player = new Player(obj_id);
     player->c_setup_player_model(model_index);
     objs.push_back(player);

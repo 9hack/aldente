@@ -32,6 +32,12 @@ void BuildPhase::s_setup() {
         context.ready_flags[id] = false;
     }
 
+    for (auto & p : GameState::players) {
+        Player* player = p.second;
+        player->set_start_position({ 2.f, 0, 1.f + p.first });
+        player->reset_position();
+    }
+
     // Re-enable chests on server side.
     for (auto & kv : GameObject::game_objects) {
         if (dynamic_cast<Chest*>(kv.second)) {
