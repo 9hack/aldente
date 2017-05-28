@@ -148,9 +148,7 @@ void Player::stop_walk() {
 }
 
 void Player::start_walk() {
-    anim_player.set_speed(3.0f);
-    anim_player.set_anim("walk");
-    anim_player.set_loop(true);
+    anim_player.set_anim("walk", 3.0f, true);
 }
 
 // Server collision
@@ -214,16 +212,12 @@ void Player::s_begin_warp(float x, float z) {
 
 void Player::c_begin_warp() {
     // Set up warp animation
-    anim_player.set_speed(1.0f);
-    anim_player.set_anim("exit");
-    anim_player.set_loop(true);
+    anim_player.set_anim("exit", 1.0f, true);
     anim_player.play();
     exiting = true;
 
     Timer::get()->do_after(std::chrono::seconds(1), [&]() {
-        anim_player.set_speed(3.0f);
-        anim_player.set_anim("walk");
-        anim_player.set_loop(true);
+        start_walk();
         exiting = false;
     });
 }
@@ -276,6 +270,14 @@ void Player::c_take_damage() {
     int count = 0;
     end_flicker = false;
 
+    // Make sure all animations from previous cycle has ended
+    if (cancel_flicker)
+        cancel_flicker();
+    if (cancel_stun)
+        cancel_stun();
+    if (cancel_invulnerable)
+        cancel_invulnerable();
+
     // Flicker
     cancel_flicker = Timer::get()->do_every(
         std::chrono::milliseconds(100),
@@ -293,22 +295,18 @@ void Player::c_take_damage() {
 
     // Change to the hurt animation
     stunned = true;
-    anim_player.set_anim("damage");
-    anim_player.set_loop(false);
-    anim_player.set_speed(1.0f);
+    anim_player.set_anim("damage", 1.0f, false);
     anim_player.play();
 
     // End hurt animation
-    Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
+    cancel_stun = Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
         [&]() {
         stunned = false;
-        anim_player.set_speed(3.0f);
-        anim_player.set_anim("walk");
-        anim_player.set_loop(true);
+        start_walk();
     });
 
     // End
-    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
+    cancel_invulnerable = Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
         [&]() {
         end_flicker = true;
         cancel_flicker();

@@ -73,19 +73,23 @@ SlimeGreen::SlimeGreen(int x, int z, int id) : Slime(x, z, id) {
 }
 
 void SlimeBlue::setup_model() {
-    setup_slime_model(std::string("slime_blue"));
+    std::string model = "slime_blue";
+    setup_slime_model(model);
 }
 
 void SlimeYellow::setup_model() {
-    setup_slime_model(std::string("slime_yellow"));
+    std::string model = "slime_yellow";
+    setup_slime_model(model);
 }
 
 void SlimeRed::setup_model() {
-    setup_slime_model(std::string("slime_red"));
+    std::string model = "slime_red";
+    setup_slime_model(model);
 }
 
 void SlimeGreen::setup_model() {
-    setup_slime_model(std::string("slime_green"));
+    std::string model = "slime_green";
+    setup_slime_model(model);
 }
 
 void Slime::setup_slime_model(std::string &slime_name) {

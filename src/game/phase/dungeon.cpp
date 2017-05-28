@@ -1,4 +1,5 @@
 #include <game/game_state.h>
+#include <input/modal_input.h>
 #include "dungeon.h"
 #include "game_objects/player.h"
 #include "game_objects/essence.h"
@@ -48,17 +49,26 @@ void DungeonPhase::s_setup() {
 
 void DungeonPhase::c_setup() {
     context.player_finished = false;
-    joystick_conn = events::stick_event.connect([&](events::StickData d) {
+    joystick_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).sticks.connect([&](const events::StickData &d) {
         // Left stick
         if (d.input == events::STICK_LEFT) {
             events::dungeon::network_player_move_event(d);
         }
     });
 
-    button_conn = events::button_event.connect([&](events::ButtonData d) {
-        // A button pressed.
-        if (d.input == events::BTN_A && d.state == 1) {
-            events::dungeon::player_interact_event();
+    button_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).buttons.connect([&](const events::ButtonData &d) {
+        if (d.state == 0) return;
+        switch (d.input) {
+            case events::BTN_A:
+                // A button pressed.
+                events::dungeon::player_interact_event();
+                break;
+            case events::BTN_BACK:
+                // Toggle leaderboard
+                events::ui::toggle_leaderboard();
+            break;
+            default:
+                break;
         }
     });
 

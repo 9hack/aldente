@@ -36,6 +36,9 @@ message Construct {
   optional int32 id = 4;
   optional bool status = 5;
   optional int32 player_id = 6;
+  optional float fwd_x = 7;
+  optional float fwd_y = 8;
+  optional float fwd_z = 9;
 }
 
 message JoinResponse {

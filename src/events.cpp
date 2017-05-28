@@ -2,9 +2,9 @@
 
 namespace events {
     using boost::signals2::signal;
-    signal<void(JoystickData &)> joystick_event;
-    signal<void(ButtonData &)> button_event;
-    signal<void(StickData &)> stick_event;
+    signal<void(const JoystickData &)> joystick_event;
+    signal<void(const ButtonData &)> button_event;
+    signal<void(const StickData &)> stick_event;
     signal<void(const AudioData &)> music_event;
     signal<void(const AudioData &)> sound_effects_event;
     signal<void(std::string)> stop_sound_effects_event;
@@ -54,8 +54,9 @@ namespace events {
 
     namespace ui {
         signal<void(int)> update_time;
-        signal<void()> display_leaderboard;
-        signal<void()> hide_leaderboard;
+        signal<void()> toggle_leaderboard;
+        signal<void()> disable_leaderboard;
+        signal<void()> enable_leaderboard;
         signal<void(int, int, std::string)> leaderboard_update;
     }
 
@@ -67,6 +68,7 @@ namespace events {
         signal<void()> select_grid_return_event;
         signal<void(ConstructType)> construct_selected_event;
         signal<void(ConstructType, bool)> c_construct_preview_event;
+        signal<void(bool)> c_rotate_preview_event;
         signal<void(proto::Construct &)> request_build_event;
         signal<void(ConstructType)> c_check_funds_event;
         signal<void(proto::Construct &)> s_verify_and_build;
@@ -84,7 +86,7 @@ namespace events {
         signal<void(glm::vec3, glm::vec3, std::function<void(GameObject *bt_hit)>)> request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void()> s_prepare_dungeon_event;
-        signal<void(StickData &)> network_player_move_event;
+        signal<void(const StickData &)> network_player_move_event;
         signal<void(Context*)> update_state_event;
         signal<void(int, int)> network_collision_event;
         signal<void()> player_interact_event;

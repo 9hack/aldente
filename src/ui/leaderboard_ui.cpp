@@ -54,13 +54,18 @@ LeaderboardUI::LeaderboardUI(float aspect)
     // disabled by default
     disable();
 
-    // Setup listener to activate.
-    events::ui::display_leaderboard.connect([&](){
+    /* EVENT LISTENERS */
+    events::ui::disable_leaderboard.connect([&]() {
+        disable();
+    });
+    events::ui::enable_leaderboard.connect([&]() {
         enable();
     });
-
-    // Deactivate.
-    events::ui::hide_leaderboard.connect([&](){
+    events::ui::toggle_leaderboard.connect([&](){
+        toggle();
+    });
+    // Hide when build phase begins.
+    events::build::start_build_event.connect([&]() {
         disable();
     });
 

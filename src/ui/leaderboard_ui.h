@@ -5,6 +5,7 @@
 #include "ui_image_node.h"
 #include "ui_grid.h"
 #include "util/color.h"
+#include "asset_loader.h"
 
 #include <map>
 #include <vector>
@@ -29,8 +30,8 @@ private:
 
     int gold;
 
-    static map<int, Color> ranking_to_color; // static mapping from {1,2,3,4} to colors
-    static map<int, std::string> ranking_to_image; // {1,2,3,4} to their images
+    static std::map<int, Color> ranking_to_color; // static mapping from {1,2,3,4} to colors
+    static std::map<int, std::string> ranking_to_image; // {1,2,3,4} to their images
 };
 
 class LeaderboardUI : public UI {
