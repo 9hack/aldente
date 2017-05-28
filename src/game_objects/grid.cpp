@@ -96,8 +96,7 @@ void Grid::setup_listeners() {
         // Build the construct locally on the server, without graphics.
         // A build is permitted if the desired tile is buildable, e.g. not a wall and has no existing construct.
         if (permitted) {
-            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false,
-                c.fwd_x(), c.fwd_y(), c.fwd_z());
+            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), c.fwd_x(), c.fwd_y(), c.fwd_z());
             if (built) {
                 c.set_id(built->get_id());
             }
@@ -109,8 +108,7 @@ void Grid::setup_listeners() {
 
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
-        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, 
-            c.fwd_x(), c.fwd_y(), c.fwd_z(), c.id());
+        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), c.fwd_x(), c.fwd_y(), c.fwd_z(), c.id());
 
         events::sound_effects_event(events::AudioData{ AudioManager::BUILD_CONFIRM_SOUND, 80, false });
     });
@@ -130,15 +128,14 @@ bool Grid::verify_build(ConstructType type, int col, int row) {
     return candidate->buildable;
 }
 
-Construct* Grid::build(ConstructType type, int col, int row, bool graphical,
-        float fx, float fy, float fz, int id) {
+Construct* Grid::build(ConstructType type, int col, int row, float fx, float fy, float fz, int id) {
     Tile* candidate = grid[row][col];
     Construct* to_add = nullptr;
 
     if (type == REMOVE) {
         // TODO: Move destructor to construct's destructor.
         if (candidate->get_construct() != nullptr) {
-            if (!graphical) {
+            if (id == ON_SERVER) {
                 events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
                 candidate->buildable = true;
                 candidate->set_construct(nullptr);
@@ -152,29 +149,29 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical,
     else if (type != NONE) {
         switch (type) {
         case CHEST:
-            to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
+            to_add = new Chest(col, row, id);
             break;
         case SPIKES:
-            to_add = graphical ? new Spikes(col, row, id) : new Spikes(col, row);
+            to_add = new Spikes(col, row, id);
             break;
         case SLIME_B:
-            to_add = graphical ? new SlimeBlue(col, row, id) : new SlimeBlue(col, row);
+            to_add = new SlimeBlue(col, row, id);
             break;
         case SLIME_Y:
-            to_add = graphical ? new SlimeYellow(col, row, id) : new SlimeYellow(col, row);
+            to_add = new SlimeYellow(col, row, id);
             break;
         case SLIME_R:
-            to_add = graphical ? new SlimeRed(col, row, id) : new SlimeRed(col, row);
+            to_add = new SlimeRed(col, row, id);
             break;
         case SLIME_G:
-            to_add = graphical ? new SlimeGreen(col, row, id) : new SlimeGreen(col, row);
+            to_add = new SlimeGreen(col, row, id);
             break;
         default:
             return nullptr;
             break;
         }
 	
-	    if (graphical)
+	    if (id != ON_SERVER)
             to_add->setup_model();
 
         to_add->set_initial_direction(glm::vec3(fx, fy, fz));
