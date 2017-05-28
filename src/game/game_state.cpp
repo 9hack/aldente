@@ -25,6 +25,11 @@ void GameState::setup(bool is_server) {
     // scene_manager.set_current_scene(&start_scene, is_server);
 
     events::menu::end_menu_event.connect([&]() {
+
+        for (auto & kv : players) {
+            events::remove_rigidbody_event(dynamic_cast<GameObject*>(kv.second));
+        }
+
         std::cerr << "menu phase ended\n";
         physics.set_scene(&main_scene);
         scene_manager.set_current_scene(&main_scene, GameState::is_server);
