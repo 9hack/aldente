@@ -23,7 +23,7 @@ Essence::Essence(int id) : GameObject(id){
         events::RigidBodyData rigid;
         rigid.object = this;
         rigid.shape = hit_sphere;
-        rigid.mass = 1;
+        rigid.mass = 0.1f;
         rigid.collision_group = COLLISION_ESSENCE;
         rigid.collision_mask |= COLLISION_ESSENCE; // don't collide with own kind
         events::add_rigidbody_event(rigid);
@@ -72,7 +72,7 @@ void Essence::s_update_this() {
 
 void Essence::s_on_collision(GameObject *other) {
     Player *player = dynamic_cast<Player*>(other);
-    if (player && !player->is_invulnerable()) {
+    if (player && !player->is_stunned()) {
         value->collected_by(player); // Award player
         value = std::make_unique<collectibles::Nothing>();
 
@@ -135,9 +135,9 @@ void Essence::disappear() {
 void Essence::random_push() {
     // Setup Initial Push in Random direction
     glm::vec2 vel = glm::vec2(Util::random(-1.f, 1.f), Util::random(-1.f, 1.f));
-    vel = vel * 25.f; // Impulse Force
+    vel = vel * 100.f; // Impulse Force
 
     rigidbody->setActivationState(true);
-    rigidbody->applyCentralImpulse(btVector3(vel.x, 0, vel.y));
-    rigidbody->setDamping(0.995, 0);
+    rigidbody->applyForce(btVector3(vel.x, 0, vel.y), btVector3(0, 0, 0));
+    rigidbody->setDamping(0.9, 0);
 }

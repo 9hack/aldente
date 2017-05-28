@@ -1,10 +1,13 @@
 #include <game/game_state.h>
+#include <input/modal_input.h>
 #include "build.h"
 #include "audio/audio_manager.h"
 
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::s_setup() {
+    events::build::start_build_event();
+
     transition_after(60, proto::Phase::DUNGEON);
     ready_conn = events::player_ready_event.connect([&](int player_id) {
         context.ready_flags[player_id] = true;
@@ -38,11 +41,9 @@ void BuildPhase::s_setup() {
         player->reset_position();
     }
 
-    // Re-enable chests on server side.
+    // Resets all game objects
     for (auto & kv : GameObject::game_objects) {
-        if (dynamic_cast<Chest*>(kv.second)) {
-            kv.second->enable();
-        }
+        kv.second->s_reset();
     }
 }
 
@@ -51,7 +52,7 @@ void BuildPhase::c_setup() {
     events::build::select_grid_return_event();
     is_menu = true;
 
-    joystick_conn = events::stick_event.connect([&](events::StickData d) {
+    joystick_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).sticks.connect([&](const events::StickData &d) {
 
         // Left stick for UI Grid Movement
         if (d.input == events::STICK_LEFT) {
@@ -82,7 +83,7 @@ void BuildPhase::c_setup() {
         }
     });
 
-    button_conn = events::button_event.connect([&](events::ButtonData d) {
+    button_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).buttons.connect([&](const events::ButtonData &d) {
         Direction dir;
         bool d_pad = false;
 
@@ -128,6 +129,16 @@ void BuildPhase::c_setup() {
                 d_pad = true;
                 break;
             }
+            case events::BTN_LB: {
+                if (!is_menu)
+                    events::build::c_rotate_preview_event(false);
+                break;
+            }
+            case events::BTN_RB: {
+                if (!is_menu)
+                    events::build::c_rotate_preview_event(true);
+                break;
+            }
             default:
                 break;
         }
@@ -166,12 +177,9 @@ void BuildPhase::c_setup() {
     // Play music
     events::music_event(events::AudioData{ AudioManager::BUILD_MUSIC, 30, true });
 
-    // Make opened chests reappear at start of build phase.
+    // Resets game objects on client side
     for (auto & kv : GameObject::game_objects) {
-        if (dynamic_cast<Chest*>(kv.second)) {
-            kv.second->set_filter_alpha(1.f);
-            kv.second->enable();
-        }
+        kv.second->c_reset();
     }
 }
 
@@ -194,6 +202,8 @@ void BuildPhase::s_teardown() {
     cancel_clock_every();
     ready_conn.disconnect();
     s_verify_and_build_conn.disconnect();
+
+    events::build::end_build_event();
 }
 
 void BuildPhase::c_teardown() {

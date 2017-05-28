@@ -6,6 +6,8 @@
 #include "clock_ui.h"
 #include "gold_ui.h"
 #include "fps_ui.h"
+#include "leaderboard_ui.h"
+#include "legend_ui.h"
 
 UIManager::~UIManager() {
     for (auto it = ui_map.begin(); it != ui_map.end(); ++it) {
@@ -22,21 +24,12 @@ UIManager::UIManager(float aspect)
 void UIManager::setup_uis() {
     /* BUILD UI */
     std::vector<ConstructData> constructs;
-    for (int i = 0; i < 12; i++) {
-        int type = (i % 3) + 1;
-        switch (type) {
-        case ConstructType::CHEST:
-            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::CHEST));
-            break;
-        case ConstructType::SPIKES:
-            constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::SPIKES));
-            break;
-        case ConstructType::REMOVE:
+    for (int i = 1; i <= 12; i++) {
+        int num_available_constructs = Constructs::CONSTRUCTS.size();
+        if (i < num_available_constructs)
+            constructs.push_back(Constructs::CONSTRUCTS.at((ConstructType) i));
+        else
             constructs.push_back(Constructs::CONSTRUCTS.at(ConstructType::REMOVE));
-            break;
-        default:
-            break;
-        }
     }
     ui_map["build"] = new BuildUI(3, 4, aspect, constructs);
 
@@ -48,6 +41,12 @@ void UIManager::setup_uis() {
 
     /* FPS UI */
     ui_map["fps"] = new FPSUI(aspect);
+
+    /* LEADERBOARD UI */
+    ui_map["leaderboard"] = new LeaderboardUI(aspect);
+
+    /* LEGEND UI */
+    ui_map["legend"] = new LegendUI(aspect, 15.f, 5.f, 1.f);
 }
 
 void UIManager::setup_listeners() {

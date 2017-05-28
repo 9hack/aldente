@@ -13,6 +13,7 @@ public:
 
     void set_skeleton(Skeleton *skel);
     void set_anim(std::string anim_name);
+    void set_anim(std::string anim_name, float speed, bool will_loop);
 
     void update(); // Updates bone matrices for model based on animation playing
     void play(); // Tells the animation player to start playing
@@ -38,9 +39,8 @@ private:
     
     void reset_model();
 
-    void process_animation(float anim_time, const aiAnimation *anim, const aiNode *node, glm::mat4 parent_mat);
+    void process_animation(float anim_time, Animation *anim, const aiNode *node, glm::mat4 parent_mat);
 
-    const aiNodeAnim *find_node_anim(const aiAnimation *anim, const std::string node_name);
     glm::mat4 convert_ai_matrix(aiMatrix4x4 ai_mat);
 
     // Math Calculation stuff taken from Assimp Tutorial

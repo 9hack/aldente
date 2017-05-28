@@ -112,7 +112,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -131,7 +131,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -183,8 +183,14 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game_objects\grid.h" />
     <ClInclude Include="..\src\game_objects\player.h" />
     <ClInclude Include="..\src\game_objects\tile.h" />
+    <ClInclude Include="..\src\game_objects\traps\collision_trap.h" />
+    <ClInclude Include="..\src\game_objects\traps\mobile_trap.h" />
+    <ClInclude Include="..\src\game_objects\traps\slime.h" />
+    <ClInclude Include="..\src\game_objects\traps\spikes.h" />
+    <ClInclude Include="..\src\game_objects\traps\trap.h" />
     <ClInclude Include="..\src\input\axis_combiner.h" />
     <ClInclude Include="..\src\input\conceptual_translator.h" />
+    <ClInclude Include="..\src\input\modal_input.h" />
     <ClInclude Include="..\src\input\raw_maps\debug.h" />
     <ClInclude Include="..\src\input\raw_maps\matricom.h" />
     <ClInclude Include="..\src\input\raw_maps\raw_map.h" />
@@ -233,6 +239,8 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\ui\clock_ui.h" />
     <ClInclude Include="..\src\ui\fps_ui.h" />
     <ClInclude Include="..\src\ui\gold_ui.h" />
+    <ClInclude Include="..\src\ui\leaderboard_ui.h" />
+    <ClInclude Include="..\src\ui\legend_ui.h" />
     <ClInclude Include="..\src\ui\render2d.h" />
     <ClInclude Include="..\src\ui\ui.h" />
     <ClInclude Include="..\src\ui\ui_container.h" />
@@ -240,6 +248,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\ui\ui_grid.h" />
     <ClInclude Include="..\src\ui\ui_halo_container.h" />
     <ClInclude Include="..\src\ui\ui_image_node.h" />
+    <ClInclude Include="..\src\ui\ui_legend.h" />
     <ClInclude Include="..\src\ui\ui_manager.h" />
     <ClInclude Include="..\src\ui\ui_rectangle.h" />
     <ClInclude Include="..\src\ui\ui_text_box.h" />
@@ -277,9 +286,14 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\game_objects\grid.cpp" />
     <ClCompile Include="..\src\game_objects\player.cpp" />
     <ClCompile Include="..\src\game_objects\tile.cpp" />
+    <ClCompile Include="..\src\game_objects\traps\collision_trap.cpp" />
+    <ClCompile Include="..\src\game_objects\traps\mobile_trap.cpp" />
+    <ClCompile Include="..\src\game_objects\traps\slime.cpp" />
+    <ClCompile Include="..\src\game_objects\traps\spikes.cpp" />
     <ClCompile Include="..\src\input\axis_combiner.cpp" />
     <ClCompile Include="..\src\input\conceptual_translator.cpp" />
     <ClCompile Include="..\src\input\conceptual_translator_test.cpp" />
+    <ClCompile Include="..\src\input\modal_input.cpp" />
     <ClCompile Include="..\src\input\raw_maps\raw_map.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\model\geometry.cpp" />
@@ -328,12 +342,15 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\ui\clock_ui.cpp" />
     <ClCompile Include="..\src\ui\fps_ui.cpp" />
     <ClCompile Include="..\src\ui\gold_ui.cpp" />
+    <ClCompile Include="..\src\ui\leaderboard_ui.cpp" />
+    <ClCompile Include="..\src\ui\legend_ui.cpp" />
     <ClCompile Include="..\src\ui\render2d.cpp" />
     <ClCompile Include="..\src\ui\ui.cpp" />
     <ClCompile Include="..\src\ui\ui_container.cpp" />
     <ClCompile Include="..\src\ui\ui_grid.cpp" />
     <ClCompile Include="..\src\ui\ui_halo_container.cpp" />
     <ClCompile Include="..\src\ui\ui_image_node.cpp" />
+    <ClCompile Include="..\src\ui\ui_legend.cpp" />
     <ClCompile Include="..\src\ui\ui_manager.cpp" />
     <ClCompile Include="..\src\ui\ui_rectangle.cpp" />
     <ClCompile Include="..\src\ui\ui_text_box.cpp" />

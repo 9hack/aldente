@@ -571,6 +571,27 @@ class Construct : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 player_id() const;
   inline void set_player_id(::google::protobuf::int32 value);
 
+  // optional float fwd_x = 7;
+  inline bool has_fwd_x() const;
+  inline void clear_fwd_x();
+  static const int kFwdXFieldNumber = 7;
+  inline float fwd_x() const;
+  inline void set_fwd_x(float value);
+
+  // optional float fwd_y = 8;
+  inline bool has_fwd_y() const;
+  inline void clear_fwd_y();
+  static const int kFwdYFieldNumber = 8;
+  inline float fwd_y() const;
+  inline void set_fwd_y(float value);
+
+  // optional float fwd_z = 9;
+  inline bool has_fwd_z() const;
+  inline void clear_fwd_z();
+  static const int kFwdZFieldNumber = 9;
+  inline float fwd_z() const;
+  inline void set_fwd_z(float value);
+
   // @@protoc_insertion_point(class_scope:proto.Construct)
  private:
   inline void set_has_type();
@@ -585,6 +606,12 @@ class Construct : public ::google::protobuf::Message {
   inline void clear_has_status();
   inline void set_has_player_id();
   inline void clear_has_player_id();
+  inline void set_has_fwd_x();
+  inline void clear_has_fwd_x();
+  inline void set_has_fwd_y();
+  inline void clear_has_fwd_y();
+  inline void set_has_fwd_z();
+  inline void clear_has_fwd_z();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -596,6 +623,9 @@ class Construct : public ::google::protobuf::Message {
   ::google::protobuf::int32 id_;
   bool status_;
   ::google::protobuf::int32 player_id_;
+  float fwd_x_;
+  float fwd_y_;
+  float fwd_z_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -2398,6 +2428,78 @@ inline void Construct::set_player_id(::google::protobuf::int32 value) {
   set_has_player_id();
   player_id_ = value;
   // @@protoc_insertion_point(field_set:proto.Construct.player_id)
+}
+
+// optional float fwd_x = 7;
+inline bool Construct::has_fwd_x() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Construct::set_has_fwd_x() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Construct::clear_has_fwd_x() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Construct::clear_fwd_x() {
+  fwd_x_ = 0;
+  clear_has_fwd_x();
+}
+inline float Construct::fwd_x() const {
+  // @@protoc_insertion_point(field_get:proto.Construct.fwd_x)
+  return fwd_x_;
+}
+inline void Construct::set_fwd_x(float value) {
+  set_has_fwd_x();
+  fwd_x_ = value;
+  // @@protoc_insertion_point(field_set:proto.Construct.fwd_x)
+}
+
+// optional float fwd_y = 8;
+inline bool Construct::has_fwd_y() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Construct::set_has_fwd_y() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Construct::clear_has_fwd_y() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Construct::clear_fwd_y() {
+  fwd_y_ = 0;
+  clear_has_fwd_y();
+}
+inline float Construct::fwd_y() const {
+  // @@protoc_insertion_point(field_get:proto.Construct.fwd_y)
+  return fwd_y_;
+}
+inline void Construct::set_fwd_y(float value) {
+  set_has_fwd_y();
+  fwd_y_ = value;
+  // @@protoc_insertion_point(field_set:proto.Construct.fwd_y)
+}
+
+// optional float fwd_z = 9;
+inline bool Construct::has_fwd_z() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Construct::set_has_fwd_z() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Construct::clear_has_fwd_z() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Construct::clear_fwd_z() {
+  fwd_z_ = 0;
+  clear_has_fwd_z();
+}
+inline float Construct::fwd_z() const {
+  // @@protoc_insertion_point(field_get:proto.Construct.fwd_z)
+  return fwd_z_;
+}
+inline void Construct::set_fwd_z(float value) {
+  set_has_fwd_z();
+  fwd_z_ = value;
+  // @@protoc_insertion_point(field_set:proto.Construct.fwd_z)
 }
 
 // -------------------------------------------------------------------

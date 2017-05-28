@@ -28,7 +28,7 @@ namespace events {
         int state; // If button, zero is not pressed, nonzero is pressed.
         // Otherwise, is axis analog level.
     };
-    extern signal<void(JoystickData &)> joystick_event;
+    extern signal<void(const JoystickData &)> joystick_event;
 
     // Conceptual button input
     enum ConceptualButton {
@@ -47,7 +47,7 @@ namespace events {
         int state; // If button, zero is not pressed, nonzero is pressed.
         // Otherwise, is axis analog level.
     };
-    extern signal<void(ButtonData &)> button_event;
+    extern signal<void(const ButtonData &)> button_event;
 
     // Stick
     enum Stick {
@@ -58,7 +58,7 @@ namespace events {
         Stick input;
         std::pair<int, int> state;
     };
-    extern signal<void(StickData &)> stick_event;
+    extern signal<void(const StickData &)> stick_event;
 
     // Audio
     struct AudioData {
@@ -181,6 +181,10 @@ namespace events {
     namespace ui {
         // Update the UI timer.
         extern signal<void(int)> update_time;
+        extern signal<void()> toggle_leaderboard;
+        extern signal<void()> disable_leaderboard;
+        extern signal<void()> enable_leaderboard;
+        extern signal<void(int, int, std::string)> leaderboard_update;
     }
 
     namespace build {
@@ -205,6 +209,9 @@ namespace events {
         // Show the construct preview on the 3D build grid.
         // Tint green if valid bool is true, otherwise tint red.
         extern signal<void(ConstructType, bool)> c_construct_preview_event;
+
+        // Rotate the preview, True: cw, False: ccw
+        extern signal<void(bool)> c_rotate_preview_event;
 
         // Client requests to build a construct.
         extern signal<void(proto::Construct &)> request_build_event;
@@ -242,7 +249,7 @@ namespace events {
 
     namespace dungeon {
         // Player class asks physics for a raycast check
-        extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> player_request_raycast_event;
+        extern signal<void(glm::vec3, glm::vec3,std::function<void(GameObject *bt_hit)>)> request_raycast_event;
 
         // Sends out signal for player's position. Used for camera to follow player
         extern signal<void(glm::vec3)> player_position_updated_event;
@@ -251,7 +258,7 @@ namespace events {
         extern signal<void()> s_prepare_dungeon_event;
 
         // Client requests the server to move player, passing its input stick data.
-        extern signal<void(StickData &)> network_player_move_event;
+        extern signal<void(const StickData &)> network_player_move_event;
 
         // Server sends context containing position, collisions, and interactions of game objects to all clients.
         extern signal<void(Context*)> update_state_event;

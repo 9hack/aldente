@@ -8,7 +8,7 @@
 #include "util/util.h"
 
 #define ANIMATE_DELTA 0.001f
-#define STUN_LENGTH 500 // milliseconds
+#define STUN_LENGTH 1000 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 
 std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
@@ -89,7 +89,7 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
     float dz = std::fabs(z - transform.get_position().z);
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
-    if (!animate && !exiting) {
+    if (!animate && !exiting && !stunned) {
         if (!anim_player.check_paused()) {
             events::stop_sound_effects_event(AudioManager::FOOTSTEPS_SOUND);
 
@@ -110,6 +110,7 @@ void Player::c_update_state(float x, float z, float wx, float wz, bool enab) {
 void Player::do_movement() {
 
     if (stunned) {
+        rigidbody->setLinearVelocity(btVector3(0, 0, 0));
         rigidbody->setActivationState(false);
         return;
     }
@@ -122,10 +123,13 @@ void Player::do_movement() {
 }
 
 void Player::interact() {
+    if (stunned)
+        return;
+
     // Asks physics for a raycast to check if the player
     // is facing a construct.
     if (transform.get_forward().x != 0 || transform.get_forward().z != 0) {
-        events::dungeon::player_request_raycast_event(
+        events::dungeon::request_raycast_event(
             transform.get_position(), transform.get_forward(),
             [&](GameObject *bt_hit) {
             Construct *construct = dynamic_cast<Construct*>(bt_hit);
@@ -144,10 +148,7 @@ void Player::stop_walk() {
 }
 
 void Player::start_walk() {
-    anim_player.set_speed(3.0f);
-    anim_player.set_anim("walk");
-    anim_player.set_loop(true);
-    anim_player.play();
+    anim_player.set_anim("walk", 3.0f, true);
 }
 
 // Server collision
@@ -191,6 +192,10 @@ void Player::c_setup_player_model(int index) {
         transform.set_scale({ 0.0043f, 0.0043f, 0.0043f });
 
     initial_transform.set_scale(transform.get_scale());
+
+    // Update leaderboard with player id and starting gold.
+    // NOTE: THIS IS HERE BECAUSE LEADERBOARD WANTS TO KNOW WHICH MODEL TO ASSOCIATE.
+    events::ui::leaderboard_update(id, stats.get_coins(), model_name);
 }
 
 void Player::s_begin_warp(float x, float z) {
@@ -207,16 +212,12 @@ void Player::s_begin_warp(float x, float z) {
 
 void Player::c_begin_warp() {
     // Set up warp animation
-    anim_player.set_speed(1.0f);
-    anim_player.set_anim("exit");
-    anim_player.set_loop(true);
+    anim_player.set_anim("exit", 1.0f, true);
     anim_player.play();
     exiting = true;
 
     Timer::get()->do_after(std::chrono::seconds(1), [&]() {
-        anim_player.set_speed(3.0f);
-        anim_player.set_anim("walk");
-        anim_player.set_loop(true);
+        start_walk();
         exiting = false;
     });
 }
@@ -234,18 +235,21 @@ bool Player::s_take_damage() {
     std::cerr << "Player is hit: " << id << std::endl;
 
     // Player loses percentage essence
-    const float percent_loss = .20f;
+    const float percent_loss = .20f; // Hardcoded. Should change later to make it variable based on traps?
     int amount_loss = (int) stats.get_coins() * percent_loss;
+    amount_loss = amount_loss - (amount_loss % 10); // Round down to nearest tenth
+    amount_loss = (amount_loss <= 0 && stats.get_coins() > 0) ? 10 : amount_loss; // Loses a minimum of 10 essence
     s_modify_stats([&](PlayerStats & stats) {
-        stats.add_coins(-amount_loss);
+        if (stats.get_coins() > 0)
+            stats.add_coins(-amount_loss);
     });
 
     // Drop essence to total amount loss, rounded down. Assuming that each essence has 10 coin value. 
     const float essence_val = 10.0f; // Currently hardcoded
     int number_essence_loss = (int)floor(amount_loss / essence_val);
-    for (int i = 1; i <= (amount_loss / 10.0f); i++)
+    for (int i = 0; i < number_essence_loss; i++)
         events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
-
+    
     // End Stunned
     Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
         [&]() {
@@ -266,6 +270,14 @@ void Player::c_take_damage() {
     int count = 0;
     end_flicker = false;
 
+    // Make sure all animations from previous cycle has ended
+    if (cancel_flicker)
+        cancel_flicker();
+    if (cancel_stun)
+        cancel_stun();
+    if (cancel_invulnerable)
+        cancel_invulnerable();
+
     // Flicker
     cancel_flicker = Timer::get()->do_every(
         std::chrono::milliseconds(100),
@@ -281,8 +293,20 @@ void Player::c_take_damage() {
         count++;
     });
 
+    // Change to the hurt animation
+    stunned = true;
+    anim_player.set_anim("damage", 1.0f, false);
+    anim_player.play();
+
+    // End hurt animation
+    cancel_stun = Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
+        [&]() {
+        stunned = false;
+        start_walk();
+    });
+
     // End
-    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
+    cancel_invulnerable = Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
         [&]() {
         end_flicker = true;
         cancel_flicker();
@@ -305,6 +329,9 @@ void Player::c_update_stats(const proto::PlayerStats &update) {
 
     if (is_client)
         events::c_player_stats_updated(update);
+
+    // update leaderboard ui
+    events::ui::leaderboard_update(id, update.coins(), PLAYER_MODELS[model_index]);
 }
 
 bool Player::can_afford(int cost) {

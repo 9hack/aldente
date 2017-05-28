@@ -1,3 +1,4 @@
+#include <input/modal_input.h>
 #include "aldente_client.h"
 
 #include "window.h"
@@ -65,6 +66,7 @@ void AldenteClient::start() {
             input::BTN_MAP_XBOX;
     input::ConceptualTranslator translator(control_mapping, input::KBD_MAP_DEBUG);
     input::AxisCombiner stick_handler(translator, input::STICKS_DEFAULT);
+    input::ModalInput::provide(std::make_shared<input::ModalInput>());
 
     // Setup subsystems after window creation.
     glSetup();
@@ -84,6 +86,9 @@ void AldenteClient::start() {
     Timer timer(GAME_TICK);
     Timer::provide(&timer);
 
+    // Has logic based on phase change, so set ui up before GameState
+    UIManager ui_manager((float) width / (float) height);
+
     // Game logic. Start game with menu phase.
     GameState::setup(false);
     GameState::set_phase(proto::Phase::MENU);
@@ -92,8 +97,6 @@ void AldenteClient::start() {
 
     // Debug Drawer for Bullet
     btDebug bt_debug(&GameState::physics);
-
-    UIManager ui_manager((float) width / (float) height);
 
     DebugInput debug_input(window, GameState::scene_manager, GameState::physics);
 

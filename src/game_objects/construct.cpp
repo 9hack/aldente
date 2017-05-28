@@ -53,9 +53,9 @@ void Chest::s_interact_trigger(GameObject *other) {
 
 // Activated when a player presses A on it, graphical
 void Chest::c_interact_trigger(GameObject *other) {
-    anim_player.play_if_paused("open");
+    anim_player.play_if_paused("open", 1.5f);
 
-    Timer::get()->do_after(std::chrono::milliseconds(500),
+    Timer::get()->do_after(std::chrono::milliseconds(1000),
         [&]() {
         disappear();
     });
@@ -85,45 +85,16 @@ void Chest::disappear() {
     });
 }
 
-/************SPIKES***************/
-
-Spikes::Spikes(int x, int z, int id) : Construct(x, z, id) {
-    tag = "SPIKES";
-
-    if (id == ON_SERVER) {
-        //Creates Rigid Body
-        events::RigidBodyData rigid;
-        rigid.object = this;
-        rigid.shape = hit_box;
-        rigid.is_ghost = true;
-        rigid.position = { x, 0.0f, z };
-        events::add_rigidbody_event(rigid);
-        notify_on_collision = true;
-    }
+void Chest::s_reset() {
+    enable();
 }
 
-void Spikes::s_on_collision(GameObject *other) {
-    Player *player = dynamic_cast<Player*>(other);
-    if (player) {
-        if (player->s_take_damage()) {
-            // Send signal to client that this player was hit
-            events::dungeon::network_collision_event(other->get_id(), id);
-        }
-    }
-}
-
-void Spikes::c_on_collision(GameObject *other) {
-    anim_player.play_if_paused("trigger");
-
-    Player* player = dynamic_cast<Player*>(other);
-    assert(player);
-    player->c_take_damage();
-}
-
-void Spikes::setup_model() {
-    attach_model(AssetLoader::get_model("spikes"));
-    transform.set_scale({ 0.4f, 0.4f, 0.4f });
-    initial_transform.set_scale(transform.get_scale());
+void Chest::c_reset() {
+    if(cancel_fade)
+        cancel_fade();
+    anim_player.stop();
+    set_filter_alpha(1.0f);
+    enable();
 }
 
 /************GOAL***************/
@@ -146,9 +117,7 @@ void Goal::setup_model() {
     attach_model(AssetLoader::get_model("warp"));
     transform.set_scale(0.006f, 0.006f, 0.006f);
     initial_transform.set_scale(transform.get_scale());
-    anim_player.set_speed(1.0f);
-    anim_player.set_anim("spin");
-    anim_player.set_loop(true);
+    anim_player.set_anim("spin", 1.0f, true);
     anim_player.play();
 }
 

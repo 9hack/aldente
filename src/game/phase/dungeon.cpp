@@ -1,7 +1,9 @@
 #include <game/game_state.h>
+#include <input/modal_input.h>
 #include "dungeon.h"
 #include "game_objects/player.h"
 #include "game_objects/essence.h"
+#include "game_objects/traps/mobile_trap.h"
 #include "audio/audio_manager.h"
 
 void DungeonPhase::s_setup() {
@@ -47,17 +49,26 @@ void DungeonPhase::s_setup() {
 
 void DungeonPhase::c_setup() {
     context.player_finished = false;
-    joystick_conn = events::stick_event.connect([&](events::StickData d) {
+    joystick_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).sticks.connect([&](const events::StickData &d) {
         // Left stick
         if (d.input == events::STICK_LEFT) {
             events::dungeon::network_player_move_event(d);
         }
     });
 
-    button_conn = events::button_event.connect([&](events::ButtonData d) {
-        // A button pressed.
-        if (d.input == events::BTN_A && d.state == 1) {
-            events::dungeon::player_interact_event();
+    button_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).buttons.connect([&](const events::ButtonData &d) {
+        if (d.state == 0) return;
+        switch (d.input) {
+            case events::BTN_A:
+                // A button pressed.
+                events::dungeon::player_interact_event();
+                break;
+            case events::BTN_BACK:
+                // Toggle leaderboard
+                events::ui::toggle_leaderboard();
+            break;
+            default:
+                break;
         }
     });
 
@@ -87,7 +98,7 @@ proto::Phase DungeonPhase::s_update() {
     // Send the position and orientation of the specified game objects.
     // Currently sending all Player objects and Constructs.
     for (auto const & o : GameObject::game_objects) {
-        if (dynamic_cast<Player*>(o.second) || dynamic_cast<Goal*>(o.second) || dynamic_cast<Essence*>(o.second))
+        if (!dynamic_cast<Tile*>(o.second) && !dynamic_cast<Grid*>(o.second))
             context.updated_objects.insert(o.second);
     }
     events::dungeon::update_state_event(&context);
