@@ -154,7 +154,7 @@ void ServerNetworkManager::update() {
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kReadyRequest: {
-                events::build::player_ready_event(msg.ready_request());
+                events::player_ready_event(msg.ready_request());
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kChangeAvatarRequest: {

@@ -33,6 +33,7 @@ namespace events {
     signal<void(GameObject *obj)> enable_rigidbody_event;
     signal<void(int)> player_finished_event;
     signal<void(const proto::PlayerStats &)> c_player_stats_updated;
+    signal<void(int)> player_ready_event;
 
     signal<void(glm::vec3 position, int time)> camera_anim_position_event;
     signal<void(glm::vec3 axis, float angle, int time)> camera_anim_rotate_event;
@@ -75,7 +76,6 @@ namespace events {
         signal<void(int,int)> hover_position_updated_event;
         signal<void()> start_build_event;
         signal<void()> end_build_event;
-        signal<void(int)> player_ready_event;
     }
 
     namespace dungeon {

@@ -6,7 +6,7 @@ bool BuildPhase::is_menu = true;
 
 void BuildPhase::s_setup() {
     transition_after(60, proto::Phase::DUNGEON);
-    ready_conn = events::build::player_ready_event.connect([&](int player_id) {
+    ready_conn = events::player_ready_event.connect([&](int player_id) {
         context.ready_flags[player_id] = true;
     });
 
