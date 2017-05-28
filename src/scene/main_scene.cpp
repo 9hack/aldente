@@ -31,12 +31,14 @@ void MainScene::c_update() {
 }
 
 void MainScene::s_setup() {
+    std::cerr << "[s] main scene setup\n";
     //Setting up map
     grid = new Grid(chosen_map);
     objs.push_back(grid);
 }
 
 void MainScene::c_setup() {
+    std::cerr << "[c] main scene setup\n";
     //Setting up map
     grid = new Grid(chosen_map);
     objs.push_back(grid);

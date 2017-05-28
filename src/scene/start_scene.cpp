@@ -21,7 +21,7 @@ void StartScene::c_setup() {
     // Set up platforms on which the player will stand.
     // Serves no functionality other than just being visible.
     for (int i = 0; i < 4; i++) {
-        GameObject *platform = new GameObject();
+        GameObject *platform = new GameObject(-1);
         platform->transform.set_position(glm::vec3(2 * i, -0.8f, 0));
         platform->attach_model(AssetLoader::get_model("chest_good"));
         platform->transform.set_scale({ 0.006f, 0.006f, 0.006f });

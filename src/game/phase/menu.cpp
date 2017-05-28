@@ -33,6 +33,7 @@ void MenuPhase::c_update() {
 }
 
 void MenuPhase::s_teardown() {
+    events::menu::end_menu_event();
 }
 
 void MenuPhase::c_teardown() {

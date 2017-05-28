@@ -20,10 +20,15 @@ void GameState::setup(bool is_server) {
 
     // TODO: shouldn't need physics on client, but this is needed to create tiles & their rigid bodies.
     physics.set_scene(&start_scene);
-    scene_manager.set_current_scene(&start_scene);
+    scene_manager.set_current_scene(&start_scene, is_server);
+    events::menu::end_menu_event.connect([&]() {
+        std::cerr << "menu phase ended\n";
+        physics.set_scene(&main_scene);
+        scene_manager.set_current_scene(&main_scene, GameState::is_server);
+    });
 
     if (is_server) {
-        scene_manager.get_current_scene()->s_setup();
+        //scene_manager.get_current_scene()->s_setup();
 
         // Client of given connection id wishes to join the game.
         // For now, allow more than 4 players to join the game.
@@ -52,16 +57,10 @@ void GameState::setup(bool is_server) {
         });
     }
     else {
-        scene_manager.get_current_scene()->c_setup();
+        //scene_manager.get_current_scene()->c_setup();
 
         events::menu::spawn_existing_player_event.connect([](int id, int model_index) {
             c_add_player(id, model_index, false);
-        });
-
-        events::menu::end_menu_event.connect([&]() {
-            std::cerr << "menu phase ended\n";
-            physics.set_scene(&main_scene);
-            scene_manager.set_current_scene(&main_scene);
         });
     }
 }

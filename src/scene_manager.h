@@ -18,5 +18,5 @@ public:
     Camera *get_camera(); // Gets currently active camera
 
     void add_scene(Scene* scene);
-    void set_current_scene(Scene* scene);
+    void set_current_scene(Scene* scene, bool is_server);
 };
