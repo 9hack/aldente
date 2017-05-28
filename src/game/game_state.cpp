@@ -17,6 +17,8 @@ bool GameState::is_server = true;
 
 void GameState::setup(bool is_server) {
     GameState::is_server = is_server;
+    scene_manager.add_scene(&start_scene);
+    scene_manager.add_scene(&main_scene);
 
     // TODO: shouldn't need physics on client, but this is needed to create tiles & their rigid bodies.
     physics.set_scene(&start_scene);
