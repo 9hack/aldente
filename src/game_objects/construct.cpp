@@ -53,9 +53,9 @@ void Chest::s_interact_trigger(GameObject *other) {
 
 // Activated when a player presses A on it, graphical
 void Chest::c_interact_trigger(GameObject *other) {
-    anim_player.play_if_paused("open");
+    anim_player.play_if_paused("open", 1.5f);
 
-    Timer::get()->do_after(std::chrono::milliseconds(500),
+    Timer::get()->do_after(std::chrono::milliseconds(1000),
         [&]() {
         disappear();
     });
@@ -90,7 +90,8 @@ void Chest::s_reset() {
 }
 
 void Chest::c_reset() {
-    cancel_fade();
+    if(cancel_fade)
+        cancel_fade();
     anim_player.stop();
     set_filter_alpha(1.0f);
     enable();

@@ -249,7 +249,7 @@ bool Player::s_take_damage() {
     int number_essence_loss = (int)floor(amount_loss / essence_val);
     for (int i = 0; i < number_essence_loss; i++)
         events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
-
+    
     // End Stunned
     Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
         [&]() {
