@@ -56,6 +56,9 @@ void Grid::setup_listeners() {
         c.set_type(selected);
         c.set_x(hover->getX());
         c.set_z(hover->getZ());
+        c.set_fwd_x(preview.curr_preview->transform.get_forward().x);
+        c.set_fwd_y(preview.curr_preview->transform.get_forward().y);
+        c.set_fwd_z(preview.curr_preview->transform.get_forward().z);
         events::build::request_build_event(c);
     });
 
@@ -68,6 +71,13 @@ void Grid::setup_listeners() {
         children.push_back(&preview);
         // Update preview position based on hover position
         update_selection();
+    });
+
+    events::build::c_rotate_preview_event.connect([&](bool cw) {
+        if (cw)
+            preview.curr_preview->transform.rotate(glm::vec3(0, -90, 0));
+        else
+            preview.curr_preview->transform.rotate(glm::vec3(0, 90, 0));
     });
 
     events::c_player_stats_updated.connect([&](const proto::PlayerStats &update) {
@@ -86,7 +96,7 @@ void Grid::setup_listeners() {
         // Build the construct locally on the server, without graphics.
         // A build is permitted if the desired tile is buildable, e.g. not a wall and has no existing construct.
         if (permitted) {
-            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), false);
+            Construct* built = build(static_cast<ConstructType>(c.type()), c.x(), c.z(), c.fwd_x(), c.fwd_y(), c.fwd_z());
             if (built) {
                 c.set_id(built->get_id());
             }
@@ -98,7 +108,7 @@ void Grid::setup_listeners() {
 
     events::build::update_build_event.connect([&](proto::Construct& c) {
         // Build on the client, with graphics.
-        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), true, c.id());
+        build(static_cast<ConstructType>(c.type()), c.x(), c.z(), c.fwd_x(), c.fwd_y(), c.fwd_z(), c.id());
 
         events::sound_effects_event(events::AudioData{ AudioManager::BUILD_CONFIRM_SOUND, 80, false });
     });
@@ -118,14 +128,14 @@ bool Grid::verify_build(ConstructType type, int col, int row) {
     return candidate->buildable;
 }
 
-Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int id) {
+Construct* Grid::build(ConstructType type, int col, int row, float fx, float fy, float fz, int id) {
     Tile* candidate = grid[row][col];
     Construct* to_add = nullptr;
 
     if (type == REMOVE) {
         // TODO: Move destructor to construct's destructor.
         if (candidate->get_construct() != nullptr) {
-            if (!graphical) {
+            if (id == ON_SERVER) {
                 events::remove_rigidbody_event(dynamic_cast<GameObject*>(candidate->get_construct()));
                 candidate->buildable = true;
                 candidate->set_construct(nullptr);
@@ -139,31 +149,32 @@ Construct* Grid::build(ConstructType type, int col, int row, bool graphical, int
     else if (type != NONE) {
         switch (type) {
         case CHEST:
-            to_add = graphical ? new Chest(col, row, id) : new Chest(col, row);
+            to_add = new Chest(col, row, id);
             break;
         case SPIKES:
-            to_add = graphical ? new Spikes(col, row, id) : new Spikes(col, row);
+            to_add = new Spikes(col, row, id);
             break;
         case SLIME_B:
-            to_add = graphical ? new SlimeBlue(col, row, id) : new SlimeBlue(col, row);
+            to_add = new SlimeBlue(col, row, id);
             break;
         case SLIME_Y:
-            to_add = graphical ? new SlimeYellow(col, row, id) : new SlimeYellow(col, row);
+            to_add = new SlimeYellow(col, row, id);
             break;
         case SLIME_R:
-            to_add = graphical ? new SlimeRed(col, row, id) : new SlimeRed(col, row);
+            to_add = new SlimeRed(col, row, id);
             break;
         case SLIME_G:
-            to_add = graphical ? new SlimeGreen(col, row, id) : new SlimeGreen(col, row);
+            to_add = new SlimeGreen(col, row, id);
             break;
         default:
             return nullptr;
             break;
         }
 	
-	if (graphical)
+	    if (id != ON_SERVER)
             to_add->setup_model();
 
+        to_add->set_initial_direction(glm::vec3(fx, fy, fz));
         children.push_back(to_add);
         candidate->set_construct(to_add);
         candidate->buildable = false;

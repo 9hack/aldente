@@ -202,6 +202,9 @@ namespace events {
         // Tint green if valid bool is true, otherwise tint red.
         extern signal<void(ConstructType, bool)> c_construct_preview_event;
 
+        // Rotate the preview, True: cw, False: ccw
+        extern signal<void(bool)> c_rotate_preview_event;
+
         // Client requests to build a construct.
         extern signal<void(proto::Construct &)> request_build_event;
 

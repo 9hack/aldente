@@ -192,3 +192,8 @@ void GameObject::enable() {
         }
     }
 }
+
+void GameObject::set_initial_direction(glm::vec3 dir) {
+    transform.look_at(dir);
+    initial_transform.look_at(dir);
+}
