@@ -57,13 +57,7 @@ void MainScene::c_setup() {
 }
 
 void MainScene::connect_listeners() {
-    dungeon_conn = events::dungeon::s_prepare_dungeon_event.connect([&]() {
-        remove_goal();
-        s_place_goal(glm::vec3(0.0f), 20);
-    });
-
-    goal_conn = events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
-        std::unique_lock<std::mutex> lock(goal_mutex);
+    build_conn = events::build::start_build_event.connect([&]() {
         if (goal) {
             auto position = std::find(objs.begin(), objs.end(), goal);
             if (position != objs.end())
@@ -72,12 +66,20 @@ void MainScene::connect_listeners() {
         }
         if (goal_light)
             remove_light(goal_light);
+    });
 
+    dungeon_conn = events::dungeon::s_prepare_dungeon_event.connect([&]() {
+        remove_goal();
+        s_place_goal(glm::vec3(0.0f), 20);
+    });
+
+    goal_conn = events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
         c_place_goal(x, z, id);
     });
 }
 
 void MainScene::disconnect_listeners() {
+    build_conn.disconnect();
     dungeon_conn.disconnect();
     goal_conn.disconnect();
 }

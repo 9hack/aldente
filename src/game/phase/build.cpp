@@ -6,8 +6,6 @@
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::s_setup() {
-    events::build::start_build_event();
-
     transition_after(60, proto::Phase::DUNGEON);
     ready_conn = events::player_ready_event.connect([&](int player_id) {
         context.ready_flags[player_id] = true;
@@ -179,6 +177,8 @@ void BuildPhase::c_setup() {
 
     // Resets game objects on client side
     for (auto & kv : GameObject::game_objects) {
+        if (dynamic_cast<Player*>(kv.second))
+            kv.second->disable();
         kv.second->c_reset();
     }
 }

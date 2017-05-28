@@ -22,9 +22,9 @@ private:
 
     Goal *goal;
     PulsePointLight *goal_light;
-    std::mutex goal_mutex; // In case a new goal is created before old one is removed.
     int goal_z, goal_x;
 
+    boost::signals2::connection build_conn;
     boost::signals2::connection dungeon_conn;
     boost::signals2::connection goal_conn;
 public:
