@@ -36,6 +36,7 @@ void protobuf_ShutdownFile_net_2eproto();
 
 class ServerMessage;
 class ClientMessage;
+class Ping;
 class Construct;
 class JoinResponse;
 class GameState;
@@ -135,7 +136,7 @@ class ServerMessage : public ::google::protobuf::Message {
   static const ServerMessage& default_instance();
 
   enum MessageTypeCase {
-    kMessage = 1,
+    kPing = 1,
     kBuildUpdate = 2,
     kJoinResponse = 3,
     kStateUpdate = 4,
@@ -177,17 +178,12 @@ class ServerMessage : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string message = 1;
-  inline bool has_message() const;
-  inline void clear_message();
-  static const int kMessageFieldNumber = 1;
-  inline const ::std::string& message() const;
-  inline void set_message(const ::std::string& value);
-  inline void set_message(const char* value);
-  inline void set_message(const char* value, size_t size);
-  inline ::std::string* mutable_message();
-  inline ::std::string* release_message();
-  inline void set_allocated_message(::std::string* message);
+  // optional uint64 ping = 1;
+  inline bool has_ping() const;
+  inline void clear_ping();
+  static const int kPingFieldNumber = 1;
+  inline ::google::protobuf::uint64 ping() const;
+  inline void set_ping(::google::protobuf::uint64 value);
 
   // optional .proto.Construct build_update = 2;
   inline bool has_build_update() const;
@@ -258,7 +254,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
-  inline void set_has_message();
+  inline void set_has_ping();
   inline void set_has_build_update();
   inline void set_has_join_response();
   inline void set_has_state_update();
@@ -277,7 +273,7 @@ class ServerMessage : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   union MessageTypeUnion {
-    ::std::string* message_;
+    ::google::protobuf::uint64 ping_;
     ::proto::Construct* build_update_;
     ::proto::JoinResponse* join_response_;
     ::proto::GameState* state_update_;
@@ -322,7 +318,7 @@ class ClientMessage : public ::google::protobuf::Message {
   static const ClientMessage& default_instance();
 
   enum MessageTypeCase {
-    kMessage = 1,
+    kPing = 1,
     kBuildRequest = 2,
     kJoinRequest = 3,
     kMoveRequest = 4,
@@ -363,17 +359,14 @@ class ClientMessage : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string message = 1;
-  inline bool has_message() const;
-  inline void clear_message();
-  static const int kMessageFieldNumber = 1;
-  inline const ::std::string& message() const;
-  inline void set_message(const ::std::string& value);
-  inline void set_message(const char* value);
-  inline void set_message(const char* value, size_t size);
-  inline ::std::string* mutable_message();
-  inline ::std::string* release_message();
-  inline void set_allocated_message(::std::string* message);
+  // optional .proto.Ping ping = 1;
+  inline bool has_ping() const;
+  inline void clear_ping();
+  static const int kPingFieldNumber = 1;
+  inline const ::proto::Ping& ping() const;
+  inline ::proto::Ping* mutable_ping();
+  inline ::proto::Ping* release_ping();
+  inline void set_allocated_ping(::proto::Ping* ping);
 
   // optional .proto.Construct build_request = 2;
   inline bool has_build_request() const;
@@ -438,7 +431,7 @@ class ClientMessage : public ::google::protobuf::Message {
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ClientMessage)
  private:
-  inline void set_has_message();
+  inline void set_has_ping();
   inline void set_has_build_request();
   inline void set_has_join_request();
   inline void set_has_move_request();
@@ -456,7 +449,7 @@ class ClientMessage : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   union MessageTypeUnion {
-    ::std::string* message_;
+    ::proto::Ping* ping_;
     ::proto::Construct* build_request_;
     ::std::string* join_request_;
     ::proto::StickData* move_request_;
@@ -473,6 +466,95 @@ class ClientMessage : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ClientMessage* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Ping : public ::google::protobuf::Message {
+ public:
+  Ping();
+  virtual ~Ping();
+
+  Ping(const Ping& from);
+
+  inline Ping& operator=(const Ping& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Ping& default_instance();
+
+  void Swap(Ping* other);
+
+  // implements Message ----------------------------------------------
+
+  Ping* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Ping& from);
+  void MergeFrom(const Ping& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 client_id = 1;
+  inline bool has_client_id() const;
+  inline void clear_client_id();
+  static const int kClientIdFieldNumber = 1;
+  inline ::google::protobuf::int32 client_id() const;
+  inline void set_client_id(::google::protobuf::int32 value);
+
+  // optional uint64 ping = 2;
+  inline bool has_ping() const;
+  inline void clear_ping();
+  static const int kPingFieldNumber = 2;
+  inline ::google::protobuf::uint64 ping() const;
+  inline void set_ping(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:proto.Ping)
+ private:
+  inline void set_has_client_id();
+  inline void clear_has_client_id();
+  inline void set_has_ping();
+  inline void clear_has_ping();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::uint64 ping_;
+  ::google::protobuf::int32 client_id_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static Ping* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1515,74 +1597,31 @@ class AvatarChange : public ::google::protobuf::Message {
 
 // ServerMessage
 
-// optional string message = 1;
-inline bool ServerMessage::has_message() const {
-  return message_type_case() == kMessage;
+// optional uint64 ping = 1;
+inline bool ServerMessage::has_ping() const {
+  return message_type_case() == kPing;
 }
-inline void ServerMessage::set_has_message() {
-  _oneof_case_[0] = kMessage;
+inline void ServerMessage::set_has_ping() {
+  _oneof_case_[0] = kPing;
 }
-inline void ServerMessage::clear_message() {
-  if (has_message()) {
-    delete message_type_.message_;
+inline void ServerMessage::clear_ping() {
+  if (has_ping()) {
+    message_type_.ping_ = GOOGLE_ULONGLONG(0);
     clear_has_message_type();
   }
 }
-inline const ::std::string& ServerMessage::message() const {
-  if (has_message()) {
-    return *message_type_.message_;
+inline ::google::protobuf::uint64 ServerMessage::ping() const {
+  if (has_ping()) {
+    return message_type_.ping_;
   }
-  return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  return GOOGLE_ULONGLONG(0);
 }
-inline void ServerMessage::set_message(const ::std::string& value) {
-  if (!has_message()) {
+inline void ServerMessage::set_ping(::google::protobuf::uint64 value) {
+  if (!has_ping()) {
     clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
+    set_has_ping();
   }
-  message_type_.message_->assign(value);
-}
-inline void ServerMessage::set_message(const char* value) {
-  if (!has_message()) {
-    clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
-  }
-  message_type_.message_->assign(value);
-}
-inline void ServerMessage::set_message(const char* value, size_t size) {
-  if (!has_message()) {
-    clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
-  }
-  message_type_.message_->assign(
-      reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* ServerMessage::mutable_message() {
-  if (!has_message()) {
-    clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
-  }
-  return message_type_.message_;
-}
-inline ::std::string* ServerMessage::release_message() {
-  if (has_message()) {
-    clear_has_message_type();
-    ::std::string* temp = message_type_.message_;
-    message_type_.message_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void ServerMessage::set_allocated_message(::std::string* message) {
-  clear_message_type();
-  if (message) {
-    set_has_message();
-    message_type_.message_ = message;
-  }
+  message_type_.ping_ = value;
 }
 
 // optional .proto.Construct build_update = 2;
@@ -1895,73 +1934,46 @@ inline ServerMessage::MessageTypeCase ServerMessage::message_type_case() const {
 
 // ClientMessage
 
-// optional string message = 1;
-inline bool ClientMessage::has_message() const {
-  return message_type_case() == kMessage;
+// optional .proto.Ping ping = 1;
+inline bool ClientMessage::has_ping() const {
+  return message_type_case() == kPing;
 }
-inline void ClientMessage::set_has_message() {
-  _oneof_case_[0] = kMessage;
+inline void ClientMessage::set_has_ping() {
+  _oneof_case_[0] = kPing;
 }
-inline void ClientMessage::clear_message() {
-  if (has_message()) {
-    delete message_type_.message_;
+inline void ClientMessage::clear_ping() {
+  if (has_ping()) {
+    delete message_type_.ping_;
     clear_has_message_type();
   }
 }
-inline const ::std::string& ClientMessage::message() const {
-  if (has_message()) {
-    return *message_type_.message_;
-  }
-  return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+inline const ::proto::Ping& ClientMessage::ping() const {
+  return has_ping() ? *message_type_.ping_
+                      : ::proto::Ping::default_instance();
 }
-inline void ClientMessage::set_message(const ::std::string& value) {
-  if (!has_message()) {
+inline ::proto::Ping* ClientMessage::mutable_ping() {
+  if (!has_ping()) {
     clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
+    set_has_ping();
+    message_type_.ping_ = new ::proto::Ping;
   }
-  message_type_.message_->assign(value);
+  return message_type_.ping_;
 }
-inline void ClientMessage::set_message(const char* value) {
-  if (!has_message()) {
-    clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
-  }
-  message_type_.message_->assign(value);
-}
-inline void ClientMessage::set_message(const char* value, size_t size) {
-  if (!has_message()) {
-    clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
-  }
-  message_type_.message_->assign(
-      reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* ClientMessage::mutable_message() {
-  if (!has_message()) {
-    clear_message_type();
-    set_has_message();
-    message_type_.message_ = new ::std::string;
-  }
-  return message_type_.message_;
-}
-inline ::std::string* ClientMessage::release_message() {
-  if (has_message()) {
+inline ::proto::Ping* ClientMessage::release_ping() {
+  if (has_ping()) {
     clear_has_message_type();
-    ::std::string* temp = message_type_.message_;
-    message_type_.message_ = NULL;
+    ::proto::Ping* temp = message_type_.ping_;
+    message_type_.ping_ = NULL;
     return temp;
   } else {
     return NULL;
   }
 }
-inline void ClientMessage::set_allocated_message(::std::string* message) {
+inline void ClientMessage::set_allocated_ping(::proto::Ping* ping) {
   clear_message_type();
-  if (message) {
-    set_has_message();
-    message_type_.message_ = message;
+  if (ping) {
+    set_has_ping();
+    message_type_.ping_ = ping;
   }
 }
 
@@ -2255,6 +2267,58 @@ inline void ClientMessage::clear_has_message_type() {
 inline ClientMessage::MessageTypeCase ClientMessage::message_type_case() const {
   return ClientMessage::MessageTypeCase(_oneof_case_[0]);
 }
+// -------------------------------------------------------------------
+
+// Ping
+
+// optional int32 client_id = 1;
+inline bool Ping::has_client_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Ping::set_has_client_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Ping::clear_has_client_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Ping::clear_client_id() {
+  client_id_ = 0;
+  clear_has_client_id();
+}
+inline ::google::protobuf::int32 Ping::client_id() const {
+  // @@protoc_insertion_point(field_get:proto.Ping.client_id)
+  return client_id_;
+}
+inline void Ping::set_client_id(::google::protobuf::int32 value) {
+  set_has_client_id();
+  client_id_ = value;
+  // @@protoc_insertion_point(field_set:proto.Ping.client_id)
+}
+
+// optional uint64 ping = 2;
+inline bool Ping::has_ping() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Ping::set_has_ping() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Ping::clear_has_ping() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Ping::clear_ping() {
+  ping_ = GOOGLE_ULONGLONG(0);
+  clear_has_ping();
+}
+inline ::google::protobuf::uint64 Ping::ping() const {
+  // @@protoc_insertion_point(field_get:proto.Ping.ping)
+  return ping_;
+}
+inline void Ping::set_ping(::google::protobuf::uint64 value) {
+  set_has_ping();
+  ping_ = value;
+  // @@protoc_insertion_point(field_set:proto.Ping.ping)
+}
+
 // -------------------------------------------------------------------
 
 // Construct

@@ -113,6 +113,8 @@ void AldenteClient::start() {
     Timer::get()->do_every(std::chrono::seconds(1), [&](){
         events::debug::fps_count_event(frame);
         frame = 0;
+
+        events::debug::ping_event();
     });
 
     while (!window.should_close()) {

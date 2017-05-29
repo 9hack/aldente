@@ -25,6 +25,8 @@ namespace events {
         signal<void()> toggle_ui_text_box_background_event;
         signal<void()> toggle_fps_event;
         signal<void(int)> fps_count_event;
+        signal<void()> ping_event;
+        signal<void(long long)> ping_changed_event;
     }
 
     signal<void(RigidBodyData d)> add_rigidbody_event;

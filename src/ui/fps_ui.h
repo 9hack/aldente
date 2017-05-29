@@ -8,4 +8,5 @@ public:
     FPSUI(float aspect);
 private:
     UITextBox fps_display;
+    UITextBox ping_display;
 };

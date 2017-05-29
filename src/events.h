@@ -119,6 +119,8 @@ namespace events {
         extern signal<void()> toggle_ui_text_box_background_event;
         extern signal<void()> toggle_fps_event;
         extern signal<void(int)> fps_count_event;
+        extern signal<void()> ping_event;
+        extern signal<void(long long)> ping_changed_event;
     }
 
     // Struct for parameters for rigidbody initialization
