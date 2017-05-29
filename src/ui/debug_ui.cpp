@@ -2,7 +2,7 @@
 
 #include "events.h"
 
-FPSUI::FPSUI(float aspect)
+DebugUI::DebugUI(float aspect)
     : UI(95.f * aspect, 95.f),
       fps_display("0",
                   0, 0,

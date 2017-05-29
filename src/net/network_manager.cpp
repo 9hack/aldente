@@ -301,6 +301,11 @@ void ClientNetworkManager::update() {
             if (resp.status()) {
                 client_id = resp.id();
                 GameState::c_add_player(resp.obj_id(), resp.model_index(), true)->c_set_client_player();
+                
+                // Start a timer event to ping the server every second.
+                Timer::get()->do_every(std::chrono::seconds(1), [&]() {
+                    events::debug::ping_event();
+                });
             }
             break;
         }

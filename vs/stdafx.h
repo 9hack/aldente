@@ -91,6 +91,7 @@
 
 #include "ui/build_ui.h"
 #include "ui/clock_ui.h"
+#include "ui/debug_ui.h"
 #include "ui/render2d.h"
 #include "ui/ui.h"
 #include "ui/ui_container.h"

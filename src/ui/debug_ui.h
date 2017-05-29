@@ -3,9 +3,9 @@
 #include "ui.h"
 #include "ui_text_box.h"
 
-class FPSUI : public UI {
+class DebugUI : public UI {
 public:
-    FPSUI(float aspect);
+    DebugUI(float aspect);
 private:
     UITextBox fps_display;
     UITextBox ping_display;
