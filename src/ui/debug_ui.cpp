@@ -1,4 +1,4 @@
-#include "fps_ui.h"
+#include "debug_ui.h"
 
 #include "events.h"
 
