@@ -89,9 +89,9 @@ void AldenteClient::start() {
     // Has logic based on phase change, so set ui up before GameState
     UIManager ui_manager((float) width / (float) height);
 
-    // Game logic. Temporarily start game with build phase.
+    // Game logic. Start game with menu phase.
     GameState::setup(false);
-    GameState::set_phase(proto::Phase::BUILD);
+    GameState::set_phase(proto::Phase::MENU);
 
     Render render(window, GameState::scene_manager);
 

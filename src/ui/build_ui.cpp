@@ -48,6 +48,9 @@ BuildUI::BuildUI(int num_cols, int num_rows, float aspect, std::vector<Construct
     // Display info of first element by default.
     update_info_panel(0);
 
+    // Initially hidden.
+    disable();
+
     // Build UI disable/enable triggers.
     // Enables Build UI on the start of the build phase
     events::build::start_build_event.connect([&]() {

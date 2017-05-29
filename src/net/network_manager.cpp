@@ -161,7 +161,7 @@ void ServerNetworkManager::update() {
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kReadyRequest: {
-                events::build::player_ready_event(msg.ready_request());
+                events::player_ready_event(msg.ready_request());
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kChangeAvatarRequest: {
@@ -200,9 +200,9 @@ void ClientNetworkManager::register_listeners() {
     // Debug.
     events::debug::client_set_phase_event.connect([&](Phase* phase) {
         proto::ClientMessage msg;
-        /* if (phase == &GameState::menu_phase)               // FIXME(metakirby5)
+        if (phase == &GameState::menu_phase)
             msg.set_phase_request(proto::Phase::MENU);
-        else */ if (phase == &GameState::build_phase)
+        else if (phase == &GameState::build_phase)
             msg.set_phase_request(proto::Phase::BUILD);
         else if (phase == &GameState::dungeon_phase)
             msg.set_phase_request(proto::Phase::DUNGEON);

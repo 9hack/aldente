@@ -3,8 +3,11 @@
 #include "game_objects/player.h"
 #include "physics.h"
 #include "scene_manager.h"
+#include "scene/main_scene.h"
+#include "scene/start_scene.h"
 #include "context.h"
 #include "phase/phase.h"
+#include "phase/menu.h"
 #include "phase/build.h"
 #include "phase/dungeon.h"
 #include <map>
@@ -13,6 +16,7 @@
 class GameState {
 public:
     static Context context;
+    static MenuPhase menu_phase;
     static BuildPhase build_phase;
     static DungeonPhase dungeon_phase;
 
@@ -40,7 +44,8 @@ public:
     static Player* c_add_player(int obj_id, int model_index, bool is_client);
 private:
     static void set_phase(Phase* phase);
-    static MainScene testScene;
+    static MainScene main_scene;
+    static StartScene start_scene;
     static int num_players;
     static bool is_server;
 };

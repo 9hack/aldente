@@ -6,10 +6,8 @@
 bool BuildPhase::is_menu = true;
 
 void BuildPhase::s_setup() {
-    events::build::start_build_event();
-
     transition_after(60, proto::Phase::DUNGEON);
-    ready_conn = events::build::player_ready_event.connect([&](int player_id) {
+    ready_conn = events::player_ready_event.connect([&](int player_id) {
         context.ready_flags[player_id] = true;
     });
 
@@ -33,6 +31,12 @@ void BuildPhase::s_setup() {
 
     for (int id : context.player_ids) {
         context.ready_flags[id] = false;
+    }
+
+    for (auto & p : GameState::players) {
+        Player* player = p.second;
+        player->set_start_position({ 2.f, 0, 1.f + p.first });
+        player->reset_position();
     }
 
     // Resets all game objects
@@ -123,21 +127,13 @@ void BuildPhase::c_setup() {
                 d_pad = true;
                 break;
             }
-            /*case events::BTN_LB: {
-                events::menu::c_cycle_player_model_event(false);
-                break;
-            }
-            case events::BTN_RB: {
-                events::menu::c_cycle_player_model_event(true);
-                break;
-            }*/
             case events::BTN_LB: {
-                if(!is_menu)
+                if (!is_menu)
                     events::build::c_rotate_preview_event(false);
                 break;
             }
             case events::BTN_RB: {
-                if(!is_menu)
+                if (!is_menu)
                     events::build::c_rotate_preview_event(true);
                 break;
             }
@@ -181,6 +177,8 @@ void BuildPhase::c_setup() {
 
     // Resets game objects on client side
     for (auto & kv : GameObject::game_objects) {
+        if (dynamic_cast<Player*>(kv.second))
+            kv.second->disable();
         kv.second->c_reset();
     }
 }

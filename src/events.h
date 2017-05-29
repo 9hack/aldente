@@ -143,6 +143,9 @@ namespace events {
     // Client-side. Called when the client player's gold amount has updated.
     extern signal<void(const proto::PlayerStats &)> c_player_stats_updated;
 
+    // Signals that we should toggle player's "ready" status.
+    extern signal<void(int)> player_ready_event;
+
     /* Events for camera animation. Call on client
     * Position: The end position of the transition
     * Angle: The total amount of rotation desired (degrees)
@@ -170,6 +173,9 @@ namespace events {
         // Cycles to the next player avatar model.
         // Bool direction decides if we're cycling forward or backward.
         extern signal<void(bool)> c_cycle_player_model_event;
+
+        // Signals the end of menu phase.
+        extern signal<void()> end_menu_event;
     }
 
     namespace ui {
@@ -239,9 +245,6 @@ namespace events {
 
         // Signals that the build phase has ended
         extern signal<void()> end_build_event;
-
-        // Signals that we should toggle player's "ready" status.
-        extern signal<void(int)> player_ready_event;
     }
 
     namespace dungeon {

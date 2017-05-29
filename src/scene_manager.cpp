@@ -43,7 +43,7 @@ void SceneManager::set_current_scene(Scene* scene) {
         add_scene(scene);
     }
     
-    if(current_scene)
+    if (current_scene)
         current_scene->disconnect_listeners();
     current_scene = scene;
     camera = &scene->get_cam();

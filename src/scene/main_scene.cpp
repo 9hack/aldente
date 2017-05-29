@@ -57,13 +57,7 @@ void MainScene::c_setup() {
 }
 
 void MainScene::connect_listeners() {
-    dungeon_conn = events::dungeon::s_prepare_dungeon_event.connect([&]() {
-        remove_goal();
-        s_place_goal(glm::vec3(0.0f), 20);
-    });
-
-    goal_conn = events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
-        std::unique_lock<std::mutex> lock(goal_mutex);
+    build_conn = events::build::start_build_event.connect([&]() {
         if (goal) {
             auto position = std::find(objs.begin(), objs.end(), goal);
             if (position != objs.end())
@@ -72,35 +66,22 @@ void MainScene::connect_listeners() {
         }
         if (goal_light)
             remove_light(goal_light);
+    });
 
+    dungeon_conn = events::dungeon::s_prepare_dungeon_event.connect([&]() {
+        remove_goal();
+        s_place_goal(glm::vec3(0.0f), 20);
+    });
+
+    goal_conn = events::dungeon::spawn_existing_goal_event.connect([&](int x, int z, int id) {
         c_place_goal(x, z, id);
     });
 }
 
 void MainScene::disconnect_listeners() {
+    build_conn.disconnect();
     dungeon_conn.disconnect();
     goal_conn.disconnect();
-}
-
-Player* MainScene::s_spawn_player(int conn_id) {
-    Player *player = new Player();
-
-    // TODO: determine where each player starts based on client id. 
-    // For now, players 1-4 start at (2, 2), (2, 3), (2, 4), (2, 5) respectively.
-    player->set_start_position({ 2.f, 0, 1.f + conn_id });
-    player->s_set_model_index(conn_id % Player::PLAYER_MODELS.size());
-    player->reset_position();
-    objs.push_back(player);
-
-    return player;
-}
-
-Player* MainScene::c_spawn_player(int obj_id, int model_index) {
-    Player *player = new Player(obj_id);
-    player->c_setup_player_model(model_index);
-    objs.push_back(player);
-
-    return player;
 }
 
 void MainScene::s_place_goal(glm::vec3 start, int min_dist) {
