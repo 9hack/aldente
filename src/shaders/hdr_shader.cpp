@@ -1,5 +1,6 @@
 #include "hdr_shader.h"
 
+#include <iostream>
 #include "events.h"
 
 void HDRShader::init() {

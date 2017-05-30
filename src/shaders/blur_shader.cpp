@@ -1,5 +1,6 @@
 #include "blur_shader.h"
 
+#include <iostream>
 #include "events.h"
 
 #define GAUSSIAN_ITERATIONS 10
