@@ -7,6 +7,8 @@
 #include "text_shader.h"
 #include "debug_shadow_shader.h"
 #include "ui_shader.h"
+#include "hdr_shader.h"
+#include "blur_shader.h"
 
 class ShaderManager {
 public:
@@ -18,8 +20,8 @@ public:
     static DebugShadowShader debug_shadow;
     static UIShader ui;
     static BasicShader unlit;
-    static BasicShader anim_basic;
-    static BasicShader anim_unlit;
+    static HDRShader hdr;
+    static BlurShader blur;
 
     // Utility shader function to load and compile shader program from file.
     // Returns program ID assigned to the shader program.
@@ -41,9 +43,9 @@ public:
         ui.init();
         unlit.set_id(create_shader_program("unlit"));
         unlit.init();
-        anim_basic.set_id(create_shader_program("anim_basic"));
-        anim_basic.init();
-        anim_unlit.set_id(create_shader_program("anim_unlit"));
-        anim_unlit.init();
+        hdr.set_id(create_shader_program("hdr"));
+        hdr.init();
+        blur.set_id(create_shader_program("blur"));
+        blur.init();
     }
 };

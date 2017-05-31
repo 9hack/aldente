@@ -41,7 +41,7 @@ void ShadowShader::pre_draw(SceneInfo &scene_info) {
 
     // Calculate light projection matrix to use based on frustum intersection
     glm::mat4 light_proj = // HARD-CODED!
-            glm::ortho(-20.f, 60.f, -20.f, 20.f, -30.f, 30.f); //scene_info.camera->frustum_ortho(scene_info.light_pos);
+            glm::ortho(-30.f, 60.f, -30.f, 60.f, -30.f, 30.f); //scene_info.camera->frustum_ortho(scene_info.light_pos);
     // Recalculate light matrix based on current light position and light projection matrix
     // Use the first directional light. TODO: multiple light shadows.
     if (scene_info.dir_lights.size() == 0) return;
@@ -60,6 +60,16 @@ void ShadowShader::post_draw() {
 }
 
 void ShadowShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
+    char buf[128]; // hold uniform name as a char *, for perfomance when sending to shader.
+
+    /* BONES */
+    std::vector<glm::mat4> &bones = mesh->model_filter.skeleton.bones_final;
+    for (int i = 0; i < bones.size(); i++) {
+        sprintf(buf, "bones[%d]", i);
+        set_uni(buf, bones[i]);
+    }
+    set_uni("has_bones", bones.size() != 0);
+
     set_uni("mesh_model", mesh->local_transform);
     set_uni("model", to_world);
     mesh->geometry->bind();
