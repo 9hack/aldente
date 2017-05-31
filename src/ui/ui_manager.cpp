@@ -5,7 +5,7 @@
 #include "build_ui.h"
 #include "clock_ui.h"
 #include "gold_ui.h"
-#include "fps_ui.h"
+#include "debug_ui.h"
 #include "leaderboard_ui.h"
 #include "legend_ui.h"
 #include "dialog_ui.h"
@@ -40,8 +40,8 @@ void UIManager::setup_uis() {
     /* GOLD UI */
     ui_map["gold"] = new GoldUI(aspect);
 
-    /* FPS UI */
-    ui_map["fps"] = new FPSUI(aspect);
+    /* DEBUG UI */
+    ui_map["debug"] = new DebugUI(aspect);
 
     /* LEADERBOARD UI */
     ui_map["leaderboard"] = new LeaderboardUI(aspect);

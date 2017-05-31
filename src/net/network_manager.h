@@ -33,7 +33,8 @@ private:
 
 class ClientNetworkManager : public NetworkManager {
 public:
-    ClientNetworkManager() : client(io_service) {}
+    ClientNetworkManager() : client(io_service),
+        waiting_for_ping(false) {}
     void connect();
     void update();
 
@@ -46,4 +47,5 @@ private:
     int port;
     bool is_connected;
     int client_id; // Connection id that the server uses to identify this client.
+    bool waiting_for_ping;
 };

@@ -131,6 +131,13 @@ void ServerNetworkManager::update() {
     for (auto& client : server.read_all_messages()) {
         for (auto& msg : client.second) {
             switch (msg.message_type_case()) {
+            case proto::ClientMessage::MessageTypeCase::kPing: {
+                proto::ServerMessage resp;
+                proto::Ping ping = msg.ping();
+                resp.set_ping(ping.ping());
+                server.send_to(ping.client_id(), resp);
+                break;
+            }
             case proto::ClientMessage::MessageTypeCase::kBuildRequest: {
                 proto::Construct construct = msg.build_request();
                 events::build::s_verify_and_build(construct);
@@ -215,6 +222,25 @@ void ClientNetworkManager::register_listeners() {
         client.send(msg);
     });
 
+    events::debug::ping_event.connect([&]() {
+        if (waiting_for_ping) return;
+
+        // Get current time in millis
+        auto now = std::chrono::system_clock::now();
+        auto duration = now.time_since_epoch();
+        auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+
+        // Send a message to server containing timestamp and client's id
+        proto::ClientMessage msg;
+        proto::Ping* ping = new proto::Ping();
+        ping->set_client_id(client_id);
+        ping->set_ping(millis);
+        msg.set_allocated_ping(ping);
+
+        waiting_for_ping = true;
+        client.send(msg);
+    });
+
     // Build phase.
     events::build::request_build_event.connect([&](proto::Construct& c) {
         proto::ClientMessage msg;
@@ -249,6 +275,17 @@ void ClientNetworkManager::update() {
     proto::ServerMessage msg;
     while (client.read_message(&msg)) {
         switch (msg.message_type_case()) {
+        case proto::ServerMessage::MessageTypeCase::kPing: {
+            // Recieved pong from server. Calculate difference in time
+            auto now = std::chrono::system_clock::now();
+            auto duration = now.time_since_epoch();
+            auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+
+            auto diff = millis - msg.ping();
+            events::debug::ping_changed_event(diff);
+            waiting_for_ping = false;
+            break;
+        }
         case proto::ServerMessage::MessageTypeCase::kBuildUpdate: {
             proto::Construct construct = msg.build_update();
             if (construct.status())
@@ -264,6 +301,11 @@ void ClientNetworkManager::update() {
             if (resp.status()) {
                 client_id = resp.id();
                 GameState::c_add_player(resp.obj_id(), resp.model_index(), true)->c_set_client_player();
+                
+                // Start a timer event to ping the server every second.
+                Timer::get()->do_every(std::chrono::seconds(1), [&]() {
+                    events::debug::ping_event();
+                });
             }
             break;
         }

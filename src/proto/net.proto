@@ -4,7 +4,7 @@ package proto;
 
 message ServerMessage {
   oneof message_type {
-    string message = 1;
+    uint64 ping = 1;
     Construct build_update = 2;
     JoinResponse join_response = 3;
     GameState state_update = 4;
@@ -18,7 +18,7 @@ message ServerMessage {
 
 message ClientMessage {
   oneof message_type {
-    string message = 1;
+    Ping ping = 1;
     Construct build_request = 2;
     string join_request = 3;
     StickData move_request = 4;
@@ -27,6 +27,11 @@ message ClientMessage {
     int32 ready_request = 7;
     AvatarChange change_avatar_request = 8;
   }
+}
+
+message Ping {
+  optional int32 client_id = 1;
+  optional uint64 ping = 2;
 }
 
 message Construct {
