@@ -40,7 +40,7 @@ void ProjectileTrap::setup_timer(long long time_interval_ms) {
 // Makes copies of the given projectile to fill the projectile_pool with
 void ProjectileTrap::fill_projectile_pool(ProjectileTypes type) {
     // Removes all projectiles from pool
-    for each(Projectile* proj in projectile_pool) {
+    for(Projectile* proj : projectile_pool) {
         proj->disable();
     }
     projectile_pool.clear();
