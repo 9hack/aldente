@@ -8,7 +8,7 @@ NotificationUI::NotificationUI(float aspect, float width, float height)
 
     // Show notification when requested
     events::ui::show_notification.connect([&](const std::string &message) {
-        queue.push(message);
+        que.push(message);
         show_next();
     });
 }
@@ -37,10 +37,10 @@ std::shared_ptr<UIUnstretchedTextBox> NotificationUI::make_notification(std::str
 }
 
 void NotificationUI::show_next() {
-    if (animating || queue.empty()) return;
+    if (animating || que.empty()) return;
 
-    auto notif = make_notification(queue.front());
-    queue.pop();
+    auto notif = make_notification(que.front());
+    que.pop();
 
     // Shift all notifications up by height, then bring in the next notification
     // I sure am glad we're single-threaded

@@ -16,7 +16,7 @@ private:
     std::shared_ptr<UIUnstretchedTextBox>  make_notification(std::string text);
     void show_next(); // Pop from queue and show next
 
-    std::queue<std::string> queue;
+    std::queue<std::string> que;
     std::set<std::shared_ptr<UIUnstretchedTextBox>> notifications;
 
     // Hacky fix to prevent animation segfaults...
