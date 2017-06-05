@@ -14,8 +14,8 @@
 #define SFX_DECREASE_DISTANCE_THRESHOLD 7
 #define SFX_DECREASE_RATIO 0.1
 
-const std::string AudioManager::BUILD_MUSIC = "assets/audio/music/mikoto.wav";
-const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/k_theme.wav";
+const std::string AudioManager::BUILD_MUSIC = "assets/audio/music/motif6.wav";
+const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/motif5.wav";
 
 const std::string AudioManager::BUILD_CONFIRM_SOUND = "assets/audio/sound/build_confirm.wav";
 const std::string AudioManager::ARROW_SWOOSH_SOUND = "assets/audio/sound/arrow_swoosh.wav";
