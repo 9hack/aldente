@@ -63,8 +63,14 @@ namespace events {
     // Audio
     struct AudioData {
         std::string filename;
-        int volume;
         bool loop;
+        float distance = 0.0;  // for sound effects
+
+        // For music or sound effects (with distance 0)
+        // AudioData(std::string f, bool l) : filename(f), loop(l) {}
+
+        //For sound effects
+        AudioData(std::string f, bool l, float d = 0.0) : filename(f), loop(l), distance(d) {}
     };
     extern signal<void(const AudioData &)> music_event;
     extern signal<void(const AudioData &)> sound_effects_event;

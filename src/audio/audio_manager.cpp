@@ -3,6 +3,7 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
+#include <math.h>
 #include <string>
 #include <iostream>
 
@@ -14,7 +15,7 @@ const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/k_theme.wav"
 const std::string AudioManager::BUILD_CONFIRM_SOUND = "assets/audio/sound/build_confirm.wav";
 const std::string AudioManager::FOOTSTEPS_SOUND = "assets/audio/sound/footsteps.wav";
 
-AudioManager::AudioManager() : muted(true) {
+AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_effects_volume(100.0) {
     loadSounds();
 
     events::music_event.connect([&](const events::AudioData &d) {
@@ -28,7 +29,7 @@ AudioManager::AudioManager() : muted(true) {
             std::cerr << "AudioManager: Cannot open " << filename << std::endl;;
         }
 
-        music.setVolume(d.volume);
+        music.setVolume(max_music_volume);
         music.setLoop(d.loop);
 
         if (muted) return;
@@ -39,7 +40,7 @@ AudioManager::AudioManager() : muted(true) {
     events::sound_effects_event.connect([&](const events::AudioData &d) {
         std::string filename = d.filename;
 
-        sounds[filename].setVolume(d.volume);
+        sounds[filename].setVolume(max_sound_effects_volume);
         sounds[filename].setLoop(d.loop);
 
         if (d.loop) {
@@ -89,4 +90,8 @@ void AudioManager::loadSounds() {
         }
         sounds[filename] = sf::Sound(sound_buffers[filename]);
     }
+}
+
+float AudioManager::volumeByDistance(float distance) {
+    return max_sound_effects_volume * exp(-0.15 * distance);
 }

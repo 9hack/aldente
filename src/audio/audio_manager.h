@@ -20,6 +20,8 @@ public:
 private:
     sf::Music music;
     bool muted;
+    float max_music_volume, max_sound_effects_volume;
 
     void loadSounds();
+    float volumeByDistance(float distance);
 };
