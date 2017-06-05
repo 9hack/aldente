@@ -4,6 +4,9 @@
 #include "game_objects/player.h"
 #include <set>
 
+// Forward-declare
+class Player;
+
 class Context {
 public:
     // Server

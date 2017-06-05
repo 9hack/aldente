@@ -2,6 +2,9 @@
 
 #include "game_objects/player.h"
 
+// Forward-declare
+class Player;
+
 namespace collectibles {
 
 // Interface for collectible items
