@@ -13,6 +13,7 @@ public:
     std::unordered_map<int, bool> ready_flags; // <Player id, if ready>
 
     // Client
+    Player* client_player;
     int player_id;
     bool player_finished;
 };
