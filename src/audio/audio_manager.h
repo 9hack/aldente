@@ -11,7 +11,6 @@ public:
     static const std::string DUNGEON_MUSIC;
 
     static const std::string BUILD_CONFIRM_SOUND;
-    static const std::string FOOTSTEPS_SOUND;
     static const std::string ARROW_SWOOSH_SOUND;
 
     std::unordered_map<std::string, sf::Sound> sounds;

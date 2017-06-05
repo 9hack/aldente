@@ -16,7 +16,6 @@ const std::string AudioManager::BUILD_MUSIC = "assets/audio/music/mikoto.wav";
 const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/k_theme.wav";
 
 const std::string AudioManager::BUILD_CONFIRM_SOUND = "assets/audio/sound/build_confirm.wav";
-const std::string AudioManager::FOOTSTEPS_SOUND = "assets/audio/sound/footsteps.wav";
 const std::string AudioManager::ARROW_SWOOSH_SOUND = "assets/audio/sound/arrow_swoosh.wav";
 
 const float AudioManager::SFX_DECREASE_COEFFICIENT = log(SFX_DECREASE_RATIO) / SFX_DECREASE_DISTANCE_THRESHOLD;
