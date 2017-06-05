@@ -16,8 +16,8 @@ void Render::update() {
     // Second pass: usual rendering.
     window.clear();
 
-    curr_scene->draw();
     curr_scene->draw_skybox(); // Skybox rendered last for optimization
+    curr_scene->draw();
 
     // Apply HDR. Render as a quad.
     hdr.render(curr_scene);
