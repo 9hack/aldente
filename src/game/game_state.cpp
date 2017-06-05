@@ -102,14 +102,10 @@ void GameState::set_phase(Phase* phase) {
         curr_phase->s_setup();
     }
     else {
-        if (curr_phase == nullptr) {
-            curr_phase = phase;
-            curr_phase->c_setup();
-        } else {
+        if (curr_phase)
             curr_phase->c_teardown();
-            curr_phase = phase;
-            curr_phase->c_setup();
-        }
+        curr_phase = phase;
+        curr_phase->c_setup();
     }
 }
 
