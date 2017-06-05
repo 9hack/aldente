@@ -34,5 +34,10 @@ void ArrowTrap::setup_model() {
 }
 
 void ArrowTrap::play_trigger_animation() {
+    assert(GameState::context.client_player);
+    float distance = glm::distance(GameState::context.client_player->transform.get_position(), this->transform.get_position());
+    events::sound_effects_event(events::AudioData(AudioManager::ARROW_SWOOSH_SOUND, false, distance));
+
     anim_player.play();
 }
+

@@ -9,11 +9,17 @@
 
 #define SOUND_DIR_PATH "assets/audio/sound/"
 
+#define SFX_DECREASE_DISTANCE_THRESHOLD 7
+#define SFX_DECREASE_RATIO 0.1
+
 const std::string AudioManager::BUILD_MUSIC = "assets/audio/music/mikoto.wav";
 const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/k_theme.wav";
 
 const std::string AudioManager::BUILD_CONFIRM_SOUND = "assets/audio/sound/build_confirm.wav";
 const std::string AudioManager::FOOTSTEPS_SOUND = "assets/audio/sound/footsteps.wav";
+const std::string AudioManager::ARROW_SWOOSH_SOUND = "assets/audio/sound/arrow_swoosh.wav";
+
+const float AudioManager::SFX_DECREASE_COEFFICIENT = log(SFX_DECREASE_RATIO) / SFX_DECREASE_DISTANCE_THRESHOLD;
 
 AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_effects_volume(100.0) {
     loadSounds();
@@ -40,7 +46,9 @@ AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_e
     events::sound_effects_event.connect([&](const events::AudioData &d) {
         std::string filename = d.filename;
 
-        sounds[filename].setVolume(max_sound_effects_volume);
+        float vol = volumeByDistance(d.distance);
+        std::cerr << "Volume of " << filename << " is " << vol << " with distance " << d.distance << std::endl;
+        sounds[filename].setVolume(vol);
         sounds[filename].setLoop(d.loop);
 
         if (d.loop) {
@@ -86,12 +94,17 @@ void AudioManager::loadSounds() {
     for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
         std::string filename = SOUND_DIR_PATH + entry.path().filename().string();
         if (!sound_buffers[filename].loadFromFile(filename)) {
-            std::cerr << "AudioManager: Cannot open" << filename << std::endl;
+            std::cerr << "AudioManager: Cannot open " << filename << std::endl;
         }
         sounds[filename] = sf::Sound(sound_buffers[filename]);
     }
 }
 
+/*
+ * Model is a decreasing exponential function:
+ * Volume heard = (Max volume) * e^(decreasing coefficient * distance between objects)
+ * where decreasing coefficient = log(SFX_DECREASE_RATIO) / SFX_DECREASE_DISTANCE_THRESHOLD and < 0
+ */
 float AudioManager::volumeByDistance(float distance) {
-    return max_sound_effects_volume * exp(-0.15 * distance);
+    return max_sound_effects_volume * exp(SFX_DECREASE_COEFFICIENT * distance);
 }
