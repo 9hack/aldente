@@ -7,6 +7,21 @@
 Physics::Physics() {
     // The world.
     scene = nullptr;
+    // Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
+    // even though we won't use most of this stuff.
+
+    // Build the broadphase
+    btBroadphaseInterface *broadphase = new btDbvtBroadphase();
+
+    // Set up the collision configuration and dispatcher
+    btDefaultCollisionConfiguration *collisionConfiguration = new btDefaultCollisionConfiguration();
+    btCollisionDispatcher *dispatcher = new btCollisionDispatcher(collisionConfiguration);
+
+    // The actual physics solver
+    btSequentialImpulseConstraintSolver *solver = new btSequentialImpulseConstraintSolver;
+
+    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+    dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
 
     events::dungeon::request_raycast_event.connect([&](glm::vec3 position, glm::vec3 dir, float dist, std::function<void(GameObject *bt_hit)> callback) {
         callback(raycast(position, dir, dist));
@@ -37,30 +52,10 @@ Physics::Physics() {
 Physics::~Physics() {}
 
 void Physics::set_scene(Scene *s) {
+    if (scene)
+        scene->disable_scene();
     scene = s;
-
-    //Make a new dynamicsWorld if scene was not previously used
-    if (scene_worlds.count(s) == 0) {
-        // Initialize Bullet. This strictly follows http://bulletphysics.org/mediawiki-1.5.8/index.php/Hello_World,
-        // even though we won't use most of this stuff.
-
-        // Build the broadphase
-        btBroadphaseInterface *broadphase = new btDbvtBroadphase();
-
-        // Set up the collision configuration and dispatcher
-        btDefaultCollisionConfiguration *collisionConfiguration = new btDefaultCollisionConfiguration();
-        btCollisionDispatcher *dispatcher = new btCollisionDispatcher(collisionConfiguration);
-
-        // The actual physics solver
-        btSequentialImpulseConstraintSolver *solver = new btSequentialImpulseConstraintSolver;
-
-        dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-        dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
-        scene_worlds[s] = dynamicsWorld;
-    }
-    else {
-        dynamicsWorld = scene_worlds[s];
-    }
+    scene->enable_scene();
 }
 
 void Physics::raycast_mouse(double xpos, double ypos, int width, int height) {
@@ -132,6 +127,7 @@ void Physics::collision_detection() {
         const btCollisionObject *obj_b = contact_manifold->getBody1();
 
         // Send callbacks to both objects' on_collide.
+
         GameObject *go_a = static_cast<GameObject *>(obj_a->getUserPointer());
         GameObject *go_b = static_cast<GameObject *>(obj_b->getUserPointer());
         // ORDER OF THESE ON_COLLISION CALLS MAY MATTER HERE. CONSIDER BUFFERING.

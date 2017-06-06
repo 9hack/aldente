@@ -123,3 +123,27 @@ void MainScene::remove_goal() {
         events::remove_rigidbody_event(goal);
     }
 }
+
+void MainScene::disable_scene() {
+    Scene::disable_scene();
+    if (grid) {
+        std::vector<std::vector<Tile*>> grid_vec = grid->get_grid();
+        for (std::vector<Tile*> row : grid_vec) {
+            for (Tile *tile : row) {
+                tile->disable();
+            }
+        }
+    }
+}
+
+void MainScene::enable_scene() {
+    Scene::enable_scene();
+    if (grid) {
+        std::vector<std::vector<Tile*>> grid_vec = grid->get_grid();
+        for (std::vector<Tile*> row : grid_vec) {
+            for (Tile *tile : row) {
+                tile->enable();
+            }
+        }
+    }
+}

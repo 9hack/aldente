@@ -7,7 +7,7 @@ Platform::Platform() : GameObject(-1) {
 
     events::RigidBodyData platform_rigid;
     platform_rigid.object = this;
-    platform_rigid.shape = new btBoxShape(btVector3(10, 0.5f, 5));
+    platform_rigid.shape = hit_box;
     platform_rigid.mass = 0;
     events::add_rigidbody_event(platform_rigid);
 }

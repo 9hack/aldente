@@ -55,8 +55,6 @@ void PenguinMG::s_setup() {
     }
 
     GameState::set_scene(context.minigame_scenes["penguin"]);
-
-    dynamic_cast<MGScenePenguin*>(context.minigame_scenes["penguin"])->reset_scene();
 }
 
 void PenguinMG::s_teardown() {
