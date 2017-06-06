@@ -15,7 +15,7 @@
 #define SFX_DECREASE_RATIO 0.1
 
 const std::string AudioManager::BUILD_MUSIC = "assets/audio/music/motif6.wav";
-const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/motif5.wav";
+const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/motif8.wav";
 
 const std::string AudioManager::BUILD_CONFIRM_SOUND = "assets/audio/sound/build_confirm.wav";
 const std::string AudioManager::ARROW_SWOOSH_SOUND = "assets/audio/sound/arrow_swoosh.wav";
@@ -53,16 +53,14 @@ AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_e
         std::string filename = d.filename;
 
         float vol = volumeByDistance(d.distance);
-        std::cerr << "Volume of " << filename << " is " << vol << " with distance " << d.distance << std::endl;
         int inactive_sound_index = firstInactiveSoundIndex();
 
         // Give up sound effects request if all sounds are active (Very unlikely)
         if (inactive_sound_index == -1) {
             return;
         }
-        std::cerr << inactive_sound_index << std::endl;
-        active_sounds[inactive_sound_index].setBuffer(sound_buffers[filename]);
 
+        active_sounds[inactive_sound_index].setBuffer(sound_buffers[filename]);
         active_sounds[inactive_sound_index].setVolume(vol);
 
         // Need to think of better way to do looped sound effects if necessary
@@ -76,10 +74,6 @@ AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_e
         if (muted) return;
 
         active_sounds[inactive_sound_index].play();
-    });
-
-    events::stop_sound_effects_event.connect([&](const std::string filename) {
-        //sounds[filename].stop();
     });
 
     events::toggle_mute_event.connect([&]() {
