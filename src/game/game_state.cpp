@@ -77,6 +77,7 @@ void GameState::setup(bool is_server) {
         });
     }
 
+    physics.set_scene(&start_scene);
     scene_manager.set_current_scene(&start_scene);
 }
 
