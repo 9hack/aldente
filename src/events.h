@@ -63,12 +63,21 @@ namespace events {
     // Audio
     struct AudioData {
         std::string filename;
-        int volume;
         bool loop;
+        float distance = 0.0;  // for spatial sound effects
+
+        //For global music or sound effects
+        AudioData(std::string f, bool l) : filename(f), loop(l) {}
+
+        //For spatial sound effects
+        AudioData(std::string f, bool l, GameObject * p, GameObject * o) : filename(f), loop(l) {
+            assert(p);
+            assert(o);
+            distance = glm::distance(p->transform.get_position(), o->transform.get_position());
+        }
     };
     extern signal<void(const AudioData &)> music_event;
     extern signal<void(const AudioData &)> sound_effects_event;
-    extern signal<void(std::string)> stop_sound_effects_event;
     extern signal<void()> toggle_mute_event;
 
     struct WindowSizeData {

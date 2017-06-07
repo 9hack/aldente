@@ -7,6 +7,7 @@
 #include "util/util.h"
 #include "game/collectibles/gold.h"
 #include "game/collectibles/nothing.h"
+#include "audio/audio_manager.h"
 
 #include <iostream>
 
@@ -140,6 +141,8 @@ void Essence::random_push() {
 }
 
 void Essence::pickup_anim() {
+    events::sound_effects_event(events::AudioData(AudioManager::DREAM_ESSENCE_SOUND, false));
+
     // Add "pick up" animation
     anim_player.set_anim("up");
     anim_player.set_speed(3.0f);

@@ -114,7 +114,7 @@ void Grid::setup_listeners() {
         // Build on the client, with graphics.
         build(static_cast<ConstructType>(c.type()), c.x(), c.z(), c.fwd_x(), c.fwd_y(), c.fwd_z(), c.id());
 
-        events::sound_effects_event(events::AudioData{ AudioManager::BUILD_CONFIRM_SOUND, 80, false });
+        events::sound_effects_event(events::AudioData(AudioManager::BUILD_CONFIRM_SOUND, false));
     });
 
     events::build::end_build_event.connect([&]() {
