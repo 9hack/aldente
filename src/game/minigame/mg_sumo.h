@@ -4,15 +4,15 @@
 #include "minigame.h"
 
 /*
-Holds the functionality for the "Pushy Penguins" minigame
+Holds the functionality for the "Bumper Balls" minigame
 */
 
-const auto PENGUINMG_TIME = std::chrono::seconds(30);
-const int PENGUINMG_REWARD = 100;
+const auto SUMOMG_TIME = std::chrono::seconds(60);
+const int SUMOMG_REWARD = 100;
 
-class PenguinMG : public Minigame {
+class SumoMG : public Minigame {
 public:
-    PenguinMG(Context& to_set);
+    SumoMG(Context& to_set);
 
     void s_setup() override;
     void s_teardown() override;
@@ -20,10 +20,11 @@ public:
     void c_teardown() override;
 
     bool is_finished() override;
-private: 
+private:
     boost::signals2::connection joystick_conn;
     boost::signals2::connection collision_conn;
     boost::signals2::connection flag_conn;
+    boost::signals2::connection button_conn;
 
     std::map<int, bool> dead_player_flags;
 };

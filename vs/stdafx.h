@@ -35,6 +35,7 @@
 #include "game/phase/phase.h"
 #include "game/minigame/minigame.h"
 #include "game/minigame/mg_penguin.h"
+#include "game/minigame/mg_sumo.h"
 
 #include "game_objects/construct.h"
 #include "game_objects/construct_preview.h"
@@ -84,6 +85,7 @@
 #include "scene/light/pulse_point_light.h"
 #include "scene/light/spot_light.h"
 #include "scene/minigame_scenes/mgscene_penguin.h"
+#include "scene/minigame_scenes/mgscene_sumo.h"
 
 #include "shaders/basic_shader.h"
 #include "shaders/debug_shadow_shader.h"

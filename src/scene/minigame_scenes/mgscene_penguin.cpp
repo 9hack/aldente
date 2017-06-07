@@ -36,13 +36,15 @@ void MGScenePenguin::s_setup() {
     }
 
     // Set up the platform
-    Platform* platform = new Platform();
+    Platform* platform = new Platform(PlatformShape::SQUARE);
 
     platform->set_position(glm::vec3(0, -0.5f, -0.5f));
     objs.push_back(platform);
 
     // Set up the collider below the platform to detect things falling off.
     EmptyCollider* collider = new EmptyCollider(-1);
+    // Set position
+    collider->set_position(glm::vec3(0, -3, 0));
     objs.push_back(collider);
 }
 
@@ -56,7 +58,7 @@ void MGScenePenguin::c_setup() {
     }
 
     // Set up the platform
-    Platform* platform = new Platform();
+    Platform* platform = new Platform(PlatformShape::SQUARE);
     
     platform->initial_transform.set_scale(glm::vec3(10, 1, 5));
     platform->transform.set_scale(glm::vec3(10, 0.5f, 5));

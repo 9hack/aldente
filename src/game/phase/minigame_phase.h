@@ -3,6 +3,7 @@
 #include "phase.h"
 #include "game/minigame/minigame.h"
 #include "game/minigame/mg_penguin.h"
+#include "game/minigame/mg_sumo.h"
 #include "game/context.h"
 
 class MinigamePhase : public TimedPhase {

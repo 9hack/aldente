@@ -16,7 +16,7 @@
 
 std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
 
-Player::Player(int id) : GameObject(id), is_client(false) {
+Player::Player(int id) : GameObject(id), is_client(false), momentum(false) {
     tag = "PLAYER";
 
     if (id == ON_SERVER) {
@@ -114,7 +114,12 @@ void Player::do_movement() {
     // framerate independent? Unsure how Bullet handles framerate.
     rigidbody->setActivationState(true);
     btVector3 vel = rigidbody->getLinearVelocity();
-    rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, vel.getY(), to_moveZ * move_speed));
+
+    if (momentum)
+        rigidbody->applyCentralForce(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
+    else
+        rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, vel.getY(), to_moveZ * move_speed));
+
     transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
 }
 

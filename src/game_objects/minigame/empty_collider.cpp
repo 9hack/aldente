@@ -11,9 +11,6 @@ EmptyCollider::EmptyCollider(int id) : GameObject(id) {
     rigid.mass = 0;
     events::add_rigidbody_event(rigid);
 
-    // Set position
-    set_position(glm::vec3(0,-3,0));
-
     notify_on_collision = true;
 }
 

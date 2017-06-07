@@ -37,6 +37,8 @@ private:
 
     PlayerStats stats;
     int model_index;
+
+    bool momentum;
 public:
     Player(int id = 0);
 
@@ -109,4 +111,5 @@ public:
     static std::vector<std::string> PLAYER_MODELS;
 
     void set_speed(float to_set) { move_speed = to_set; };
+    void set_momentum(bool to_set) { momentum = to_set; };
 };
