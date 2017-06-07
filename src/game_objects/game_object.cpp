@@ -218,6 +218,30 @@ void GameObject::enable() {
     }
 }
 
+void GameObject::disable_all() {
+    if (enabled) {
+        enabled = false;
+        if (rigidbody) {
+            events::disable_rigidbody_event(this);
+        }
+        for (GameObject *obj : children) {
+            obj->disable_all();
+        }
+    }
+}
+
+void GameObject::enable_all() {
+    if (!enabled) {
+        enabled = true;
+        if (rigidbody) {
+            events::enable_rigidbody_event(this);
+        }
+        for (GameObject *obj : children) {
+            obj->enable_all();
+        }
+    }
+}
+
 void GameObject::set_initial_direction(glm::vec3 dir) {
     transform.look_at(dir);
     initial_transform.look_at(dir);

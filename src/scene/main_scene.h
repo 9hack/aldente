@@ -39,4 +39,7 @@ public:
     void s_place_goal(glm::vec3 start, int min_dist);
     void c_place_goal(int x, int z, int id);
     void remove_goal();
+
+    void disable_scene() override;
+    void enable_scene() override;
 };

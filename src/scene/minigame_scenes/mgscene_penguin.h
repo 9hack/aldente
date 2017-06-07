@@ -22,5 +22,5 @@ public:
     void connect_listeners() override;
     void disconnect_listeners() override;
     void reset_camera() override;
-    void reset_scene();
+    void reset_scene() override;
 };

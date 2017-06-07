@@ -54,4 +54,8 @@ public:
 
     // Resets camera to starting position.
     virtual void reset_camera() {};
+    virtual void reset_scene() {};
+
+    virtual void disable_scene();
+    virtual void enable_scene();
 };

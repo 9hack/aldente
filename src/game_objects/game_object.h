@@ -115,8 +115,12 @@ public:
     void sync_position();
 
     void set_ghost(bool b);
+    
     void disable();
     void enable();
+    void disable_all();
+    void enable_all();
+
     bool is_enabled() { return enabled; };
 
     // Set's initial transform's rotation

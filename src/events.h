@@ -130,7 +130,7 @@ namespace events {
     // Struct for parameters for rigidbody initialization
     struct RigidBodyData {
         GameObject *object = nullptr; //Object that has the rigidBody
-        btCollisionShape *shape = nullptr; // Collider Shape
+        btCollisionShape *shape = new btEmptyShape(); // Collider Shape
         bool is_ghost = false; // whether this rigidbody is a ghost/trigger
         float mass = 0.0f;
         glm::vec3 inertia = glm::vec3(0.0f);

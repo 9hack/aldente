@@ -77,6 +77,7 @@ void GameState::setup(bool is_server) {
         });
     }
 
+    physics.set_scene(&start_scene);
     scene_manager.set_current_scene(&start_scene);
 }
 
@@ -151,8 +152,9 @@ void GameState::set_scene(Scene* scene) {
     }
 
     physics.set_scene(scene);
-    scene_manager.set_current_scene(scene);
     scene->reset_camera();
+    scene->reset_scene();
+    scene_manager.set_current_scene(scene);
 
     // Enable rigid bodies on the next scene.
     for (auto & kv : players) {

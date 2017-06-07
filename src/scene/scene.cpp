@@ -75,3 +75,15 @@ void Scene::remove_light(SpotLight *l) {
     if (position != info.spot_lights.end())
         info.spot_lights.erase(position);
 }
+
+void Scene::disable_scene() {
+    for (GameObject *obj : objs) {
+        obj->disable_all();
+    }
+}
+
+void Scene::enable_scene() {
+    for (GameObject *obj : objs) {
+        obj->enable_all();
+    }
+}
