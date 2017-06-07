@@ -19,6 +19,8 @@ const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/motif8.wav";
 
 const std::string AudioManager::BUILD_CONFIRM_SOUND = "assets/audio/sound/build_confirm.wav";
 const std::string AudioManager::ARROW_SWOOSH_SOUND = "assets/audio/sound/arrow_swoosh.wav";
+const std::string AudioManager::DREAM_ESSENCE_SOUND = "assets/audio/sound/dream_essence.wav";
+
 
 const float AudioManager::SFX_DECREASE_COEFFICIENT = log(SFX_DECREASE_RATIO) / SFX_DECREASE_DISTANCE_THRESHOLD;
 

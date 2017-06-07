@@ -13,6 +13,7 @@ public:
 
     static const std::string BUILD_CONFIRM_SOUND;
     static const std::string ARROW_SWOOSH_SOUND;
+    static const std::string DREAM_ESSENCE_SOUND;
 
     std::unordered_map<std::string, sf::SoundBuffer> sound_buffers;
 
