@@ -159,9 +159,6 @@ namespace events {
     // Signals that we should toggle player's "ready" status.
     extern signal<void(int)> player_ready_event;
 
-    // Indicates that the current round (numerical) has changed.
-    extern signal<void(int)> round_changed_event;
-
     /* Events for camera animation. Call on client
     * Position: The end position of the transition
     * Angle: The total amount of rotation desired (degrees)
@@ -219,6 +216,9 @@ namespace events {
         // Display a countdown
         // Parmeters are (strings_to_show, do_after_callback)
         extern signal<void(const std::vector<std::string> &, const std::function<void()> &)> show_countdown;
+        
+        // Indicates that the current round (numerical) has changed; updates UI.
+        extern signal<void(int)> round_changed_event;
     }
 
     namespace build {
