@@ -19,6 +19,7 @@ private:
     std::function<void()> cancel_flicker; // Callback function to cancel damage flicker.
     std::function<void()> cancel_stun;
     std::function<void()> cancel_invulnerable;
+    std::function<void()> cancel_slow;
     bool end_flicker; // Whether we should stop player flickering.
     bool invulnerable; // Can't lose coins or collide with other harmful traps.
     bool stunned; // Can't move.
@@ -74,6 +75,10 @@ public:
     bool s_take_damage(); // Set invulnerability, drop coins, lose gold (true if took damage)
     void c_take_damage(); // Graphical : Flickers player to show they've been hit
 
+    // Get Slowed
+    void s_slow(); // Hit by slow trap. Get frozen, and then slowly regain movespeed
+    void c_slow(); // Turn bluish to indicate frozen. Can later change to a UI effect
+
     // Used for checking if player has been hit and in the period of invulnerability, 
     // where they can't be hit by traps again.
     bool is_invulnerable() { return invulnerable; };
@@ -102,4 +107,6 @@ public:
     int c_get_model_index() const;
 
     static std::vector<std::string> PLAYER_MODELS;
+
+    void set_speed(float to_set) { move_speed = to_set; };
 };

@@ -7,7 +7,7 @@
 #include "audio/audio_manager.h"
 
 void DungeonPhase::s_setup() {
-    transition_after(60, proto::Phase::BUILD);
+    transition_after(60, proto::Phase::MINIGAME);
 
     collision_conn = events::dungeon::network_collision_event.connect([&](int dispatcher, int other) {
         context.collisions.emplace(dispatcher, other);
@@ -57,18 +57,28 @@ void DungeonPhase::c_setup() {
     });
 
     button_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).buttons.connect([&](const events::ButtonData &d) {
-        if (d.state == 0) return;
-        switch (d.input) {
-            case events::BTN_A:
-                // A button pressed.
-                events::dungeon::player_interact_event();
-                break;
-            case events::BTN_BACK:
-                // Toggle leaderboard
-                events::ui::toggle_leaderboard();
-            break;
-            default:
-                break;
+        // On release
+        if (d.state == 0) {
+            switch (d.input) {
+                case events::BTN_LB:
+                    events::ui::disable_leaderboard();
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (d.input) {
+                case events::BTN_A:
+                    // A button pressed.
+                    events::dungeon::player_interact_event();
+                    break;
+                case events::BTN_LB:
+                    // Enable leaderboard
+                    events::ui::enable_leaderboard();
+                    break;
+                default:
+                    break;
+            }
         }
     });
 
@@ -77,7 +87,7 @@ void DungeonPhase::c_setup() {
             context.player_finished = true;
             events::dungeon::post_dungeon_camera_event();
         } else {
-            // TODO: can do client-side notification here, e.g. "Player X has reached the goal!"
+            events::ui::show_notification("Someone reached the goal!");
         }
     });
 
@@ -113,7 +123,7 @@ proto::Phase DungeonPhase::s_update() {
     }
 
     if (all_players_done)
-        return proto::Phase::BUILD;
+        return proto::Phase::MINIGAME;
     else
         return next;
 }
@@ -148,4 +158,5 @@ void DungeonPhase::c_teardown() {
     joystick_conn.disconnect();
     button_conn.disconnect();
     essence_conn.disconnect();
+    player_finish_conn.disconnect();
 }

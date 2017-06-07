@@ -33,6 +33,8 @@
 #include "game/phase/dungeon.h"
 #include "game/phase/menu.h"
 #include "game/phase/phase.h"
+#include "game/minigame/minigame.h"
+#include "game/minigame/mg_penguin.h"
 
 #include "game_objects/construct.h"
 #include "game_objects/construct_preview.h"
@@ -40,6 +42,8 @@
 #include "game_objects/grid.h"
 #include "game_objects/player.h"
 #include "game_objects/tile.h"
+#include "game_objects/minigame/penguin.h"
+#include "game_objects/minigame/platform.h"
 
 #include "input/axis_combiner.h"
 #include "input/conceptual_translator.h"
@@ -79,6 +83,7 @@
 #include "scene/light/point_light.h"
 #include "scene/light/pulse_point_light.h"
 #include "scene/light/spot_light.h"
+#include "scene/minigame_scenes/mgscene_penguin.h"
 
 #include "shaders/basic_shader.h"
 #include "shaders/debug_shadow_shader.h"

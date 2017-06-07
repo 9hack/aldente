@@ -41,8 +41,8 @@ namespace events {
     signal<void(const proto::PlayerStats &)> c_player_stats_updated;
     signal<void(int)> player_ready_event;
 
-    signal<void(glm::vec3 position, int time)> camera_anim_position_event;
-    signal<void(glm::vec3 axis, float angle, int time)> camera_anim_rotate_event;
+    signal<void(glm::vec3 position, int time, std::function<void()> do_after)> camera_anim_position_event;
+    signal<void(glm::vec3 axis, float angle, int time, std::function<void()> do_after)> camera_anim_rotate_event;
 
     namespace server {
         signal<void(proto::ServerMessage &)> announce;
@@ -66,7 +66,15 @@ namespace events {
         signal<void()> disable_leaderboard;
         signal<void()> enable_leaderboard;
         signal<void(int, int, std::string)> leaderboard_update;
+        signal<void(const std::vector<std::tuple<std::string, int, int>> &)> scoreboard_sequence;
+        signal<void()> disable_scoreboard;
         signal<void(const std::vector<std::pair<std::string, std::string>> &)> show_dialog;
+        signal<void(const std::string &)> show_notification;
+        signal<void(float, std::function<void()>)> transition_wipe;
+        signal<void(float, std::function<void()>)> transition_fade;
+        signal<void()> enable_main_menu;
+        signal<void()> disable_main_menu;
+        signal<void(const std::vector<std::string> &, const std::function<void()> &)> show_countdown;
     }
 
     namespace build {
@@ -104,5 +112,11 @@ namespace events {
         signal<void()> post_dungeon_camera_event;
         signal<void(float, float)> s_spawn_essence_event;
         signal<void(float, float, int)> c_spawn_essence_event;
+    }
+
+    namespace minigame {
+        signal<void()> start_minigame_event;
+        signal<void()> end_minigame_event;
+        signal<void(int)> player_died_event;
     }
 }

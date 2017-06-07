@@ -15,7 +15,10 @@ GameObject::GameObject(int id) : id(id) {
 
     model = new Model();
     rigidbody = nullptr;
-    game_objects[this->id] = this;
+
+    if (id != -1)
+        game_objects[this->id] = this;
+    
     enabled = true;
 }
 
@@ -211,6 +214,30 @@ void GameObject::enable() {
         enabled = true;
         if (rigidbody) {
             events::enable_rigidbody_event(this);
+        }
+    }
+}
+
+void GameObject::disable_all() {
+    if (enabled) {
+        enabled = false;
+        if (rigidbody) {
+            events::disable_rigidbody_event(this);
+        }
+        for (GameObject *obj : children) {
+            obj->disable_all();
+        }
+    }
+}
+
+void GameObject::enable_all() {
+    if (!enabled) {
+        enabled = true;
+        if (rigidbody) {
+            events::enable_rigidbody_event(this);
+        }
+        for (GameObject *obj : children) {
+            obj->enable_all();
         }
     }
 }

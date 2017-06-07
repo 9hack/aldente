@@ -10,6 +10,9 @@
 #define ANIMATE_DELTA 0.001f
 #define STUN_LENGTH 1000 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
+#define SLOW_LENGTH 3000
+
+#define BASE_MOVE_SPEED 2.0f
 
 std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
 
@@ -19,7 +22,7 @@ Player::Player(int id) : GameObject(id), is_client(false) {
     if (id == ON_SERVER) {
         to_moveX = 0;
         to_moveZ = 0;
-        move_speed = 2.0f;
+        move_speed = BASE_MOVE_SPEED;
         exiting = false;
 
         events::RigidBodyData rigid;
@@ -106,7 +109,8 @@ void Player::do_movement() {
     // Should account for deltatime so movement is
     // framerate independent? Unsure how Bullet handles framerate.
     rigidbody->setActivationState(true);
-    rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
+    btVector3 vel = rigidbody->getLinearVelocity();
+    rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, vel.getY(), to_moveZ * move_speed));
     transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
 }
 
@@ -302,6 +306,59 @@ void Player::c_take_damage() {
         [&]() {
         end_flicker = true;
         cancel_flicker();
+    });
+}
+
+void Player::s_slow() {
+    if (cancel_slow)
+        cancel_slow();
+
+    // Start off unable to move, then slowly regain movespeed
+    move_speed = 0.2f;
+    int count = 0;
+    const int num_steps = 50;
+    cancel_slow = Timer::get()->do_every(std::chrono::milliseconds(SLOW_LENGTH / num_steps),
+        [&, count, num_steps]() mutable{
+        move_speed = Util::lerp(0.2f, BASE_MOVE_SPEED, (float)count / num_steps);
+
+        if (move_speed >= BASE_MOVE_SPEED) {
+            move_speed = BASE_MOVE_SPEED;
+            cancel_slow();
+        }
+
+        count++;
+    });
+
+    return;
+}
+
+void Player::c_slow() {
+    if (cancel_slow)
+        cancel_slow();
+
+    // Turn player blue
+    model->reset_colors();
+    model->multiply_colors(Color(0.1f, 0.1f, 10.0f, false));
+
+    // Fade back slowly to original color
+    int count = 0;
+    const int num_steps = 50;
+    cancel_slow = Timer::get()->do_every(std::chrono::milliseconds(SLOW_LENGTH / num_steps),
+        [&, count, num_steps]() mutable {
+
+        model->reset_colors();
+
+        float rg = Util::lerp(0.1f, 1.0f, (float)count / num_steps);
+        float b = Util::lerp(10.0f, 1.0f, (float)count / num_steps);
+
+        model->multiply_colors(Color(rg, rg, b, false));
+
+        if (count >= num_steps) {
+            cancel_slow();
+            model->reset_colors();
+        }
+
+        count++;
     });
 }
 

@@ -5,11 +5,13 @@
 #include "scene_manager.h"
 #include "scene/main_scene.h"
 #include "scene/start_scene.h"
+#include "scene/minigame_scenes/mgscene_penguin.h"
 #include "context.h"
 #include "phase/phase.h"
 #include "phase/menu.h"
 #include "phase/build.h"
 #include "phase/dungeon.h"
+#include "phase/minigame_phase.h"
 #include <map>
 #include <unordered_set>
 
@@ -19,9 +21,13 @@ public:
     static MenuPhase menu_phase;
     static BuildPhase build_phase;
     static DungeonPhase dungeon_phase;
+    static MinigamePhase minigame_phase;
 
     static Phase* curr_phase;
     static SceneManager scene_manager;
+    static MainScene main_scene;
+    static StartScene start_scene;
+    static MGScenePenguin penguin_scene;
     static Physics physics;
 
     static std::map<int, Player*> players;
@@ -36,16 +42,17 @@ public:
     // Force a phase change to the specified phase.
     // If server, dispatch the change to clients.
     static void set_phase(proto::Phase phase);
-    static void set_client_phase(proto::Phase phase);
 
     // Adds a player to the main scene. If server, add new player to auto-gen the id.
     // If client, add existing player with given id that the server sent.
     static Player* s_add_player(int conn_id);
     static Player* c_add_player(int obj_id, int model_index, bool is_client);
+
+    // Changes the current scene.
+    static void set_scene(Scene* scene);
+
 private:
     static void set_phase(Phase* phase);
-    static MainScene main_scene;
-    static StartScene start_scene;
     static int num_players;
     static bool is_server;
 };

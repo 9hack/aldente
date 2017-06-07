@@ -139,7 +139,7 @@ namespace events {
     // Struct for parameters for rigidbody initialization
     struct RigidBodyData {
         GameObject *object = nullptr; //Object that has the rigidBody
-        btCollisionShape *shape = nullptr; // Collider Shape
+        btCollisionShape *shape = new btEmptyShape(); // Collider Shape
         bool is_ghost = false; // whether this rigidbody is a ghost/trigger
         float mass = 0.0f;
         glm::vec3 inertia = glm::vec3(0.0f);
@@ -165,8 +165,8 @@ namespace events {
     * Axis: The axis of rotation
     * Time: Amount of time the transition should take (milliseconds)
     */
-    extern signal<void(glm::vec3 position, int time)> camera_anim_position_event;
-    extern signal<void(glm::vec3 axis, float angle, int time)> camera_anim_rotate_event;
+    extern signal<void(glm::vec3 position, int time, std::function<void()> do_after)> camera_anim_position_event;
+    extern signal<void(glm::vec3 axis, float angle, int time, std::function<void()> do_after)> camera_anim_rotate_event;
 
     namespace server {
         extern signal<void(proto::ServerMessage &)> announce;
@@ -198,10 +198,24 @@ namespace events {
         extern signal<void()> disable_leaderboard;
         extern signal<void()> enable_leaderboard;
         extern signal<void(int, int, std::string)> leaderboard_update;
+        // Display scoreboard with vector of <model_name, gold, gold_delta>
+        extern signal<void(const std::vector<std::tuple<std::string, int, int>> &)> scoreboard_sequence;
+        extern signal<void()> disable_scoreboard;
+        extern signal<void(float, std::function<void()>)> transition_wipe;
+        extern signal<void(float, std::function<void()>)> transition_fade;
+        extern signal<void()> enable_main_menu;
+        extern signal<void()> disable_main_menu;
 
         // Request some dialog to be shown
         // Show a sequence of dialog with events::ui::show_dialog({{portrait_str, text}, ...}).
         extern signal<void(const std::vector<std::pair<std::string, std::string>> &)> show_dialog;
+
+        // Create a notification
+        extern signal<void(const std::string &)> show_notification;
+
+        // Display a countdown
+        // Parmeters are (strings_to_show, do_after_callback)
+        extern signal<void(const std::vector<std::string> &, const std::function<void()> &)> show_countdown;
     }
 
     namespace build {
@@ -303,5 +317,16 @@ namespace events {
         // Spawns a Dream Essence object
         extern signal<void(float, float)> s_spawn_essence_event; // Server
         extern signal<void(float, float, int)> c_spawn_essence_event; // Client
+    }
+
+    namespace minigame {
+        // Signals the start of the minigame phase, on both server and client.
+        extern signal<void()> start_minigame_event;
+
+        // Signals the end of the minigame phase, on both server and client.
+        extern signal<void()> end_minigame_event;
+
+        // Signals that the player has died
+        extern signal<void(int)> player_died_event;
     }
 }

@@ -55,17 +55,40 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                 case GLFW_KEY_M:
                     events::toggle_mute_event();
                     break;
-                case GLFW_KEY_F6:
+                case GLFW_KEY_F1:
+                    events::ui::transition_wipe(1.f, [](){});
+                    break;
+                case GLFW_KEY_F2:
+                    events::ui::transition_fade(1.f, [](){});
+                    break;
+                case GLFW_KEY_F3:
+                    events::ui::scoreboard_sequence(
+                            {{"boy_two", 123, 500},
+                             {"lizard", 456, 7},
+                             {"cat", 999, 5},
+                             {"tomato", 1, 66666}
+                            });
+                    break;
+                case GLFW_KEY_F4:
+                    events::ui::disable_scoreboard();
+                    break;
+                case GLFW_KEY_F5:
                     events::debug::decrease_hdr_exposure_event();
                     break;
-                case GLFW_KEY_F7:
+                case GLFW_KEY_F6:
                     events::debug::increase_hdr_exposure_event();
                     break;
-                case GLFW_KEY_F8:
+                case GLFW_KEY_F7:
                     events::debug::toggle_hdr_event();
                     break;
-                case GLFW_KEY_F9:
+                case GLFW_KEY_F8:
                     events::debug::toggle_bloom_event();
+                    break;
+                case GLFW_KEY_F9:
+                    events::ui::enable_main_menu();
+                    break;
+                case GLFW_KEY_F10:
+                    events::ui::disable_main_menu();
                     break;
                 case GLFW_KEY_0:
                     events::debug::client_set_phase_event(&GameState::menu_phase);
@@ -77,12 +100,19 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     events::debug::client_set_phase_event(&GameState::dungeon_phase);
                     break;
                 case GLFW_KEY_3:
-                    // FIXME(metakirby5)
+                    events::debug::client_set_phase_event(&GameState::minigame_phase);
                     break;
                 case GLFW_KEY_4:
                     // Camera animation debug. Feel free to remove if needed
-                    events::camera_anim_position_event(glm::vec3(1, 0.5f, 0), 2000);
-                    events::camera_anim_rotate_event(glm::vec3(0, 0, 1), 720, 2000);
+                    events::camera_anim_position_event(glm::vec3(1, 0.5f, 0), 2000, [](){});
+                    events::camera_anim_rotate_event(glm::vec3(0, 0, 1), 720, 2000, [](){});
+                    break;
+
+                // Ethan's testing stuff
+                case GLFW_KEY_Z:
+                    events::ui::show_countdown({"3", "2", "1", "GO!"}, []() {
+                        std::cerr << "counted\n";
+                    });
                     break;
                 default:
                     break;

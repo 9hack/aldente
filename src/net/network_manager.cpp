@@ -65,7 +65,10 @@ void ServerNetworkManager::register_listeners() {
             go->set_enabled(player->is_enabled());
         }
         
+        // Intentionally send message twice. This fixes a visual bug where the
+        // updated position is seen as a movement, so the running anim is played.
         update_msg.set_allocated_state_update(state);
+        server.send_to_all(update_msg);
         server.send_to_all(update_msg);
     });
 
@@ -221,8 +224,8 @@ void ClientNetworkManager::register_listeners() {
             msg.set_phase_request(proto::Phase::BUILD);
         else if (phase == &GameState::dungeon_phase)
             msg.set_phase_request(proto::Phase::DUNGEON);
-//        else if (phase == &GameState::minigame_phase)
-//            msg.set_phase_request(proto::Phase::MINIGAME);  // FIXME(metakirby5)
+        else if (phase == &GameState::minigame_phase)
+            msg.set_phase_request(proto::Phase::MINIGAME);
         else {
             std::cerr << "Unrecognized phase. Use the static phases in GameState.\n";
             return;
@@ -330,6 +333,7 @@ void ClientNetworkManager::update() {
                 int obj_x = world_mat[3][0];
                 int obj_z = world_mat[3][2];
 
+                bool obj_exists = true;
                 if (GameObject::game_objects.find(obj.id()) == GameObject::game_objects.end()) {
                     // Game object with that ID doesn't exist on this client yet; create it.
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
@@ -346,11 +350,13 @@ void ClientNetworkManager::update() {
                             GameState::scene_manager.get_current_scene()->objs.push_back(arrow);
                         }
                     } else {
+                        obj_exists = false;
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }
-                } else {
-                    GameObject::game_objects[obj.id()]->c_update_state(world_mat, obj.enabled());
                 }
+
+                if (obj_exists)
+                    GameObject::game_objects[obj.id()]->c_update_state(world_mat, obj.enabled());
             }
 
             // Call all collision handlers of game objects that collided, but only ones that already exist, 

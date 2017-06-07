@@ -18,6 +18,8 @@ public:
     void set_height(float height);
     void set_text_color(Color text_color);
     void set_bg_color(Color bg_color);
+    void set_alpha(float alpha) override;
+
 private:
     float calc_text_width(std::string s);
 

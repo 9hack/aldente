@@ -20,9 +20,11 @@ public:
                float padding,
                Alignment h_align, Alignment v_align,
                Color text_color, Color bg_color,
-               float alpha);
+               float alpha, bool draw_bg = true);
     void set_text(const std::string &text);
+    void set_color(Color color);
     unsigned long get_max_chars();
+    void set_alpha(float alpha) override;
 
 private:
     float char_width, char_height, line_height;

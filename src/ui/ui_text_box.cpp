@@ -12,7 +12,7 @@ UITextBox::UITextBox(std::string text,
                      float width, float height,
                      Color text_color, Color bg_color,
                      float alpha) :
-    UIContainer(start_x, start_y, alpha),
+    UIContainer(start_x, start_y),
     width(width), height(height),
     initial_alpha(alpha) {
 
@@ -38,6 +38,11 @@ void UITextBox::set_text(std::string new_text) {
 
     // Adjust text_width accordingly.
     text_node.set_x_scale(calc_text_width(new_text));
+}
+
+void UITextBox::set_alpha(float alpha) {
+    this->alpha = alpha;
+    text_node.set_alpha(alpha);
 }
 
 void UITextBox::set_width(float width) {

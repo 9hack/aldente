@@ -81,6 +81,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;assimp-vc140-mtd.lib;opengl32.lib;glu32.lib;soil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -96,6 +97,7 @@
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;assimp-vc140-mtd.lib;opengl32.lib;glu32.lib;soil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -130,7 +132,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -171,9 +173,12 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game\context.h" />
     <ClInclude Include="..\src\game\direction.h" />
     <ClInclude Include="..\src\game\game_state.h" />
+    <ClInclude Include="..\src\game\minigame\mg_penguin.h" />
+    <ClInclude Include="..\src\game\minigame\minigame.h" />
     <ClInclude Include="..\src\game\phase\build.h" />
     <ClInclude Include="..\src\game\phase\dungeon.h" />
     <ClInclude Include="..\src\game\phase\menu.h" />
+    <ClInclude Include="..\src\game\phase\minigame_phase.h" />
     <ClInclude Include="..\src\game\phase\phase.h" />
     <ClInclude Include="..\src\game\player_stats.h" />
     <ClInclude Include="..\src\game_objects\construct.h" />
@@ -181,6 +186,9 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game_objects\essence.h" />
     <ClInclude Include="..\src\game_objects\game_object.h" />
     <ClInclude Include="..\src\game_objects\grid.h" />
+    <ClInclude Include="..\src\game_objects\minigame\empty_collider.h" />
+    <ClInclude Include="..\src\game_objects\minigame\penguin.h" />
+    <ClInclude Include="..\src\game_objects\minigame\platform.h" />
     <ClInclude Include="..\src\game_objects\player.h" />
     <ClInclude Include="..\src\game_objects\tile.h" />
     <ClInclude Include="..\src\game_objects\traps\arrow.h" />
@@ -191,6 +199,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game_objects\traps\projectile.h" />
     <ClInclude Include="..\src\game_objects\traps\projectile_trap.h" />
     <ClInclude Include="..\src\game_objects\traps\slime.h" />
+    <ClInclude Include="..\src\game_objects\traps\slow_trap.h" />
     <ClInclude Include="..\src\game_objects\traps\spikes.h" />
     <ClInclude Include="..\src\game_objects\traps\trap.h" />
     <ClInclude Include="..\src\input\axis_combiner.h" />
@@ -228,6 +237,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\scene\light\pulse_point_light.h" />
     <ClInclude Include="..\src\scene\light\spot_light.h" />
     <ClInclude Include="..\src\scene\main_scene.h" />
+    <ClInclude Include="..\src\scene\minigame_scenes\mgscene_penguin.h" />
     <ClInclude Include="..\src\scene\scene.h" />
     <ClInclude Include="..\src\scene\scene_info.h" />
     <ClInclude Include="..\src\scene\start_scene.h" />
@@ -245,18 +255,24 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\timer.h" />
     <ClInclude Include="..\src\ui\build_ui.h" />
     <ClInclude Include="..\src\ui\clock_ui.h" />
+    <ClInclude Include="..\src\ui\countdown_ui.h" />
     <ClInclude Include="..\src\ui\debug_ui.h" />
     <ClInclude Include="..\src\ui\dialog_ui.h" />
     <ClInclude Include="..\src\ui\gold_ui.h" />
     <ClInclude Include="..\src\ui\leaderboard_ui.h" />
     <ClInclude Include="..\src\ui\legend_ui.h" />
+    <ClInclude Include="..\src\ui\main_menu_ui.h" />
+    <ClInclude Include="..\src\ui\notification_ui.h" />
     <ClInclude Include="..\src\ui\render2d.h" />
+    <ClInclude Include="..\src\ui\score_ui.h" />
+    <ClInclude Include="..\src\ui\transition_ui.h" />
     <ClInclude Include="..\src\ui\ui.h" />
     <ClInclude Include="..\src\ui\ui_container.h" />
     <ClInclude Include="..\src\ui\ui_element.h" />
     <ClInclude Include="..\src\ui\ui_grid.h" />
     <ClInclude Include="..\src\ui\ui_halo_container.h" />
     <ClInclude Include="..\src\ui\ui_image_node.h" />
+    <ClInclude Include="..\src\ui\ui_leaderboard_entry.h" />
     <ClInclude Include="..\src\ui\ui_legend.h" />
     <ClInclude Include="..\src\ui\ui_manager.h" />
     <ClInclude Include="..\src\ui\ui_rectangle.h" />
@@ -285,9 +301,11 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\example_test.cpp" />
     <ClCompile Include="..\src\game\collectibles\gold.cpp" />
     <ClCompile Include="..\src\game\game_state.cpp" />
+    <ClCompile Include="..\src\game\minigame\mg_penguin.cpp" />
     <ClCompile Include="..\src\game\phase\build.cpp" />
     <ClCompile Include="..\src\game\phase\dungeon.cpp" />
     <ClCompile Include="..\src\game\phase\menu.cpp" />
+    <ClCompile Include="..\src\game\phase\minigame_phase.cpp" />
     <ClCompile Include="..\src\game\phase\phase.cpp" />
     <ClCompile Include="..\src\game\player_stats.cpp" />
     <ClCompile Include="..\src\game_objects\construct.cpp" />
@@ -295,6 +313,9 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\game_objects\essence.cpp" />
     <ClCompile Include="..\src\game_objects\game_object.cpp" />
     <ClCompile Include="..\src\game_objects\grid.cpp" />
+    <ClCompile Include="..\src\game_objects\minigame\empty_collider.cpp" />
+    <ClCompile Include="..\src\game_objects\minigame\penguin.cpp" />
+    <ClCompile Include="..\src\game_objects\minigame\platform.cpp" />
     <ClCompile Include="..\src\game_objects\player.cpp" />
     <ClCompile Include="..\src\game_objects\tile.cpp" />
     <ClCompile Include="..\src\game_objects\traps\arrow.cpp" />
@@ -305,6 +326,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\game_objects\traps\projectile.cpp" />
     <ClCompile Include="..\src\game_objects\traps\projectile_trap.cpp" />
     <ClCompile Include="..\src\game_objects\traps\slime.cpp" />
+    <ClCompile Include="..\src\game_objects\traps\slow_trap.cpp" />
     <ClCompile Include="..\src\game_objects\traps\spikes.cpp" />
     <ClCompile Include="..\src\input\axis_combiner.cpp" />
     <ClCompile Include="..\src\input\conceptual_translator.cpp" />
@@ -342,6 +364,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\render\shadows.cpp" />
     <ClCompile Include="..\src\scene\camera.cpp" />
     <ClCompile Include="..\src\scene\main_scene.cpp" />
+    <ClCompile Include="..\src\scene\minigame_scenes\mgscene_penguin.cpp" />
     <ClCompile Include="..\src\scene\scene.cpp" />
     <ClCompile Include="..\src\scene\scene_info.cpp" />
     <ClCompile Include="..\src\scene\start_scene.cpp" />
@@ -359,18 +382,24 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\timer.cpp" />
     <ClCompile Include="..\src\ui\build_ui.cpp" />
     <ClCompile Include="..\src\ui\clock_ui.cpp" />
+    <ClCompile Include="..\src\ui\countdown_ui.cpp" />
     <ClCompile Include="..\src\ui\debug_ui.cpp" />
     <ClCompile Include="..\src\ui\dialog_ui.cpp" />
     <ClCompile Include="..\src\ui\gold_ui.cpp" />
     <ClCompile Include="..\src\ui\leaderboard_ui.cpp" />
     <ClCompile Include="..\src\ui\legend_ui.cpp" />
+    <ClCompile Include="..\src\ui\notification_ui.cpp" />
+    <ClCompile Include="..\src\ui\main_menu_ui.cpp" />
     <ClCompile Include="..\src\ui\render2d.cpp" />
+    <ClCompile Include="..\src\ui\score_ui.cpp" />
+    <ClCompile Include="..\src\ui\transition_ui.cpp" />
     <ClCompile Include="..\src\ui\ui.cpp" />
     <ClCompile Include="..\src\ui\ui_container.cpp" />
     <ClCompile Include="..\src\ui\ui_element.cpp" />
     <ClCompile Include="..\src\ui\ui_grid.cpp" />
     <ClCompile Include="..\src\ui\ui_halo_container.cpp" />
     <ClCompile Include="..\src\ui\ui_image_node.cpp" />
+    <ClCompile Include="..\src\ui\ui_leaderboard_entry.cpp" />
     <ClCompile Include="..\src\ui\ui_legend.cpp" />
     <ClCompile Include="..\src\ui\ui_manager.cpp" />
     <ClCompile Include="..\src\ui\ui_rectangle.cpp" />

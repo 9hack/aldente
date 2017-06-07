@@ -3,14 +3,21 @@
 #include "game_objects/game_object.h"
 #include "game_objects/player.h"
 #include <set>
+#include <scene/scene.h>
+
+// Forward-declare
+class Player;
 
 class Context {
 public:
+    // Common
+    std::vector<int> player_ids;
+    std::map<std::string, Scene*> minigame_scenes;
+
     // Server
     std::set<GameObject*> updated_objects;
     std::set<std::pair<int, int>> collisions;
     std::set<std::pair<int, int>> interacts;
-    std::vector<int> player_ids;
     std::unordered_map<int, bool> ready_flags; // <Player id, if ready>
 
     // Client

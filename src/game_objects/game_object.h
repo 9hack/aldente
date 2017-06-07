@@ -33,8 +33,6 @@ protected:
     AnimationPlayer anim_player;
     btRigidBody *rigidbody;
 
-    Transform initial_transform; // Initial transform to reset to at beginning of build phase
-
     int id;
     bool enabled;
 
@@ -44,6 +42,7 @@ public:
     std::vector<GameObject *> children;
 
     Transform transform; // World matrix now controlled using the Transform Component
+    Transform initial_transform; // Initial transform to reset to at beginning of build phase
     std::string tag; // Identify this GameObject by a human-readable tag.
     bool notify_on_collision = false; // Physics engine will only call on_collision if this flag is set.
 
@@ -116,8 +115,12 @@ public:
     void sync_position();
 
     void set_ghost(bool b);
+    
     void disable();
     void enable();
+    void disable_all();
+    void enable_all();
+
     bool is_enabled() { return enabled; };
 
     // Set's initial transform's rotation

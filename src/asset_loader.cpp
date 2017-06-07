@@ -106,6 +106,9 @@ void AssetLoader::load(std::string file_loc, std::string file_name) {
         // Goes through assimp node structure to load meshes for models
         process_node(model, skel, scene, scene->mRootNode, glm::mat4(1.0f));
 
+        // Saves models original colors on model
+        model->save_colors();
+
         // Stores model
         models[model_name] = model;
     }
@@ -186,8 +189,8 @@ Mesh *AssetLoader::process_mesh(aiMesh *mesh, const aiScene *scene) {
     assimpMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
     float shiny = 0.0f;
     assimpMat->Get(AI_MATKEY_SHININESS, shiny);
-    load_mat->diffuse = Color(diffuse.r, diffuse.g, diffuse.b);
-    load_mat->specular = Color(specular.r, specular.g, specular.b);
+    load_mat->diffuse = Color(diffuse.r, diffuse.g, diffuse.b, false);
+    load_mat->specular = Color(specular.r, specular.g, specular.b, false);
     load_mat->shininess = shiny;
     final_mesh = new Mesh(geo, load_mat);
 
