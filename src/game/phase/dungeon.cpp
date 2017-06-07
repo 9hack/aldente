@@ -159,4 +159,6 @@ void DungeonPhase::c_teardown() {
     button_conn.disconnect();
     essence_conn.disconnect();
     player_finish_conn.disconnect();
+
+    events::stop_all_sounds();
 }

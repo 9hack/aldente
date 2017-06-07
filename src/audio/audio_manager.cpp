@@ -65,17 +65,19 @@ AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_e
         active_sounds[inactive_sound_index].setBuffer(sound_buffers[filename]);
         active_sounds[inactive_sound_index].setVolume(vol);
 
-        // Need to think of better way to do looped sound effects if necessary
-        //sounds[filename].setLoop(d.loop);
-
-        //if (d.loop) {
-        //    sounds[filename].play();
-        //    sounds[filename].pause();
-        //}
+        // Need to think of better way to stop looped sound effects if necessary
+        active_sounds[inactive_sound_index].setLoop(d.loop);
 
         if (muted) return;
 
         active_sounds[inactive_sound_index].play();
+    });
+
+    events::stop_all_sounds.connect([&]() {
+        for (int i = 0; i < active_sounds.size(); i++) {
+            active_sounds[i] = sf::Sound();
+        }
+        std::cerr << "Done stopping sounds" << std::endl;
     });
 
     events::toggle_mute_event.connect([&]() {
@@ -88,7 +90,9 @@ AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_e
                 sound.pause();
             }
         } else {
-            music.play();
+            if (music.getStatus() == sf::Music::Status::Paused) {
+                music.play();
+            }
 
             // Play sound effects that has been paused
             for (sf::Sound sound : active_sounds) {
