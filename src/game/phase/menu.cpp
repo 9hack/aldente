@@ -8,7 +8,8 @@ std::string MenuPhase::to_string() {
 
 void MenuPhase::s_setup() {
     ready_conn = events::player_ready_event.connect([&](int player_id) {
-        context.ready_flags[player_id] = true;
+        // Ready up if not previously ready. Otherwise un-ready up.
+        context.ready_flags[player_id] = !context.ready_flags[player_id];
     });
 }
 
