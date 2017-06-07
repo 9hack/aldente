@@ -77,7 +77,6 @@ AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_e
         for (int i = 0; i < active_sounds.size(); i++) {
             active_sounds[i] = sf::Sound();
         }
-        std::cerr << "Done stopping sounds" << std::endl;
     });
 
     events::toggle_mute_event.connect([&]() {
