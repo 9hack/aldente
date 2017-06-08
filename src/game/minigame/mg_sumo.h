@@ -27,4 +27,11 @@ private:
     boost::signals2::connection button_conn;
 
     std::map<int, bool> dead_player_flags;
+
+    std::vector<glm::vec3> player_start_pos{
+        {-3, 0.8f, -3},
+        {3, 0.8f, -3},
+        {-3, 0.8f, 3},
+        {3, 0.8f, 3},
+    };
 };

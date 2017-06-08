@@ -34,6 +34,7 @@ void SumoMG::s_setup() {
         events::server::announce(msg);
     });
 
+    int player_count = 0;
     // Prep players for the minigame
     for (int id : context.player_ids) {
         dead_player_flags[id] = false;
@@ -45,10 +46,8 @@ void SumoMG::s_setup() {
         player->enable();
 
         player->get_rigid()->setLinearFactor(btVector3(1, 1.5f, 1));
-        glm::vec3 pos = player->transform.get_position();
-        pos.y = 0.8f;
         player->set_speed(1.0f);
-        player->set_position(pos);
+        player->set_position(player_start_pos[player_count++]);
         player->set_momentum(true);
         player->toggle_sumo_collider();
     }
