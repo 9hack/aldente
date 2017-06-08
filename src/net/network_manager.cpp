@@ -186,7 +186,10 @@ void ServerNetworkManager::update() {
                 proto::AvatarChange change = msg.change_avatar_request();
                 Player* player = dynamic_cast<Player*>(GameObject::game_objects[change.player_id()]);
                 assert(player);
-                player->s_set_model_index(change.model_index());
+
+                int next_model = GameState::cycle_avatar(player);
+                change.set_model_index(next_model);
+                player->s_set_model_index(next_model);
 
                 // Send the avatar change update to all clients.
                 proto::ServerMessage response;
@@ -355,7 +358,7 @@ void ClientNetworkManager::update() {
                     }
                 }
 
-                if (obj_exists)
+                if (obj_exists && GameObject::game_objects.find(obj.id()) != GameObject::game_objects.end())
                     GameObject::game_objects[obj.id()]->c_update_state(world_mat, obj.enabled());
             }
 

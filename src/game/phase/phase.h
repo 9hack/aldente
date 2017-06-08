@@ -12,6 +12,7 @@ public:
     virtual void c_setup() = 0;
     virtual void c_update() {};
     virtual void c_teardown() = 0;
+    virtual std::string to_string() = 0;
 protected:
     Context& context;
 
@@ -28,7 +29,8 @@ public:
 protected:
     std::function<void()> cancel_clock_every;
     int remaining_seconds;
+    int remaining_countdown;
 
     // Use to set up timer to transition to next phase after specified time.
-    void transition_after(int seconds, proto::Phase to);
+    void transition_after(int countdown, int seconds, proto::Phase to);
 };

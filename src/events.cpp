@@ -7,7 +7,7 @@ namespace events {
     signal<void(const StickData &)> stick_event;
     signal<void(const AudioData &)> music_event;
     signal<void(const AudioData &)> sound_effects_event;
-    signal<void(std::string)> stop_sound_effects_event;
+    signal<void()> stop_all_sounds;
     signal<void()> toggle_mute_event;
     signal<void(WindowSizeData &)> window_buffer_resize_event;
     signal<void(WindowKeyData &)> window_key_event;
@@ -43,8 +43,8 @@ namespace events {
     signal<void(const proto::PlayerStats &)> c_player_stats_updated;
     signal<void(int)> player_ready_event;
 
-    signal<void(glm::vec3 position, int time)> camera_anim_position_event;
-    signal<void(glm::vec3 axis, float angle, int time)> camera_anim_rotate_event;
+    signal<void(glm::vec3 position, int time, std::function<void()> do_after)> camera_anim_position_event;
+    signal<void(glm::vec3 axis, float angle, int time, std::function<void()> do_after)> camera_anim_rotate_event;
 
     namespace server {
         signal<void(proto::ServerMessage &)> announce;
@@ -72,9 +72,12 @@ namespace events {
         signal<void()> disable_scoreboard;
         signal<void(const std::vector<std::pair<std::string, std::string>> &)> show_dialog;
         signal<void(const std::string &)> show_notification;
-        signal<void(float, std::function<void()>)> transition_wipe;
-        signal<void(float, std::function<void()>)> transition_fade;
+        signal<void(float, std::string, std::function<void()>)> transition_wipe;
+        signal<void(float, std::string, std::function<void()>)> transition_fade;
+        signal<void()> enable_main_menu;
+        signal<void()> disable_main_menu;
         signal<void(const std::vector<std::string> &, const std::function<void()> &)> show_countdown;
+        signal<void(int)> round_changed_event;
     }
 
     namespace build {
@@ -99,6 +102,7 @@ namespace events {
     }
 
     namespace dungeon {
+        signal<void()> c_start;
         signal<void(glm::vec3, glm::vec3, float, std::function<void(GameObject *bt_hit)>)> request_raycast_event;
         signal<void(glm::vec3)> player_position_updated_event;
         signal<void()> s_prepare_dungeon_event;

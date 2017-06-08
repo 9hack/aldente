@@ -5,10 +5,14 @@
 
 bool BuildPhase::is_menu = true;
 
+std::string BuildPhase::to_string() {
+    return "BUILD PHASE";
+}
+
 void BuildPhase::s_setup() {
     GameState::set_scene(&GameState::main_scene);
 
-    transition_after(60, proto::Phase::DUNGEON);
+    transition_after(0, 60, proto::Phase::DUNGEON);
     ready_conn = events::player_ready_event.connect([&](int player_id) {
         context.ready_flags[player_id] = true;
     });
@@ -45,6 +49,9 @@ void BuildPhase::s_setup() {
     for (auto & kv : GameObject::game_objects) {
         kv.second->s_reset();
     }
+
+    // Update the round counter. Starts at 0, so pre-increment.
+    ++context.current_round;
 }
 
 void BuildPhase::c_setup() {
@@ -177,7 +184,7 @@ void BuildPhase::c_setup() {
     });
 
     // Play music
-    events::music_event(events::AudioData{ AudioManager::BUILD_MUSIC, 30, true });
+    events::music_event(events::AudioData(AudioManager::BUILD_MUSIC, true));
 
     // Resets game objects on client side
     for (auto & kv : GameObject::game_objects) {
@@ -185,6 +192,9 @@ void BuildPhase::c_setup() {
             kv.second->disable();
         kv.second->c_reset();
     }
+
+    // Updates the client-side round counter, and update the UI.
+    events::ui::round_changed_event(++context.current_round);
 }
 
 proto::Phase BuildPhase::s_update() {

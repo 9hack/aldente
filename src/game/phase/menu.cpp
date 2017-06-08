@@ -1,5 +1,10 @@
 #include <game/game_state.h>
 #include "menu.h"
+#include <input/modal_input.h>
+
+std::string MenuPhase::to_string() {
+    return "MAIN MENU";
+}
 
 void MenuPhase::s_setup() {
     ready_conn = events::player_ready_event.connect([&](int player_id) {
@@ -8,7 +13,7 @@ void MenuPhase::s_setup() {
 }
 
 void MenuPhase::c_setup() {
-    button_conn = events::button_event.connect([&](events::ButtonData d) {
+    button_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).buttons.connect([&](const events::ButtonData &d) {
         if (d.state == 0) return;
         switch (d.input) {
             case events::BTN_START: {

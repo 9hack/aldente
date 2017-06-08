@@ -3,18 +3,33 @@
 #include <boost/range.hpp>
 #include <boost/filesystem.hpp>
 
+#include <math.h>
 #include <string>
 #include <iostream>
 
 #define SOUND_DIR_PATH "assets/audio/sound/"
 
+#define NUM_OF_ACTIVE_SOUNDS 128
+
+#define SFX_DECREASE_DISTANCE_THRESHOLD 7
+#define SFX_DECREASE_RATIO 0.1
+
 const std::string AudioManager::BUILD_MUSIC = "assets/audio/music/motif6.wav";
 const std::string AudioManager::DUNGEON_MUSIC = "assets/audio/music/motif8.wav";
 
 const std::string AudioManager::BUILD_CONFIRM_SOUND = "assets/audio/sound/build_confirm.wav";
-const std::string AudioManager::FOOTSTEPS_SOUND = "assets/audio/sound/footsteps.wav";
+const std::string AudioManager::ARROW_SWOOSH_SOUND = "assets/audio/sound/arrow_swoosh.wav";
+const std::string AudioManager::DREAM_ESSENCE_SOUND = "assets/audio/sound/dream_essence.wav";
 
-AudioManager::AudioManager() : muted(true) {
+
+const float AudioManager::SFX_DECREASE_COEFFICIENT = log(SFX_DECREASE_RATIO) / SFX_DECREASE_DISTANCE_THRESHOLD;
+
+AudioManager::AudioManager() : muted(true), max_music_volume(100.0), max_sound_effects_volume(100.0) {
+    // Fill active sounds
+    for (int i = 0; i < NUM_OF_ACTIVE_SOUNDS; i++) {
+        active_sounds.push_back(sf::Sound());
+    }
+    
     loadSounds();
 
     events::music_event.connect([&](const events::AudioData &d) {
@@ -28,7 +43,7 @@ AudioManager::AudioManager() : muted(true) {
             std::cerr << "AudioManager: Cannot open " << filename << std::endl;;
         }
 
-        music.setVolume(d.volume);
+        music.setVolume(max_music_volume);
         music.setLoop(d.loop);
 
         if (muted) return;
@@ -39,21 +54,29 @@ AudioManager::AudioManager() : muted(true) {
     events::sound_effects_event.connect([&](const events::AudioData &d) {
         std::string filename = d.filename;
 
-        sounds[filename].setVolume(d.volume);
-        sounds[filename].setLoop(d.loop);
+        float vol = volumeByDistance(d.distance);
+        int inactive_sound_index = firstInactiveSoundIndex();
 
-        if (d.loop) {
-            sounds[filename].play();
-            sounds[filename].pause();
+        // Give up sound effects request if all sounds are active (Very unlikely)
+        if (inactive_sound_index == -1) {
+            return;
         }
+
+        active_sounds[inactive_sound_index].setBuffer(sound_buffers[filename]);
+        active_sounds[inactive_sound_index].setVolume(vol);
+
+        // Need to think of better way to stop looped sound effects if necessary
+        active_sounds[inactive_sound_index].setLoop(d.loop);
 
         if (muted) return;
 
-        sounds[filename].play();
+        active_sounds[inactive_sound_index].play();
     });
 
-    events::stop_sound_effects_event.connect([&](const std::string filename) {
-        sounds[filename].stop();
+    events::stop_all_sounds.connect([&]() {
+        for (int i = 0; i < active_sounds.size(); i++) {
+            active_sounds[i] = sf::Sound();
+        }
     });
 
     events::toggle_mute_event.connect([&]() {
@@ -62,16 +85,18 @@ AudioManager::AudioManager() : muted(true) {
             music.pause();
 
             // Mute all sound effects
-            for (auto &sound : sounds) {
-                sound.second.pause();
+            for (sf::Sound sound : active_sounds) {
+                sound.pause();
             }
         } else {
-            music.play();
+            if (music.getStatus() == sf::Music::Status::Paused) {
+                music.play();
+            }
 
-            // Play looped sound effects that has been paused
-            for (auto &sound : sounds) {
-                if (sound.second.getStatus() == sf::SoundSource::Status::Paused) {
-                    sound.second.play();
+            // Play sound effects that has been paused
+            for (sf::Sound sound : active_sounds) {
+                if (sound.getStatus() == sf::SoundSource::Status::Paused) {
+                    sound.play();
                 }
             }
         }
@@ -85,8 +110,27 @@ void AudioManager::loadSounds() {
     for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(path), {})) {
         std::string filename = SOUND_DIR_PATH + entry.path().filename().string();
         if (!sound_buffers[filename].loadFromFile(filename)) {
-            std::cerr << "AudioManager: Cannot open" << filename << std::endl;
+            std::cerr << "AudioManager: Cannot open " << filename << std::endl;
         }
-        sounds[filename] = sf::Sound(sound_buffers[filename]);
     }
+}
+
+int AudioManager::firstInactiveSoundIndex() {
+    int inactive_index = -1;
+    for (int i = 0; i < active_sounds.size(); i++) {
+        if (active_sounds[i].getStatus() == sf::Sound::Status::Stopped) {
+            inactive_index = i;
+            break;
+        }
+    }
+    return inactive_index;
+}
+
+/*
+ * Model is a decreasing exponential function:
+ * Volume heard = (Max volume) * e^(decreasing coefficient * distance between objects)
+ * where decreasing coefficient = log(SFX_DECREASE_RATIO) / SFX_DECREASE_DISTANCE_THRESHOLD and < 0
+ */
+float AudioManager::volumeByDistance(float distance) {
+    return max_sound_effects_volume * exp(SFX_DECREASE_COEFFICIENT * distance);
 }

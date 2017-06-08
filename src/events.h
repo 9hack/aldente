@@ -63,12 +63,22 @@ namespace events {
     // Audio
     struct AudioData {
         std::string filename;
-        int volume;
         bool loop;
+        float distance = 0.0;  // for spatial sound effects
+
+        //For global music or sound effects
+        AudioData(std::string f, bool l) : filename(f), loop(l) {}
+
+        //For spatial sound effects
+        AudioData(std::string f, bool l, GameObject * p, GameObject * o) : filename(f), loop(l) {
+            assert(p);
+            assert(o);
+            distance = glm::distance(p->transform.get_position(), o->transform.get_position());
+        }
     };
     extern signal<void(const AudioData &)> music_event;
     extern signal<void(const AudioData &)> sound_effects_event;
-    extern signal<void(std::string)> stop_sound_effects_event;
+    extern signal<void()> stop_all_sounds;
     extern signal<void()> toggle_mute_event;
 
     struct WindowSizeData {
@@ -157,8 +167,8 @@ namespace events {
     * Axis: The axis of rotation
     * Time: Amount of time the transition should take (milliseconds)
     */
-    extern signal<void(glm::vec3 position, int time)> camera_anim_position_event;
-    extern signal<void(glm::vec3 axis, float angle, int time)> camera_anim_rotate_event;
+    extern signal<void(glm::vec3 position, int time, std::function<void()> do_after)> camera_anim_position_event;
+    extern signal<void(glm::vec3 axis, float angle, int time, std::function<void()> do_after)> camera_anim_rotate_event;
 
     namespace server {
         extern signal<void(proto::ServerMessage &)> announce;
@@ -193,8 +203,10 @@ namespace events {
         // Display scoreboard with vector of <model_name, gold, gold_delta>
         extern signal<void(const std::vector<std::tuple<std::string, int, int>> &)> scoreboard_sequence;
         extern signal<void()> disable_scoreboard;
-        extern signal<void(float, std::function<void()>)> transition_wipe;
-        extern signal<void(float, std::function<void()>)> transition_fade;
+        extern signal<void(float, std::string, std::function<void()>)> transition_wipe;
+        extern signal<void(float, std::string, std::function<void()>)> transition_fade;
+        extern signal<void()> enable_main_menu;
+        extern signal<void()> disable_main_menu;
 
         // Request some dialog to be shown
         // Show a sequence of dialog with events::ui::show_dialog({{portrait_str, text}, ...}).
@@ -206,6 +218,9 @@ namespace events {
         // Display a countdown
         // Parmeters are (strings_to_show, do_after_callback)
         extern signal<void(const std::vector<std::string> &, const std::function<void()> &)> show_countdown;
+        
+        // Indicates that the current round (numerical) has changed; updates UI.
+        extern signal<void(int)> round_changed_event;
     }
 
     namespace build {
@@ -269,6 +284,9 @@ namespace events {
     }
 
     namespace dungeon {
+        // Client dungeon phase start
+        extern signal<void()> c_start;
+
         // Player class asks physics for a raycast check
         extern signal<void(glm::vec3 pos, glm::vec3 dir, float dist, std::function<void(GameObject *bt_hit)>)> request_raycast_event;
 

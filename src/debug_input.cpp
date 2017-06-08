@@ -56,10 +56,10 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     events::toggle_mute_event();
                     break;
                 case GLFW_KEY_F1:
-                    events::ui::transition_wipe(1.f, [](){});
+                    events::ui::transition_wipe(1.f, "TO BE CONTINUED", [](){});
                     break;
                 case GLFW_KEY_F2:
-                    events::ui::transition_fade(1.f, [](){});
+                    events::ui::transition_fade(1.f, "TO BE CONTINUED", [](){});
                     break;
                 case GLFW_KEY_F3:
                     events::ui::scoreboard_sequence(
@@ -84,6 +84,12 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                 case GLFW_KEY_F8:
                     events::debug::toggle_bloom_event();
                     break;
+                case GLFW_KEY_F9:
+                    events::ui::enable_main_menu();
+                    break;
+                case GLFW_KEY_F10:
+                    events::ui::disable_main_menu();
+                    break;
                 case GLFW_KEY_0:
                     events::debug::client_set_phase_event(&GameState::menu_phase);
                     break;
@@ -98,8 +104,8 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     break;
                 case GLFW_KEY_4:
                     // Camera animation debug. Feel free to remove if needed
-                    events::camera_anim_position_event(glm::vec3(1, 0.5f, 0), 2000);
-                    events::camera_anim_rotate_event(glm::vec3(0, 0, 1), 720, 2000);
+                    events::camera_anim_position_event(glm::vec3(1, 0.5f, 0), 2000, [](){});
+                    events::camera_anim_rotate_event(glm::vec3(0, 0, 1), 720, 2000, [](){});
                     break;
                 case GLFW_KEY_5:
                     events::debug::print_camera_event();

@@ -17,7 +17,9 @@ public:
     void c_setup() override;
     void c_update() override;
     void c_teardown() override;
+    std::string to_string() override;
 private:
     std::vector<Minigame*> minigames;
     Minigame* curr_mg;
+    bool do_update;
 };

@@ -1,3 +1,5 @@
+#include <audio/audio_manager.h>
+#include <game/game_state.h>
 #include "arrow_trap.h"
 #include "asset_loader.h"
 
@@ -34,5 +36,8 @@ void ArrowTrap::setup_model() {
 }
 
 void ArrowTrap::play_trigger_animation() {
+    events::sound_effects_event(events::AudioData(AudioManager::ARROW_SWOOSH_SOUND, false, GameState::context.client_player, this));
+
     anim_player.play();
 }
+
