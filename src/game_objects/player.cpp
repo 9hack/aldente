@@ -6,6 +6,7 @@
 #include "timer.h"
 
 #include "util/util.h"
+#include "util/util_bt.h"
 
 #define ANIMATE_DELTA 0.001f
 #define STUN_LENGTH 1000 // milliseconds
@@ -154,9 +155,15 @@ void Player::start_walk() {
 
 // Server collision
 void Player::s_on_collision(GameObject *other) {
-    // By default, does not need to notify the client of any collisions.
-    // If it triggers a trap, the trap will notify the client that the
-    // player is hit. 
+    /*// For sumo bounciness
+    if (sumo && dynamic_cast<Player*>(other)) {
+        glm::vec3 dir = transform.get_position() - other->transform.get_position();
+        float speed = glm::length(util_bt::convert_vec3(
+            other->get_rigid()->getLinearVelocity()));
+
+        dir *= speed;
+        rigidbody->applyCentralImpulse(util_bt::convert_vec3(dir));
+    }*/
 }
 
 // Graphical collision
@@ -412,7 +419,7 @@ void Player::toggle_sumo_collider() {
     if (sumo) {
         rigidbody->setCollisionShape(hit_capsule);
         restitution = rigidbody->getRestitution();
-        rigidbody->setRestitution(1.0f);
+        rigidbody->setRestitution(2.0f);
         sumo = false;
     }
     else {

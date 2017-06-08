@@ -14,8 +14,8 @@ private:
     Player *player;
     glm::vec3 prev_player_vec;
     bool first;
-
-    std::vector<std::string> BALL_MODELS = { "slime_blue", "tomato_ball", "tomato_ball", "tomato_ball" };
+        
+    std::vector<std::string> BALL_MODELS = { "slime_blue", "lizard_ball", "cat_ball", "tomato_ball" };
 public:
     Ball(int id = 0);
 
