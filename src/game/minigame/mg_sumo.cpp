@@ -99,9 +99,10 @@ void SumoMG::c_teardown() {
 }
 
 bool SumoMG::is_finished() {
+    int count = 0;
     for (auto const &kv : dead_player_flags) {
         if (!kv.second)
-            return false;
+            count++;
     }
-    return true;
+    return (count == 1);
 }
