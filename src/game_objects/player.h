@@ -29,6 +29,7 @@ private:
     int to_moveZ;
 
     float move_speed;
+    float restitution;
 
     bool exiting;
     bool is_client;

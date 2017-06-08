@@ -411,10 +411,13 @@ int Player::c_get_model_index() const {
 void Player::toggle_sumo_collider() {
     if (sumo) {
         rigidbody->setCollisionShape(hit_capsule);
+        restitution = rigidbody->getRestitution();
+        rigidbody->setRestitution(1.0f);
         sumo = false;
     }
     else {
         rigidbody->setCollisionShape(sumo_hit_capsule);
+        rigidbody->setRestitution(restitution);
         sumo = true;
     }
 }
