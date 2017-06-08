@@ -327,6 +327,7 @@ class ClientMessage : public ::google::protobuf::Message {
     kInteractRequest = 6,
     kReadyRequest = 7,
     kChangeAvatarRequest = 8,
+    kPumpRequest = 9,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -429,6 +430,13 @@ class ClientMessage : public ::google::protobuf::Message {
   inline ::proto::AvatarChange* release_change_avatar_request();
   inline void set_allocated_change_avatar_request(::proto::AvatarChange* change_avatar_request);
 
+  // optional int32 pump_request = 9;
+  inline bool has_pump_request() const;
+  inline void clear_pump_request();
+  static const int kPumpRequestFieldNumber = 9;
+  inline ::google::protobuf::int32 pump_request() const;
+  inline void set_pump_request(::google::protobuf::int32 value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ClientMessage)
  private:
@@ -440,6 +448,7 @@ class ClientMessage : public ::google::protobuf::Message {
   inline void set_has_interact_request();
   inline void set_has_ready_request();
   inline void set_has_change_avatar_request();
+  inline void set_has_pump_request();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -458,6 +467,7 @@ class ClientMessage : public ::google::protobuf::Message {
     ::google::protobuf::int32 interact_request_;
     ::google::protobuf::int32 ready_request_;
     ::proto::AvatarChange* change_avatar_request_;
+    ::google::protobuf::int32 pump_request_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -2278,6 +2288,33 @@ inline void ClientMessage::set_allocated_change_avatar_request(::proto::AvatarCh
     set_has_change_avatar_request();
     message_type_.change_avatar_request_ = change_avatar_request;
   }
+}
+
+// optional int32 pump_request = 9;
+inline bool ClientMessage::has_pump_request() const {
+  return message_type_case() == kPumpRequest;
+}
+inline void ClientMessage::set_has_pump_request() {
+  _oneof_case_[0] = kPumpRequest;
+}
+inline void ClientMessage::clear_pump_request() {
+  if (has_pump_request()) {
+    message_type_.pump_request_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::google::protobuf::int32 ClientMessage::pump_request() const {
+  if (has_pump_request()) {
+    return message_type_.pump_request_;
+  }
+  return 0;
+}
+inline void ClientMessage::set_pump_request(::google::protobuf::int32 value) {
+  if (!has_pump_request()) {
+    clear_message_type();
+    set_has_pump_request();
+  }
+  message_type_.pump_request_ = value;
 }
 
 inline bool ClientMessage::has_message_type() {
