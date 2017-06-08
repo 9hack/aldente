@@ -44,7 +44,7 @@ void SumoMG::s_setup() {
         player->enable();
         player->get_rigid()->setLinearFactor(btVector3(1, 1.5f, 1));
         player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
-        player->set_speed(1.0f);
+        player->set_speed(1.2f);
         player->set_position(player_start_pos[player_count++]);
         player->set_momentum(true);
         player->toggle_sumo_collider();
@@ -104,5 +104,6 @@ bool SumoMG::is_finished() {
         if (!kv.second)
             count++;
     }
-    return (count == 1);
+    return false;
+    //return (count == 1);
 }
