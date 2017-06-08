@@ -12,7 +12,7 @@
 
 class EmptyCollider : public GameObject {
 private:
-    btBoxShape *hit_box = new btBoxShape(btVector3(20, 1, 20));
+    btBoxShape *hit_box = new btBoxShape(btVector3(30, 1, 30));
 public:
     EmptyCollider(int id = 0);
 

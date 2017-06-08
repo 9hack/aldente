@@ -118,6 +118,10 @@ void Camera::setup_listeners() {
             do_after();
         });
     });
+
+    events::debug::print_camera_event.connect([&]() {
+        print_cam_info();
+    });
 }
 
 void Camera::recalculate() {
@@ -298,4 +302,16 @@ void Camera::rotate_cam(glm::vec3 axis, float angle) {
     cam_front = glm::normalize(rot * front);
     cam_up = glm::normalize(rot * up);
     recalculate();
+}
+
+void Camera::print_cam_info() {
+    std::cerr << "Position: " << 
+        cam_pos.x << ", " <<
+        cam_pos.y << ", " <<
+        cam_pos.z << "\n" <<
+        
+        "Forward: " <<
+        cam_front.x << ", " <<
+        cam_front.y << ", " <<
+        cam_front.z << std::endl;
 }

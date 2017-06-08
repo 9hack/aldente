@@ -107,7 +107,9 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     events::camera_anim_position_event(glm::vec3(1, 0.5f, 0), 2000, [](){});
                     events::camera_anim_rotate_event(glm::vec3(0, 0, 1), 720, 2000, [](){});
                     break;
-
+                case GLFW_KEY_5:
+                    events::debug::print_camera_event();
+                    break;
                 // Ethan's testing stuff
                 case GLFW_KEY_Z:
                     events::ui::show_countdown({"3", "2", "1", "GO"}, []() {

@@ -6,6 +6,7 @@
 #include "timer.h"
 
 #include "util/util.h"
+#include "util/util_bt.h"
 
 #define ANIMATE_DELTA 0.001f
 #define STUN_LENGTH 1000 // milliseconds
@@ -16,7 +17,7 @@
 
 std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
 
-Player::Player(int id) : GameObject(id), is_client(false) {
+Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo(false) {
     tag = "PLAYER";
 
     if (id == ON_SERVER) {
@@ -110,7 +111,12 @@ void Player::do_movement() {
     // framerate independent? Unsure how Bullet handles framerate.
     rigidbody->setActivationState(true);
     btVector3 vel = rigidbody->getLinearVelocity();
-    rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, vel.getY(), to_moveZ * move_speed));
+
+    if (momentum)
+        rigidbody->applyCentralForce(btVector3(to_moveX * move_speed, 0, to_moveZ * move_speed));
+    else
+        rigidbody->setLinearVelocity(btVector3(to_moveX * move_speed, vel.getY(), to_moveZ * move_speed));
+
     transform.look_at(glm::vec3(to_moveX * move_speed, 0, to_moveZ * move_speed));
 }
 
@@ -145,9 +151,20 @@ void Player::start_walk() {
 
 // Server collision
 void Player::s_on_collision(GameObject *other) {
-    // By default, does not need to notify the client of any collisions.
-    // If it triggers a trap, the trap will notify the client that the
-    // player is hit. 
+    // For sumo bounciness
+    if (sumo && dynamic_cast<Player*>(other)) {
+        glm::vec3 dir = transform.get_position() - other->transform.get_position();
+        float speed = glm::length(util_bt::convert_vec3(
+            other->get_rigid()->getLinearVelocity()));
+
+        dir *= speed * 0.25f;
+        glm::vec3 clamp = glm::normalize(dir) * 0.1f;
+        if (glm::length(dir) < glm::length(clamp)) {
+            dir = clamp;
+        }
+
+        rigidbody->applyCentralImpulse(util_bt::convert_vec3(dir));
+    }
 }
 
 // Graphical collision
@@ -397,4 +414,15 @@ void Player::s_set_model_index(int index) {
 
 int Player::c_get_model_index() const {
     return model_index;
+}
+
+void Player::toggle_sumo_collider() {
+    if (sumo) {
+        rigidbody->setCollisionShape(hit_capsule);
+        sumo = false;
+    }
+    else {
+        rigidbody->setCollisionShape(sumo_hit_capsule);
+        sumo = true;
+    }
 }

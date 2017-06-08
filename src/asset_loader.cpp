@@ -24,8 +24,16 @@ void AssetLoader::destroy() {
     (animation and textures attached to file)
 */
 void AssetLoader::setup() {
+    // Load textures.
+    boost::filesystem::path path = boost::filesystem::path(TEXTURE_DIR_PATH);
+    for (auto &entry : boost::make_iterator_range(
+        boost::filesystem::directory_iterator(path),
+        {})) {
+        load_texture(TEXTURE_DIR_PATH + entry.path().filename().string());
+    }
+
     // Load models.
-    boost::filesystem::path path = boost::filesystem::path(MODEL_DIR_PATH);
+    path = boost::filesystem::path(MODEL_DIR_PATH);
     for (auto &entry : boost::make_iterator_range(
                 boost::filesystem::directory_iterator(path),
                 {})) {
@@ -38,14 +46,6 @@ void AssetLoader::setup() {
                 boost::filesystem::directory_iterator(path),
                 {})) {
         load(ANIM_DIR_PATH, entry.path().filename().string());
-    }
-
-    // Load textures.
-    path = boost::filesystem::path(TEXTURE_DIR_PATH);
-    for (auto &entry : boost::make_iterator_range(
-                boost::filesystem::directory_iterator(path),
-                {})) {
-        load_texture(TEXTURE_DIR_PATH + entry.path().filename().string());
     }
 }
 

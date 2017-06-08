@@ -135,6 +135,7 @@ namespace events {
         extern signal<void()> decrease_hdr_exposure_event;
         extern signal<void()> toggle_hdr_event;
         extern signal<void()> toggle_bloom_event;
+        extern signal<void()> print_camera_event;
     }
 
     // Struct for parameters for rigidbody initialization

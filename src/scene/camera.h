@@ -52,5 +52,7 @@ public:
     glm::mat4 frustum_ortho(glm::vec3 light_pos);
 
     void rotate_cam(glm::vec3 axis, float angle);
+
+    void print_cam_info();
 };
 

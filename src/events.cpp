@@ -31,6 +31,7 @@ namespace events {
         signal<void()> decrease_hdr_exposure_event;
         signal<void()> toggle_hdr_event;
         signal<void()> toggle_bloom_event;
+        signal<void()> print_camera_event;
     }
 
     signal<void(RigidBodyData d)> add_rigidbody_event;

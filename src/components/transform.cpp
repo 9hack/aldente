@@ -88,6 +88,14 @@ void Transform::rotate(float x, float y, float z, bool local) {
 
 }
 
+void Transform::rotate(glm::vec3 axis, float angle) {
+    glm::vec4 temp = world_mat[3];
+    world_mat[3] = glm::vec4(0, 0, 0, 1);
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis);
+    world_mat = rot * world_mat;
+    world_mat[3] = temp;
+}
+
 void Transform::look_at(glm::vec3 dir, float a) {
     if (dir.x != 0 || dir.z != 0) {
         float goal_angle = atan2(dir.x, dir.z);
