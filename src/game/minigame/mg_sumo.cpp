@@ -69,13 +69,19 @@ void SumoMG::s_teardown() {
     }
 
     // Assigns rewards to alive players
+    int count = 0;
+    for (auto const &kv : dead_player_flags) {
+        if (!kv.second)
+            count++;
+    }
+
     Player *curr_player;
     for (auto const &kv : dead_player_flags) {
         if (!kv.second) {
             curr_player = dynamic_cast<Player*>(GameObject::game_objects[kv.first]);
             assert(curr_player);
             curr_player->s_modify_stats([&, kv](PlayerStats &stats) {
-                stats.add_coins(SUMOMG_REWARD);
+                stats.add_coins((int)SUMOMG_REWARD/count);
             });
         }
     }
