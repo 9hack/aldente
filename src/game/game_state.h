@@ -7,6 +7,7 @@
 #include "scene/start_scene.h"
 #include "scene/minigame_scenes/mgscene_penguin.h"
 #include "scene/minigame_scenes/mgscene_sumo.h"
+#include "scene/minigame_scenes/mgscene_pump.h"
 #include "context.h"
 #include "phase/phase.h"
 #include "phase/menu.h"
@@ -30,6 +31,7 @@ public:
     static StartScene start_scene;
     static MGScenePenguin penguin_scene;
     static MGSceneSumo sumo_scene;
+    static MGScenePump pump_scene;
     static Physics physics;
 
     static std::map<int, Player*> players;
