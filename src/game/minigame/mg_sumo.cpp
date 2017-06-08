@@ -50,9 +50,20 @@ void SumoMG::s_setup() {
         player->set_speed(1.0f);
         player->set_position(pos);
         player->set_momentum(true);
+        player->toggle_sumo_collider();
     }
 
     GameState::set_scene(context.minigame_scenes["sumo"]);
+    scene = context.minigame_scenes["sumo"];
+
+    /*int ball_count = 0;
+    std::vector<Ball*> balls = dynamic_cast<MGSceneSumo*>(scene)->get_balls();
+    // Assign balls to players
+    for (int id : context.player_ids) {
+        Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
+        assert(player);
+        balls[ball_count++]->s_set_player(player);
+    }*/
 }
 
 void SumoMG::s_teardown() {
@@ -66,6 +77,7 @@ void SumoMG::s_teardown() {
         player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
         player->set_speed(2.0f);
         player->set_momentum(false);
+        player->toggle_sumo_collider();
     }
 
     // Assigns rewards to alive players
@@ -91,6 +103,16 @@ void SumoMG::c_setup() {
     });
 
     GameState::set_scene(context.minigame_scenes["sumo"]);
+    scene = context.minigame_scenes["sumo"];
+
+    /*int ball_count = 0;
+    std::vector<Ball*> balls = dynamic_cast<MGSceneSumo*>(scene)->get_balls();
+    // Assign balls to players
+    for (int id : context.player_ids) {
+        Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
+        assert(player);
+        balls[ball_count++]->c_set_player(player);
+    }*/
 }
 
 void SumoMG::c_teardown() {

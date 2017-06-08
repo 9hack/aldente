@@ -34,11 +34,13 @@ private:
     bool is_client;
 
     btCapsuleShape *hit_capsule = new btCapsuleShape(0.2f, 1.0f);
+    btCapsuleShape *sumo_hit_capsule = new btCapsuleShape(0.45f, 3.0f);
 
     PlayerStats stats;
     int model_index;
 
     bool momentum;
+    bool sumo;
 public:
     Player(int id = 0);
 
@@ -112,4 +114,6 @@ public:
 
     void set_speed(float to_set) { move_speed = to_set; };
     void set_momentum(bool to_set) { momentum = to_set; };
+
+    void toggle_sumo_collider();
 };

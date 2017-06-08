@@ -19,4 +19,7 @@ public:
     void disconnect_listeners() override;
     void reset_camera() override;
     void reset_scene() override;
+    std::vector<Ball*> get_balls() { return balls; };
+
+    void c_add_ball(Player *to_set);
 };

@@ -198,6 +198,8 @@ Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
     if (is_client) {
         context.player_id = obj_id;
         context.client_player = player;
+
+        sumo_scene.c_add_ball(player);
     }
 
     return player;

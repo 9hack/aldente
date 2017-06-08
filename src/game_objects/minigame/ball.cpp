@@ -1,23 +1,36 @@
 #include "ball.h"
 #include "asset_loader.h"
 #include "events.h"
+#include "util/util_bt.h"
 
 Ball::Ball(int id) : GameObject(id) {
     tag = "BALL";
+    first = true;
 }
 
-void Ball::s_update_this() {
+void Ball::c_update_this() {
     if (player) {
-        transform.set_position(player->transform.get_position());
+        glm::vec3 pos = player->transform.get_position();
+        transform.set_position(pos.x, pos.y - 0.5f, pos.z);
+
+        if (first) {
+            prev_player_vec = pos;
+            first = false;
+            return;
+        }
+
+        glm::vec3 vec = pos - prev_player_vec;
+        vec.y = 0;
+        float speed = glm::length(vec);
+
+        if (speed != 0) {
+            glm::vec3 axis = glm::cross(glm::vec3(0, 1, 0), glm::normalize(vec));
+            axis = glm::normalize(axis);
+            transform.rotate(axis, speed * 100.f);
+        }
+
+        prev_player_vec = pos;
     }
-}
-
-void Ball::c_update_state(glm::mat4 mat, bool enab) {
-    anim_player.update();
-    GameObject::c_update_state(mat, enab);
-}
-
-void Ball::setup_model() {
 }
 
 void Ball::c_set_player(Player *to_set) {

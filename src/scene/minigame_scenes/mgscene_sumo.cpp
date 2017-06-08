@@ -28,12 +28,12 @@ void MGSceneSumo::s_setup() {
     collider->set_position(glm::vec3(0, -8, 0));
     objs.push_back(collider);
 
-    // Instantiate balls for players
-    for (unsigned int i = 0; i < GameState::players.size(); i++) {
+    /*// Instantiate balls for players
+    for (unsigned int i = 0; i < 4; i++) {
         Ball *ball = new Ball();
         objs.push_back(ball);
         balls.push_back(ball);
-    }
+    }*/
 }
 
 void MGSceneSumo::c_setup() {
@@ -49,12 +49,12 @@ void MGSceneSumo::c_setup() {
         Color::WHITE, 0.5f);
     add_light(sun);
 
-    // Instantiate balls for players
-    for (unsigned int i = 0; i < GameState::context.player_ids.size(); i++) {
+    /*// Instantiate balls for players
+    for (unsigned int i = 0; i < 4; i++) {
         Ball *ball = new Ball();
         objs.push_back(ball);
         balls.push_back(ball);
-    }
+    }*/
 
     for (GameObject *obj : objs) {
         obj->setup_model();
@@ -75,4 +75,11 @@ void MGSceneSumo::reset_camera() {
 }
 
 void MGSceneSumo::reset_scene() {
+}
+
+void MGSceneSumo::c_add_ball(Player *to_set) {
+    Ball *ball = new Ball(-1);
+    ball->c_set_player(to_set);
+    objs.push_back(ball);
+    balls.push_back(ball);
 }

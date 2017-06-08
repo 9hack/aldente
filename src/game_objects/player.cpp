@@ -16,7 +16,7 @@
 
 std::vector<std::string> Player::PLAYER_MODELS = { "boy_two", "lizard", "cat", "tomato" };
 
-Player::Player(int id) : GameObject(id), is_client(false), momentum(false) {
+Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo(false) {
     tag = "PLAYER";
 
     if (id == ON_SERVER) {
@@ -406,4 +406,15 @@ void Player::s_set_model_index(int index) {
 
 int Player::c_get_model_index() const {
     return model_index;
+}
+
+void Player::toggle_sumo_collider() {
+    if (sumo) {
+        rigidbody->setCollisionShape(hit_capsule);
+        sumo = false;
+    }
+    else {
+        rigidbody->setCollisionShape(sumo_hit_capsule);
+        sumo = true;
+    }
 }
