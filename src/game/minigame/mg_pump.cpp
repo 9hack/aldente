@@ -19,17 +19,31 @@ PumpMG::PumpMG(Context& to_set) : Minigame(to_set) {
 
 void PumpMG::s_setup() {
     int count = 0;
+    team1.clear();
+    team2.clear();
+
+    std::vector<int> player_assignments = context.player_ids;
+    std::random_shuffle(player_assignments.begin(), player_assignments.end());
+
     // Set up players
-    for (int id : context.player_ids) {
+    bool curr_team = true;
+    for (int id : player_assignments) {
         Player *player = dynamic_cast<Player*>(GameObject::game_objects[id]);
         assert(player);
         player->enable();
+
+        if (curr_team)
+            team1.push_back(player);
+        else
+            team2.push_back(player);
 
         player->get_rigid()->setLinearFactor(btVector3(0, 0, 0));
         player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
         player->set_ghost(true);
         player->set_position(player_start_pos[count++]);
         player->transform.look_at(glm::vec3(0, 0, 1));
+
+        curr_team = !curr_team;
     }
 
     GameState::set_scene(context.minigame_scenes["pump"]);
