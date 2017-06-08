@@ -170,7 +170,7 @@ vec3 calc_color(Material mat,
         pow(max(dot(normal, normalize(light_dir + view_dir)), 0.0), mat.shininess);
 
     // Ambient: c_a (diffuse color) * k_a (coeff)
-    vec3 ambient = mat.diffuse * ambient_coeff;
+    vec3 ambient = light_intensity * mat.diffuse * ambient_coeff;
 
     // Shadows
     float shadow = 0;
