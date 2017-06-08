@@ -155,7 +155,7 @@ void Player::start_walk() {
 
 // Server collision
 void Player::s_on_collision(GameObject *other) {
-    /*// For sumo bounciness
+    // For sumo bounciness
     if (sumo && dynamic_cast<Player*>(other)) {
         glm::vec3 dir = transform.get_position() - other->transform.get_position();
         float speed = glm::length(util_bt::convert_vec3(
@@ -163,7 +163,7 @@ void Player::s_on_collision(GameObject *other) {
 
         dir *= speed;
         rigidbody->applyCentralImpulse(util_bt::convert_vec3(dir));
-    }*/
+    }
 }
 
 // Graphical collision
@@ -418,13 +418,10 @@ int Player::c_get_model_index() const {
 void Player::toggle_sumo_collider() {
     if (sumo) {
         rigidbody->setCollisionShape(hit_capsule);
-        restitution = rigidbody->getRestitution();
-        rigidbody->setRestitution(2.0f);
         sumo = false;
     }
     else {
         rigidbody->setCollisionShape(sumo_hit_capsule);
-        rigidbody->setRestitution(restitution);
         sumo = true;
     }
 }
