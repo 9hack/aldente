@@ -26,6 +26,7 @@ message ClientMessage {
     int32 interact_request = 6;
     int32 ready_request = 7;
     AvatarChange change_avatar_request = 8;
+    int32 pump_request = 9;
   }
 }
 
