@@ -1,3 +1,5 @@
+#include <audio/audio_manager.h>
+#include <game/game_state.h>
 #include "arrow_trap.h"
 #include "asset_loader.h"
 
