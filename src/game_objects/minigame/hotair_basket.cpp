@@ -2,12 +2,13 @@
 #include "asset_loader.h"
 #include "events.h"
 
-HotairBasket(int id) : GameObject(-1) {
+HotAirBasket::HotAirBasket(int id) : GameObject(-1) {
     tag = "BASKET";
 }
 
-void HotairBasket::setup_model() {
+void HotAirBasket::setup_model() {
     attach_model(AssetLoader::get_model("basket"));
+    model->set_shader(&ShaderManager::unlit);
     transform.set_scale({ 0.006f, 0.006f, 0.006f });
     initial_transform.set_scale(transform.get_scale());
 }

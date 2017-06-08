@@ -7,9 +7,9 @@
 #include "../game_object.h"
 #include "btBulletDynamicsCommon.h"
 
-class HotairBasket : public GameObject {
+class HotAirBasket : public GameObject {
 public:
-    HotairBasket(int id);
+    HotAirBasket(int id);
 
     void setup_model() override;
 };

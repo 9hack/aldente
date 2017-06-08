@@ -36,6 +36,7 @@
 #include "game/minigame/minigame.h"
 #include "game/minigame/mg_penguin.h"
 #include "game/minigame/mg_sumo.h"
+#include "game/minigame/mg_pump.h"
 
 #include "game_objects/construct.h"
 #include "game_objects/construct_preview.h"
@@ -45,6 +46,10 @@
 #include "game_objects/tile.h"
 #include "game_objects/minigame/penguin.h"
 #include "game_objects/minigame/platform.h"
+#include "game_objects/minigame/empty_collider.h"
+#include "game_objects/minigame/sumo_ball.h"
+#include "game_objects/minigame/hotair_basket.h"
+#include "game_objects/minigame/pump.h"
 
 #include "input/axis_combiner.h"
 #include "input/conceptual_translator.h"
@@ -86,6 +91,7 @@
 #include "scene/light/spot_light.h"
 #include "scene/minigame_scenes/mgscene_penguin.h"
 #include "scene/minigame_scenes/mgscene_sumo.h"
+#include "scene/minigame_scenes/mgscene_pump.h"
 
 #include "shaders/basic_shader.h"
 #include "shaders/debug_shadow_shader.h"

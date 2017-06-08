@@ -3,8 +3,6 @@
 #include "game_objects/minigame/platform.h"
 #include "events.h"
 #include "../../asset_loader.h"
-#include "game_objects/minigame/pump.h"
-#include "game_objects/minigame/hotair_basket.h"
 
 void MGScenePump::s_update() {
     Scene::s_update();
@@ -21,9 +19,34 @@ void MGScenePump::c_setup() {
     // Set up the platform
     Platform* platform = new Platform(PlatformShape::SQUARE);
 
-    platform->set_position(glm::vec3(0, -0.5f, 0));
+    platform->set_position(glm::vec3(0, -1.f, 0));
     platform->transform.set_scale(glm::vec3(10, 1.0f, 10));
     objs.push_back(platform);
+
+    // Set up 4 pumps
+    for (int i = 0; i < 4; i++) {
+        Pump *pump = new Pump(-1);
+        pumps.push_back(pump);
+        objs.push_back(pump);
+    }
+    
+    // Properly space pumps
+    pumps[0]->transform.set_position(glm::vec3(-5, 0, 0));
+    pumps[1]->transform.set_position(glm::vec3(-1, 0, 0));
+    pumps[2]->transform.set_position(glm::vec3(1, 0, 0));
+    pumps[3]->transform.set_position(glm::vec3(5, 0, 0));
+    
+
+    // Set up the 2 hot air balloons
+    for (int i = 0; i < 2; i++) {
+        HotAirBasket* basket = new HotAirBasket(-1);
+        objs.push_back(basket);
+        baskets.push_back(basket);
+    }
+
+    // Properly space baskets
+    baskets[0]->transform.set_position(glm::vec3(-3, 0, 0));
+    baskets[1]->transform.set_position(glm::vec3(3, 0, 0));
 
     // Setup lights.
     DirectionalLight *sun = new DirectionalLight(glm::vec3(0.f, -1.f, -1.f),
@@ -49,11 +72,4 @@ void MGScenePump::reset_camera() {
 }
 
 void MGScenePump::reset_scene() {
-}
-
-void MGScenePump::c_add_pump(int to_set) {
-    SumoBall *ball = new SumoBall(-1);
-    ball->c_set_player(to_set);
-    objs.push_back(ball);
-    balls.push_back(ball);
 }

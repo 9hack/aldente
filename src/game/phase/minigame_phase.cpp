@@ -10,6 +10,7 @@ MinigamePhase::MinigamePhase(Context& context) : TimedPhase(context) {
     minigames = {
         new PenguinMG(context),
         new SumoMG(context),
+        new PumpMG(context),
     };
     curr_mg = nullptr;
 }
@@ -24,7 +25,7 @@ MinigamePhase::~MinigamePhase() {
 void MinigamePhase::s_setup() {
     // Pick minigame and set up timer/connections
     // For now, just choose first one
-    curr_mg = minigames[1];
+    curr_mg = minigames[2];
 
     do_update = false;
     transition_after(6, curr_mg->get_time().count(), proto::Phase::BUILD);
@@ -40,7 +41,7 @@ void MinigamePhase::c_setup() {
     input::ModalInput::get()->set_mode(input::ModalInput::DISABLE);
     // TODO: client needs to know what minigame was chosen!!
     // For now, choose first one
-    curr_mg = minigames[1];
+    curr_mg = minigames[2];
 
     curr_mg->c_setup();
     // Show minigame info
