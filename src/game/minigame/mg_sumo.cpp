@@ -41,11 +41,9 @@ void SumoMG::s_setup() {
         Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
         assert(player);
 
-        // Set player start location here
-        player->set_position({ 0, 0, 0 });
         player->enable();
-
         player->get_rigid()->setLinearFactor(btVector3(1, 1.5f, 1));
+        player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
         player->set_speed(1.0f);
         player->set_position(player_start_pos[player_count++]);
         player->set_momentum(true);
@@ -54,15 +52,6 @@ void SumoMG::s_setup() {
 
     GameState::set_scene(context.minigame_scenes["sumo"]);
     scene = context.minigame_scenes["sumo"];
-
-    /*int ball_count = 0;
-    std::vector<Ball*> balls = dynamic_cast<MGSceneSumo*>(scene)->get_balls();
-    // Assign balls to players
-    for (int id : context.player_ids) {
-        Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
-        assert(player);
-        balls[ball_count++]->s_set_player(player);
-    }*/
 }
 
 void SumoMG::s_teardown() {
@@ -103,15 +92,6 @@ void SumoMG::c_setup() {
 
     GameState::set_scene(context.minigame_scenes["sumo"]);
     scene = context.minigame_scenes["sumo"];
-
-    /*int ball_count = 0;
-    std::vector<Ball*> balls = dynamic_cast<MGSceneSumo*>(scene)->get_balls();
-    // Assign balls to players
-    for (int id : context.player_ids) {
-        Player* player = dynamic_cast<Player*>(GameObject::game_objects[id]);
-        assert(player);
-        balls[ball_count++]->c_set_player(player);
-    }*/
 }
 
 void SumoMG::c_teardown() {

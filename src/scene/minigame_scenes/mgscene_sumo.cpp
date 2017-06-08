@@ -27,13 +27,6 @@ void MGSceneSumo::s_setup() {
     // Set position
     collider->set_position(glm::vec3(0, -8, 0));
     objs.push_back(collider);
-
-    /*// Instantiate balls for players
-    for (unsigned int i = 0; i < 4; i++) {
-        Ball *ball = new Ball();
-        objs.push_back(ball);
-        balls.push_back(ball);
-    }*/
 }
 
 void MGSceneSumo::c_setup() {
@@ -49,13 +42,6 @@ void MGSceneSumo::c_setup() {
         Color::WHITE, 0.5f);
     add_light(sun);
 
-    /*// Instantiate balls for players
-    for (unsigned int i = 0; i < 4; i++) {
-        Ball *ball = new Ball();
-        objs.push_back(ball);
-        balls.push_back(ball);
-    }*/
-
     for (GameObject *obj : objs) {
         obj->setup_model();
     }
@@ -69,8 +55,8 @@ void MGSceneSumo::disconnect_listeners() {
 
 void MGSceneSumo::reset_camera() {
     info.camera.reset();
-    info.camera.rotate_cam(glm::vec3(1, 0, 0), -65.0f);
-    info.camera.cam_pos = glm::vec3(0, 6, 5);
+    info.camera.rotate_cam(glm::vec3(1, 0, 0), -45.0f);
+    info.camera.cam_pos = glm::vec3(0, 8, 9);
     info.camera.recalculate();
 }
 

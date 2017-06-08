@@ -48,6 +48,7 @@ void PenguinMG::s_setup() {
         Player *player = dynamic_cast<Player*>(GameObject::game_objects[id]);
         assert(player);
         player->get_rigid()->setLinearFactor(btVector3(1, 1.5f, 1));
+        player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
         glm::vec3 pos = player->transform.get_position();
         pos.y = 1.f;
         player->set_speed(1.0f);

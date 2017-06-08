@@ -19,13 +19,7 @@ private:
 public:
     Ball(int id = 0);
 
-    //void setup_model() override;
-
     void c_update_this() override;
-
-    //void c_update_state(glm::mat4 mat, bool enab) override;
-
-    //void s_set_player(Player *to_set) { player = to_set; };
 
     void c_set_player(Player *to_set);
 };
