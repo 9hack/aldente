@@ -161,7 +161,12 @@ void Player::s_on_collision(GameObject *other) {
         float speed = glm::length(util_bt::convert_vec3(
             other->get_rigid()->getLinearVelocity()));
 
-        dir *= speed;
+        dir *= speed * 0.25f;
+        glm::vec3 clamp = glm::normalize(dir) * 0.1f;
+        if (glm::length(dir) < glm::length(clamp)) {
+            dir = clamp;
+        }
+
         rigidbody->applyCentralImpulse(util_bt::convert_vec3(dir));
     }
 }
