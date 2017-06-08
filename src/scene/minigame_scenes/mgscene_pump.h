@@ -11,6 +11,7 @@ class MGScenePump : public Scene {
 private:
     std::vector<Pump*> pumps;
     std::vector<HotAirBasket*> baskets;
+    int player_count;
 public:
     MGScenePump() {};
     void s_update() override;

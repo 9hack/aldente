@@ -25,7 +25,12 @@ void MGScenePump::c_setup() {
 
     // Set up 4 pumps
     for (int i = 0; i < 4; i++) {
-        Pump *pump = new Pump(-1);
+        Pump *pump;
+        if (i <= 1)
+            pump = new Pump(-1, PumpColor::RED);
+        else
+            pump = new Pump(-1, PumpColor::BLUE);
+
         pumps.push_back(pump);
         objs.push_back(pump);
     }
@@ -72,4 +77,8 @@ void MGScenePump::reset_camera() {
 }
 
 void MGScenePump::reset_scene() {
+}
+
+void MGScenePump::c_add_pump(int to_set) {
+
 }

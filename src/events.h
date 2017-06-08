@@ -347,5 +347,8 @@ namespace events {
 
         // Signals that the player has died
         extern signal<void(int)> player_died_event;
+
+        // Signals anim for pumping
+        extern signal<void(int)> c_play_pump_event;
     }
 }

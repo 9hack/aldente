@@ -27,7 +27,9 @@ void PumpMG::s_setup() {
 
         player->get_rigid()->setLinearFactor(btVector3(0, 0, 0));
         player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
-        player->transform.set_position(player_start_pos[count++]);
+        player->set_ghost(true);
+        player->set_position(player_start_pos[count++]);
+        player->transform.look_at(glm::vec3(0, 0, 1));
     }
 
     GameState::set_scene(context.minigame_scenes["pump"]);
@@ -39,6 +41,7 @@ void PumpMG::s_teardown() {
         assert(player);
         player->get_rigid()->setLinearFactor(btVector3(1, 0, 1));
         player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
+        player->set_ghost(false);
         player->set_speed(2.0f);
     }
 
@@ -56,10 +59,34 @@ void PumpMG::s_teardown() {
 }
 
 void PumpMG::c_setup() {
+    int count = 0;
+
+    button_conn = input::ModalInput::get()->with_mode(input::ModalInput::NORMAL).buttons.connect([&](const events::ButtonData &d) {
+        if (d.state == 1) {
+            switch (d.input) {
+            case events::BTN_A:
+                // A button pressed.
+                events::minigame::c_play_pump_event(context.player_id);
+                break;
+            default:
+                break;
+            }
+        }
+    });
+
+    Player *player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
+    assert(player);
+    player->set_pump();
+    player->set_anim_override(true);
+
     GameState::set_scene(context.minigame_scenes["pump"]);
 }
 
 void PumpMG::c_teardown() {
+    Player *player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
+    assert(player);
+    player->start_walk();
+    player->set_anim_override(false);
 }
 
 bool PumpMG::is_finished() {

@@ -24,10 +24,10 @@ private:
     boost::signals2::connection button_conn;
 
     std::vector<glm::vec3> player_start_pos{
-        { -3, 0, -0.5f },
-        { -2, 0, -0.5f },
-        { 2, 0, -0.5f },
-        { 3, 0, -0.5f },
+        { -5, 0.0f, -0.5f },
+        { -1, 0.0f, -0.5f },
+        { 5, 0.0f, -0.5f },
+        { 1, 0.0f, -0.5f },
     };
     //std::map<int, bool> dead_player_flags;
 };
