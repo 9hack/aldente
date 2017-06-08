@@ -64,7 +64,7 @@ void MGSceneSumo::reset_scene() {
 }
 
 void MGSceneSumo::c_add_ball(Player *to_set) {
-    Ball *ball = new Ball(-1);
+    SumoBall *ball = new SumoBall(-1);
     ball->c_set_player(to_set);
     objs.push_back(ball);
     balls.push_back(ball);

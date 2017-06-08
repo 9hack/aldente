@@ -68,7 +68,7 @@ void SumoMG::s_teardown() {
         player->toggle_sumo_collider();
     }
 
-    // Assigns rewards to alive players
+    // Distribute reward evenly to all alive players
     int count = 0;
     for (auto const &kv : dead_player_flags) {
         if (!kv.second)

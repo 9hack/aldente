@@ -1,14 +1,14 @@
 #pragma once
 
 #include "scene/scene.h"
-#include "game_objects/minigame/ball.h"
+#include "game_objects/minigame/sumo_ball.h"
 
 /*
 Scene for sumo minigame
 */
 class MGSceneSumo : public Scene {
 private:
-    std::vector<Ball*> balls;
+    std::vector<SumoBall*> balls;
 public:
     MGSceneSumo() {};
     void s_update() override;
@@ -19,7 +19,7 @@ public:
     void disconnect_listeners() override;
     void reset_camera() override;
     void reset_scene() override;
-    std::vector<Ball*> get_balls() { return balls; };
+    std::vector<SumoBall*> get_balls() { return balls; };
 
     void c_add_ball(Player *to_set);
 };

@@ -1,14 +1,16 @@
-#include "ball.h"
+#include "sumo_ball.h"
 #include "asset_loader.h"
 #include "events.h"
 #include "util/util_bt.h"
 
-Ball::Ball(int id) : GameObject(id) {
+SumoBall::SumoBall(int id) : GameObject(id) {
     tag = "BALL";
     first = true;
 }
 
-void Ball::c_update_this() {
+void SumoBall::c_update_this() {
+    // Make the ball follow the player and
+    // rotate with its direction
     if (player) {
         glm::vec3 pos = player->transform.get_position();
         transform.set_position(pos.x, pos.y - 0.5f, pos.z);
@@ -33,7 +35,7 @@ void Ball::c_update_this() {
     }
 }
 
-void Ball::c_set_player(Player *to_set) {
+void SumoBall::c_set_player(Player *to_set) {
     player = to_set;
     int index = player->c_get_model_index();
 
