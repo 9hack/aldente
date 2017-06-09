@@ -1,3 +1,4 @@
+#include <audio/audio_manager.h>
 #include "ui_grid.h"
 
 #include "events.h"

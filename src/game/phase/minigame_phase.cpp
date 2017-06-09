@@ -1,5 +1,6 @@
 #include <game/game_state.h>
 #include <util/config.h>
+#include <audio/audio_manager.h>
 #include "minigame_phase.h"
 #include "input/modal_input.h"
 

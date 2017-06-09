@@ -1,3 +1,4 @@
+#include <audio/audio_manager.h>
 #include "leaderboard_ui.h"
 
 #include "util/color.h"

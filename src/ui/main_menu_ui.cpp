@@ -6,6 +6,7 @@
 #include "util/color.h"
 #include "asset_loader.h"
 #include <iostream>
+#include <audio/audio_manager.h>
 
 MainMenuUI::MainMenuUI(float aspect)
         : UI(0.f * aspect, 0.f),
