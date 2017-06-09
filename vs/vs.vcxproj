@@ -178,6 +178,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game\minigame\mg_sumo.h" />
     <ClInclude Include="..\src\game\minigame\minigame.h" />
     <ClInclude Include="..\src\game\phase\build.h" />
+    <ClInclude Include="..\src\game\phase\dialogue.h" />
     <ClInclude Include="..\src\game\phase\dungeon.h" />
     <ClInclude Include="..\src\game\phase\menu.h" />
     <ClInclude Include="..\src\game\phase\minigame_phase.h" />
@@ -315,6 +316,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\game\minigame\mg_penguin.cpp" />
     <ClCompile Include="..\src\game\minigame\mg_sumo.cpp" />
     <ClCompile Include="..\src\game\phase\build.cpp" />
+    <ClCompile Include="..\src\game\phase\dialogue.cpp" />
     <ClCompile Include="..\src\game\phase\dungeon.cpp" />
     <ClCompile Include="..\src\game\phase\menu.cpp" />
     <ClCompile Include="..\src\game\phase\minigame_phase.cpp" />

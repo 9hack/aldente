@@ -30,6 +30,7 @@ void MinigamePhase::s_setup() {
     do_update = false;
     transition_after(6, curr_mg->get_time().count(), proto::Phase::BUILD);
     Timer::get()->do_after(std::chrono::seconds(6), [this]() {
+        curr_mg->get_scene()->start_timers();
         do_update = true;
     });
 
@@ -47,7 +48,7 @@ void MinigamePhase::c_setup() {
     // Show minigame info
     events::ui::show_legend(curr_mg->get_info().input_legend);
     Timer::get()->do_after(std::chrono::seconds(1), [this]() {
-        events::ui::show_notification(curr_mg->get_info().objective);
+        events::ui::show_notification(curr_mg->get_info().objective, 5);
     });
 
     events::ui::show_countdown({"3", "2", "1", "GO"}, [this]() {
@@ -83,6 +84,7 @@ void MinigamePhase::c_update() {
 
 void MinigamePhase::s_teardown() {
     cancel_clock_every();
+    curr_mg->get_scene()->stop_timers();
     curr_mg->s_teardown();
 
     events::minigame::end_minigame_event();

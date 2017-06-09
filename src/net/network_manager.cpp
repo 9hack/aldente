@@ -203,6 +203,10 @@ void ServerNetworkManager::update() {
                 events::minigame::s_inflate_balloon_event(player);
                 break;
             }
+            case proto::ClientMessage::MessageTypeCase::kPlayerFinishedDialogue: {
+                events::dialogue::s_player_finished_dialogue(msg.player_finished_dialogue());
+                break;
+            }
             default:
                 break;
             }

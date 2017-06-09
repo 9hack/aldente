@@ -2,7 +2,17 @@
 
 #include "model/geometry_generator.h"
 
+#include "events.h"
+
 #define SKYBOX_DIRECTORY_PATH "assets/skybox/"
+
+// List of skyboxes. Hard-coded for now.
+std::vector<std::string> SkyboxShader::skyboxes = {
+        "cloud0", "cloud1",
+        "cloud2", "cloud3",
+        "cloud4",
+        "fog", "space"
+};
 
 void SkyboxShader::set_skybox(std::string skybox_name) {
     if (texture_ids.find(skybox_name) != texture_ids.end())
@@ -12,11 +22,6 @@ void SkyboxShader::set_skybox(std::string skybox_name) {
 void SkyboxShader::init() {
     // Use cube geometry.
     cube_geometry = GeometryGenerator::generate_cube(2.f);
-
-    // List of skyboxes. Hard-coded for now.
-    std::vector<std::string> skyboxes {
-            "cloud1", "fog", "space"
-    };
 
     // Name of each file, in ppm format. Hard-coded for now.
     std::vector<std::string> faces {
@@ -58,6 +63,15 @@ void SkyboxShader::init() {
 
     // Set default skybox to be the first one.
     set_skybox(skyboxes[0]);
+
+    // Listen to round changing.
+    events::ui::round_changed_event.connect([&](int round_number) {
+       set_skybox(skyboxes[round_number % 5]);
+    });
+
+    events::menu::end_menu_event.connect([&]() {
+        rot = glm::rotate(glm::mat4(1.f), glm::radians(67.f), glm::vec3(1.f, 0.3f, 0.8f));
+    });
 }
 
 void SkyboxShader::pre_draw(SceneInfo &scene_info) {}
@@ -73,6 +87,7 @@ void SkyboxShader::draw(Mesh *mesh, SceneInfo &scene_info, glm::mat4 to_world) {
     // Send view and projection matrices
     set_uni("view", view);
     set_uni("projection", scene_info.camera.P);
+    set_uni("rot", rot);
 
     // Bind active texture.
     glActiveTexture(GL_TEXTURE0);
