@@ -19,9 +19,10 @@ private:
     std::vector<ConstructData> constructs;
     UIGrid ui_grid;
     UIRectangle rect;
-    UIContainer info_panel, player_panel, shop_panel;
-    UIRectangle info_rect, player_rect;
-    UITextBox title_label, description_label, cost_label, balance_label;
+    UIContainer info_panel, shop_panel;
+    UIRectangle info_rect;
+    UITextBox title_label, description_label, cost_label;
+    UIImageNode gold_image;
 
     std::vector<UIImageNode*> images;
 };

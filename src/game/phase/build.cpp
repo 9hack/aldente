@@ -3,6 +3,8 @@
 #include "build.h"
 #include "audio/audio_manager.h"
 
+#define STARTING_GOLD 100
+
 bool BuildPhase::is_menu = true;
 
 std::string BuildPhase::to_string() {
@@ -10,6 +12,10 @@ std::string BuildPhase::to_string() {
 }
 
 void BuildPhase::s_setup() {
+
+    // Update the round counter. Starts at 0, so pre-increment.
+    ++context.current_round;
+
     GameState::set_scene(&GameState::main_scene);
 
     transition_after(0, 60, proto::Phase::DUNGEON);
@@ -44,15 +50,19 @@ void BuildPhase::s_setup() {
         Player* player = p.second;
         player->set_start_position({ 2.f, 0, 1.f + p.first });
         player->reset_position();
+
+        // If it's the first round, grant everyone start gold
+        if (context.current_round == 1) {
+            player->s_modify_stats([](PlayerStats &stats) {
+                stats.set_coins(STARTING_GOLD);
+            });
+        }
     }
 
     // Resets all game objects
     for (auto & kv : GameObject::game_objects) {
         kv.second->s_reset();
     }
-
-    // Update the round counter. Starts at 0, so pre-increment.
-    ++context.current_round;
 }
 
 void BuildPhase::c_setup() {
@@ -97,8 +107,16 @@ void BuildPhase::c_setup() {
         Direction dir;
         bool d_pad = false;
 
-        if (d.state == 0) return;
-        switch (d.input) {
+        if (d.state == 0) {
+            switch (d.input) {
+                case events::BTN_LB:
+                    events::ui::disable_leaderboard();
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (d.input) {
             case events::BTN_A: {
                 if (is_menu)
                     events::build::select_grid_confirm_event();
@@ -144,6 +162,8 @@ void BuildPhase::c_setup() {
             case events::BTN_LB: {
                 if (!is_menu)
                     events::build::c_rotate_preview_event(false);
+                else
+                    events::ui::enable_leaderboard();
                 break;
             }
             case events::BTN_RB: {
@@ -153,6 +173,7 @@ void BuildPhase::c_setup() {
             }
             default:
                 break;
+            }
         }
 
         if (d_pad) {

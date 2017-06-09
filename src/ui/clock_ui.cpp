@@ -10,7 +10,7 @@ ClockUI::ClockUI(float aspect, int rounds)
                 0.f, 0.f, // starting coordinates
                 20.f * aspect, 10.f, // width and height
                 Color::WHITE, Color::BLACK, // foreground and background
-                0.5f), // transparency
+                0.f), // transparency
           round_count_bg(0, -2.f,
                 20.f * aspect, 2.f, // width and height
                 rounds, rounds, // num rectangles = num rounds
@@ -20,7 +20,7 @@ ClockUI::ClockUI(float aspect, int rounds)
                 0),  // no halo selector
           ready(3.f, 3.f, 0.f, -24.f, 20.f * aspect, 20.f, 0.f,
                 UIUnstretchedTextBox::MIDDLE, UIUnstretchedTextBox::START,
-                Color::BLACK, Color::BLACK, 1.f, false) {
+                Color::WHITE, Color::BLACK, 1.f, false) {
 
     attach(clock);
 

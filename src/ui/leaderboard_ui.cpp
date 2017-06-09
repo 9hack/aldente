@@ -59,7 +59,7 @@ LeaderboardUI::LeaderboardUI(float aspect)
         disable_animated();
     });
 
-    events::ui::leaderboard_update.connect([&](int player_id, int gold, std::string model) {
+    events::ui::leaderboard_update.connect([this](int player_id, int gold, std::string model) {
         // Set up association from player id to leaderboard entry if none exists.
         auto it = id_to_entry.find(player_id);
         if (it == id_to_entry.end()) {
