@@ -16,6 +16,7 @@
 #include "countdown_ui.h"
 #include "util/config.h"
 #include "effects_ui.h"
+#include "char_selection_ui.h"
 
 UIManager::~UIManager() {
     for (auto it = ui_map.begin(); it != ui_map.end(); ++it) {
@@ -55,6 +56,9 @@ void UIManager::setup_uis() {
 
     /* SCORE SCREEN UI */
     ui_map["score-screen"] = new ScoreUI(aspect);
+
+    /* CHARACTER SELECTION UI */
+    ui_map["char-select"] = new CharSelectionUI(aspect);
 
     /* LEADERBOARD UI */
     ui_map["z4-leaderboard"] = new LeaderboardUI(aspect);
