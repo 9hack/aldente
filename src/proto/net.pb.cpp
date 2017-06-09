@@ -499,11 +499,11 @@ void protobuf_AddDesc_net_2eproto() {
     "vatarChange\022\021\n\tplayer_id\030\001 \001(\005\022\023\n\013model_"
     "index\030\002 \001(\005\"+\n\010PumpPair\022\021\n\tplayer_id\030\001 \001"
     "(\005\022\014\n\004pump\030\002 \001(\005\"0\n\016PumpAssignment\022\036\n\005pa"
-    "irs\030\001 \003(\0132\017.proto.PumpPair*\213\001\n\005Phase\022\010\n\004"
+    "irs\030\001 \003(\0132\017.proto.PumpPair*\241\001\n\005Phase\022\010\n\004"
     "NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002"
-    "\022\014\n\010MINIGAME\020\003\022\022\n\016BUILD_TUTORIAL\020\005\022\024\n\020DU"
-    "NGEON_TUTORIAL\020\006\022\025\n\021MINIGAME_TUTORIAL\020\007\022"
-    "\007\n\003END\020\010", 2048);
+    "\022\014\n\010MINIGAME\020\003\022\024\n\020MINIGAME_RESULTS\020\t\022\022\n\016"
+    "BUILD_TUTORIAL\020\005\022\024\n\020DUNGEON_TUTORIAL\020\006\022\025"
+    "\n\021MINIGAME_TUTORIAL\020\007\022\007\n\003END\020\010", 2070);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -560,6 +560,7 @@ bool Phase_IsValid(int value) {
     case 6:
     case 7:
     case 8:
+    case 9:
       return true;
     default:
       return false;
