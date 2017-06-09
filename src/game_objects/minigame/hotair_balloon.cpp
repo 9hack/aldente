@@ -5,6 +5,7 @@
 HotAirBalloon::HotAirBalloon(int id, BalloonColor to_set) : GameObject(id) {
 	tag = "BALLOON";
 	color = to_set;
+	scale = INITIAL_SCALE;
 }
 
 void HotAirBalloon::setup_model() {
@@ -18,7 +19,7 @@ void HotAirBalloon::setup_model() {
 		default: break;
 	}
 	//model->set_shader(&ShaderManager::unlit);
-	transform.set_scale({ 0.001f, 0.001f, 0.001f });
+	transform.set_scale({ INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE });
 	initial_transform.set_scale(transform.get_scale());
 }
 
@@ -32,4 +33,9 @@ void HotAirBalloon::c_update_state(glm::mat4 mat, bool enab) {
 		transform.set_world_mat(mat);
 		set_rb_transform();
 	}
+}
+
+void HotAirBalloon::inflate() {
+	scale += 0.000025f;
+	transform.set_scale(scale, scale, scale);
 }

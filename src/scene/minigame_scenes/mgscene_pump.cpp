@@ -23,9 +23,9 @@ void MGScenePump::s_setup() {
 
 	// Properly space balloons
 	balloons[0]->transform.set_position(glm::vec3(-3, 1.6f, 0));
-	balloons[0]->transform.set_scale({ 0.001f, 0.001f, 0.001f });
+	balloons[0]->transform.set_scale({ INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE });
 	balloons[1]->transform.set_position(glm::vec3(3, 1.6f, 0));
-	balloons[1]->transform.set_scale({ 0.001f, 0.001f, 0.001f });
+	balloons[1]->transform.set_scale({ INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE });
 }
 
 void MGScenePump::c_setup() {
@@ -102,8 +102,17 @@ void MGScenePump::reset_camera() {
 }
 
 void MGScenePump::reset_scene() {
+	balloons[0]->transform.set_scale(glm::vec3(INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE));
+	balloons[1]->transform.set_scale(glm::vec3(INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE));
 }
 
 void MGScenePump::c_add_pump(int to_set) {
 
+}
+
+void MGScenePump::inflate_balloon(bool is_team1) {
+	if (is_team1)
+		balloons[0]->inflate();
+	else
+		balloons[1]->inflate();
 }

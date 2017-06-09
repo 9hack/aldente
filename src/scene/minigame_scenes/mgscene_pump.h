@@ -25,4 +25,5 @@ public:
     void reset_camera() override;
     void reset_scene() override;
     void c_add_pump(int to_set);
+	void inflate_balloon(bool is_team1);
 };
