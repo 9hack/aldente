@@ -39,7 +39,7 @@ void MGScenePump::c_setup() {
     // Set up 4 pumps
     for (int i = 0; i < 4; i++) {
         Pump *pump;
-        if (i <= 1)
+        if (i % 2 == 0)
             pump = new Pump(-1, PumpColor::RED);
         else
             pump = new Pump(-1, PumpColor::BLUE);
@@ -50,9 +50,9 @@ void MGScenePump::c_setup() {
     
     // Properly space pumps
     pumps[0]->transform.set_position(glm::vec3(-5, 0, 0));
-    pumps[1]->transform.set_position(glm::vec3(1, 0, 0));
+    pumps[1]->transform.set_position(glm::vec3(5, 0, 0));
     pumps[2]->transform.set_position(glm::vec3(-1, 0, 0));
-    pumps[3]->transform.set_position(glm::vec3(5, 0, 0));
+    pumps[3]->transform.set_position(glm::vec3(1, 0, 0));
     
 
     // Set up the 2 hot air balloons
