@@ -4,6 +4,14 @@
 #include "events.h"
 #include "../../asset_loader.h"
 
+MGScenePump::MGScenePump() {
+    events::minigame::c_assign_pump_event.connect([&](int player_id, int pump) {
+        //pump_map[player_id] = pumps[pump];
+        std::cerr << "[c] assign pump " << pump << " to player " << player_id << "\n";
+        pumps[pump]->c_set_player_id(player_id);
+    });
+}
+
 void MGScenePump::s_update() {
     Scene::s_update();
 }
@@ -86,20 +94,12 @@ void MGScenePump::c_setup() {
     for (GameObject *obj : objs) {
         obj->setup_model();
     }
-
-	pump_conn = events::minigame::c_assign_pump_event.connect([&](int player_id, int pump) {
-		//pump_map[player_id] = pumps[pump];
-		std::cerr << "[c] assign pump " << pump << " to player " << player_id << "\n";
-		pumps[pump]->c_set_player_id(player_id);
-	});
 }
 
 void MGScenePump::connect_listeners() {
-    
 }
 
 void MGScenePump::disconnect_listeners() {
-    pump_conn.disconnect();
 }
 
 void MGScenePump::reset_camera() {
