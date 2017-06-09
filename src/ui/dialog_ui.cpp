@@ -6,13 +6,13 @@
 #include "input/modal_input.h"
 
 DialogUI::DialogUI(float aspect, float width, float height, float padding)
-    : bg(0, 0, aspect * 100.f, 100.f, Color::BLACK, 0.8f)
+    : bg(0, 0, aspect * 100.f, 100.f, Color::BLACK, 0.5f)
     , textbox(3.f, 4.f,
               aspect * (100.f - width) / 2, // Center
               padding, aspect * width, height, padding,
               UIUnstretchedTextBox::START, UIUnstretchedTextBox::START, Color::WHITE, Color::BLACK, 0.5f)
     , portrait(aspect * (width + (100.f - width) / 2 - width / 1.7), // Right-align
-               padding, aspect * width / 1.7, height * 3,
+               0.f, aspect * width / 1.7, height * 3,
                AssetLoader::get_texture("dio.jpg"))
     , cancel_text_animation([](){})
     , animating(false) {
