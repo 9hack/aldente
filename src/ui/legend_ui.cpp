@@ -41,7 +41,7 @@ LegendUI::LegendUI(float aspect, float legend_width_, float entry_height_, float
         set_legend(BUILD_MENU_LEGEND);
         enable();
     });
-    events::build::select_grid_confirm_event.connect([&]() {
+    events::build::construct_selected_event.connect([&](auto _) {
         set_legend(BUILD_SELECTED_LEGEND);
         enable();
     });
