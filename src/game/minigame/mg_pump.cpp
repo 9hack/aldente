@@ -5,6 +5,7 @@
 #include "game_objects/player.h"
 #include <iostream>
 #include <algorithm>
+#include <audio/audio_manager.h>
 
 PumpMG::PumpMG(Context& to_set) : Minigame(to_set) {
     time = PUMPMG_TIME;

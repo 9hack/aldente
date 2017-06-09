@@ -10,6 +10,7 @@
 #include "audio/audio_manager.h"
 
 #include <iostream>
+#include <game/game_state.h>
 
 #define ESSENCE_TIME_OUT 6000 // Milliseconds
 #define DISAPPEAR_ANIM_LENGTH 500 // Time it takes for disappearing animation to finish

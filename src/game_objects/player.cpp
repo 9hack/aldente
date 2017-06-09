@@ -282,6 +282,9 @@ bool Player::s_take_damage() {
     if (invulnerable || exiting)
         return false;
 
+    cancel_stun();
+    cancel_invulnerable();
+
     // Period of invulerability
     invulnerable = true;
 
@@ -309,13 +312,13 @@ bool Player::s_take_damage() {
         events::dungeon::s_spawn_essence_event(transform.get_position().x, transform.get_position().z);
     
     // End Stunned
-    Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
+    cancel_stun = Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
         [&]() {
         stunned = false;
     });
 
     // End Invulernability
-    Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
+    cancel_invulnerable = Timer::get()->do_after(std::chrono::milliseconds(INVULNERABLE_LENGTH),
         [&]() {
         invulnerable = false;
 

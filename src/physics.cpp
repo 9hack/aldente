@@ -44,8 +44,10 @@ Physics::Physics() {
     });
 
     events::update_collision_mask_event.connect([&](GameObject *obj) {
-        disable_rigid(obj);
-        enable_rigid(obj);
+        obj->disable();
+        obj->enable();
+        //disable_rigid(obj);
+        //enable_rigid(obj);
     });
 }
 
