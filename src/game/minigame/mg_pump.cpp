@@ -51,8 +51,7 @@ void PumpMG::s_setup() {
         // Find which team the player is on.
         bool is_team1 = std::find(team1.begin(), team1.end(), player) != team1.end();
 
-        // TODO(kavin): inflate the corresponding balloon.
-        std::cerr << "[s] inflating balloon of team " << (is_team1 ? "1" : "2") << "\n";
+		dynamic_cast<MGScenePump*>(context.minigame_scenes["pump"])->inflate_balloon(is_team1);
     });
 
     GameState::set_scene(context.minigame_scenes["pump"]);
