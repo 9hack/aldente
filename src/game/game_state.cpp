@@ -289,6 +289,10 @@ int GameState::cycle_avatar(Player* player) {
         }
     }
 
+    // If player has readied up, don't allow changing avatar.
+    if (context.ready_flags[player->get_id()])
+        return old;
+
     for (int i = 0; i < 4; i++) {
         int current = (old + i) % 4;
         // This avatar is currently not in use. Assign to player.
