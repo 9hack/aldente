@@ -27,7 +27,7 @@ void MinigamePhase::s_setup() {
 
     // Pick minigame and set up timer/connections
     // For now, just choose first one
-    curr_mg = minigames[2];
+    curr_mg = minigames[1];
 
     do_update = false;
     transition_after(6, curr_mg->get_time().count(), s_phase_when_done());
@@ -46,7 +46,7 @@ void MinigamePhase::c_setup() {
     input::ModalInput::get()->set_mode(input::ModalInput::DISABLE);
     // TODO: client needs to know what minigame was chosen!!
     // For now, choose first one
-    curr_mg = minigames[2];
+    curr_mg = minigames[1];
 
     curr_mg->c_setup();
     // Show minigame info
