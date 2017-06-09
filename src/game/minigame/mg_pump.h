@@ -7,7 +7,7 @@
 Holds the functionality for the "Hot Air Balloon" minigame
 */
 
-const auto PUMPMG_TIME = std::chrono::seconds(60);
+const auto PUMPMG_TIME = std::chrono::seconds(30);
 const int PUMPMG_REWARD = 100;
 
 class PumpMG : public Minigame {
@@ -35,5 +35,7 @@ private:
 
     std::vector<Player*> team1;
     std::vector<Player*> team2;
+	int team1_points;
+	int team2_points;
     //std::map<int, bool> dead_player_flags;
 };

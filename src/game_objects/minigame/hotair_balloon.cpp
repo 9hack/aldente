@@ -39,3 +39,8 @@ void HotAirBalloon::inflate() {
 	scale += 0.000025f;
 	transform.set_scale(scale, scale, scale);
 }
+
+void HotAirBalloon::reset() {
+	transform.set_scale(glm::vec3(INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE));
+	scale = INITIAL_SCALE;
+}

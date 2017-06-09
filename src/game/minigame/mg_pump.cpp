@@ -22,12 +22,14 @@ void PumpMG::s_setup() {
     int count = 0;
     team1.clear();
     team2.clear();
+	team1_points = 0;
+	team2_points = 0;
 
     std::vector<int> player_assignments = context.player_ids;
     std::random_shuffle(player_assignments.begin(), player_assignments.end());
 
     proto::ServerMessage msg;
-    proto::PumpAssignment* pump_asg = new proto::PumpAssignment();
+	proto::PumpAssignment *pump_asg = msg.mutable_pump_assignment();
 
     // Set up players
     bool curr_team = true;
@@ -55,12 +57,16 @@ void PumpMG::s_setup() {
         pair->set_pump(position);
     }
 
-    msg.set_allocated_pump_assignment(pump_asg);
     events::server::announce(msg);
 
     inflate_conn = events::minigame::s_inflate_balloon_event.connect([&](Player* player) {
         // Find which team the player is on.
         bool is_team1 = std::find(team1.begin(), team1.end(), player) != team1.end();
+
+		if (is_team1)
+			team1_points++;
+		else
+			team2_points++;
 
 		dynamic_cast<MGScenePump*>(context.minigame_scenes["pump"])->inflate_balloon(is_team1);
     });
@@ -80,17 +86,22 @@ void PumpMG::s_teardown() {
         player->set_speed(2.0f);
     }
 
-    /*// Assigns rewards to alive players
-    Player *curr_player;
-    for (auto const &kv : dead_player_flags) {
-        if (!kv.second) {
-            curr_player = dynamic_cast<Player*>(GameObject::game_objects[kv.first]);
-            assert(curr_player);
-            curr_player->s_modify_stats([&, kv](PlayerStats &stats) {
-                stats.add_coins(PUMPMG_REWARD);
-            });
-        }
-    }*/
+    // Assigns rewards to winning team. 
+	// No reward if somehow they tie.
+	if (team1_points > team2_points) {
+		for (Player* player : team1) {
+			player->s_modify_stats([&](PlayerStats &stats) {
+				stats.add_coins(PUMPMG_REWARD);
+			});
+		}
+	}
+	else if (team1_points < team2_points) {
+		for (Player* player : team2) {
+			player->s_modify_stats([&](PlayerStats &stats) {
+				stats.add_coins(PUMPMG_REWARD);
+			});
+		}
+	}
 }
 
 void PumpMG::c_setup() {

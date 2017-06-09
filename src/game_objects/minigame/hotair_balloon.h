@@ -23,4 +23,6 @@ public:
 	void c_update_state(glm::mat4 mat, bool enab) override;
 
 	void inflate();
+
+	void reset();
 };
