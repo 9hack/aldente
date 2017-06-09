@@ -152,6 +152,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kTimeUpdate = 8,
     kChangeAvatarUpdate = 9,
     kPumpAssignment = 10,
+    kPumpUpdate = 11,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -267,6 +268,13 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::proto::PumpAssignment* release_pump_assignment();
   inline void set_allocated_pump_assignment(::proto::PumpAssignment* pump_assignment);
 
+  // optional int32 pump_update = 11;
+  inline bool has_pump_update() const;
+  inline void clear_pump_update();
+  static const int kPumpUpdateFieldNumber = 11;
+  inline ::google::protobuf::int32 pump_update() const;
+  inline void set_pump_update(::google::protobuf::int32 value);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
@@ -280,6 +288,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_time_update();
   inline void set_has_change_avatar_update();
   inline void set_has_pump_assignment();
+  inline void set_has_pump_update();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -300,6 +309,7 @@ class ServerMessage : public ::google::protobuf::Message {
     ::google::protobuf::int32 time_update_;
     ::proto::AvatarChange* change_avatar_update_;
     ::proto::PumpAssignment* pump_assignment_;
+    ::google::protobuf::int32 pump_update_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -2192,6 +2202,33 @@ inline void ServerMessage::set_allocated_pump_assignment(::proto::PumpAssignment
     set_has_pump_assignment();
     message_type_.pump_assignment_ = pump_assignment;
   }
+}
+
+// optional int32 pump_update = 11;
+inline bool ServerMessage::has_pump_update() const {
+  return message_type_case() == kPumpUpdate;
+}
+inline void ServerMessage::set_has_pump_update() {
+  _oneof_case_[0] = kPumpUpdate;
+}
+inline void ServerMessage::clear_pump_update() {
+  if (has_pump_update()) {
+    message_type_.pump_update_ = 0;
+    clear_has_message_type();
+  }
+}
+inline ::google::protobuf::int32 ServerMessage::pump_update() const {
+  if (has_pump_update()) {
+    return message_type_.pump_update_;
+  }
+  return 0;
+}
+inline void ServerMessage::set_pump_update(::google::protobuf::int32 value) {
+  if (!has_pump_update()) {
+    clear_message_type();
+    set_has_pump_update();
+  }
+  message_type_.pump_update_ = value;
 }
 
 inline bool ServerMessage::has_message_type() {

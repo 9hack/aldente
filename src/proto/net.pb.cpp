@@ -34,6 +34,7 @@ struct ServerMessageOneofInstance {
   ::google::protobuf::int32 time_update_;
   const ::proto::AvatarChange* change_avatar_update_;
   const ::proto::PumpAssignment* pump_assignment_;
+  ::google::protobuf::int32 pump_update_;
 }* ServerMessage_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* ClientMessage_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -100,7 +101,7 @@ void protobuf_AssignDesc_net_2eproto() {
       "net.proto");
   GOOGLE_CHECK(file != NULL);
   ServerMessage_descriptor_ = file->message_type(0);
-  static const int ServerMessage_offsets_[11] = {
+  static const int ServerMessage_offsets_[12] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, ping_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, build_update_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, join_response_),
@@ -111,6 +112,7 @@ void protobuf_AssignDesc_net_2eproto() {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, time_update_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, change_avatar_update_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, pump_assignment_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ServerMessage_default_oneof_instance_, pump_update_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerMessage, message_type_),
   };
   ServerMessage_reflection_ =
@@ -450,7 +452,7 @@ void protobuf_AddDesc_net_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\tnet.proto\022\005proto\"\243\003\n\rServerMessage\022\016\n\004"
+    "\n\tnet.proto\022\005proto\"\272\003\n\rServerMessage\022\016\n\004"
     "ping\030\001 \001(\004H\000\022(\n\014build_update\030\002 \001(\0132\020.pro"
     "to.ConstructH\000\022,\n\rjoin_response\030\003 \001(\0132\023."
     "proto.JoinResponseH\000\022(\n\014state_update\030\004 \001"
@@ -460,47 +462,47 @@ void protobuf_AddDesc_net_2eproto() {
     "roto.PlayerStatsH\000\022\025\n\013time_update\030\010 \001(\005H"
     "\000\0223\n\024change_avatar_update\030\t \001(\0132\023.proto."
     "AvatarChangeH\000\0220\n\017pump_assignment\030\n \001(\0132"
-    "\025.proto.PumpAssignmentH\000B\016\n\014message_type"
-    "\"\367\002\n\rClientMessage\022\033\n\004ping\030\001 \001(\0132\013.proto"
-    ".PingH\000\022)\n\rbuild_request\030\002 \001(\0132\020.proto.C"
-    "onstructH\000\022\026\n\014join_request\030\003 \001(\tH\000\022(\n\014mo"
-    "ve_request\030\004 \001(\0132\020.proto.StickDataH\000\022%\n\r"
-    "phase_request\030\005 \001(\0162\014.proto.PhaseH\000\022\032\n\020i"
-    "nteract_request\030\006 \001(\005H\000\022\027\n\rready_request"
-    "\030\007 \001(\005H\000\0224\n\025change_avatar_request\030\010 \001(\0132"
-    "\023.proto.AvatarChangeH\000\022\026\n\014pump_request\030\t"
-    " \001(\005H\000\022\"\n\030player_finished_dialogue\030\n \001(\005"
-    "H\000B\016\n\014message_type\"\'\n\004Ping\022\021\n\tclient_id\030"
-    "\001 \001(\005\022\014\n\004ping\030\002 \001(\004\"\213\001\n\tConstruct\022\014\n\004typ"
-    "e\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001("
-    "\005\022\016\n\006status\030\005 \001(\010\022\021\n\tplayer_id\030\006 \001(\005\022\r\n\005"
-    "fwd_x\030\007 \001(\002\022\r\n\005fwd_y\030\010 \001(\002\022\r\n\005fwd_z\030\t \001("
-    "\002\"d\n\014JoinResponse\022\016\n\006status\030\001 \001(\010\022\023\n\013num"
-    "_players\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001"
-    "(\005\022\023\n\013model_index\030\005 \001(\005\"t\n\tGameState\022\"\n\007"
-    "objects\030\001 \003(\0132\021.proto.GameObject\022!\n\ncoll"
-    "isions\030\002 \003(\0132\r.proto.IdPair\022 \n\tinteracts"
-    "\030\003 \003(\0132\r.proto.IdPair\"*\n\006IdPair\022\021\n\tiniti"
-    "ator\030\001 \001(\005\022\r\n\005other\030\002 \001(\005\"\377\001\n\nGameObject"
-    "\022\n\n\002id\030\001 \001(\005\022$\n\004type\030\002 \001(\0162\026.proto.GameO"
-    "bject.Type\022\021\n\ttransform\030\003 \003(\002\022\021\n\tclient_"
-    "id\030\004 \001(\005\022\017\n\007enabled\030\005 \001(\010\022\023\n\013model_index"
-    "\030\006 \001(\005\022\021\n\tparent_id\030\007 \001(\005\022\017\n\007subtype\030\010 \001"
-    "(\005\"O\n\004Type\022\n\n\006PLAYER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHES"
-    "T\020\002\022\t\n\005SPIKE\020\003\022\013\n\007ESSENCE\020\004\022\016\n\nPROJECTIL"
-    "E\020\005\"%\n\tCollision\022\n\n\002id\030\001 \001(\005\022\014\n\004type\030\002 \001"
-    "(\005\"~\n\tStickData\022%\n\005input\030\001 \001(\0162\026.proto.S"
-    "tickData.Stick\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002"
-    "id\030\004 \001(\005\"(\n\005Stick\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STI"
-    "CK_RIGHT\020\001\"(\n\013PlayerStats\022\n\n\002id\030\001 \001(\005\022\r\n"
-    "\005coins\030\002 \001(\005\"6\n\014AvatarChange\022\021\n\tplayer_i"
-    "d\030\001 \001(\005\022\023\n\013model_index\030\002 \001(\005\"+\n\010PumpPair"
-    "\022\021\n\tplayer_id\030\001 \001(\005\022\014\n\004pump\030\002 \001(\005\"0\n\016Pum"
-    "pAssignment\022\036\n\005pairs\030\001 \003(\0132\017.proto.PumpP"
-    "air*\202\001\n\005Phase\022\010\n\004NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUI"
-    "LD\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010MINIGAME\020\003\022\022\n\016BUILD"
-    "_TUTORIAL\020\005\022\024\n\020DUNGEON_TUTORIAL\020\006\022\025\n\021MIN"
-    "IGAME_TUTORIAL\020\007", 2016);
+    "\025.proto.PumpAssignmentH\000\022\025\n\013pump_update\030"
+    "\013 \001(\005H\000B\016\n\014message_type\"\367\002\n\rClientMessag"
+    "e\022\033\n\004ping\030\001 \001(\0132\013.proto.PingH\000\022)\n\rbuild_"
+    "request\030\002 \001(\0132\020.proto.ConstructH\000\022\026\n\014joi"
+    "n_request\030\003 \001(\tH\000\022(\n\014move_request\030\004 \001(\0132"
+    "\020.proto.StickDataH\000\022%\n\rphase_request\030\005 \001"
+    "(\0162\014.proto.PhaseH\000\022\032\n\020interact_request\030\006"
+    " \001(\005H\000\022\027\n\rready_request\030\007 \001(\005H\000\0224\n\025chang"
+    "e_avatar_request\030\010 \001(\0132\023.proto.AvatarCha"
+    "ngeH\000\022\026\n\014pump_request\030\t \001(\005H\000\022\"\n\030player_"
+    "finished_dialogue\030\n \001(\005H\000B\016\n\014message_typ"
+    "e\"\'\n\004Ping\022\021\n\tclient_id\030\001 \001(\005\022\014\n\004ping\030\002 \001"
+    "(\004\"\213\001\n\tConstruct\022\014\n\004type\030\001 \001(\005\022\t\n\001x\030\002 \001("
+    "\005\022\t\n\001z\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\022\016\n\006status\030\005 \001(\010"
+    "\022\021\n\tplayer_id\030\006 \001(\005\022\r\n\005fwd_x\030\007 \001(\002\022\r\n\005fw"
+    "d_y\030\010 \001(\002\022\r\n\005fwd_z\030\t \001(\002\"d\n\014JoinResponse"
+    "\022\016\n\006status\030\001 \001(\010\022\023\n\013num_players\030\002 \001(\005\022\n\n"
+    "\002id\030\003 \001(\005\022\016\n\006obj_id\030\004 \001(\005\022\023\n\013model_index"
+    "\030\005 \001(\005\"t\n\tGameState\022\"\n\007objects\030\001 \003(\0132\021.p"
+    "roto.GameObject\022!\n\ncollisions\030\002 \003(\0132\r.pr"
+    "oto.IdPair\022 \n\tinteracts\030\003 \003(\0132\r.proto.Id"
+    "Pair\"*\n\006IdPair\022\021\n\tinitiator\030\001 \001(\005\022\r\n\005oth"
+    "er\030\002 \001(\005\"\377\001\n\nGameObject\022\n\n\002id\030\001 \001(\005\022$\n\004t"
+    "ype\030\002 \001(\0162\026.proto.GameObject.Type\022\021\n\ttra"
+    "nsform\030\003 \003(\002\022\021\n\tclient_id\030\004 \001(\005\022\017\n\007enabl"
+    "ed\030\005 \001(\010\022\023\n\013model_index\030\006 \001(\005\022\021\n\tparent_"
+    "id\030\007 \001(\005\022\017\n\007subtype\030\010 \001(\005\"O\n\004Type\022\n\n\006PLA"
+    "YER\020\000\022\010\n\004GOAL\020\001\022\t\n\005CHEST\020\002\022\t\n\005SPIKE\020\003\022\013\n"
+    "\007ESSENCE\020\004\022\016\n\nPROJECTILE\020\005\"%\n\tCollision\022"
+    "\n\n\002id\030\001 \001(\005\022\014\n\004type\030\002 \001(\005\"~\n\tStickData\022%"
+    "\n\005input\030\001 \001(\0162\026.proto.StickData.Stick\022\t\n"
+    "\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\n\n\002id\030\004 \001(\005\"(\n\005Stick"
+    "\022\016\n\nSTICK_LEFT\020\000\022\017\n\013STICK_RIGHT\020\001\"(\n\013Pla"
+    "yerStats\022\n\n\002id\030\001 \001(\005\022\r\n\005coins\030\002 \001(\005\"6\n\014A"
+    "vatarChange\022\021\n\tplayer_id\030\001 \001(\005\022\023\n\013model_"
+    "index\030\002 \001(\005\"+\n\010PumpPair\022\021\n\tplayer_id\030\001 \001"
+    "(\005\022\014\n\004pump\030\002 \001(\005\"0\n\016PumpAssignment\022\036\n\005pa"
+    "irs\030\001 \003(\0132\017.proto.PumpPair*\202\001\n\005Phase\022\010\n\004"
+    "NOOP\020\004\022\010\n\004MENU\020\000\022\t\n\005BUILD\020\001\022\013\n\007DUNGEON\020\002"
+    "\022\014\n\010MINIGAME\020\003\022\022\n\016BUILD_TUTORIAL\020\005\022\024\n\020DU"
+    "NGEON_TUTORIAL\020\006\022\025\n\021MINIGAME_TUTORIAL\020\007", 2039);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "net.proto", &protobuf_RegisterTypes);
   ServerMessage::default_instance_ = new ServerMessage();
@@ -576,6 +578,7 @@ const int ServerMessage::kPlayerStatsUpdateFieldNumber;
 const int ServerMessage::kTimeUpdateFieldNumber;
 const int ServerMessage::kChangeAvatarUpdateFieldNumber;
 const int ServerMessage::kPumpAssignmentFieldNumber;
+const int ServerMessage::kPumpUpdateFieldNumber;
 #endif  // !_MSC_VER
 
 ServerMessage::ServerMessage()
@@ -595,6 +598,7 @@ void ServerMessage::InitAsDefaultInstance() {
   ServerMessage_default_oneof_instance_->time_update_ = 0;
   ServerMessage_default_oneof_instance_->change_avatar_update_ = const_cast< ::proto::AvatarChange*>(&::proto::AvatarChange::default_instance());
   ServerMessage_default_oneof_instance_->pump_assignment_ = const_cast< ::proto::PumpAssignment*>(&::proto::PumpAssignment::default_instance());
+  ServerMessage_default_oneof_instance_->pump_update_ = 0;
 }
 
 ServerMessage::ServerMessage(const ServerMessage& from)
@@ -684,6 +688,10 @@ void ServerMessage::clear_message_type() {
     }
     case kPumpAssignment: {
       delete message_type_.pump_assignment_;
+      break;
+    }
+    case kPumpUpdate: {
+      // No need to clear
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {
@@ -851,6 +859,22 @@ bool ServerMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(88)) goto parse_pump_update;
+        break;
+      }
+
+      // optional int32 pump_update = 11;
+      case 11: {
+        if (tag == 88) {
+         parse_pump_update:
+          clear_message_type();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &message_type_.pump_update_)));
+          set_has_pump_update();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -937,6 +961,11 @@ void ServerMessage::SerializeWithCachedSizes(
       10, this->pump_assignment(), output);
   }
 
+  // optional int32 pump_update = 11;
+  if (has_pump_update()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(11, this->pump_update(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1008,6 +1037,11 @@ void ServerMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         10, this->pump_assignment(), target);
+  }
+
+  // optional int32 pump_update = 11;
+  if (has_pump_update()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(11, this->pump_update(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1091,6 +1125,13 @@ int ServerMessage::ByteSize() const {
           this->pump_assignment());
       break;
     }
+    // optional int32 pump_update = 11;
+    case kPumpUpdate: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->pump_update());
+      break;
+    }
     case MESSAGE_TYPE_NOT_SET: {
       break;
     }
@@ -1159,6 +1200,10 @@ void ServerMessage::MergeFrom(const ServerMessage& from) {
     }
     case kPumpAssignment: {
       mutable_pump_assignment()->::proto::PumpAssignment::MergeFrom(from.pump_assignment());
+      break;
+    }
+    case kPumpUpdate: {
+      set_pump_update(from.pump_update());
       break;
     }
     case MESSAGE_TYPE_NOT_SET: {
