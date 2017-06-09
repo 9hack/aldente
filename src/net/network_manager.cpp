@@ -201,6 +201,10 @@ void ServerNetworkManager::update() {
                 Player* player = dynamic_cast<Player*>(GameObject::game_objects[msg.pump_request()]);
                 assert(player);
                 events::minigame::s_inflate_balloon_event(player);
+
+                proto::ServerMessage response;
+                response.set_pump_update(player->get_id());
+                server.send_to_all(response);
                 break;
             }
             case proto::ClientMessage::MessageTypeCase::kPlayerFinishedDialogue: {
@@ -433,6 +437,11 @@ void ClientNetworkManager::update() {
             for (auto & p : pump_asg.pairs()) {
                 events::minigame::c_assign_pump_event(p.player_id(), p.pump());
             }
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPumpUpdate: {
+            events::minigame::c_play_pump_event(msg.pump_update());
+            break;
         }
         default:
             break;

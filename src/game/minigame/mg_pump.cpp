@@ -113,7 +113,8 @@ void PumpMG::c_setup() {
             switch (d.input) {
             case events::BTN_A: {
                 // A button pressed.
-                events::minigame::c_play_pump_event(context.player_id);
+                //events::minigame::c_play_pump_event(context.player_id);
+
                 //MGScenePump* pump_scene = dynamic_cast<MGScenePump*>(scene);
                 //pump_scene->c_trigger_pump(context.player_id);
 
