@@ -13,8 +13,6 @@ MinigamePhase::MinigamePhase(Context& context) : TimedPhase(context) {
         new SumoMG(context),
     };
     curr_mg = nullptr;
-
-    Config::config->get_value(Config::str_num_rounds, n_rounds);
 }
 
 MinigamePhase::~MinigamePhase() {
@@ -25,6 +23,8 @@ MinigamePhase::~MinigamePhase() {
 
 
 void MinigamePhase::s_setup() {
+    Config::config->get_value(Config::str_num_rounds, n_rounds);
+
     // Pick minigame and set up timer/connections
     // For now, just choose first one
     curr_mg = minigames[0];
@@ -41,6 +41,8 @@ void MinigamePhase::s_setup() {
 }
 
 void MinigamePhase::c_setup() {
+    Config::config->get_value(Config::str_num_rounds, n_rounds);
+
     input::ModalInput::get()->set_mode(input::ModalInput::DISABLE);
     // TODO: client needs to know what minigame was chosen!!
     // For now, choose first one
