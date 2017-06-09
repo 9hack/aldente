@@ -197,6 +197,12 @@ void ServerNetworkManager::update() {
                 server.send_to_all(response);
                 break;
             }
+            case proto::ClientMessage::MessageTypeCase::kPumpRequest: {
+                Player* player = dynamic_cast<Player*>(GameObject::game_objects[msg.pump_request()]);
+                assert(player);
+                events::minigame::s_inflate_balloon_event(player);
+                break;
+            }
             default:
                 break;
             }

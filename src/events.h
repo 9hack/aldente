@@ -350,5 +350,8 @@ namespace events {
 
         // Signals anim for pumping
         extern signal<void(int)> c_play_pump_event;
+
+        // Inflate the balloon of the team that the player belongs to.
+        extern signal<void(Player*)> s_inflate_balloon_event;
     }
 }
