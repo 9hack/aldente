@@ -8,16 +8,21 @@
 #include "util/util.h"
 #include "util/util_bt.h"
 
+#include "game/game_state.h"
+
 #define ANIMATE_DELTA 0.001f
 #define STUN_LENGTH 1000 // milliseconds
 #define INVULNERABLE_LENGTH 3000 // ms
 #define SLOW_LENGTH 3000
+#define CONFUSE_LENGTH 5000 // ms
 
 #define BASE_MOVE_SPEED 2.0f
 
 std::vector<std::string> Player::PLAYER_MODELS = { "lizar", "pig", "cat", "tomatoe" };
 
-Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo(false), cancel_flicker([]() {}), cancel_invulnerable([]() {}), cancel_slow([]() {}), cancel_stun([]() {}) {
+Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo(false),
+    cancel_flicker([]() {}), cancel_invulnerable([]() {}), cancel_slow([]() {}), 
+    cancel_stun([]() {}), cancel_confuse([]() {}), anim_override(false) {
     tag = "PLAYER";
 
     if (id == ON_SERVER) {
@@ -61,6 +66,13 @@ Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo
         msg.set_allocated_change_avatar_request(request);
         events::client::send(msg);
     });
+
+    events::minigame::c_play_pump_event.connect([&](int player_id) {
+        if (player_id != this->get_id()) return;
+
+        anim_player.stop();
+        anim_player.play();
+    });
 }
 
 // Just calls do_movement for now, can have more
@@ -85,14 +97,16 @@ void Player::c_update_state(glm::mat4 mat, bool enab) {
     float dz = std::fabs(mat[3][2] - transform.get_position().z);
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
-    if (!animate && !exiting && !stunned) {
-        if (!anim_player.check_paused()) {
-            anim_player.stop();
+    if (!anim_override) {
+        if (!animate && !exiting && !stunned) {
+            if (!anim_player.check_paused()) {
+                anim_player.stop();
+            }
         }
-    }
-    else {
-        if (anim_player.check_paused()) {
-            anim_player.play();
+        else {
+            if (anim_player.check_paused()) {
+                anim_player.play();
+            }
         }
     }
 
@@ -149,6 +163,10 @@ void Player::start_walk() {
     anim_player.set_anim("walk", 3.0f, true);
 }
 
+void Player::set_pump() {
+    anim_player.set_anim("pump", 5.0f, false);
+}
+
 // Server collision
 void Player::s_on_collision(GameObject *other) {
     // For sumo bounciness
@@ -192,7 +210,7 @@ void Player::c_setup_player_model(int index) {
 
     // Sets scale. Need better way to do this later.
     if (model_name == "pig")
-        set_scale({ 0.004f, 0.004f, 0.004f });
+        set_scale({ 0.0043f, 0.0043f, 0.0043f });
     else if (model_name == "cat")
         set_scale({ 0.004f, 0.004f, 0.004f });
     else if (model_name == "lizar")
@@ -324,6 +342,10 @@ void Player::s_slow() {
 
     // Start off unable to move, then slowly regain movespeed
     move_speed = 0.2f;
+
+    if (confused)
+        move_speed = -move_speed;
+
     int count = 0;
     const int num_steps = 50;
     cancel_slow = Timer::get()->do_every(std::chrono::milliseconds(SLOW_LENGTH / num_steps),
@@ -334,6 +356,9 @@ void Player::s_slow() {
             move_speed = BASE_MOVE_SPEED;
             cancel_slow();
         }
+
+        if (confused)
+            move_speed = -move_speed;
 
         count++;
     });
@@ -367,6 +392,47 @@ void Player::c_slow() {
         }
 
         count++;
+    });
+}
+
+bool Player::s_confuse() {
+    // Cannot be confused twice
+    if (confused)
+        return false;
+
+    confused = true;
+
+    cancel_confuse();
+
+    // Movement direction gets reversed
+    move_speed = -move_speed;
+    momentum = true;
+
+    // Returns back to normal in about 3 seconds
+    cancel_confuse = Timer::get()->do_after(std::chrono::milliseconds(CONFUSE_LENGTH),
+        [&] () {
+        move_speed = BASE_MOVE_SPEED;
+        confused = false;
+        momentum = false;
+    });
+
+    return true;
+}
+
+void Player::c_confuse() {
+    cancel_confuse();
+
+    // Tint player purple for a short period of time
+    model->reset_colors();
+    model->multiply_colors(Color(5.0f, 0.1f, 5.0f, false));
+
+    // Sets UI effect if client player
+    set_confuse_effect(true);
+
+    cancel_confuse = Timer::get()->do_after(std::chrono::milliseconds(CONFUSE_LENGTH),
+        [&] () {
+        set_confuse_effect(false);
+        model->reset_colors();
     });
 }
 
@@ -416,4 +482,15 @@ void Player::toggle_sumo_collider() {
         rigidbody->setCollisionShape(sumo_hit_capsule);
         sumo = true;
     }
+}
+
+void Player::set_confuse_effect(bool b) {
+    if (GameState::context.client_player != this)
+        return;
+
+    if (b)
+        events::ui::show_effect_image(2.0f, "confuse.png");
+    else
+        events::ui::hide_effect_image(1.0f);
+
 }

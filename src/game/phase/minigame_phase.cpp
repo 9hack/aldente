@@ -7,10 +7,11 @@ std::string MinigamePhase::to_string() {
     return "MINIGAME PHASE";
 }
 
-MinigamePhase::MinigamePhase(Context& context) : TimedPhase(context) {
+MinigamePhase::MinigamePhase(Context& context) : TimedPhase(context), curr_mg_index(0) {
     minigames = {
         new PenguinMG(context),
         new SumoMG(context),
+        new PumpMG(context),
     };
     curr_mg = nullptr;
 }
@@ -23,11 +24,9 @@ MinigamePhase::~MinigamePhase() {
 
 
 void MinigamePhase::s_setup() {
-    Config::config->get_value(Config::str_num_rounds, n_rounds);
-
     // Pick minigame and set up timer/connections
-    // For now, just choose first one
-    curr_mg = minigames[1];
+    curr_mg = minigames[curr_mg_index];
+    curr_mg_index = (curr_mg_index + 1) % minigames.size();
 
     do_update = false;
     transition_after(6, curr_mg->get_time().count(), s_phase_when_done());
@@ -41,12 +40,11 @@ void MinigamePhase::s_setup() {
 }
 
 void MinigamePhase::c_setup() {
-    Config::config->get_value(Config::str_num_rounds, n_rounds);
-
     input::ModalInput::get()->set_mode(input::ModalInput::DISABLE);
-    // TODO: client needs to know what minigame was chosen!!
-    // For now, choose first one
-    curr_mg = minigames[1];
+
+    // Client just cycles through minigames in same order as server.
+    curr_mg = minigames[curr_mg_index];
+    curr_mg_index = (curr_mg_index + 1) % minigames.size();
 
     curr_mg->c_setup();
     // Show minigame info
@@ -101,5 +99,5 @@ void MinigamePhase::c_teardown() {
 }
 
 proto::Phase MinigamePhase::s_phase_when_done() {
-    return context.current_round == n_rounds ? proto::Phase::END : proto::Phase::BUILD;
+    return proto::Phase::MINIGAME_RESULTS;
 }

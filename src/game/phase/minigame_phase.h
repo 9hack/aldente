@@ -4,6 +4,7 @@
 #include "game/minigame/minigame.h"
 #include "game/minigame/mg_penguin.h"
 #include "game/minigame/mg_sumo.h"
+#include "game/minigame/mg_pump.h"
 #include "game/context.h"
 
 class MinigamePhase : public TimedPhase {
@@ -23,5 +24,5 @@ private:
     std::vector<Minigame*> minigames;
     Minigame* curr_mg;
     bool do_update;
-    int n_rounds;
+    int curr_mg_index;
 };

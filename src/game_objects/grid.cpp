@@ -12,6 +12,8 @@
 #include "game_objects/traps/mimic.h"
 #include "game_objects/traps/slow_trap.h"
 #include "game_objects/traps/shooter.h"
+#include "game_objects/traps/bomb.h"
+#include "game_objects/traps/confuse_trap.h"
 
 #include <fstream>
 
@@ -168,6 +170,9 @@ Construct* Grid::build(ConstructType type, int col, int row, float fx, float fy,
         case MIMIC:
             to_add = new Mimic(col, row, id);
             break;
+        case BOMB:
+            to_add = new Bomb(col, row, id);
+            break;
         case SPIKES:
             to_add = new Spikes(col, row, id);
             break;
@@ -191,6 +196,9 @@ Construct* Grid::build(ConstructType type, int col, int row, float fx, float fy,
             break;
         case ICE:
             to_add = new SlowTrap(col, row, id);
+            break;
+        case CONFUSE:
+            to_add = new ConfuseTrap(col, row, id);
             break;
         default:
             return nullptr;

@@ -20,9 +20,14 @@ private:
     std::function<void()> cancel_stun;
     std::function<void()> cancel_invulnerable;
     std::function<void()> cancel_slow;
+    std::function<void()> cancel_confuse;
+
+
     bool end_flicker; // Whether we should stop player flickering.
     bool invulnerable; // Can't lose coins or collide with other harmful traps.
     bool stunned; // Can't move.
+    bool anim_override; // Always animate
+    bool confused; // Movement direction is reversed
 
     // to_move is for saving the joystick input in each frame.
     int to_moveX;
@@ -41,6 +46,8 @@ private:
 
     bool momentum;
     bool sumo;
+
+    void set_confuse_effect(bool b);
 public:
     Player(int id = 0);
 
@@ -64,6 +71,7 @@ public:
     // Animation Cues
     void start_walk();
     void stop_walk();
+    void set_pump();
 
     // Set this player's spawn position.
     void set_start_position(glm::vec3 pos);
@@ -82,6 +90,10 @@ public:
     // Get Slowed
     void s_slow(); // Hit by slow trap. Get frozen, and then slowly regain movespeed
     void c_slow(); // Turn bluish to indicate frozen. Can later change to a UI effect
+    
+    // Get Confused
+    bool s_confuse(); // Movement gets reversed.
+    void c_confuse(); // Turns purple, with purple UI overlay
 
     // Used for checking if player has been hit and in the period of invulnerability, 
     // where they can't be hit by traps again.
@@ -116,4 +128,5 @@ public:
     void set_momentum(bool to_set) { momentum = to_set; };
 
     void toggle_sumo_collider();
+    void set_anim_override(bool to_set) { anim_override = to_set; };
 };

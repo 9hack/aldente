@@ -6,6 +6,8 @@
 #include "game_objects/traps/mimic.h"
 #include "game_objects/traps/slow_trap.h"
 #include "game_objects/traps/shooter.h"
+#include "game_objects/traps/bomb.h"
+#include "game_objects/traps/confuse_trap.h"
 
 ConstructPreview::ConstructPreview()
     : curr_preview(nullptr) {}
@@ -22,6 +24,9 @@ void ConstructPreview::set_construct_type(ConstructType type, bool valid) {
                 break;
             case MIMIC:
                 cached_previews[type] = make_preview<Mimic>();
+                break;
+            case BOMB:
+                cached_previews[type] = make_preview<Bomb>();
                 break;
             case SPIKES:
                 cached_previews[type] = make_preview<Spikes>();
@@ -46,6 +51,9 @@ void ConstructPreview::set_construct_type(ConstructType type, bool valid) {
                 break;
             case ICE:
                 cached_previews[type] = make_preview<SlowTrap>();
+                break;
+            case CONFUSE:
+                cached_previews[type] = make_preview<ConfuseTrap>();
                 break;
             default:
                 cached_previews[type] = make_preview<Chest>();
