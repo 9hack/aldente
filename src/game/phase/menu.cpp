@@ -2,6 +2,7 @@
 #include "menu.h"
 #include <input/modal_input.h>
 #include <util/config.h>
+#include <audio/audio_manager.h>
 
 std::string MenuPhase::to_string() {
     return "MAIN MENU";

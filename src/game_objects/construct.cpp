@@ -1,3 +1,5 @@
+#include <audio/audio_manager.h>
+#include <game/game_state.h>
 #include "construct.h"
 #include "asset_loader.h"
 #include "player.h"

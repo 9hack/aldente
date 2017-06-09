@@ -1,5 +1,6 @@
 #include <asset_loader.h>
 #include <util/util.h>
+#include <audio/audio_manager.h>
 #include "dialog_ui.h"
 #include "timer.h"
 #include "events.h"

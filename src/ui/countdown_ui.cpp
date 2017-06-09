@@ -1,5 +1,6 @@
 #include <events.h>
 #include <timer.h>
+#include <audio/audio_manager.h>
 #include "countdown_ui.h"
 
 #define START_Y -50.f
