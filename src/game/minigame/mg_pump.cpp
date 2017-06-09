@@ -72,6 +72,7 @@ void PumpMG::s_setup() {
     });
 
     GameState::set_scene(context.minigame_scenes["pump"]);
+	scene = context.minigame_scenes["pump"];
 }
 
 void PumpMG::s_teardown() {
