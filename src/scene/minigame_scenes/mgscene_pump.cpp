@@ -19,19 +19,19 @@ void MGScenePump::c_update() {
 }
 
 void MGScenePump::s_setup() {
-	// Create balloons
-	HotAirBalloon *red_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_RED);
-	balloons.push_back(red_balloon);
-	objs.push_back(red_balloon);
-	HotAirBalloon *blue_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_BLUE);
-	balloons.push_back(blue_balloon);
-	objs.push_back(blue_balloon);
+    // Create balloons
+    HotAirBalloon *red_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_RED);
+    balloons.push_back(red_balloon);
+    objs.push_back(red_balloon);
+    HotAirBalloon *blue_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_BLUE);
+    balloons.push_back(blue_balloon);
+    objs.push_back(blue_balloon);
 
-	// Properly space balloons
-	balloons[0]->transform.set_position(glm::vec3(-3, 1.6f, 0));
-	balloons[0]->transform.set_scale({ INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE });
-	balloons[1]->transform.set_position(glm::vec3(3, 1.6f, 0));
-	balloons[1]->transform.set_scale({ INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE });
+    // Properly space balloons
+    balloons[0]->transform.set_position(glm::vec3(-3, 1.6f, 0));
+    balloons[0]->transform.set_scale({ INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE });
+    balloons[1]->transform.set_position(glm::vec3(3, 1.6f, 0));
+    balloons[1]->transform.set_scale({ INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE });
 }
 
 void MGScenePump::c_setup() {
@@ -72,17 +72,17 @@ void MGScenePump::c_setup() {
     baskets[0]->transform.set_position(glm::vec3(-3, 0, 0));
     baskets[1]->transform.set_position(glm::vec3(3, 0, 0));
 
-	// Create balloons
-	HotAirBalloon *red_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_RED);
-	balloons.push_back(red_balloon);
-	objs.push_back(red_balloon);
-	HotAirBalloon *blue_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_BLUE);
-	balloons.push_back(blue_balloon);
-	objs.push_back(blue_balloon);
+    // Create balloons
+    HotAirBalloon *red_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_RED);
+    balloons.push_back(red_balloon);
+    objs.push_back(red_balloon);
+    HotAirBalloon *blue_balloon = new HotAirBalloon(0, BalloonColor::BALLOON_BLUE);
+    balloons.push_back(blue_balloon);
+    objs.push_back(blue_balloon);
 
-	// Properly space balloons
-	balloons[0]->transform.set_position(glm::vec3(-3, 1.6f, 0));
-	balloons[1]->transform.set_position(glm::vec3(3, 1.6f, 0));
+    // Properly space balloons
+    balloons[0]->transform.set_position(glm::vec3(-3, 1.6f, 0));
+    balloons[1]->transform.set_position(glm::vec3(3, 1.6f, 0));
 
     // Setup lights.
     DirectionalLight *sun = new DirectionalLight(glm::vec3(0.f, -1.f, -1.f),
@@ -108,8 +108,8 @@ void MGScenePump::reset_camera() {
 }
 
 void MGScenePump::reset_scene() {
-	balloons[0]->reset();
-	balloons[1]->reset();
+    balloons[0]->reset();
+    balloons[1]->reset();
 }
 
 void MGScenePump::inflate_balloon(bool is_team1) {
