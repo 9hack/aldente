@@ -65,8 +65,8 @@ void MGScenePenguin::c_setup() {
     Platform* platform = new Platform(PlatformShape::SQUARE);
     
     platform->initial_transform.set_scale(glm::vec3(10, 1, 5));
-    platform->transform.set_scale(glm::vec3(10, 0.5f, 5));
-    platform->transform.set_position(glm::vec3(0, 0, -0.5f));
+    platform->transform.set_scale(glm::vec3(0.0165f, 0.01f, 0.009f));
+    platform->transform.set_position(glm::vec3(0, -1.5f, -0.5f));
     objs.push_back(platform);
 
     // Setup lights.
@@ -88,7 +88,7 @@ void MGScenePenguin::disconnect_listeners() {
 void MGScenePenguin::reset_camera() {
     info.camera.reset();
     info.camera.rotate_cam(glm::vec3(1, 0, 0), -70.0f);
-    info.camera.cam_pos = glm::vec3(0, 12, 5);
+    info.camera.cam_pos = glm::vec3(-3, 12, 5);
     info.camera.recalculate();
 }
 

@@ -109,5 +109,5 @@ bool SumoMG::is_finished() {
         if (!kv.second)
             count++;
     }
-    return (count == 1);
+    return (count != 1);
 }
