@@ -110,8 +110,10 @@ void MGScenePump::reset_camera() {
 void MGScenePump::reset_scene() {
     balloons[0]->reset();
     balloons[1]->reset();
-    baskets[0]->reset();
-    baskets[1]->reset();
+
+    for (auto & basket : baskets) {
+        basket->reset();
+    }
 }
 
 void MGScenePump::inflate_balloon(bool is_team1) {
