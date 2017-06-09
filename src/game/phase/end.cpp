@@ -1,5 +1,6 @@
 #include <game/game_state.h>
 #include <dialogues.h>
+#include <audio/audio_manager.h>
 #include "end.h"
 #include "dialogues.h"
 
