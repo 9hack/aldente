@@ -46,6 +46,7 @@ class Collision;
 class StickData;
 class PlayerStats;
 class AvatarChange;
+class PumpAssignment;
 
 enum GameObject_Type {
   GameObject_Type_PLAYER = 0,
@@ -146,6 +147,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kPlayerStatsUpdate = 7,
     kTimeUpdate = 8,
     kChangeAvatarUpdate = 9,
+    kPumpAssignment = 10,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -252,6 +254,15 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::proto::AvatarChange* release_change_avatar_update();
   inline void set_allocated_change_avatar_update(::proto::AvatarChange* change_avatar_update);
 
+  // optional .proto.PumpAssignment pump_assignment = 10;
+  inline bool has_pump_assignment() const;
+  inline void clear_pump_assignment();
+  static const int kPumpAssignmentFieldNumber = 10;
+  inline const ::proto::PumpAssignment& pump_assignment() const;
+  inline ::proto::PumpAssignment* mutable_pump_assignment();
+  inline ::proto::PumpAssignment* release_pump_assignment();
+  inline void set_allocated_pump_assignment(::proto::PumpAssignment* pump_assignment);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
@@ -264,6 +275,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_player_stats_update();
   inline void set_has_time_update();
   inline void set_has_change_avatar_update();
+  inline void set_has_pump_assignment();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -283,6 +295,7 @@ class ServerMessage : public ::google::protobuf::Message {
     ::proto::PlayerStats* player_stats_update_;
     ::google::protobuf::int32 time_update_;
     ::proto::AvatarChange* change_avatar_update_;
+    ::proto::PumpAssignment* pump_assignment_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1622,6 +1635,101 @@ class AvatarChange : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static AvatarChange* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class PumpAssignment : public ::google::protobuf::Message {
+ public:
+  PumpAssignment();
+  virtual ~PumpAssignment();
+
+  PumpAssignment(const PumpAssignment& from);
+
+  inline PumpAssignment& operator=(const PumpAssignment& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PumpAssignment& default_instance();
+
+  void Swap(PumpAssignment* other);
+
+  // implements Message ----------------------------------------------
+
+  PumpAssignment* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const PumpAssignment& from);
+  void MergeFrom(const PumpAssignment& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated int32 player_id = 1;
+  inline int player_id_size() const;
+  inline void clear_player_id();
+  static const int kPlayerIdFieldNumber = 1;
+  inline ::google::protobuf::int32 player_id(int index) const;
+  inline void set_player_id(int index, ::google::protobuf::int32 value);
+  inline void add_player_id(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      player_id() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_player_id();
+
+  // repeated int32 pump = 2;
+  inline int pump_size() const;
+  inline void clear_pump();
+  static const int kPumpFieldNumber = 2;
+  inline ::google::protobuf::int32 pump(int index) const;
+  inline void set_pump(int index, ::google::protobuf::int32 value);
+  inline void add_pump(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      pump() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_pump();
+
+  // @@protoc_insertion_point(class_scope:proto.PumpAssignment)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > player_id_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > pump_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static PumpAssignment* default_instance_;
+};
 // ===================================================================
 
 
@@ -1950,6 +2058,49 @@ inline void ServerMessage::set_allocated_change_avatar_update(::proto::AvatarCha
   if (change_avatar_update) {
     set_has_change_avatar_update();
     message_type_.change_avatar_update_ = change_avatar_update;
+  }
+}
+
+// optional .proto.PumpAssignment pump_assignment = 10;
+inline bool ServerMessage::has_pump_assignment() const {
+  return message_type_case() == kPumpAssignment;
+}
+inline void ServerMessage::set_has_pump_assignment() {
+  _oneof_case_[0] = kPumpAssignment;
+}
+inline void ServerMessage::clear_pump_assignment() {
+  if (has_pump_assignment()) {
+    delete message_type_.pump_assignment_;
+    clear_has_message_type();
+  }
+}
+inline const ::proto::PumpAssignment& ServerMessage::pump_assignment() const {
+  return has_pump_assignment() ? *message_type_.pump_assignment_
+                      : ::proto::PumpAssignment::default_instance();
+}
+inline ::proto::PumpAssignment* ServerMessage::mutable_pump_assignment() {
+  if (!has_pump_assignment()) {
+    clear_message_type();
+    set_has_pump_assignment();
+    message_type_.pump_assignment_ = new ::proto::PumpAssignment;
+  }
+  return message_type_.pump_assignment_;
+}
+inline ::proto::PumpAssignment* ServerMessage::release_pump_assignment() {
+  if (has_pump_assignment()) {
+    clear_has_message_type();
+    ::proto::PumpAssignment* temp = message_type_.pump_assignment_;
+    message_type_.pump_assignment_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void ServerMessage::set_allocated_pump_assignment(::proto::PumpAssignment* pump_assignment) {
+  clear_message_type();
+  if (pump_assignment) {
+    set_has_pump_assignment();
+    message_type_.pump_assignment_ = pump_assignment;
   }
 }
 
@@ -3326,6 +3477,70 @@ inline void AvatarChange::set_model_index(::google::protobuf::int32 value) {
   set_has_model_index();
   model_index_ = value;
   // @@protoc_insertion_point(field_set:proto.AvatarChange.model_index)
+}
+
+// -------------------------------------------------------------------
+
+// PumpAssignment
+
+// repeated int32 player_id = 1;
+inline int PumpAssignment::player_id_size() const {
+  return player_id_.size();
+}
+inline void PumpAssignment::clear_player_id() {
+  player_id_.Clear();
+}
+inline ::google::protobuf::int32 PumpAssignment::player_id(int index) const {
+  // @@protoc_insertion_point(field_get:proto.PumpAssignment.player_id)
+  return player_id_.Get(index);
+}
+inline void PumpAssignment::set_player_id(int index, ::google::protobuf::int32 value) {
+  player_id_.Set(index, value);
+  // @@protoc_insertion_point(field_set:proto.PumpAssignment.player_id)
+}
+inline void PumpAssignment::add_player_id(::google::protobuf::int32 value) {
+  player_id_.Add(value);
+  // @@protoc_insertion_point(field_add:proto.PumpAssignment.player_id)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+PumpAssignment::player_id() const {
+  // @@protoc_insertion_point(field_list:proto.PumpAssignment.player_id)
+  return player_id_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+PumpAssignment::mutable_player_id() {
+  // @@protoc_insertion_point(field_mutable_list:proto.PumpAssignment.player_id)
+  return &player_id_;
+}
+
+// repeated int32 pump = 2;
+inline int PumpAssignment::pump_size() const {
+  return pump_.size();
+}
+inline void PumpAssignment::clear_pump() {
+  pump_.Clear();
+}
+inline ::google::protobuf::int32 PumpAssignment::pump(int index) const {
+  // @@protoc_insertion_point(field_get:proto.PumpAssignment.pump)
+  return pump_.Get(index);
+}
+inline void PumpAssignment::set_pump(int index, ::google::protobuf::int32 value) {
+  pump_.Set(index, value);
+  // @@protoc_insertion_point(field_set:proto.PumpAssignment.pump)
+}
+inline void PumpAssignment::add_pump(::google::protobuf::int32 value) {
+  pump_.Add(value);
+  // @@protoc_insertion_point(field_add:proto.PumpAssignment.pump)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+PumpAssignment::pump() const {
+  // @@protoc_insertion_point(field_list:proto.PumpAssignment.pump)
+  return pump_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+PumpAssignment::mutable_pump() {
+  // @@protoc_insertion_point(field_mutable_list:proto.PumpAssignment.pump)
+  return &pump_;
 }
 
 
