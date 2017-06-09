@@ -28,7 +28,7 @@ void DungeonPhase::s_setup() {
     events::dungeon::s_prepare_dungeon_event();
 
     // Start timer to spawn delayed goal.
-    Timer::get()->do_after(std::chrono::seconds(30), []() {
+    Timer::get()->do_after(std::chrono::seconds(36), []() {
         events::dungeon::s_create_goal();
     });
 
