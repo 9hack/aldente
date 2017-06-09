@@ -63,10 +63,10 @@ DebugInput::DebugInput(Window &window, SceneManager &scene_manager, Physics &p) 
                     break;
                 case GLFW_KEY_F3:
                     events::ui::scoreboard_sequence(
-                            {{"boy_two", 123, 500},
-                             {"lizard", 456, 7},
+                            {{"pig", 123, 500},
+                             {"lizar", 456, 7},
                              {"cat", 999, 5},
-                             {"tomato", 1, 66666}
+                             {"tomatoe", 1, 66666}
                             });
                     break;
                 case GLFW_KEY_F4:
