@@ -5,7 +5,6 @@
 */
 
 #include "../game_object.h"
-#include "btBulletDynamicsCommon.h"
 
 class HotAirBasket : public GameObject {
 public:

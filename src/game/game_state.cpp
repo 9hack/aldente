@@ -90,7 +90,7 @@ void GameState::setup(bool is_server) {
         physics.set_scene(&pump_scene);
         pump_scene.c_setup();
 
-        events::menu::spawn_existing_player_event.connect([](int id, int model_index) {
+        events::menu::spawn_existing_player_event.connect([&](int id, int model_index) {
             context.player_ids.push_back(id);
             c_add_player(id, model_index, false);
         });

@@ -3,6 +3,7 @@
 #include "scene/scene.h"
 #include "game_objects/minigame/pump.h"
 #include "game_objects/minigame/hotair_basket.h"
+#include "game_objects/minigame/hotair_balloon.h"
 
 /*
 Scene for pump minigame
@@ -11,6 +12,7 @@ class MGScenePump : public Scene {
 private:
     std::vector<Pump*> pumps;
     std::vector<HotAirBasket*> baskets;
+	std::vector<HotAirBalloon*> balloons;
     int player_count;
 public:
     MGScenePump() {};
