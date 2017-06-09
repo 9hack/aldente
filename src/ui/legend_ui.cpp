@@ -54,7 +54,7 @@ LegendUI::LegendUI(float aspect, float legend_width_, float entry_height_, float
         set_legend(CHAR_SELECTION_LEGEND);
         enable();
     });
-    events::ui::disable_char_selection.connect([&]() {
+    events::menu::end_menu_event.connect([&]() {
         disable();
     });
 }
