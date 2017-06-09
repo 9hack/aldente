@@ -112,13 +112,6 @@ void PumpMG::c_setup() {
         if (d.state == 1) {
             switch (d.input) {
             case events::BTN_A: {
-                // A button pressed.
-                //events::minigame::c_play_pump_event(context.player_id);
-
-                //MGScenePump* pump_scene = dynamic_cast<MGScenePump*>(scene);
-                //pump_scene->c_trigger_pump(context.player_id);
-
-                // Send pump event to server, tagged by this player's id.
                 proto::ClientMessage msg;
                 msg.set_pump_request(context.player_id);
                 events::client::send(msg);
@@ -133,8 +126,10 @@ void PumpMG::c_setup() {
     for (int player_id : context.player_ids) {
         Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
         assert(player);
+        player->disable();
         player->set_pump();
         player->set_anim_override(true);
+        player->transform.look_at(glm::vec3(0, 0, 1));
     }
 
     GameState::set_scene(context.minigame_scenes["pump"]);
