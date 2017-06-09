@@ -173,6 +173,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game\context.h" />
     <ClInclude Include="..\src\game\direction.h" />
     <ClInclude Include="..\src\game\game_state.h" />
+    <ClInclude Include="..\src\game\minigame\mg_pump.h" />
     <ClInclude Include="..\src\game\minigame\mg_penguin.h" />
     <ClInclude Include="..\src\game\minigame\mg_sumo.h" />
     <ClInclude Include="..\src\game\minigame\minigame.h" />
@@ -191,8 +192,11 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\game_objects\game_object.h" />
     <ClInclude Include="..\src\game_objects\grid.h" />
     <ClInclude Include="..\src\game_objects\minigame\empty_collider.h" />
+    <ClInclude Include="..\src\game_objects\minigame\hotair_balloon.h" />
+    <ClInclude Include="..\src\game_objects\minigame\hotair_basket.h" />
     <ClInclude Include="..\src\game_objects\minigame\penguin.h" />
     <ClInclude Include="..\src\game_objects\minigame\platform.h" />
+    <ClInclude Include="..\src\game_objects\minigame\pump.h" />
     <ClInclude Include="..\src\game_objects\minigame\sumo_ball.h" />
     <ClInclude Include="..\src\game_objects\player.h" />
     <ClInclude Include="..\src\game_objects\tile.h" />
@@ -246,6 +250,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClInclude Include="..\src\scene\light\spot_light.h" />
     <ClInclude Include="..\src\scene\main_scene.h" />
     <ClInclude Include="..\src\scene\minigame_scenes\mgscene_penguin.h" />
+    <ClInclude Include="..\src\scene\minigame_scenes\mgscene_pump.h" />
     <ClInclude Include="..\src\scene\minigame_scenes\mgscene_sumo.h" />
     <ClInclude Include="..\src\scene\scene.h" />
     <ClInclude Include="..\src\scene\scene_info.h" />
@@ -312,6 +317,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\example_test.cpp" />
     <ClCompile Include="..\src\game\collectibles\gold.cpp" />
     <ClCompile Include="..\src\game\game_state.cpp" />
+    <ClCompile Include="..\src\game\minigame\mg_pump.cpp" />
     <ClCompile Include="..\src\game\minigame\mg_penguin.cpp" />
     <ClCompile Include="..\src\game\minigame\mg_sumo.cpp" />
     <ClCompile Include="..\src\game\phase\build.cpp" />
@@ -329,8 +335,11 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\game_objects\game_object.cpp" />
     <ClCompile Include="..\src\game_objects\grid.cpp" />
     <ClCompile Include="..\src\game_objects\minigame\empty_collider.cpp" />
+    <ClCompile Include="..\src\game_objects\minigame\hotair_balloon.cpp" />
+    <ClCompile Include="..\src\game_objects\minigame\hotair_basket.cpp" />
     <ClCompile Include="..\src\game_objects\minigame\penguin.cpp" />
     <ClCompile Include="..\src\game_objects\minigame\platform.cpp" />
+    <ClCompile Include="..\src\game_objects\minigame\pump.cpp" />
     <ClCompile Include="..\src\game_objects\minigame\sumo_ball.cpp" />
     <ClCompile Include="..\src\game_objects\player.cpp" />
     <ClCompile Include="..\src\game_objects\tile.cpp" />
@@ -384,6 +393,7 @@ xcopy /F /Y "$(SolutionDir)\packages\boost_signals-vc140.1.64.0.0\lib\native\add
     <ClCompile Include="..\src\scene\camera.cpp" />
     <ClCompile Include="..\src\scene\main_scene.cpp" />
     <ClCompile Include="..\src\scene\minigame_scenes\mgscene_penguin.cpp" />
+    <ClCompile Include="..\src\scene\minigame_scenes\mgscene_pump.cpp" />
     <ClCompile Include="..\src\scene\minigame_scenes\mgscene_sumo.cpp" />
     <ClCompile Include="..\src\scene\scene.cpp" />
     <ClCompile Include="..\src\scene\scene_info.cpp" />

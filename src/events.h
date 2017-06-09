@@ -358,5 +358,14 @@ namespace events {
 
         // Signals that the player has died
         extern signal<void(int)> player_died_event;
+
+        // Signals anim for pumping
+        extern signal<void(int)> c_play_pump_event;
+
+        // Inflate the balloon of the team that the player belongs to.
+        extern signal<void(Player*)> s_inflate_balloon_event;
+
+        // Assign pump id to a player id.
+        extern signal<void(int, int)> c_assign_pump_event;
     }
 }

@@ -20,9 +20,9 @@
 
 std::vector<std::string> Player::PLAYER_MODELS = { "lizar", "pig", "cat", "tomatoe" };
 
-Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo(false), 
-        cancel_flicker([]() {}), cancel_invulnerable([]() {}), cancel_slow([]() {}), 
-        cancel_stun([]() {}), cancel_confuse([]() {}) {
+Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo(false),
+    cancel_flicker([]() {}), cancel_invulnerable([]() {}), cancel_slow([]() {}), 
+    cancel_stun([]() {}), cancel_confuse([]() {}), anim_override(false) {
     tag = "PLAYER";
 
     if (id == ON_SERVER) {
@@ -66,6 +66,13 @@ Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo
         msg.set_allocated_change_avatar_request(request);
         events::client::send(msg);
     });
+
+    events::minigame::c_play_pump_event.connect([&](int player_id) {
+        if (player_id != this->get_id()) return;
+
+        anim_player.stop();
+        anim_player.play();
+    });
 }
 
 // Just calls do_movement for now, can have more
@@ -90,14 +97,16 @@ void Player::c_update_state(glm::mat4 mat, bool enab) {
     float dz = std::fabs(mat[3][2] - transform.get_position().z);
     bool animate = dx > ANIMATE_DELTA || dz > ANIMATE_DELTA;
 
-    if (!animate && !exiting && !stunned) {
-        if (!anim_player.check_paused()) {
-            anim_player.stop();
+    if (!anim_override) {
+        if (!animate && !exiting && !stunned) {
+            if (!anim_player.check_paused()) {
+                anim_player.stop();
+            }
         }
-    }
-    else {
-        if (anim_player.check_paused()) {
-            anim_player.play();
+        else {
+            if (anim_player.check_paused()) {
+                anim_player.play();
+            }
         }
     }
 
@@ -152,6 +161,10 @@ void Player::stop_walk() {
 
 void Player::start_walk() {
     anim_player.set_anim("walk", 3.0f, true);
+}
+
+void Player::set_pump() {
+    anim_player.set_anim("pump", 5.0f, false);
 }
 
 // Server collision
@@ -309,6 +322,9 @@ void Player::c_take_damage() {
     anim_player.set_anim("dmg", 1.0f, false);
     anim_player.play();
 
+    // Play take damage sound effect
+    events::sound_effects_event(events::AudioData(AudioManager::TAKE_DAMAGE_SOUND, false));
+
     // End hurt animation
     cancel_stun = Timer::get()->do_after(std::chrono::milliseconds(STUN_LENGTH),
         [&]() {
@@ -360,6 +376,9 @@ void Player::c_slow() {
     model->reset_colors();
     model->multiply_colors(Color(0.1f, 0.1f, 10.0f, false));
 
+    // Show UI Effect if client player
+    c_set_ice_effect(true);
+
     // Fade back slowly to original color
     int count = 0;
     const int num_steps = 50;
@@ -375,6 +394,7 @@ void Player::c_slow() {
 
         if (count >= num_steps) {
             cancel_slow();
+            c_set_ice_effect(false);
             model->reset_colors();
         }
 
@@ -479,5 +499,17 @@ void Player::set_confuse_effect(bool b) {
         events::ui::show_effect_image(2.0f, "confuse.png");
     else
         events::ui::hide_effect_image(1.0f);
+}
 
+// Makes the screen tinted blue to show UI slow effect
+void Player::c_set_ice_effect(bool b) {
+    // Only if player that is slowed is this client's player
+
+    if (GameState::context.client_player != this)
+        return;
+
+    if (b)
+        events::ui::show_effect_image(1.0f, "ice.png");
+    else
+        events::ui::hide_effect_image(1.0f);
 }
