@@ -1,4 +1,5 @@
 #include <game/game_state.h>
+#include <util/config.h>
 #include "minigame_phase.h"
 #include "input/modal_input.h"
 
@@ -23,12 +24,14 @@ MinigamePhase::~MinigamePhase() {
 
 
 void MinigamePhase::s_setup() {
+    Config::config->get_value(Config::str_num_rounds, n_rounds);
+
     // Pick minigame and set up timer/connections
     // For now, just choose first one
     curr_mg = minigames[2];
 
     do_update = false;
-    transition_after(6, curr_mg->get_time().count(), proto::Phase::BUILD);
+    transition_after(6, curr_mg->get_time().count(), s_phase_when_done());
     Timer::get()->do_after(std::chrono::seconds(6), [this]() {
         curr_mg->get_scene()->start_timers();
         do_update = true;
@@ -39,6 +42,8 @@ void MinigamePhase::s_setup() {
 }
 
 void MinigamePhase::c_setup() {
+    Config::config->get_value(Config::str_num_rounds, n_rounds);
+
     input::ModalInput::get()->set_mode(input::ModalInput::DISABLE);
     // TODO: client needs to know what minigame was chosen!!
     // For now, choose first one
@@ -74,7 +79,7 @@ proto::Phase MinigamePhase::s_update() {
     bool finished = curr_mg->is_finished();
 
     if (finished)
-        return proto::Phase::BUILD;
+        return s_phase_when_done();
     else
         return next;
 }
@@ -94,4 +99,8 @@ void MinigamePhase::c_teardown() {
     curr_mg->c_teardown();
     events::ui::dismiss_legend();
     events::minigame::end_minigame_event();
+}
+
+proto::Phase MinigamePhase::s_phase_when_done() {
+    return context.current_round == n_rounds ? proto::Phase::END : proto::Phase::BUILD;
 }
