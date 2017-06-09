@@ -98,7 +98,6 @@ void GameState::setup(bool is_server) {
         pump_scene.c_setup();
 
         events::menu::spawn_existing_player_event.connect([&](int id, int model_index) {
-            context.player_ids.push_back(id);
             c_add_player(id, model_index, false);
         });
     }
@@ -217,6 +216,7 @@ Player* GameState::s_add_player(int conn_id) {
 Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
     Player *player = new Player(obj_id);
     player->c_setup_player_model(model_index);
+    context.player_ids.push_back(obj_id);
     
     start_scene.objs.push_back(player);
     main_scene.objs.push_back(player);
