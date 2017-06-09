@@ -104,8 +104,8 @@ void MGScenePump::disconnect_listeners() {
 
 void MGScenePump::reset_camera() {
     info.camera.reset();
-    info.camera.rotate_cam(glm::vec3(1, 0, 0), -45.0f);
-    info.camera.cam_pos = glm::vec3(0, 8, 9);
+    //info.camera.rotate_cam(glm::vec3(1, 0, 0), .0f);
+    info.camera.cam_pos = glm::vec3(0, 3, 8);
     info.camera.recalculate();
 }
 
