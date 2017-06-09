@@ -6,7 +6,7 @@
 
 CharSelectionUI::CharSelectionUI(float aspect)
         : UI(0.f, 0.f),
-          title(5.f, 5.f, 0.f, -20.f, 100.f * aspect, 100.f, 0.f,
+          title(5.f, 5.f, 0.f, -40.f, 100.f * aspect, 100.f, 0.f,
           UIUnstretchedTextBox::MIDDLE, UIUnstretchedTextBox::MIDDLE,
           Color::BLACK, Color::BLACK, 1.f, false) {
 
