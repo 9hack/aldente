@@ -192,7 +192,7 @@ void Player::c_setup_player_model(int index) {
 
     // Sets scale. Need better way to do this later.
     if (model_name == "pig")
-        set_scale({ 0.004f, 0.004f, 0.004f });
+        set_scale({ 0.0043f, 0.0043f, 0.0043f });
     else if (model_name == "cat")
         set_scale({ 0.004f, 0.004f, 0.004f });
     else if (model_name == "lizar")

@@ -4,9 +4,9 @@
 
 std::map<std::string, std::string> UILeaderboardEntry::model_to_portrait = {
         {"pig", "pig_icon.png"},
-        {"lizard", "lizard_icon.png"},
+        {"lizar", "lizard_icon.png"},
         {"cat", "cat_icon.png"},
-        {"tomato", "tomato_icon.png"}};
+        {"tomatoe", "tomato_icon.png"}};
 std::map<int, Color> UILeaderboardEntry::ranking_to_color = {
         {0, Color::GOLD},
         {1, Color::SILVER},
