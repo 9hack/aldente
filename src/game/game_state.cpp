@@ -6,6 +6,7 @@ MenuPhase GameState::menu_phase(context);
 BuildPhase GameState::build_phase(context);
 DungeonPhase GameState::dungeon_phase(context);
 MinigamePhase GameState::minigame_phase(context);
+MinigameResultsPhase GameState::minigame_results_phase(context);
 EndPhase GameState::end_phase(context);
 
 DialoguePhase GameState::build_tutorial_phase(
@@ -170,6 +171,9 @@ void GameState::set_phase(proto::Phase phase) {
         break;
     case proto::Phase::MINIGAME:
         GameState::set_phase(&GameState::minigame_phase);
+        break;
+    case proto::Phase::MINIGAME_RESULTS:
+        GameState::set_phase(&GameState::minigame_results_phase);
         break;
     case proto::Phase::BUILD_TUTORIAL:
         GameState::set_phase(&GameState::build_tutorial_phase);

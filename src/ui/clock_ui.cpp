@@ -50,6 +50,7 @@ ClockUI::ClockUI(float aspect, int rounds)
     events::build::end_build_event.connect([this]() { disable(); });
     events::build::start_build_event.connect([this]() { enable(); });
     events::dungeon::c_start.connect([this]() { enable(); });
+    events::minigame::start_minigame_event.connect([this]() { enable(); });
     events::ui::update_time.connect([this](int time) { set_time(time); });
 
     events::ui::round_changed_event.connect([&](int next_round) {
