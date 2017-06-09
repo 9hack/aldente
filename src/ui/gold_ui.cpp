@@ -72,7 +72,7 @@ void GoldUI::set_gold(int gold) {
     total_gold.set_text(std::to_string(cur_gold));
 
     // Update delta text
-    std::string prefix = cur_delta < 0 ? "-" : "+";
+    std::string prefix = cur_delta <= 0 ? "-" : "+";
     Color color = cur_delta < 0 ? Color::INDIAN_RED : Color::WINDWAKER_GREEN;
     gold_delta.set_text(prefix + std::to_string(std::abs(cur_delta)));
     gold_delta.set_color(color);
