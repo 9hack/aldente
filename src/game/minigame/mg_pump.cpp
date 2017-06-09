@@ -146,7 +146,7 @@ void PumpMG::c_teardown() {
     button_conn.disconnect();
 
     for (int player_id : context.player_ids) {
-        Player *player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
+        Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
         assert(player);
         player->start_walk();
         player->set_anim_override(false);
