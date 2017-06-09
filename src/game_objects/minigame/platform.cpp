@@ -26,10 +26,14 @@ Platform::Platform(PlatformShape shape) : GameObject(-1) {
 void Platform::setup_model() {
     switch (type) {
     case PlatformShape::SQUARE:
-        attach_model(AssetLoader::get_model("cube"));
+        attach_model(AssetLoader::get_model("cloud_platform"));
+        model->set_shader(&ShaderManager::unlit);
+        model->set_color({ 1.001f, 1.001f, 1.001f, false });
         break;
     case PlatformShape::CIRCLE:
-        attach_model(AssetLoader::get_model("cylinder"));
+        attach_model(AssetLoader::get_model("roundcloud"));
+        model->set_shader(&ShaderManager::unlit);
+        model->set_color({ 1.001f, 1.001f, 1.001f, false });
         break;
     default: break;
     }

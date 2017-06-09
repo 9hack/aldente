@@ -33,8 +33,9 @@ void MGSceneSumo::c_setup() {
     // Set up the platform
     Platform* platform = new Platform(PlatformShape::CIRCLE);
 
-    platform->set_position(glm::vec3(0, 0.2f, 0));
-    platform->transform.set_scale(glm::vec3(6, 0.5f, 6));
+    platform->set_position(glm::vec3(0, -0.05f, 0));
+    platform->transform.set_position(glm::vec3(0, -1.2f, 0));
+    platform->transform.set_scale(glm::vec3(0.015f, 0.01f, 0.015f));
     objs.push_back(platform);
 
     // Setup lights.
