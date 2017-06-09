@@ -107,15 +107,15 @@ void DungeonPhase::c_setup() {
             }
         });
 
-        essence_conn = events::dungeon::c_spawn_essence_event.connect([&](float x, float z, int id) {
-            Essence *ess = new Essence(id);
-            ess->set_position({ x, 0, z });
-            ess->setup_model();
-            GameState::scene_manager.get_current_scene()->objs.push_back(ess);
-        });
-
         // Play music
         events::music_event(events::AudioData(AudioManager::DUNGEON_MUSIC, true));
+    });
+
+    essence_conn = events::dungeon::c_spawn_essence_event.connect([&](float x, float z, int id) {
+        Essence *ess = new Essence(id);
+        ess->set_position({ x, 0, z });
+        ess->setup_model();
+        GameState::scene_manager.get_current_scene()->objs.push_back(ess);
     });
 }
 

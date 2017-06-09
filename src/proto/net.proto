@@ -13,6 +13,8 @@ message ServerMessage {
     PlayerStats player_stats_update = 7;
     int32 time_update = 8; // in seconds
     AvatarChange change_avatar_update = 9;
+    PumpAssignment pump_assignment = 10;
+    int32 pump_update = 11;
   }
 }
 
@@ -26,6 +28,7 @@ message ClientMessage {
     int32 interact_request = 6;
     int32 ready_request = 7;
     AvatarChange change_avatar_request = 8;
+    int32 pump_request = 9;
     int32 player_finished_dialogue = 10;
   }
 }
@@ -126,4 +129,13 @@ message PlayerStats {
 message AvatarChange {
   optional int32 player_id = 1;
   optional int32 model_index = 2;
+}
+
+message PumpPair {
+  optional int32 player_id = 1;
+  optional int32 pump = 2;
+}
+
+message PumpAssignment {
+  repeated PumpPair pairs = 1;
 }

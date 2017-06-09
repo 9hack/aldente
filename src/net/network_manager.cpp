@@ -197,6 +197,16 @@ void ServerNetworkManager::update() {
                 server.send_to_all(response);
                 break;
             }
+            case proto::ClientMessage::MessageTypeCase::kPumpRequest: {
+                Player* player = dynamic_cast<Player*>(GameObject::game_objects[msg.pump_request()]);
+                assert(player);
+                events::minigame::s_inflate_balloon_event(player);
+
+                proto::ServerMessage response;
+                response.set_pump_update(player->get_id());
+                server.send_to_all(response);
+                break;
+            }
             case proto::ClientMessage::MessageTypeCase::kPlayerFinishedDialogue: {
                 events::dialogue::s_player_finished_dialogue(msg.player_finished_dialogue());
                 break;
@@ -319,7 +329,7 @@ void ClientNetworkManager::update() {
             if (resp.status()) {
                 client_id = resp.id();
                 GameState::c_add_player(resp.obj_id(), resp.model_index(), true)->c_set_client_player();
-                
+
                 // Start a timer event to ping the server every second.
                 Timer::get()->do_every(std::chrono::seconds(1), [&]() {
                     events::debug::ping_event();
@@ -345,18 +355,22 @@ void ClientNetworkManager::update() {
                     // Game object with that ID doesn't exist on this client yet; create it.
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
                         events::menu::spawn_existing_player_event(obj.id(), obj.model_index());
-                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
+                    }
+                    else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
                         events::dungeon::spawn_existing_goal_event(obj_x, obj_z, obj.id());
-                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {
+                    }
+                    else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {
                         events::dungeon::c_spawn_essence_event(obj_x, obj_z, obj.id());
-                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_PROJECTILE) {
+                    }
+                    else if (obj.type() == proto::GameObject::Type::GameObject_Type_PROJECTILE) {
                         if (obj.subtype() == ProjectileTypes::ARROW) {
                             Arrow *arrow = new Arrow(obj.id());
                             arrow->set_parent(obj.parent_id());
                             arrow->setup_model();
                             GameState::scene_manager.get_current_scene()->objs.push_back(arrow);
                         }
-                    } else {
+                    }
+                    else {
                         obj_exists = false;
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }
@@ -416,6 +430,17 @@ void ClientNetworkManager::update() {
             Player* player = dynamic_cast<Player*>(GameObject::game_objects[change.player_id()]);
             assert(player);
             player->c_setup_player_model(change.model_index());
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPumpAssignment: {
+            proto::PumpAssignment pump_asg = msg.pump_assignment();
+            for (auto & p : pump_asg.pairs()) {
+                events::minigame::c_assign_pump_event(p.player_id(), p.pump());
+            }
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPumpUpdate: {
+            events::minigame::c_play_pump_event(msg.pump_update());
             break;
         }
         default:

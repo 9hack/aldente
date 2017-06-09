@@ -217,6 +217,7 @@ void BuildPhase::c_setup() {
 
     // Resets game objects on client side
     for (auto & kv : GameObject::game_objects) {
+        if (!kv.second) continue;
         if (dynamic_cast<Player*>(kv.second))
             kv.second->disable();
         kv.second->c_reset();

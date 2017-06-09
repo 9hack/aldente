@@ -26,6 +26,7 @@ private:
     bool end_flicker; // Whether we should stop player flickering.
     bool invulnerable; // Can't lose coins or collide with other harmful traps.
     bool stunned; // Can't move.
+    bool anim_override; // Always animate
     bool confused; // Movement direction is reversed
 
     // to_move is for saving the joystick input in each frame.
@@ -70,6 +71,7 @@ public:
     // Animation Cues
     void start_walk();
     void stop_walk();
+    void set_pump();
 
     // Set this player's spawn position.
     void set_start_position(glm::vec3 pos);
@@ -126,4 +128,5 @@ public:
     void set_momentum(bool to_set) { momentum = to_set; };
 
     void toggle_sumo_collider();
+    void set_anim_override(bool to_set) { anim_override = to_set; };
 };
