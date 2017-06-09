@@ -451,6 +451,16 @@ void ClientNetworkManager::update() {
             events::minigame::c_play_pump_event(msg.pump_update());
             break;
         }
+        case proto::ServerMessage::MessageTypeCase::kReadyUpdate: {
+            proto::ReadyUpdate ready = msg.ready_update();
+            Player* player = dynamic_cast<Player*>(GameObject::game_objects[ready.player_id()]);
+            assert(player);
+            if (ready.ready())
+                player->emote(false);
+            else
+                player->stop_anim();
+            break;
+        }
         default:
             break;
         }

@@ -13,6 +13,13 @@ void MenuPhase::s_setup() {
     ready_conn = events::player_ready_event.connect([&](int player_id) {
         // Ready up if not previously ready. Otherwise un-ready up.
         context.ready_flags[player_id] = !context.ready_flags[player_id];
+
+        proto::ServerMessage msg;
+        proto::ReadyUpdate* ready = new proto::ReadyUpdate();
+        ready->set_player_id(player_id);
+        ready->set_ready(context.ready_flags[player_id]);
+        msg.set_allocated_ready_update(ready);
+        events::server::announce(msg);
     });
 }
 
@@ -84,6 +91,11 @@ void MenuPhase::c_teardown() {
 
     events::stop_all_sounds_event();
     events::stop_music_event();
+
+    for (int player_id : context.player_ids) {
+        Player* player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
+        player->set_anim_override(false);
+    }
 }
 
 proto::Phase MenuPhase::s_phase_when_done() {

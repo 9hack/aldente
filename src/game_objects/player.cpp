@@ -523,3 +523,7 @@ void Player::emote(bool loop, float speed) {
     anim_player.play();
     anim_override = true;
 }
+
+void Player::stop_anim() {
+    anim_player.stop();
+}
