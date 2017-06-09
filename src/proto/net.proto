@@ -124,7 +124,11 @@ message AvatarChange {
   optional int32 model_index = 2;
 }
 
+message PumpPair {
+  optional int32 player_id = 1;
+  optional int32 pump = 2;
+}
+
 message PumpAssignment {
-  repeated int32 player_id = 1;
-  repeated int32 pump = 2;
+  repeated PumpPair pairs = 1;
 }

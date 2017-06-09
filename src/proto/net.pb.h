@@ -46,6 +46,7 @@ class Collision;
 class StickData;
 class PlayerStats;
 class AvatarChange;
+class PumpPair;
 class PumpAssignment;
 
 enum GameObject_Type {
@@ -1637,6 +1638,95 @@ class AvatarChange : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class PumpPair : public ::google::protobuf::Message {
+ public:
+  PumpPair();
+  virtual ~PumpPair();
+
+  PumpPair(const PumpPair& from);
+
+  inline PumpPair& operator=(const PumpPair& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PumpPair& default_instance();
+
+  void Swap(PumpPair* other);
+
+  // implements Message ----------------------------------------------
+
+  PumpPair* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const PumpPair& from);
+  void MergeFrom(const PumpPair& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 player_id = 1;
+  inline bool has_player_id() const;
+  inline void clear_player_id();
+  static const int kPlayerIdFieldNumber = 1;
+  inline ::google::protobuf::int32 player_id() const;
+  inline void set_player_id(::google::protobuf::int32 value);
+
+  // optional int32 pump = 2;
+  inline bool has_pump() const;
+  inline void clear_pump();
+  static const int kPumpFieldNumber = 2;
+  inline ::google::protobuf::int32 pump() const;
+  inline void set_pump(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:proto.PumpPair)
+ private:
+  inline void set_has_player_id();
+  inline void clear_has_player_id();
+  inline void set_has_pump();
+  inline void clear_has_pump();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::int32 player_id_;
+  ::google::protobuf::int32 pump_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static PumpPair* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class PumpAssignment : public ::google::protobuf::Message {
  public:
   PumpAssignment();
@@ -1690,29 +1780,17 @@ class PumpAssignment : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated int32 player_id = 1;
-  inline int player_id_size() const;
-  inline void clear_player_id();
-  static const int kPlayerIdFieldNumber = 1;
-  inline ::google::protobuf::int32 player_id(int index) const;
-  inline void set_player_id(int index, ::google::protobuf::int32 value);
-  inline void add_player_id(::google::protobuf::int32 value);
-  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-      player_id() const;
-  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-      mutable_player_id();
-
-  // repeated int32 pump = 2;
-  inline int pump_size() const;
-  inline void clear_pump();
-  static const int kPumpFieldNumber = 2;
-  inline ::google::protobuf::int32 pump(int index) const;
-  inline void set_pump(int index, ::google::protobuf::int32 value);
-  inline void add_pump(::google::protobuf::int32 value);
-  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-      pump() const;
-  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-      mutable_pump();
+  // repeated .proto.PumpPair pairs = 1;
+  inline int pairs_size() const;
+  inline void clear_pairs();
+  static const int kPairsFieldNumber = 1;
+  inline const ::proto::PumpPair& pairs(int index) const;
+  inline ::proto::PumpPair* mutable_pairs(int index);
+  inline ::proto::PumpPair* add_pairs();
+  inline const ::google::protobuf::RepeatedPtrField< ::proto::PumpPair >&
+      pairs() const;
+  inline ::google::protobuf::RepeatedPtrField< ::proto::PumpPair >*
+      mutable_pairs();
 
   // @@protoc_insertion_point(class_scope:proto.PumpAssignment)
  private:
@@ -1721,8 +1799,7 @@ class PumpAssignment : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > player_id_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > pump_;
+  ::google::protobuf::RepeatedPtrField< ::proto::PumpPair > pairs_;
   friend void  protobuf_AddDesc_net_2eproto();
   friend void protobuf_AssignDesc_net_2eproto();
   friend void protobuf_ShutdownFile_net_2eproto();
@@ -3481,66 +3558,88 @@ inline void AvatarChange::set_model_index(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
-// PumpAssignment
+// PumpPair
 
-// repeated int32 player_id = 1;
-inline int PumpAssignment::player_id_size() const {
-  return player_id_.size();
+// optional int32 player_id = 1;
+inline bool PumpPair::has_player_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void PumpAssignment::clear_player_id() {
-  player_id_.Clear();
+inline void PumpPair::set_has_player_id() {
+  _has_bits_[0] |= 0x00000001u;
 }
-inline ::google::protobuf::int32 PumpAssignment::player_id(int index) const {
-  // @@protoc_insertion_point(field_get:proto.PumpAssignment.player_id)
-  return player_id_.Get(index);
+inline void PumpPair::clear_has_player_id() {
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline void PumpAssignment::set_player_id(int index, ::google::protobuf::int32 value) {
-  player_id_.Set(index, value);
-  // @@protoc_insertion_point(field_set:proto.PumpAssignment.player_id)
+inline void PumpPair::clear_player_id() {
+  player_id_ = 0;
+  clear_has_player_id();
 }
-inline void PumpAssignment::add_player_id(::google::protobuf::int32 value) {
-  player_id_.Add(value);
-  // @@protoc_insertion_point(field_add:proto.PumpAssignment.player_id)
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-PumpAssignment::player_id() const {
-  // @@protoc_insertion_point(field_list:proto.PumpAssignment.player_id)
+inline ::google::protobuf::int32 PumpPair::player_id() const {
+  // @@protoc_insertion_point(field_get:proto.PumpPair.player_id)
   return player_id_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-PumpAssignment::mutable_player_id() {
-  // @@protoc_insertion_point(field_mutable_list:proto.PumpAssignment.player_id)
-  return &player_id_;
+inline void PumpPair::set_player_id(::google::protobuf::int32 value) {
+  set_has_player_id();
+  player_id_ = value;
+  // @@protoc_insertion_point(field_set:proto.PumpPair.player_id)
 }
 
-// repeated int32 pump = 2;
-inline int PumpAssignment::pump_size() const {
-  return pump_.size();
+// optional int32 pump = 2;
+inline bool PumpPair::has_pump() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void PumpAssignment::clear_pump() {
-  pump_.Clear();
+inline void PumpPair::set_has_pump() {
+  _has_bits_[0] |= 0x00000002u;
 }
-inline ::google::protobuf::int32 PumpAssignment::pump(int index) const {
-  // @@protoc_insertion_point(field_get:proto.PumpAssignment.pump)
-  return pump_.Get(index);
+inline void PumpPair::clear_has_pump() {
+  _has_bits_[0] &= ~0x00000002u;
 }
-inline void PumpAssignment::set_pump(int index, ::google::protobuf::int32 value) {
-  pump_.Set(index, value);
-  // @@protoc_insertion_point(field_set:proto.PumpAssignment.pump)
+inline void PumpPair::clear_pump() {
+  pump_ = 0;
+  clear_has_pump();
 }
-inline void PumpAssignment::add_pump(::google::protobuf::int32 value) {
-  pump_.Add(value);
-  // @@protoc_insertion_point(field_add:proto.PumpAssignment.pump)
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-PumpAssignment::pump() const {
-  // @@protoc_insertion_point(field_list:proto.PumpAssignment.pump)
+inline ::google::protobuf::int32 PumpPair::pump() const {
+  // @@protoc_insertion_point(field_get:proto.PumpPair.pump)
   return pump_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-PumpAssignment::mutable_pump() {
-  // @@protoc_insertion_point(field_mutable_list:proto.PumpAssignment.pump)
-  return &pump_;
+inline void PumpPair::set_pump(::google::protobuf::int32 value) {
+  set_has_pump();
+  pump_ = value;
+  // @@protoc_insertion_point(field_set:proto.PumpPair.pump)
+}
+
+// -------------------------------------------------------------------
+
+// PumpAssignment
+
+// repeated .proto.PumpPair pairs = 1;
+inline int PumpAssignment::pairs_size() const {
+  return pairs_.size();
+}
+inline void PumpAssignment::clear_pairs() {
+  pairs_.Clear();
+}
+inline const ::proto::PumpPair& PumpAssignment::pairs(int index) const {
+  // @@protoc_insertion_point(field_get:proto.PumpAssignment.pairs)
+  return pairs_.Get(index);
+}
+inline ::proto::PumpPair* PumpAssignment::mutable_pairs(int index) {
+  // @@protoc_insertion_point(field_mutable:proto.PumpAssignment.pairs)
+  return pairs_.Mutable(index);
+}
+inline ::proto::PumpPair* PumpAssignment::add_pairs() {
+  // @@protoc_insertion_point(field_add:proto.PumpAssignment.pairs)
+  return pairs_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::proto::PumpPair >&
+PumpAssignment::pairs() const {
+  // @@protoc_insertion_point(field_list:proto.PumpAssignment.pairs)
+  return pairs_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::proto::PumpPair >*
+PumpAssignment::mutable_pairs() {
+  // @@protoc_insertion_point(field_mutable_list:proto.PumpAssignment.pairs)
+  return &pairs_;
 }
 
 
