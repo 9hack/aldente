@@ -64,7 +64,9 @@ Player::Player(int id) : GameObject(id), is_client(false), momentum(false), sumo
         events::client::send(msg);
     });
 
-    events::minigame::c_play_pump_event.connect([&](int id){
+    events::minigame::c_play_pump_event.connect([&](int player_id) {
+        if (player_id != this->get_id()) return;
+
         anim_player.stop();
         anim_player.play();
     });
