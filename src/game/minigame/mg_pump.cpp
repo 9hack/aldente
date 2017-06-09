@@ -130,10 +130,12 @@ void PumpMG::c_setup() {
         }
     });
 
-    Player *player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
-    assert(player);
-    player->set_pump();
-    player->set_anim_override(true);
+    for (int player_id : context.player_ids) {
+        Player *player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
+        assert(player);
+        player->set_pump();
+        player->set_anim_override(true);
+    }
 
     GameState::set_scene(context.minigame_scenes["pump"]);
     scene = context.minigame_scenes["pump"];
@@ -143,10 +145,12 @@ void PumpMG::c_setup() {
 void PumpMG::c_teardown() {
     button_conn.disconnect();
 
-    Player *player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
-    assert(player);
-    player->start_walk();
-    player->set_anim_override(false);
+    for (int player_id : context.player_ids) {
+        Player *player = dynamic_cast<Player*>(GameObject::game_objects[context.player_id]);
+        assert(player);
+        player->start_walk();
+        player->set_anim_override(false);
+    }
 
     scene->disconnect_listeners();
 }
