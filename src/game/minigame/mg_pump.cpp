@@ -26,6 +26,9 @@ void PumpMG::s_setup() {
     std::vector<int> player_assignments = context.player_ids;
     std::random_shuffle(player_assignments.begin(), player_assignments.end());
 
+    proto::ServerMessage msg;
+    proto::PumpAssignment* pump_asg = new proto::PumpAssignment();
+
     // Set up players
     bool curr_team = true;
     for (int id : player_assignments) {
@@ -38,14 +41,22 @@ void PumpMG::s_setup() {
         else
             team2.push_back(player);
 
+        int position = count++;
         player->get_rigid()->setLinearFactor(btVector3(0, 0, 0));
         player->get_rigid()->setLinearVelocity(btVector3(0, 0, 0));
         player->set_ghost(true);
-        player->set_position(player_start_pos[count++]);
+        player->set_position(player_start_pos[position]);
         player->transform.look_at(glm::vec3(0, 0, 1));
 
         curr_team = !curr_team;
+
+        proto::PumpPair* pair = pump_asg->add_pairs();
+        pair->set_player_id(id);
+        pair->set_pump(position);
     }
+
+    msg.set_allocated_pump_assignment(pump_asg);
+    events::server::announce(msg);
 
     inflate_conn = events::minigame::s_inflate_balloon_event.connect([&](Player* player) {
         // Find which team the player is on.
@@ -91,6 +102,8 @@ void PumpMG::c_setup() {
             case events::BTN_A: {
                 // A button pressed.
                 events::minigame::c_play_pump_event(context.player_id);
+                //MGScenePump* pump_scene = dynamic_cast<MGScenePump*>(scene);
+                //pump_scene->c_trigger_pump(context.player_id);
 
                 // Send pump event to server, tagged by this player's id.
                 proto::ClientMessage msg;
@@ -110,6 +123,8 @@ void PumpMG::c_setup() {
     player->set_anim_override(true);
 
     GameState::set_scene(context.minigame_scenes["pump"]);
+    scene = context.minigame_scenes["pump"];
+    scene->connect_listeners();
 }
 
 void PumpMG::c_teardown() {
@@ -119,6 +134,8 @@ void PumpMG::c_teardown() {
     assert(player);
     player->start_walk();
     player->set_anim_override(false);
+
+    scene->disconnect_listeners();
 }
 
 bool PumpMG::is_finished() {

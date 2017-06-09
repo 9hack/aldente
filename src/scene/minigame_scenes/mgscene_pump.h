@@ -4,6 +4,7 @@
 #include "game_objects/minigame/pump.h"
 #include "game_objects/minigame/hotair_basket.h"
 #include "game_objects/minigame/hotair_balloon.h"
+#include <map>
 
 /*
 Scene for pump minigame
@@ -11,9 +12,12 @@ Scene for pump minigame
 class MGScenePump : public Scene {
 private:
     std::vector<Pump*> pumps;
+    std::map<int, Pump*> pump_map;
     std::vector<HotAirBasket*> baskets;
 	std::vector<HotAirBalloon*> balloons;
     int player_count;
+
+    boost::signals2::connection pump_conn;
 public:
     MGScenePump() {};
     void s_update() override;
@@ -24,6 +28,7 @@ public:
     void disconnect_listeners() override;
     void reset_camera() override;
     void reset_scene() override;
-    void c_add_pump(int to_set);
 	void inflate_balloon(bool is_team1);
+    void c_add_pump(int count, int player_id);
+    void c_trigger_pump(int player_id);
 };

@@ -353,5 +353,8 @@ namespace events {
 
         // Inflate the balloon of the team that the player belongs to.
         extern signal<void(Player*)> s_inflate_balloon_event;
+
+        // Assign pump id to a player id.
+        extern signal<void(int, int)> c_assign_pump_event;
     }
 }

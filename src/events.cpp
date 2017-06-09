@@ -130,5 +130,6 @@ namespace events {
         signal<void(int)> player_died_event;
         signal<void(int)> c_play_pump_event;
         signal<void(Player*)> s_inflate_balloon_event;
+        signal<void(int, int)> c_assign_pump_event;
     }
 }

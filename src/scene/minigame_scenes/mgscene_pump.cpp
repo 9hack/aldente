@@ -89,9 +89,15 @@ void MGScenePump::c_setup() {
 }
 
 void MGScenePump::connect_listeners() {
+    pump_conn = events::minigame::c_assign_pump_event.connect([&](int player_id, int pump) {
+        //pump_map[player_id] = pumps[pump];
+        std::cerr << "[c] assign pump " << pump << " to player " << player_id << "\n";
+        pumps[pump]->c_set_player_id(player_id);
+    });
 }
 
 void MGScenePump::disconnect_listeners() {
+    pump_conn.disconnect();
 }
 
 void MGScenePump::reset_camera() {
@@ -106,13 +112,18 @@ void MGScenePump::reset_scene() {
 	balloons[1]->transform.set_scale(glm::vec3(INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE));
 }
 
-void MGScenePump::c_add_pump(int to_set) {
-
+void MGScenePump::inflate_balloon(bool is_team1) {
+    if (is_team1)
+        balloons[0]->inflate();
+    else
+        balloons[1]->inflate();
 }
 
-void MGScenePump::inflate_balloon(bool is_team1) {
-	if (is_team1)
-		balloons[0]->inflate();
-	else
-		balloons[1]->inflate();
+void MGScenePump::c_add_pump(int count, int player_id) {
+    //pump_map[player_id] = pumps[count];
+}
+
+void MGScenePump::c_trigger_pump(int player_id) {
+    // TODO: play animation of this pump:
+    // pump_map[player_id]
 }

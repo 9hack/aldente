@@ -321,7 +321,7 @@ void ClientNetworkManager::update() {
             if (resp.status()) {
                 client_id = resp.id();
                 GameState::c_add_player(resp.obj_id(), resp.model_index(), true)->c_set_client_player();
-                
+
                 // Start a timer event to ping the server every second.
                 Timer::get()->do_every(std::chrono::seconds(1), [&]() {
                     events::debug::ping_event();
@@ -347,18 +347,22 @@ void ClientNetworkManager::update() {
                     // Game object with that ID doesn't exist on this client yet; create it.
                     if (obj.type() == proto::GameObject::Type::GameObject_Type_PLAYER) {
                         events::menu::spawn_existing_player_event(obj.id(), obj.model_index());
-                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
+                    }
+                    else if (obj.type() == proto::GameObject::Type::GameObject_Type_GOAL) {
                         events::dungeon::spawn_existing_goal_event(obj_x, obj_z, obj.id());
-                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {
+                    }
+                    else if (obj.type() == proto::GameObject::Type::GameObject_Type_ESSENCE) {
                         events::dungeon::c_spawn_essence_event(obj_x, obj_z, obj.id());
-                    } else if (obj.type() == proto::GameObject::Type::GameObject_Type_PROJECTILE) {
+                    }
+                    else if (obj.type() == proto::GameObject::Type::GameObject_Type_PROJECTILE) {
                         if (obj.subtype() == ProjectileTypes::ARROW) {
                             Arrow *arrow = new Arrow(obj.id());
                             arrow->set_parent(obj.parent_id());
                             arrow->setup_model();
                             GameState::scene_manager.get_current_scene()->objs.push_back(arrow);
                         }
-                    } else {
+                    }
+                    else {
                         obj_exists = false;
                         std::cerr << "Unrecognized game obj type; could not create client copy.\n";
                     }
@@ -419,6 +423,12 @@ void ClientNetworkManager::update() {
             assert(player);
             player->c_setup_player_model(change.model_index());
             break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kPumpAssignment: {
+            proto::PumpAssignment pump_asg = msg.pump_assignment();
+            for (auto & p : pump_asg.pairs()) {
+                events::minigame::c_assign_pump_event(p.player_id(), p.pump());
+            }
         }
         default:
             break;
