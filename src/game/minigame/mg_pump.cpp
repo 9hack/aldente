@@ -51,7 +51,7 @@ void PumpMG::s_setup() {
         player->transform.look_at(glm::vec3(0, 0, 1));
 
         curr_team = !curr_team;
-
+        std::cerr << "[s] assign pump " << position << " to player " << id << "\n";
         proto::PumpPair* pair = pump_asg->add_pairs();
         pair->set_player_id(id);
         pair->set_pump(position);

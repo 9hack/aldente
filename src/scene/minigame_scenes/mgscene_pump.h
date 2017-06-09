@@ -16,10 +16,8 @@ private:
     std::vector<HotAirBasket*> baskets;
 	std::vector<HotAirBalloon*> balloons;
     int player_count;
-
-    boost::signals2::connection pump_conn;
 public:
-    MGScenePump() {};
+    MGScenePump();
     void s_update() override;
     void c_update() override;
     void s_setup() override;
