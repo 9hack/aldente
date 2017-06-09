@@ -37,5 +37,4 @@ private:
     std::vector<Player*> team2;
 	int team1_points;
 	int team2_points;
-    //std::map<int, bool> dead_player_flags;
 };

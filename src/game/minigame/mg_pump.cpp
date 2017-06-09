@@ -22,14 +22,14 @@ void PumpMG::s_setup() {
     int count = 0;
     team1.clear();
     team2.clear();
-	team1_points = 0;
-	team2_points = 0;
+    team1_points = 0;
+    team2_points = 0;
 
     std::vector<int> player_assignments = context.player_ids;
     std::random_shuffle(player_assignments.begin(), player_assignments.end());
 
     proto::ServerMessage msg;
-	proto::PumpAssignment *pump_asg = msg.mutable_pump_assignment();
+    proto::PumpAssignment *pump_asg = msg.mutable_pump_assignment();
 
     // Set up players
     bool curr_team = true;
@@ -51,7 +51,6 @@ void PumpMG::s_setup() {
         player->transform.look_at(glm::vec3(0, 0, 1));
 
         curr_team = !curr_team;
-        std::cerr << "[s] assign pump " << position << " to player " << id << "\n";
         proto::PumpPair* pair = pump_asg->add_pairs();
         pair->set_player_id(id);
         pair->set_pump(position);
@@ -63,16 +62,16 @@ void PumpMG::s_setup() {
         // Find which team the player is on.
         bool is_team1 = std::find(team1.begin(), team1.end(), player) != team1.end();
 
-		if (is_team1)
-			team1_points++;
-		else
-			team2_points++;
+        if (is_team1)
+            team1_points++;
+        else
+            team2_points++;
 
-		dynamic_cast<MGScenePump*>(context.minigame_scenes["pump"])->inflate_balloon(is_team1);
+        dynamic_cast<MGScenePump*>(context.minigame_scenes["pump"])->inflate_balloon(is_team1);
     });
 
     GameState::set_scene(context.minigame_scenes["pump"]);
-	scene = context.minigame_scenes["pump"];
+    scene = context.minigame_scenes["pump"];
 }
 
 void PumpMG::s_teardown() {
@@ -88,21 +87,21 @@ void PumpMG::s_teardown() {
     }
 
     // Assigns rewards to winning team. 
-	// No reward if somehow they tie.
-	if (team1_points > team2_points) {
-		for (Player* player : team1) {
-			player->s_modify_stats([&](PlayerStats &stats) {
-				stats.add_coins(PUMPMG_REWARD);
-			});
-		}
-	}
-	else if (team1_points < team2_points) {
-		for (Player* player : team2) {
-			player->s_modify_stats([&](PlayerStats &stats) {
-				stats.add_coins(PUMPMG_REWARD);
-			});
-		}
-	}
+    // No reward if somehow they tie.
+    if (team1_points > team2_points) {
+        for (Player* player : team1) {
+            player->s_modify_stats([&](PlayerStats &stats) {
+                stats.add_coins(PUMPMG_REWARD);
+            });
+        }
+    }
+    else if (team1_points < team2_points) {
+        for (Player* player : team2) {
+            player->s_modify_stats([&](PlayerStats &stats) {
+                stats.add_coins(PUMPMG_REWARD);
+            });
+        }
+    }
 }
 
 void PumpMG::c_setup() {
