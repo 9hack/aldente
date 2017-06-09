@@ -233,7 +233,7 @@ void Player::s_begin_warp(float x, float z) {
 
 void Player::c_begin_warp() {
     // Set up warp animation
-    anim_player.set_anim("exit", 1.0f, true);
+    anim_player.set_anim("exit", 1.2f, true);
     anim_player.play();
     exiting = true;
 

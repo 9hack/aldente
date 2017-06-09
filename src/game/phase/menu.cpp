@@ -96,6 +96,7 @@ void MenuPhase::c_teardown() {
         Player* player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
         player->set_anim_override(false);
         player->set_anim_pause(false);
+        player->start_walk();
     }
 }
 
