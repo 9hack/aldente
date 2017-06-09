@@ -208,6 +208,8 @@ namespace events {
         extern signal<void(float, std::string, std::function<void()>)> transition_fade;
         extern signal<void()> enable_main_menu;
         extern signal<void()> disable_main_menu;
+        extern signal<void()> enable_char_selection;
+        extern signal<void()> disable_char_selection;
         extern signal<void(float, std::string)> show_effect_image;
         extern signal<void(float)> hide_effect_image;
 

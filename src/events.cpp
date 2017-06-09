@@ -77,6 +77,8 @@ namespace events {
         signal<void(float, std::string, std::function<void()>)> transition_fade;
         signal<void()> enable_main_menu;
         signal<void()> disable_main_menu;
+        signal<void()> enable_char_selection;
+        signal<void()> disable_char_selection;
         signal<void(float, std::string)> show_effect_image;
         signal<void(float)> hide_effect_image;
 

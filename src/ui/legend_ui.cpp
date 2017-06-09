@@ -15,6 +15,11 @@ static const LegendUI::str_pair BUILD_SELECTED_LEGEND = {
         {"xboxControllerLeftShoulder.png", "Rotate CW"},
         {"xboxControllerRightShoulder.png", "Rotate CCW"},
 };
+static const LegendUI::str_pair CHAR_SELECTION_LEGEND = {
+    {"xboxControllerStart.png", "Confirm"},
+    {"xboxControllerLeftShoulder.png", "Switch character"},
+    {"xboxControllerRightShoulder.png", "Switch character"},
+};
 
 LegendUI::LegendUI(float aspect, float legend_width_, float entry_height_, float padding_) :
         UI((100.f - (legend_width_ + padding_)) * aspect, 100.f),
@@ -41,6 +46,15 @@ LegendUI::LegendUI(float aspect, float legend_width_, float entry_height_, float
         enable();
     });
     events::build::end_build_event.connect([&]() {
+        disable();
+    });
+
+    // New legacy legend stuff.
+    events::ui::enable_char_selection.connect([&]() {
+        set_legend(CHAR_SELECTION_LEGEND);
+        enable();
+    });
+    events::menu::end_menu_event.connect([&]() {
         disable();
     });
 }

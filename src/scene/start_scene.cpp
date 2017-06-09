@@ -53,6 +53,8 @@ void StartScene::c_setup() {
             events::camera_anim_rotate_event(glm::vec3(1, 0, 0), -3, 500, [](){});
             events::camera_anim_position_event(glm::vec3(3.f, 2.f, 6.f), 1500, [](){
                 input::ModalInput::get()->set_mode(input::ModalInput::NORMAL); // allow for controls after transition
+                // Show character selection UI.
+                events::ui::enable_char_selection();
             });
         });
     });

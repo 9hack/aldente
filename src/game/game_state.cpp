@@ -241,7 +241,7 @@ Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
     Player *player = new Player(obj_id);
     player->c_setup_player_model(model_index);
     context.player_ids.push_back(obj_id);
-    
+
     start_scene.objs.push_back(player);
     main_scene.objs.push_back(player);
     penguin_scene.objs.push_back(player);
@@ -251,6 +251,11 @@ Player* GameState::c_add_player(int obj_id, int model_index, bool is_client) {
     if (is_client) {
         context.player_id = obj_id;
         context.client_player = player;
+
+        // Add a light to illuminate the player's bed.
+        float x_pos = 2 * (context.player_ids.size() - 1);
+        auto goal_light = new PulsePointLight(glm::vec3(x_pos, 0.5f, 0), Color::PURPLE, 0.1f, 1.f, 0.02f, 0.1f);
+        start_scene.add_light(goal_light);
     }
     sumo_scene.c_add_ball(player);
 
