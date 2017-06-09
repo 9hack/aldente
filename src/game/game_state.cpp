@@ -255,6 +255,7 @@ Player* GameState::c_add_player(int obj_id, int model_index, bool is_client, int
     Player *player = new Player(obj_id);
     player->c_setup_player_model(model_index);
     context.player_ids.push_back(obj_id);
+    player->set_anim_pause(true);
 
     start_scene.objs.push_back(player);
     main_scene.objs.push_back(player);
@@ -287,6 +288,10 @@ int GameState::cycle_avatar(Player* player) {
             }
         }
     }
+
+    // If player has readied up, don't allow changing avatar.
+    if (context.ready_flags[player->get_id()])
+        return old;
 
     for (int i = 0; i < 4; i++) {
         int current = (old + i) % 4;

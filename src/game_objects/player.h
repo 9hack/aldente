@@ -142,4 +142,9 @@ public:
 
     // Play the emote animation.
     void emote(bool loop, float speed = 1.0f);
+
+    // Reset to default pose.
+    void stop_anim();
+
+    void set_anim_pause(bool pause);
 };

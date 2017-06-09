@@ -48,6 +48,7 @@ class PlayerStats;
 class AvatarChange;
 class PumpPair;
 class PumpAssignment;
+class ReadyUpdate;
 
 enum GameObject_Type {
   GameObject_Type_PLAYER = 0,
@@ -155,6 +156,7 @@ class ServerMessage : public ::google::protobuf::Message {
     kChangeAvatarUpdate = 9,
     kPumpAssignment = 10,
     kPumpUpdate = 11,
+    kReadyUpdate = 12,
     MESSAGE_TYPE_NOT_SET = 0,
   };
 
@@ -277,6 +279,15 @@ class ServerMessage : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 pump_update() const;
   inline void set_pump_update(::google::protobuf::int32 value);
 
+  // optional .proto.ReadyUpdate ready_update = 12;
+  inline bool has_ready_update() const;
+  inline void clear_ready_update();
+  static const int kReadyUpdateFieldNumber = 12;
+  inline const ::proto::ReadyUpdate& ready_update() const;
+  inline ::proto::ReadyUpdate* mutable_ready_update();
+  inline ::proto::ReadyUpdate* release_ready_update();
+  inline void set_allocated_ready_update(::proto::ReadyUpdate* ready_update);
+
   inline MessageTypeCase message_type_case() const;
   // @@protoc_insertion_point(class_scope:proto.ServerMessage)
  private:
@@ -291,6 +302,7 @@ class ServerMessage : public ::google::protobuf::Message {
   inline void set_has_change_avatar_update();
   inline void set_has_pump_assignment();
   inline void set_has_pump_update();
+  inline void set_has_ready_update();
 
   inline bool has_message_type();
   void clear_message_type();
@@ -312,6 +324,7 @@ class ServerMessage : public ::google::protobuf::Message {
     ::proto::AvatarChange* change_avatar_update_;
     ::proto::PumpAssignment* pump_assignment_;
     ::google::protobuf::int32 pump_update_;
+    ::proto::ReadyUpdate* ready_update_;
   } message_type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1832,6 +1845,95 @@ class PumpAssignment : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static PumpAssignment* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class ReadyUpdate : public ::google::protobuf::Message {
+ public:
+  ReadyUpdate();
+  virtual ~ReadyUpdate();
+
+  ReadyUpdate(const ReadyUpdate& from);
+
+  inline ReadyUpdate& operator=(const ReadyUpdate& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ReadyUpdate& default_instance();
+
+  void Swap(ReadyUpdate* other);
+
+  // implements Message ----------------------------------------------
+
+  ReadyUpdate* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ReadyUpdate& from);
+  void MergeFrom(const ReadyUpdate& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 player_id = 1;
+  inline bool has_player_id() const;
+  inline void clear_player_id();
+  static const int kPlayerIdFieldNumber = 1;
+  inline ::google::protobuf::int32 player_id() const;
+  inline void set_player_id(::google::protobuf::int32 value);
+
+  // optional bool ready = 2;
+  inline bool has_ready() const;
+  inline void clear_ready();
+  static const int kReadyFieldNumber = 2;
+  inline bool ready() const;
+  inline void set_ready(bool value);
+
+  // @@protoc_insertion_point(class_scope:proto.ReadyUpdate)
+ private:
+  inline void set_has_player_id();
+  inline void clear_has_player_id();
+  inline void set_has_ready();
+  inline void clear_has_ready();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::int32 player_id_;
+  bool ready_;
+  friend void  protobuf_AddDesc_net_2eproto();
+  friend void protobuf_AssignDesc_net_2eproto();
+  friend void protobuf_ShutdownFile_net_2eproto();
+
+  void InitAsDefaultInstance();
+  static ReadyUpdate* default_instance_;
+};
 // ===================================================================
 
 
@@ -2231,6 +2333,49 @@ inline void ServerMessage::set_pump_update(::google::protobuf::int32 value) {
     set_has_pump_update();
   }
   message_type_.pump_update_ = value;
+}
+
+// optional .proto.ReadyUpdate ready_update = 12;
+inline bool ServerMessage::has_ready_update() const {
+  return message_type_case() == kReadyUpdate;
+}
+inline void ServerMessage::set_has_ready_update() {
+  _oneof_case_[0] = kReadyUpdate;
+}
+inline void ServerMessage::clear_ready_update() {
+  if (has_ready_update()) {
+    delete message_type_.ready_update_;
+    clear_has_message_type();
+  }
+}
+inline const ::proto::ReadyUpdate& ServerMessage::ready_update() const {
+  return has_ready_update() ? *message_type_.ready_update_
+                      : ::proto::ReadyUpdate::default_instance();
+}
+inline ::proto::ReadyUpdate* ServerMessage::mutable_ready_update() {
+  if (!has_ready_update()) {
+    clear_message_type();
+    set_has_ready_update();
+    message_type_.ready_update_ = new ::proto::ReadyUpdate;
+  }
+  return message_type_.ready_update_;
+}
+inline ::proto::ReadyUpdate* ServerMessage::release_ready_update() {
+  if (has_ready_update()) {
+    clear_has_message_type();
+    ::proto::ReadyUpdate* temp = message_type_.ready_update_;
+    message_type_.ready_update_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void ServerMessage::set_allocated_ready_update(::proto::ReadyUpdate* ready_update) {
+  clear_message_type();
+  if (ready_update) {
+    set_has_ready_update();
+    message_type_.ready_update_ = ready_update;
+  }
 }
 
 inline bool ServerMessage::has_message_type() {
@@ -3719,6 +3864,58 @@ inline ::google::protobuf::RepeatedPtrField< ::proto::PumpPair >*
 PumpAssignment::mutable_pairs() {
   // @@protoc_insertion_point(field_mutable_list:proto.PumpAssignment.pairs)
   return &pairs_;
+}
+
+// -------------------------------------------------------------------
+
+// ReadyUpdate
+
+// optional int32 player_id = 1;
+inline bool ReadyUpdate::has_player_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ReadyUpdate::set_has_player_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ReadyUpdate::clear_has_player_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ReadyUpdate::clear_player_id() {
+  player_id_ = 0;
+  clear_has_player_id();
+}
+inline ::google::protobuf::int32 ReadyUpdate::player_id() const {
+  // @@protoc_insertion_point(field_get:proto.ReadyUpdate.player_id)
+  return player_id_;
+}
+inline void ReadyUpdate::set_player_id(::google::protobuf::int32 value) {
+  set_has_player_id();
+  player_id_ = value;
+  // @@protoc_insertion_point(field_set:proto.ReadyUpdate.player_id)
+}
+
+// optional bool ready = 2;
+inline bool ReadyUpdate::has_ready() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ReadyUpdate::set_has_ready() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ReadyUpdate::clear_has_ready() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ReadyUpdate::clear_ready() {
+  ready_ = false;
+  clear_has_ready();
+}
+inline bool ReadyUpdate::ready() const {
+  // @@protoc_insertion_point(field_get:proto.ReadyUpdate.ready)
+  return ready_;
+}
+inline void ReadyUpdate::set_ready(bool value) {
+  set_has_ready();
+  ready_ = value;
+  // @@protoc_insertion_point(field_set:proto.ReadyUpdate.ready)
 }
 
 

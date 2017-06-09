@@ -15,6 +15,7 @@ message ServerMessage {
     AvatarChange change_avatar_update = 9;
     PumpAssignment pump_assignment = 10;
     int32 pump_update = 11;
+    ReadyUpdate ready_update = 12;
   }
 }
 
@@ -138,4 +139,9 @@ message PumpPair {
 
 message PumpAssignment {
   repeated PumpPair pairs = 1;
+}
+
+message ReadyUpdate {
+  optional int32 player_id = 1;
+  optional bool ready = 2;
 }

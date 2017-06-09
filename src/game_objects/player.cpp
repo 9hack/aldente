@@ -263,7 +263,7 @@ void Player::s_begin_warp(float x, float z) {
 
 void Player::c_begin_warp() {
     // Set up warp animation
-    anim_player.set_anim("exit", 1.0f, true);
+    anim_player.set_anim("exit", 1.2f, true);
     anim_player.play();
     exiting = true;
 
@@ -552,4 +552,12 @@ void Player::emote(bool loop, float speed) {
     anim_player.set_anim("emote", speed, loop);
     anim_player.play();
     anim_override = true;
+}
+
+void Player::stop_anim() {
+    anim_player.stop();
+}
+
+void Player::set_anim_pause(bool pause) {
+    anim_player.pause_at_end = pause;
 }

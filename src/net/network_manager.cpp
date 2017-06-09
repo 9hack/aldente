@@ -437,7 +437,9 @@ void ClientNetworkManager::update() {
             proto::AvatarChange change = msg.change_avatar_update();
             Player* player = dynamic_cast<Player*>(GameObject::game_objects[change.player_id()]);
             assert(player);
-            player->c_setup_player_model(change.model_index());
+            int new_index = change.model_index();
+            if (new_index != player->c_get_model_index())
+                player->c_setup_player_model(change.model_index());
             break;
         }
         case proto::ServerMessage::MessageTypeCase::kPumpAssignment: {
@@ -449,6 +451,16 @@ void ClientNetworkManager::update() {
         }
         case proto::ServerMessage::MessageTypeCase::kPumpUpdate: {
             events::minigame::c_play_pump_event(msg.pump_update());
+            break;
+        }
+        case proto::ServerMessage::MessageTypeCase::kReadyUpdate: {
+            proto::ReadyUpdate ready = msg.ready_update();
+            Player* player = dynamic_cast<Player*>(GameObject::game_objects[ready.player_id()]);
+            assert(player);
+            if (ready.ready())
+                player->emote(false);
+            else
+                player->stop_anim();
             break;
         }
         default:

@@ -9,6 +9,8 @@
 */
 class AnimationPlayer {
 public:
+    bool pause_at_end;
+
     AnimationPlayer();
 
     void set_skeleton(Skeleton *skel);
