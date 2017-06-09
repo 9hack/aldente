@@ -142,4 +142,6 @@ public:
 
     // Reset to default pose.
     void stop_anim();
+
+    void set_anim_pause(bool pause);
 };

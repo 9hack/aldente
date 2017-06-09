@@ -95,6 +95,7 @@ void MenuPhase::c_teardown() {
     for (int player_id : context.player_ids) {
         Player* player = dynamic_cast<Player*>(GameObject::game_objects[player_id]);
         player->set_anim_override(false);
+        player->set_anim_pause(false);
     }
 }
 

@@ -10,6 +10,7 @@ AnimationPlayer::AnimationPlayer() {
     speed = 1.0f;
     loop = false;
     is_paused = true;
+    pause_at_end = false;
 }
 
 // Currently, animation player keeps track of its own timer. May change to a global timer event.
@@ -28,7 +29,10 @@ void AnimationPlayer::update() {
         // Check if Animation has Ended
         if (time_in_ticks > animation->get_anim()->mDuration) {
             if (!loop) {
-                stop();
+                if (pause_at_end)
+                    pause();
+                else
+                    stop();
                 return;
             }
         }

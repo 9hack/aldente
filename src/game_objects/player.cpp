@@ -527,3 +527,7 @@ void Player::emote(bool loop, float speed) {
 void Player::stop_anim() {
     anim_player.stop();
 }
+
+void Player::set_anim_pause(bool pause) {
+    anim_player.pause_at_end = pause;
+}
