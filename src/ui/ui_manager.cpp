@@ -41,19 +41,11 @@ void UIManager::setup_uis() {
     }
     ui_map["build"] = new BuildUI(3, 4, aspect, constructs);
 
-    /* CLOCK UI */
-    int rounds;
-    Config::config->get_value(Config::str_num_rounds, rounds);
-    ui_map["clock"] = new ClockUI(aspect, rounds);
-
     /* GOLD UI */
     ui_map["gold"] = new GoldUI(aspect);
 
     /* DEBUG UI */
     ui_map["debug"] = new DebugUI(aspect);
-
-    /* LEADERBOARD UI */
-    ui_map["leaderboard"] = new LeaderboardUI(aspect);
 
     /* LEGEND UI */
     ui_map["legend"] = new LegendUI(aspect, 15.f, 5.f, 1.f);
@@ -63,6 +55,14 @@ void UIManager::setup_uis() {
 
     /* SCORE SCREEN UI */
     ui_map["score-screen"] = new ScoreUI(aspect);
+
+    /* LEADERBOARD UI */
+    ui_map["z4-leaderboard"] = new LeaderboardUI(aspect);
+
+    /* CLOCK UI */
+    int rounds;
+    Config::config->get_value(Config::str_num_rounds, rounds);
+    ui_map["z5-clock"] = new ClockUI(aspect, rounds);
 
     /* NOTIFICATION UI (high-ish z-index) */
     ui_map["z5-notifs"] = new NotificationUI(aspect, 30.f, 15.f);

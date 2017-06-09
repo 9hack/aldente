@@ -24,6 +24,4 @@ private:
     std::vector<Minigame*> minigames;
     Minigame* curr_mg;
     bool do_update;
-    int n_rounds;
-    int curr_mg_index;
 };

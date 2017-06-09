@@ -24,8 +24,6 @@ MinigamePhase::~MinigamePhase() {
 
 
 void MinigamePhase::s_setup() {
-    Config::config->get_value(Config::str_num_rounds, n_rounds);
-
     // Pick minigame and set up timer/connections
     curr_mg = minigames[curr_mg_index];
     curr_mg_index = (curr_mg_index + 1) % minigames.size();
@@ -42,8 +40,6 @@ void MinigamePhase::s_setup() {
 }
 
 void MinigamePhase::c_setup() {
-    Config::config->get_value(Config::str_num_rounds, n_rounds);
-
     input::ModalInput::get()->set_mode(input::ModalInput::DISABLE);
 
     // Client just cycles through minigames in same order as server.
@@ -103,5 +99,5 @@ void MinigamePhase::c_teardown() {
 }
 
 proto::Phase MinigamePhase::s_phase_when_done() {
-    return context.current_round == n_rounds ? proto::Phase::END : proto::Phase::BUILD;
+    return proto::Phase::MINIGAME_RESULTS;
 }

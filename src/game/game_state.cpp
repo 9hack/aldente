@@ -6,6 +6,7 @@ MenuPhase GameState::menu_phase(context);
 BuildPhase GameState::build_phase(context);
 DungeonPhase GameState::dungeon_phase(context);
 MinigamePhase GameState::minigame_phase(context);
+MinigameResultsPhase GameState::minigame_results_phase(context);
 EndPhase GameState::end_phase(context);
 
 DialoguePhase GameState::build_tutorial_phase(
@@ -177,6 +178,9 @@ void GameState::set_phase(proto::Phase phase) {
     case proto::Phase::MINIGAME:
         GameState::set_phase(&GameState::minigame_phase);
         break;
+    case proto::Phase::MINIGAME_RESULTS:
+        GameState::set_phase(&GameState::minigame_results_phase);
+        break;
     case proto::Phase::BUILD_TUTORIAL:
         GameState::set_phase(&GameState::build_tutorial_phase);
         break;
@@ -221,7 +225,7 @@ Player* GameState::s_add_player(int conn_id) {
 
     // Determine where each player starts based on client id. 
     player->set_start_position({ (2 * (conn_id - 1)), 0, 0 });
-    player->s_set_model_index(conn_id % Player::PLAYER_MODELS.size());
+    player->s_set_model_index(cycle_avatar(player));
     player->reset_position();
 
     start_scene.objs.push_back(player);
