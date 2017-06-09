@@ -44,6 +44,10 @@ void StartScene::c_setup() {
         Color::WHITE, 0.5f);
     add_light(sun);
 
+    auto goal_light =
+        new PulsePointLight(glm::vec3(0, 0.5f, 0), Color::PURPLE, 0.1f, 1.f, 0.02f, 0.1f);
+    add_light(goal_light);
+
     // Main menu ui should show.
     events::ui::enable_main_menu();
 
