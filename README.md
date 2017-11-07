@@ -1,6 +1,6 @@
 # Sandma
 
-![Preview](preview.png)
+[![Preview](preview.png)](https://youtu.be/YeKptm0VM-w)
 
 _Mario Party._
 
